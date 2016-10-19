@@ -1,9 +1,9 @@
-##Política Social Preventiva
+## Política Social Preventiva
 
-#Grado de inseguridad alimentaria
+# Grado de inseguridad alimentaria
 - [x]  LIT REVIEW
 
-#Rezago educativo promedio en el hogar
+# Rezago educativo promedio en el hogar
 - [ ] 
 #Ingreso corriente per cápita
 - [ ] 
