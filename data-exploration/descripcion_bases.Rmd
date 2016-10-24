@@ -5,32 +5,32 @@ date: "October 21, 2016"
 output: html_document
 ---
 
-# Monitor de Sequía y disponibilidad de Agua
+## CENAPRED
+###############
 
-## Protocolo Nacional de Alerta Ante Sequía http://www.pronacose.gob.mx/pronacose14/Contenido/Documentos/Protocolo_AlertarSequias.pdf
-
-## Monitor de Sequía [bimestral]
-Se basa en la obtención e interpretación de diversos índices o indicadores de sequía, que mediante un consenso se determinan las regiones afectadas por este fenómeno, de acuerdo a la escala de intensidades que va desde Anormalmente seco (D0), Sequía moderada (D1), Sequía severa (D2), Sequía Extrema (D3) hasta Sequía excepcional (D4).
-Este monitor forma parte del Monitor de Sequía de América del Norte (NADM) y consta de una serie de materiales que incluyen una descripción de la sequía en el país, el conteo de municipios afectados por las diferentes categorías de sequía, tablas y gráficos de porcentaje de área afectada por sequía a nivel nacional, estatal, 13 Regiones Hidrológico-Administrativas y 26 Consejos de cuenca.
-
-http://smn.cna.gob.mx/es/climatologia/monitor-de-sequia/monitor-de-sequia-en-mexico
-Sequías históricas
-http://datos.gob.mx/busca/dataset/sequias-historicas-en-mexico
-
-## Vulnerabilidad a la sequía por municipio CENAPRED
-http://datos.gob.mx/busca/dataset/vulnerabilidad-a-las-sequias-por-municipio
-
-## SEQUÍA HIDROLÓGICA (SDI) [bimestral] MUNICIPAL IMAGEN
-http://www.pronacose.gob.mx/Contenido.aspx?n1=4&n2=21
-
-
-
-## Indice Nacional de Inundación
+### Indice Nacional de Inundación
 http://datos.gob.mx/busca/dataset/inundaciones
 http://datos.gob.mx/busca/dataset/peligro-por-inundaciones-a-nivel-municipal
 
+###Indicadores Municipales de Peligro, Exposición y Vulnerabilidad
+http://www.atlasnacionalderiesgos.gob.mx/archivo/indicadores-municipales.html
 
-## ÍNDICE DE VULNERABILIDAD GLOBAL [CONAGUA] MUNICIPAL / pdf
+### Server CENAPRED
+http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/Datos_Basicos/MapServer
+
+### Vulnerabilidad a la sequía por municipio CENAPRED
+http://datos.gob.mx/busca/dataset/vulnerabilidad-a-las-sequias-por-municipio
+
+
+## CONAGUA
+###############
+
+### Vulnerabilidad ambiental por municipio
+http://datos.gob.mx/busca/dataset/vulnerabilidad-ambiental-por-municipio
+### Grado de Vulnerabilidad Social, económica y ambiental
+http://datos.gob.mx/busca/dataset/vulnerabilidad-social-economica-y-ambiental-por-municipio
+
+### ÍNDICE DE VULNERABILIDAD GLOBAL [CONAGUA] MUNICIPAL / pdf
 
 Factores (zj) de la Vulnerabilidad, según el IPCC usados en el estudio de la CONAGUA (2011), a partir de los resultados de la AA2030:
 Grado de exposición
@@ -45,19 +45,20 @@ Capacidad de adaptación
 
 http://www.pronacose.gob.mx/pronacose14/contenido/documentos/TablaVulTodoslosMpios_2457_01042016.pdf
 
+### Monitor de Sequía y disponibilidad de Agua
 
-## CENAPRED
-Indicadores Municipales de Peligro, Exposición y Vulnerabilidad
-http://www.atlasnacionalderiesgos.gob.mx/archivo/indicadores-municipales.html
+### Monitor de Sequía [bimestral]
+Se basa en la obtención e interpretación de diversos índices o indicadores de sequía, que mediante un consenso se determinan las regiones afectadas por este fenómeno, de acuerdo a la escala de intensidades que va desde Anormalmente seco (D0), Sequía moderada (D1), Sequía severa (D2), Sequía Extrema (D3) hasta Sequía excepcional (D4).
+Este monitor forma parte del Monitor de Sequía de América del Norte (NADM) y consta de una serie de materiales que incluyen una descripción de la sequía en el país, el conteo de municipios afectados por las diferentes categorías de sequía, tablas y gráficos de porcentaje de área afectada por sequía a nivel nacional, estatal, 13 Regiones Hidrológico-Administrativas y 26 Consejos de cuenca.
 
-## Server CENAPRED
-http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/Datos_Basicos/MapServer
-
-## Grado de Vulnerabilidad Social, económica y ambiental
-http://datos.gob.mx/busca/dataset/vulnerabilidad-social-economica-y-ambiental-por-municipio
-
-## Vulnerabilidad ambiental por municipio
-http://datos.gob.mx/busca/dataset/vulnerabilidad-ambiental-por-municipio
+http://smn.cna.gob.mx/es/climatologia/monitor-de-sequia/monitor-de-sequia-en-mexico
+Sequías históricas
+http://datos.gob.mx/busca/dataset/sequias-historicas-en-mexico
 
 
+### SEQUÍA HIDROLÓGICA (SDI) [bimestral] MUNICIPAL IMAGEN
+http://www.pronacose.gob.mx/Contenido.aspx?n1=4&n2=21
+
+
+### Protocolo Nacional de Alerta Ante Sequía http://www.pronacose.gob.mx/pronacose14/Contenido/Documentos/Protocolo_AlertarSequias.pdf
 
