@@ -21,6 +21,87 @@ http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/Datos_Basicos/M
 ### Vulnerabilidad a la sequía por municipio CENAPRED
 http://datos.gob.mx/busca/dataset/vulnerabilidad-a-las-sequias-por-municipio
 
+Entrada a su servidor y servicios:
+http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR
+
+Servicio  [Datos Básicos]
+	Censo 2010 - areas geoestadísticas basicas
+	Uso de suelo
+		Clasificación
+		Por tipo de actividad económica
+		Áreas Naturales Protegidas
+	Hidrología
+	Climatología
+		Precipitación
+		Viento
+	Encuesta Intercensal 2015
+		Marco Geoestadístico actualizado
+		Servicios: 
+			Áreas verdes
+			Centros de asistencia médica
+			tanques de agua
+			escuela
+			subestación eléctrica
+			área verde
+			----------
+			cementerio
+			escuela
+			metro
+			bombero
+			templo
+
+Servicio [Indicadores]
+http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/Indicadores/MapServer
+	Índice de marginación 2010
+	Grado de Vulnerabilidad SOcial 2010
+	Índice de Resiliencia CENAPRED 2015
+	Perímetros de contención urbana CONAVI 2016
+
+Químico Tecnológico
+
+
+[Sanitario Ecológico]
+http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/SanitarioEcologicos/MapServer
+	Calidad de Agua
+	Casos confirmados de zika/chikungunya
+
+
+
+
+http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/Datos_Basicos/MapServer
+Servicio  [Crisis]
+	zona de peligro por caide de materiales volcánicos
+	tsunamis lejanos y ocales
+	regiones potenciales de deslizamiento
+	hundimientos regionales y agrietamientos
+	indice de inundación
+	http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/GoogleCrisis/MapServer/
+
+http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/CambioClimatico/MapServer
+Servicio  [Cambio climático]
+	Escenarios FUTUROS Cambio climático
+		proyecciones de cambio en precipitación promedio
+		proyección en cambios de temperatura max y mínima
+	Climatología Histórica
+		precipitación/temperatura(max, min)
+	Municipios más vulnerables al cambio climático
+
+http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/ANR/Fenomenos_Hidrometeorologicos/MapServer
+Servicio  [Fenomenos_Hidrometeorologicos]
+	Sequía
+		históricos y escenarios
+	Heladas
+	Tormentas de electricidad
+	granizo
+	nieve
+	inundaciones
+	ciclones
+	tornados
+
+
+
+
+
 
 ## CONAGUA
 ###############
