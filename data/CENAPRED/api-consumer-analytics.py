@@ -7,7 +7,7 @@ import json
 
 def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
 	"""
-
+    Returns a list with municipality level information from CENAPRED services
 
 	Dado que el servidor de arcgis está bloqueado a los 100 registros
 	Esta función primero identifica los id's de cada objeto y hace un proceso
