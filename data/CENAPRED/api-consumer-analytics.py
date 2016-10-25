@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import requests
 import numpy as np
-from requests.auth import HTTPDigestAuth
+import pandas as pd
 import json
+from requests.auth import HTTPDigestAuth
 
 
 def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
@@ -103,3 +104,45 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
 		print("query of Id's unsuccessful")
 
 	return features
+
+
+
+def get_inpc_ciudad_data(year = "2016",ciudad = "Area+Metropolitana+de+la+Cd.+de+M%C3%A9xico"):
+	"""
+    Returns a Pandas with INPC [nourishment] information from INEGI services
+
+    Args:
+        (str): [Pendiente descripción].
+        (str): [Pendiente].
+
+    Returns:
+        Pandas dataframe: .
+
+	"""
+
+	year = "2016";ciudad = "Area+Metropolitana+de+la+Cd.+de+M%C3%A9xico"
+
+	base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
+	"&_formato=CSV")
+
+	year_query = "&_anioI=1969&_anioF={0}".format(year)
+
+	#tipo niveles
+	tipo = ("&_meta=1&_tipo=Niveles&_info=%C3%8Dndices&_orient=vertical&esquema=0&"
+		"t=%C3%8Dndices+de+Precios+al+Consumidor&")
+
+	lugar = "st=7.+{0}".format(ciudad)
+	
+	serie = ("&pf=inp&cuadro=0&SeriesConsulta=e%7C240123%2C240124%2C240125%"
+	"2C240126%2C240146%2C240160%2C240168%2C240186%2C240189%2C240234"
+	"%2C240243%2C240260%2C240273%2C240326%2C240351%2C240407%2C240458"
+	"%2C240492%2C240533%2C260211%2C260216%2C260260%2C320804%2C320811%2C320859%2C")
+
+	url = base + year_query + tipo + lugar + serie 
+
+	try:
+		data = pd.read_csv(url,error_bad_lines=False,skiprows=14,usecols=[0,1,2,3],header=None,\
+			names=["fecha","INPC-general","INPC-alimentos-bebidas-tabaco","INPC-alimentos"])
+
+	except exception as e:
+	    print 'Error: ', e.value
