@@ -1,10 +1,17 @@
 #!/usr/bin/env python
 import requests
+import numpy as np
 from requests.auth import HTTPDigestAuth
 import json
 
 
 def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
+	""" 
+	Dado que el servidor de arcgis está bloqueado a los 100 registros
+	Esta función primero identifica los id's de cada objeto y hace un proceso
+	iterativo para descargar todos los datos.
+
+	"""
 
 	url = "http://servicios2.cenapred.unam.mx:6080/arcgis/rest/services/{0}/{1}/MapServer/0/query?f=json".\
 	format(servicio,subservicio)
@@ -17,13 +24,8 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
 		"27Quintana%20Roo%27%2C%27San%20Luis%20Potos%C3%AD%27%2C%27Sinaloa%27%2C%27Sonora%27%2C%27Tabasco%27%"
 		"2C%27Tamaulipas%27%2C%27Tlaxcala%27%2C%27Veracruz%20de%20Ignacio%20de%20la%20Llave%27%2C%27Yucat%C3%"
 		"A1n%27%2C%27Zacatecas%27)")
-
-	dict_geometry= {
-		"si":("&returnGeometry=true&spatialRel=esriSpatialRelIntersects&maxAllowableOffset=2445&geometry=%"
-		"7B%22xmin%22%3A-11271098.442820935%2C%22ymin%22%3A946596.1815284295%2C%22xmax%22%3A-10018754.17139694%"
-		"2C%22ymax%22%3A2198940.452952425%2C%22spatialReference%22%3A%7B%22wkid%22%3A102100%2C%22latestWkid%22%"
-		"3A3857%7D%7D&geometryType=esriGeometryEnvelope&inSR=102100"),
-		"no":"&returnGeometry=false"}
+	params = ("&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=102100&spatialRel"
+		"=esriSpatialRelIntersects&relationParam=")
 
 	dict_subservicio = {
 		#ANR/MuniAPP - Servicio usado en
@@ -35,21 +37,60 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
 		"2CD_GEO%2CD_HIDRO%2CD_QUI%2CE_GEO%2CE_HIDRO%2CE_QUI%2CE_SANI%2CDECLARATOR%2CPop2030%2CV_CC%"
 		"2CNum_Us_CFE%2CPOBFEM_%2CPOBMAS_%2COBJECTID_12")
 		#
-
+		}
+	dict_geometry= {
+		"si":("&returnGeometry=false&maxAllowableOffset=3000&geometryPrecision=%7B%22xmin%22%"
+		"3A-13775786.985668927%2C%22ymin%22%3A2198940.452952425%2C%22xmax%22%3A-12523442.71424493%"
+		"2C%22ymax%22%3A3451284.724376421%2C%22spatialReference%22%3A%7B%22wkid%22%3A102100%2C%"
+		"22latestWkid%22%3A3857%7D%7D&outSR=102100")
 		}
 
 	out="&outSR=102100"
 
-	url = url + state + dict_geometry[geometria] + dict_subservicio[subservicio] + out
+	return_id="&returnIdsOnly=true"
 
-	myResponse = requests.get(url)
+	get_ids = url + state + params + dict_subservicio[subservicio] + dict_geometry[geometria]  + out + return_id
 
-	if(myResponse.ok):
-	    # Loads (Load String) takes a Json file and converts into python data structure (dict or list, depending on JSON)
-	    jData = json.loads(myResponse.content)
+	myResponse_ids = requests.get(get_ids)
+
+	#Get ID's
+	if(myResponse_ids.ok):
+		# Loads (Load String) takes a Json file and converts into python data structure (dict or list, depending on JSON)
+		jIds = json.loads(myResponse_ids.content)
+		jIds = jIds["objectIds"]
+		print('query of Ids successful - {0} ids found'.format(len(jIds)))
+
+		#arcgis only gives 1000 ids at time
+		#split the ids into groups of 1000
+		chunks = int(np.ceil(len(jIds)/1000.0))
+		print("splitted into {} chunks".format(chunks))
+		chunks_of_ids = np.array_split(jIds,chunks) 
+
+		features = []
+		i=1
+		for chunk in chunks_of_ids:
+			#get id params
+			objectids = ('&objectIds=+' + '+%2C+'.join(str(i) for i in chunk))
+			get_dict = url + state + dict_geometry[geometria] + dict_subservicio[subservicio] + out + objectids
+
+			myResponse = requests.get(get_dict)
+
+
+			if(myResponse.ok):
+			    # Loads (Load String) takes a Json file and converts into python data structure (dict or list, depending on JSON)
+			    jData = json.loads(myResponse.content)
+			    features.extend(jData['features'])
+			    print('Chunk {0} of {1}:  query successful'.format(i,chunks))
+			    i+=1
+
+			else:
+				# If response code is not ok (200), print the resulting http error code with description
+				print(myResponse.raise_for_status())
+
 
 	else:
 		# If response code is not ok (200), print the resulting http error code with description
-		print(myResponse.raise_for_status())
+		print(myResponse_ids.raise_for_status())
+		print("query of Id's unsuccessful")
 
-	return jData
+	return features
