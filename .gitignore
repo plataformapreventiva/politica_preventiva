@@ -9,3 +9,4 @@
 *.swp
 *.mdb
 .dropbox
+*.pyc

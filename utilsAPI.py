@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import requests
 import numpy as np
 import pandas as pd
@@ -107,7 +108,7 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
 
 
 
-def get_inpc_ciudad_data(year = "2016",ciudad = "Area+Metropolitana+de+la+Cd.+de+M%C3%A9xico"):
+def get_inpc_ciudad_data(year = "2016"):
 	"""
     Returns a Pandas with INPC [nourishment] information from INEGI services
 
@@ -116,33 +117,44 @@ def get_inpc_ciudad_data(year = "2016",ciudad = "Area+Metropolitana+de+la+Cd.+de
         (str): [Pendiente].
 
     Returns:
-        Pandas dataframe: .
+        Pandas dataframe data and metadata: .
 
 	"""
+	data = pd.DataFrame()
+	metadata = {}
 
-	year = "2016";ciudad = "Area+Metropolitana+de+la+Cd.+de+M%C3%A9xico"
+	ciudades = ["7.+Area+Metropolitana+de+la+Cd.+de+M%C3%A9xico","Acapulco,%20Gro."]
 
-	base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
-	"&_formato=CSV")
+	for ciudad in ciudades:
+		base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
+		"&_formato=CSV")
 
-	year_query = "&_anioI=1969&_anioF={0}".format(year)
+		year_query = "&_anioI=1969&_anioF={0}".format(year)
 
-	#tipo niveles
-	tipo = ("&_meta=1&_tipo=Niveles&_info=%C3%8Dndices&_orient=vertical&esquema=0&"
-		"t=%C3%8Dndices+de+Precios+al+Consumidor&")
+		#tipo niveles
+		tipo = ("&_meta=1&_tipo=Niveles&_info=%C3%8Dndices&_orient=vertical&esquema=0&"
+			"t=%C3%8Dndices+de+Precios+al+Consumidor&")
 
-	lugar = "st=7.+{0}".format(ciudad)
-	
-	serie = ("&pf=inp&cuadro=0&SeriesConsulta=e%7C240123%2C240124%2C240125%"
-	"2C240126%2C240146%2C240160%2C240168%2C240186%2C240189%2C240234"
-	"%2C240243%2C240260%2C240273%2C240326%2C240351%2C240407%2C240458"
-	"%2C240492%2C240533%2C260211%2C260216%2C260260%2C320804%2C320811%2C320859%2C")
+		lugar = "st={0}".format(ciudad)
 
-	url = base + year_query + tipo + lugar + serie 
+		serie = ("&pf=inp&cuadro=0&SeriesConsulta=e%7C240123%2C240124%2C240125%"
+		"2C240126%2C240146%2C240160%2C240168%2C240186%2C240189%2C240234"
+		"%2C240243%2C240260%2C240273%2C240326%2C240351%2C240407%2C240458"
+		"%2C240492%2C240533%2C260211%2C260216%2C260260%2C320804%2C320811%2C320859%2C")
 
-	try:
-		data = pd.read_csv(url,error_bad_lines=False,skiprows=14,usecols=[0,1,2,3],header=None,\
-			names=["fecha","INPC-general","INPC-alimentos-bebidas-tabaco","INPC-alimentos"])
+		url = base + year_query + tipo + lugar + serie
 
-	except exception as e:
-	    print 'Error: ', e.value
+		try:
+			#download metadata
+			metadata[ciudad] = pd.read_csv(url,error_bad_lines=False,nrows=5,usecols=[0],header=None).values
+			#download new dataframe
+			temp = pd.read_csv(url,error_bad_lines=False,skiprows=14,usecols=[0,1,2,3],header=None,\
+				names=["fecha","INPC-general{}".format(ciudad),"INPC-alimentos-bebidas-tabaco{}".\
+				format(ciudad),"INPC-alimentos{}".format(ciudad)])
+			data = pd.concat([data, temp], axis=1)
+
+		except:
+		    print "Error descarga de base de datos ciudad: {}".format(ciudad)
+	return data, metadata
+
+
