@@ -6,10 +6,19 @@ import json
 
 
 def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
-	""" 
+	"""
+
+
 	Dado que el servidor de arcgis está bloqueado a los 100 registros
 	Esta función primero identifica los id's de cada objeto y hace un proceso
 	iterativo para descargar todos los datos.
+
+    Args:
+        servicio (str): [Pendiente descripción].
+        subservicio (str): [Pendiente].
+
+    Returns:
+        dataframe: Obtiene la base de datos a nivel localidad.
 
 	"""
 
@@ -64,7 +73,7 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
 		#split the ids into groups of 1000
 		chunks = int(np.ceil(len(jIds)/1000.0))
 		print("splitted into {} chunks".format(chunks))
-		chunks_of_ids = np.array_split(jIds,chunks) 
+		chunks_of_ids = np.array_split(jIds,chunks)
 
 		features = []
 		i=1
