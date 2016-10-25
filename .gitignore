@@ -6,3 +6,5 @@
 *.RDS
 *.rar
 *.zip
+*.swp
+.dropbox
