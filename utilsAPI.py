@@ -148,13 +148,14 @@ def get_inpc_ciudad_data(year = "2016"):
 			#download metadata
 			metadata[ciudad] = pd.read_csv(url,error_bad_lines=False,nrows=5,usecols=[0],header=None).values
 			#download new dataframe
+			print('trying to download data from {}'.format(ciudad))
 			temp = pd.read_csv(url,error_bad_lines=False,skiprows=14,usecols=[0,1,2,3],header=None,\
 				names=["fecha","INPC-general{}".format(ciudad),"INPC-alimentos-bebidas-tabaco{}".\
 				format(ciudad),"INPC-alimentos{}".format(ciudad)])
 			data = pd.concat([data, temp], axis=1)
-
+            print("Query succesful for city {}".format(ciudad))
 		except:
-		    print "Error descarga de base de datos ciudad: {}".format(ciudad)
+		    print "Error downloading data for : {}".format(ciudad)
 	return data, metadata
 
 
