@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 import json
 from requests.auth import HTTPDigestAuth
+import datetime
+from itertools import product
+from bs4 import BeautifulSoup
 
 
 def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
@@ -157,5 +160,109 @@ def get_inpc_ciudad_data(year = "2016"):
         except:
             print ("Error downloading data for : {}".format(ciudad))
     return data, metadata
+
+def get_avance_agricola(cultivo = "MAIZ GRANO", modo_hidrolog = "RT"):
+    """
+    Returns a Pandas with Avance Nacional de Siembra for crop 'cultivo'
+    from SAGARPA-SIEP
+
+
+    Args:
+        (cultivo): Crop to monitor. List available from dict_cultivo-
+        (modo_hidrolog): Hydrological mode to consider.
+                        R - Irrigation (riego)
+                        T - Rainfall (temporal)
+                        RT - Irrigation + Rainfall
+
+    Returns:
+        Pandas dataframe.
+
+    """
+    
+
+    dict_cultivo = {'AJO': '700',
+     'AJONJOLI': '800',
+     'ALGODON HUESO': '1800',
+     'AMARANTO': '2800',
+     'ARROZ PALAY': '3300',
+     'AVENA FORRAJERA EN VERDE': '3900',
+     'AVENA GRANO': '4000',
+     'BERENJENA': '4600',
+     'BROCOLI': '5100',
+     'CALABACITA': '5800',
+     'CARTAMO': '6900',
+     'CEBADA GRANO': '7300',
+     'CEBOLLA': '7400',
+     'CHILE VERDE': '11400',
+     'COLIFLOR': '9000',
+     'CRISANTEMO': '10130',
+     'ELOTE': '12700',
+     'FRESA': '14000',
+     'FRIJOL': '14200',
+     'GARBANZO': '14700',
+     'GLADIOLA': '15400',
+     'LECHUGA': '18500',
+     'MAIZ FORRAJERO EN VERDE': '19800',
+     'MAIZ GRANO': '19700',
+     'MELON': '21200',
+     'PAPA': '24400',
+     'PEPINO': '24900',
+     'SANDIA': '28700',
+     'SORGO FORRAJERO EN VERDE': '29300',
+     'SORGO GRANO': '29500',
+     'SOYA': '29700',
+     'TABACO': '30000',
+     'TOMATE ROJO': '30800',
+     'TOMATE VERDE': '31000',
+     'TRIGO GRANO': '31500',
+     'ZANAHORIA': '32900'}
+
+    dict_moda = {"R":"1", "T":"2", "RT":"3"}
+
+    url = "http://infosiap.siap.gob.mx/Agricola_siap/AvanceNacionalCultivo.do"
+    now = datetime.datetime.now()
+
+    anios = list(range(2004, 2016))
+    meses = list(range(1,12))
+    
+    results = []
+    # Iterate over months and years that are available
+    for month, year in product(meses, anios):
+        if month < now.month or year < now.year:
+            print('Retrieving month={} from year={}'.format(month, year))
+        
+        #Post and request file     
+        payload = {"anio": str(year), "mes": month, "cultivo": dict_cultivo[cultivo], "moda": dict_moda[modo_hidrolog]}
+        try:
+            response = requests.post(url, params=payload)
+        except Exception:
+            print('Connection error for month={} from year={}'.format(month, year))
+            response = False
+        # If Available 
+        if response:
+            print('Successful response for month={} from year={}'.format(month, year))
+
+            # Get information table from HTLM response
+            soup = BeautifulSoup(response.text, 'html.parser')
+            table = soup.find('table', attrs={'class': 'datatable'})
+            
+            # Iterate over table rows and extract informatio
+            records = []
+            for row in table.findAll('tr'):
+                tds = row.find_all('td')
+                records.append([' '.join(elem.text.lower().split()) for elem in tds])
+            # Remove extra rows with no information
+            records = [row for row in records if row]
+
+            #Add payload information 
+            for row in records:
+                row.extend([month,year, cultivo.lower()])
+            results.extend(records)
+
+    col_names = ['estado', 'sup_siembra', 'sup_cosechada', 
+            'sup_siniest', 'produccion', 'rendimiento', 'mes', 'anio', 'cultivo']
+
+    return pd.DataFrame(results, columns=col_names)
+
 
 
