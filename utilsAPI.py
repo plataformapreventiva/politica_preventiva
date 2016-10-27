@@ -14,18 +14,15 @@ from bs4 import BeautifulSoup
 
 def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
     """
-    Returns a list with municipality level information from CENAPRED services
-
-    Dado que el servidor de arcgis está bloqueado a los 100 registros
-    Esta función primero identifica los id's de cada objeto y hace un proceso
-    iterativo para descargar todos los datos.
+    Returns a DataFrame with municipality level information from CENAPRED services
 
     Args:
-        servicio (str): [Pendiente descripción].
-        subservicio (str): [Pendiente].
-
+        servicio (str): Define service to query:
+            List[]
+        subservicio (str): Define Subservices to query from:
+            List[]
     Returns:
-        dataframe: Obtiene la base de datos a nivel localidad.
+        dataframe: Pandas Dataframe with municipality level information.
 
     """
     url = "http://servicios2.cenapred.unam.mx:6080/arcgis/rest/services/{0}/{1}/MapServer/0/query?f=json".\
@@ -100,17 +97,20 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
                 print('Chunk {0} of {1}:  query successful'.format(i,chunks))
                 i+=1
 
+
+
             else:
                 # If response code is not ok (200), print the resulting http error code with description
                 print(myResponse.raise_for_status())
-
+        db = pd.DataFrame([x["attributes"] for x in  data])
 
     else:
         # If response code is not ok (200), print the resulting http error code with description
         print(myResponse_ids.raise_for_status())
         print("query of Id's unsuccessful")
 
-    return features
+
+    return db
 
 
 
