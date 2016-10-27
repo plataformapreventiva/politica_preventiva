@@ -10,6 +10,8 @@ from itertools import product
 from bs4 import BeautifulSoup
 
 
+
+
 def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
     """
     Returns a list with municipality level information from CENAPRED services
@@ -26,7 +28,6 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
         dataframe: Obtiene la base de datos a nivel localidad.
 
     """
-
     url = "http://servicios2.cenapred.unam.mx:6080/arcgis/rest/services/{0}/{1}/MapServer/0/query?f=json".\
     format(servicio,subservicio)
 
@@ -66,11 +67,13 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
     get_ids = url + state + params + dict_subservicio[subservicio] + dict_geometry[geometria]  + out + return_id
 
     myResponse_ids = requests.get(get_ids)
+    myResponse_ids.raise_for_status()
 
     #Get ID's
     if(myResponse_ids.ok):
         # Loads (Load String) takes a Json file and converts into python data structure (dict or list, depending on JSON)
-        jIds = json.loads(myResponse_ids.content)
+
+        jIds = json.loads(myResponse_ids.content.decode('utf-8'))
         jIds = jIds["objectIds"]
         print('query of Ids successful - {0} ids found'.format(len(jIds)))
 
@@ -92,7 +95,7 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
 
             if(myResponse.ok):
                 # Loads (Load String) takes a Json file and converts into python data structure (dict or list, depending on JSON)
-                jData = json.loads(myResponse.content)
+                jData = json.loads(myResponse.content.decode('utf-8'))
                 features.extend(jData['features'])
                 print('Chunk {0} of {1}:  query successful'.format(i,chunks))
                 i+=1
