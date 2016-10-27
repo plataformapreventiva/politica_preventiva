@@ -25,6 +25,7 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
         dataframe: Pandas Dataframe with municipality level information.
 
     """
+
     url = "http://servicios2.cenapred.unam.mx:6080/arcgis/rest/services/{0}/{1}/MapServer/0/query?f=json".\
     format(servicio,subservicio)
 
@@ -36,6 +37,7 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
         "27Quintana%20Roo%27%2C%27San%20Luis%20Potos%C3%AD%27%2C%27Sinaloa%27%2C%27Sonora%27%2C%27Tabasco%27%"
         "2C%27Tamaulipas%27%2C%27Tlaxcala%27%2C%27Veracruz%20de%20Ignacio%20de%20la%20Llave%27%2C%27Yucat%C3%"
         "A1n%27%2C%27Zacatecas%27)")
+
     params = ("&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=102100&spatialRel"
         "=esriSpatialRelIntersects&relationParam=")
 
@@ -50,6 +52,7 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
         "2CNum_Us_CFE%2CPOBFEM_%2CPOBMAS_%2COBJECTID_12")
         #
         }
+
     dict_geometry= {
         "si":("&returnGeometry=false&maxAllowableOffset=3000&geometryPrecision=%7B%22xmin%22%"
         "3A-13775786.985668927%2C%22ymin%22%3A2198940.452952425%2C%22xmax%22%3A-12523442.71424493%"
@@ -97,11 +100,11 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
                 print('Chunk {0} of {1}:  query successful'.format(i,chunks))
                 i+=1
 
-
-
             else:
                 # If response code is not ok (200), print the resulting http error code with description
                 print(myResponse.raise_for_status())
+
+        #convert list of dicts into dataframe
         db = pd.DataFrame([x["attributes"] for x in  features])
 
     else:
@@ -129,9 +132,58 @@ def get_inpc_ciudad_data(year = "2016"):
     data = pd.DataFrame()
     metadata = {}
 
-    ciudades = ["7.+Area+Metropolitana+de+la+Cd.+de+M%C3%A9xico","Acapulco,%20Gro."]
+    dict_ciudades = [
+        "7. Area Metropolitana de la Cd. de México",
+        "Acapulco,%20Gro.",
+        "Aguascalientes, Ags.",  
+        "Campeche, Camp.",  
+        "Cd. Acuña, Coah.",  
+        "Cd. Jiménez, Chih.",  
+        "Cd. Juárez, Chih.",  
+        "Colima, Col.",  
+        "Córdoba, Ver.",  
+        "Cortazar, Gto.",  
+        "Cuernavaca, Mor.",  
+        "Culiacán, Sin.",  
+        "Chetumal, Q.R.",  
+        "Chihuahua, Chih.",  
+        "Durango, Dgo.",  
+        "Fresnillo, Zac.",  
+        "Guadalajara, Jal.",  
+        "Hermosillo, Son.",  
+        "Huatabampo, Son.",  
+        "Iguala, Gro.",  
+        "Jacona, Mich.",  
+        "La Paz, B.C.S.",  
+        "León, Gto.",  
+        "Matamoros, Tamps.",  
+        "Mérida, Yuc.",  
+        "Mexicali, B.C.",  
+        "Monclova, Coah.",  
+        "Monterrey, N.L.",  
+        "Morelia, Mich.",  
+        "Oaxaca, Oax.",  
+        "Puebla, Pue.",  
+        "Querétaro, Qro.",  
+        "San Andrés Tuxtla, Ver.",  
+        "San Luis Potosí, S.L.P.",  
+        "Tampico, Tamps.",  
+        "Tapachula, Chis.",  
+        "Tehuantepec, Oax.",  
+        "Tepatitlán, Jal.",  
+        "Tepic, Nay.",  
+        "Tijuana, B.C.",  
+        "Tlaxcala, Tlax.",  
+        "Toluca, Edo. de Méx.",  
+        "Torreón, Coah.",  
+        "Tulancingo, Hgo.",  
+        "Veracruz, Ver.",  
+        "Villahermosa, Tab."]
 
-    for ciudad in ciudades:
+    ciudades = []
+
+    for ciudad in dict_ciudades:
+        ciudad_encoded = ciudad.replace(" ","+").encode("utf-8")
         base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
         "&_formato=CSV")
 
@@ -141,7 +193,7 @@ def get_inpc_ciudad_data(year = "2016"):
         tipo = ("&_meta=1&_tipo=Niveles&_info=%C3%8Dndices&_orient=vertical&esquema=0&"
             "t=%C3%8Dndices+de+Precios+al+Consumidor&")
 
-        lugar = "st={0}".format(ciudad)
+        lugar = "st={0}".format(ciudad_encoded)
 
         serie = ("&pf=inp&cuadro=0&SeriesConsulta=e%7C240123%2C240124%2C240125%"
         "2C240126%2C240146%2C240160%2C240168%2C240186%2C240189%2C240234"
