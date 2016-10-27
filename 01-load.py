@@ -4,4 +4,4 @@ from utilsAPI import *
 cenapred = get_cenapred_data
 
 #Precios
-INPC = get_inpc_ciudad_data()
+INPC, metadata = get_inpc_ciudad_data()

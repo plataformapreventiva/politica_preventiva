@@ -126,7 +126,12 @@ def get_inpc_ciudad_data(year = "2016"):
         (str): [Pendiente].
 
     Returns:
-        Pandas dataframe data and metadata: .
+        Returns two objects
+        - Pandas dataframe data
+        - metadata: .
+
+    e.g.
+        - data, metadata = get_inpc_ciudad_data()
 
     """
     data = pd.DataFrame()
