@@ -161,24 +161,41 @@ def get_inpc_ciudad_data(year = "2016"):
             print ("Error downloading data for : {}".format(ciudad))
     return data, metadata
 
-def get_avance_agricola(cultivo = "MAIZ GRANO", modo_hidrolog = "RT"):
+
+
+def get_avance_agricola(cultivo = "MAIZ GRANO"):
     """
     Returns a Pandas with Avance Nacional de Siembra for crop 'cultivo'
-    from SAGARPA-SIEP
-
+    from SAGARPA-SIEP. The information is divided by municipality, and
+    contains info for hydrolocial mode and cicle of agricultural year.
 
     Args:
         (cultivo): Crop to monitor. List available from dict_cultivo-
-        (modo_hidrolog): Hydrological mode to consider.
-                        R - Irrigation (riego)
-                        T - Rainfall (temporal)
-                        RT - Irrigation + Rainfall
 
     Returns:
-        Pandas dataframe.
-
+        Pandas dataframe with columns:
+            (estado): 
+            (distrito): division above municipality for agro-purposes
+            (municipio): 
+            (sup_sembrada): sowed land (hc)
+            (sup_cosech): harvested land (hc)
+            (sup_siniest): lost land (hc)
+            (prod): produce (tons)
+            (rendim): yield (tons/hc)
+            (mes): 
+            (anio):
+            (moda_hidr): hydrological mode
+                R: irrigated (riego)
+                T: rainfall (temporal)
+            (ciclo): cicle of agricultural year
+                OI: Fall-Winter
+                PV: Spring-Summer
+            (cultivo): crop to monitor (same as arg)
     """
+    # Define necessary dictionaries
+    dict_moda = {1:"R", 2:"T"}
     
+    dict_ciclo = {1: 'OI', 2: 'PV'}
 
     dict_cultivo = {'AJO': '700',
      'AJONJOLI': '800',
@@ -217,52 +234,81 @@ def get_avance_agricola(cultivo = "MAIZ GRANO", modo_hidrolog = "RT"):
      'TRIGO GRANO': '31500',
      'ZANAHORIA': '32900'}
 
-    dict_moda = {"R":"1", "T":"2", "RT":"3"}
-
-    url = "http://infosiap.siap.gob.mx/Agricola_siap/AvanceNacionalCultivo.do"
+    url =
+    "http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do"
     now = datetime.datetime.now()
 
-    anios = list(range(2004, 2016))
-    meses = list(range(1,12))
-    
+    anios = list(range(2004,2017))
+    meses = list(range(1,13))
+    moda  = list(range(1,3))
+    ciclo = list(range(1,3))
     results = []
-    # Iterate over months and years that are available
-    for month, year in product(meses, anios):
+    
+    # Iterate over years, months, hidrologyc mode and cicle (otonio-invierno or primavera-verano)
+    for year, month, moda, ciclo in product(anios, meses, moda, ciclo):
+
+        #Test for dates that are yet to occur 
         if month < now.month or year < now.year:
-            print('Retrieving month={} from year={}'.format(month, year))
+            print('Retrieving year={}, month={}, cicle={}, mode={}'.format(year,
+                 month, dict_ciclo[ciclo], dict_moda[moda]))
         
-        #Post and request file     
-        payload = {"anio": str(year), "mes": month, "cultivo": dict_cultivo[cultivo], "moda": dict_moda[modo_hidrolog]}
-        try:
-            response = requests.post(url, params=payload)
-        except Exception:
-            print('Connection error for month={} from year={}'.format(month, year))
-            response = False
-        # If Available 
-        if response:
-            print('Successful response for month={} from year={}'.format(month, year))
+            #Create payload to post
+            payload = {'anio' :str(year), 'nivel' : '3', 'delegacion' : '0', 'municipio' : '-1', 
+            'mes' : str(month), 'moda' : str(moda), 'ciclo' : str(ciclo), 
+            'producto' : dict_cultivo[cultivo], 'tipoprograma' : '0',
+            'consultar' : 'si', 'invitado' : 'false'}
 
-            # Get information table from HTLM response
-            soup = BeautifulSoup(response.text, 'html.parser')
-            table = soup.find('table', attrs={'class': 'datatable'})
-            
-            # Iterate over table rows and extract informatio
-            records = []
-            for row in table.findAll('tr'):
-                tds = row.find_all('td')
-                records.append([' '.join(elem.text.lower().split()) for elem in tds])
-            # Remove extra rows with no information
-            records = [row for row in records if row]
+            #Get post response
+            try:
+                response = requests.post(url, params=payload)
+            except Exception:
+                print('##### Connection error for year={}, month={}, cicle={}, mode={}'.format(year,
+                 month, dict_ciclo[ciclo], dict_moda[moda]))
+                response = False
 
-            #Add payload information 
-            for row in records:
-                row.extend([month,year, cultivo.lower()])
-            results.extend(records)
+            # Test for response 
+            if response:
+                print('Successful response!')
 
-    col_names = ['estado', 'sup_siembra', 'sup_cosechada', 
-            'sup_siniest', 'produccion', 'rendimiento', 'mes', 'anio', 'cultivo']
+                # Get information table from HTLM response
+                soup = BeautifulSoup(response.text, 'html.parser')
+                table = soup.find('table', attrs={'class': 'table table-responsive table-striped table-bordered'})
+                
+                # Iterate over table rows and extract information. Since the response lacks 'estado' for 
+                # a state's second and subsequent occurances, we add 'estado' with the 
+                # help of a boolean variable 'keep' and  a response variable 'keep_state' 
+                if table:
+                    print(':D       Table found')
+                    records = []
+                    keep = True
+
+                    # Iterate over rows
+                    for row in table.findAll('tr'):
+                        tds = row.find_all('td')
+
+                        # Table format contains summaries of the data in the middle of the table;
+                        # since they are not <td>, we can simply test for their absence
+                        if tds:
+                            test = "".join(tds[0].text.split())
+                            if keep and test:
+                                keep_state = tds[0]
+                                keep = False
+                            tds[0] = keep_state
+                            records.append([' '.join(elem.text.lower().split()) for elem in tds])
+                        else:
+                            keep = True
+
+                    #Add payload information to the table
+                    for row in records:
+                        row.extend([month, year, dict_moda[moda], dict_ciclo[ciclo], cultivo.lower()])
+
+                    # Add successful response to the main table
+                    results.extend(records)
+                else:
+                    print(':/       No table found')
+
+    col_names = ['estado', 'distrito', 'municipio', 'sup_sembrada', 'sup_cosech',
+     'sup_siniest', 'prod', 'rendim', 'mes', 'anio', 'moda_hidr', 'ciclo', 'cultivo']
 
     return pd.DataFrame(results, columns=col_names)
-
-
 
