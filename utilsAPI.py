@@ -234,8 +234,7 @@ def get_avance_agricola(cultivo = "MAIZ GRANO"):
      'TRIGO GRANO': '31500',
      'ZANAHORIA': '32900'}
 
-    url =
-    "http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do"
+    url = "http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do"
     now = datetime.datetime.now()
 
     anios = list(range(2004,2017))
