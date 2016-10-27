@@ -102,7 +102,7 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
             else:
                 # If response code is not ok (200), print the resulting http error code with description
                 print(myResponse.raise_for_status())
-        db = pd.DataFrame([x["attributes"] for x in  data])
+        db = pd.DataFrame([x["attributes"] for x in  features])
 
     else:
         # If response code is not ok (200), print the resulting http error code with description
