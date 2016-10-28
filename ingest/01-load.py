@@ -1,3 +1,4 @@
+# coding: utf-8
 """ Check and download most resent raw data for the proyect política preventiva
 and upload it in an AWS s3 bucket.  [run this script from /ingest]
 
