@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import requests
 import numpy as np
 import pandas as pd
@@ -8,13 +9,28 @@ from requests.auth import HTTPDigestAuth
 import datetime
 from itertools import product
 from bs4 import BeautifulSoup
+from ftplib import FTP
+
+"""
+issues:
+check if shp files exist in the directory  - Roberto
+
+"""
+
+# Setup utility functions and password / configuration info
+conf = {}
+with open("../conf/conf_profile.json", "r") as f:
+    conf_profile = json.load(f)
+    conf["SMN_USER"] = conf_profile["SMN_USER"]
+    conf["SMN_PASSWORD"] = conf_profile["SMN_PASSWORD"]
 
 
 
 
-def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
+def get_cenapred_data(servicio="ANR", subservicio="MuniAPPInfo", geometria="si"):
     """
-    Returns a DataFrame with municipality level information from CENAPRED services
+    Returns a DataFrame with municipality level information from CENAPRED
+    services
 
     Args:
         servicio (str): Define service to query:
@@ -141,49 +157,49 @@ def get_inpc_ciudad_data(year = "2016"):
     dict_ciudades = {
         "7. Area Metropolitana de la Cd. de México":"09",
         "Acapulco,%20Gro.":"12",
-        "Aguascalientes, Ags.":"01",  
-        "Campeche, Camp.":"04",  
-        "Cd. Acuña, Coah.":"05",  
-        "Cd. Jiménez, Chih.":"08",  
-        "Cd. Juárez, Chih.":"08",  
-        "Colima, Col.":"06",  
-        "Córdoba, Ver.":"30",  
-        "Cortazar, Gto.":"11",  
-        "Cuernavaca, Mor.":"17",  
-        "Culiacán, Sin.":"25",  
-        "Chetumal, Q.R.":"23",  
-        "Chihuahua, Chih.":"08",  
-        "Durango, Dgo.":"10",  
-        "Fresnillo, Zac.":"32",  
-        "Guadalajara, Jal.":"14",  
-        "Hermosillo, Son.":"26",  
+        "Aguascalientes, Ags.":"01",
+        "Campeche, Camp.":"04",
+        "Cd. Acuña, Coah.":"05",
+        "Cd. Jiménez, Chih.":"08",
+        "Cd. Juárez, Chih.":"08",
+        "Colima, Col.":"06",
+        "Córdoba, Ver.":"30",
+        "Cortazar, Gto.":"11",
+        "Cuernavaca, Mor.":"17",
+        "Culiacán, Sin.":"25",
+        "Chetumal, Q.R.":"23",
+        "Chihuahua, Chih.":"08",
+        "Durango, Dgo.":"10",
+        "Fresnillo, Zac.":"32",
+        "Guadalajara, Jal.":"14",
+        "Hermosillo, Son.":"26",
         "Huatabampo, Son.":"26",
-        "Iguala, Gro.":"12",  
-        "Jacona, Mich.":"16",  
-        "La Paz, B.C.S.":"03",  
-        "León, Gto.":"11",  
-        "Matamoros, Tamps.":"28",  
-        "Mérida, Yuc.":"31",  
-        "Mexicali, B.C.":"02",  
-        "Monclova, Coah.":"05",  
-        "Monterrey, N.L.":"19",  
-        "Morelia, Mich.":"16", 
-        "Oaxaca, Oax.":"20",  
-        "Puebla, Pue.":"21", 
-        "Querétaro, Qro.":"22",  
-        "San Andrés Tuxtla, Ver.":"30",  
-        "San Luis Potosí, S.L.P.":"24",  
-        "Tampico, Tamps.":"28",  
-        "Tapachula, Chis.":"07",  
-        "Tehuantepec, Oax.":"20",  
-        "Tepatitlán, Jal.":"14",  
+        "Iguala, Gro.":"12",
+        "Jacona, Mich.":"16",
+        "La Paz, B.C.S.":"03",
+        "León, Gto.":"11",
+        "Matamoros, Tamps.":"28",
+        "Mérida, Yuc.":"31",
+        "Mexicali, B.C.":"02",
+        "Monclova, Coah.":"05",
+        "Monterrey, N.L.":"19",
+        "Morelia, Mich.":"16",
+        "Oaxaca, Oax.":"20",
+        "Puebla, Pue.":"21",
+        "Querétaro, Qro.":"22",
+        "San Andrés Tuxtla, Ver.":"30",
+        "San Luis Potosí, S.L.P.":"24",
+        "Tampico, Tamps.":"28",
+        "Tapachula, Chis.":"07",
+        "Tehuantepec, Oax.":"20",
+        "Tepatitlán, Jal.":"14",
         "Tepic, Nay.":"18",  #error downloading data from tepic
-        "Tijuana, B.C.":"02",  
-        "Tlaxcala, Tlax.":"29",  
-        "Toluca, Edo. de Méx.":"15",  
-        "Torreón, Coah.":"05",  
-        "Tulancingo, Hgo.":"13",  
-        "Veracruz, Ver.":"30",  
+        "Tijuana, B.C.":"02",
+        "Tlaxcala, Tlax.":"29",
+        "Toluca, Edo. de Méx.":"15",
+        "Torreón, Coah.":"05",
+        "Tulancingo, Hgo.":"13",
+        "Veracruz, Ver.":"30",
         "Villahermosa, Tab.":"27"
         }
 
@@ -214,17 +230,17 @@ def get_inpc_ciudad_data(year = "2016"):
             metadata[ciudad] = pd.read_csv(url,error_bad_lines=False,nrows=5,usecols=[0],header=None).values
             #download new dataframe
             print('trying to download data from {}'.format(ciudad))
-            
+
             temp = pd.read_csv(url,error_bad_lines=False,skiprows=14,usecols=[1,2,3],header=None,\
                 names=["INPC-general_{}".format(ciudad_id),"INPC-alimentos-bebidas-tabaco_{}".\
-                format(ciudad_id),"INPC-alimentos_{}".format(ciudad_id)]) 
+                format(ciudad_id),"INPC-alimentos_{}".format(ciudad_id)])
 
-            #Just keep one fecha column          
+            #Just keep one fecha column
             try:
                 data["fecha"] = temp["fecha"]
                 del temp["fecha"]
             except:
-                pass    
+                pass
 
             data = pd.concat([data, temp], axis=1)
             print("Query succesful for city {}".format(ciudad))
@@ -247,15 +263,15 @@ def get_avance_agricola(cultivo = "MAIZ GRANO"):
 
     Returns:
         Pandas dataframe with columns:
-            (estado): 
+            (estado):
             (distrito): division above municipality for agro-purposes
-            (municipio): 
+            (municipio):
             (sup_sembrada): sowed land (hc)
             (sup_cosech): harvested land (hc)
             (sup_siniest): lost land (hc)
             (prod): produce (tons)
             (rendim): yield (tons/hc)
-            (mes): 
+            (mes):
             (anio):
             (moda_hidr): hydrological mode
                 R: irrigated (riego)
@@ -267,7 +283,7 @@ def get_avance_agricola(cultivo = "MAIZ GRANO"):
     """
     # Define necessary dictionaries
     dict_moda = {1:"R", 2:"T"}
-    
+
     dict_ciclo = {1: 'OI', 2: 'PV'}
 
     dict_cultivo = {'AJO': '700',
@@ -315,18 +331,18 @@ def get_avance_agricola(cultivo = "MAIZ GRANO"):
     moda  = list(range(1,3))
     ciclo = list(range(1,3))
     results = []
-    
+
     # Iterate over years, months, hidrologyc mode and cicle (otonio-invierno or primavera-verano)
     for year, month, moda, ciclo in product(anios, meses, moda, ciclo):
 
-        #Test for dates that are yet to occur 
+        #Test for dates that are yet to occur
         if month < now.month or year < now.year:
             print('Retrieving year={}, month={}, cicle={}, mode={}'.format(year,
                  month, dict_ciclo[ciclo], dict_moda[moda]))
-        
+
             #Create payload to post
-            payload = {'anio' :str(year), 'nivel' : '3', 'delegacion' : '0', 'municipio' : '-1', 
-            'mes' : str(month), 'moda' : str(moda), 'ciclo' : str(ciclo), 
+            payload = {'anio' :str(year), 'nivel' : '3', 'delegacion' : '0', 'municipio' : '-1',
+            'mes' : str(month), 'moda' : str(moda), 'ciclo' : str(ciclo),
             'producto' : dict_cultivo[cultivo], 'tipoprograma' : '0',
             'consultar' : 'si', 'invitado' : 'false'}
 
@@ -338,17 +354,17 @@ def get_avance_agricola(cultivo = "MAIZ GRANO"):
                  month, dict_ciclo[ciclo], dict_moda[moda]))
                 response = False
 
-            # Test for response 
+            # Test for response
             if response:
                 print('Successful response!')
 
                 # Get information table from HTLM response
                 soup = BeautifulSoup(response.text, 'html.parser')
                 table = soup.find('table', attrs={'class': 'table table-responsive table-striped table-bordered'})
-                
-                # Iterate over table rows and extract information. Since the response lacks 'estado' for 
-                # a state's second and subsequent occurances, we add 'estado' with the 
-                # help of a boolean variable 'keep' and  a response variable 'keep_state' 
+
+                # Iterate over table rows and extract information. Since the response lacks 'estado' for
+                # a state's second and subsequent occurances, we add 'estado' with the
+                # help of a boolean variable 'keep' and  a response variable 'keep_state'
                 if table:
                     print(':D       Table found')
                     records = []
@@ -384,3 +400,28 @@ def get_avance_agricola(cultivo = "MAIZ GRANO"):
 
     return pd.DataFrame(results, columns=col_names)
 
+
+def get_smn_data(year='2016',location="s3"):
+    """Downloads shp files from CONAGUA Monitor de Sequía de Mexico (smn) into
+        specified location
+
+    Args:
+        (year): give year wanted
+        (location):
+            local - it gets stored in /data/smn/
+            s3 - it gets stored in our favorite s3 bucket
+
+    """
+
+    ftp = FTP('200.4.8.36')     # connect to host, default port
+    ftp.login(conf["SMN_USER"],conf["SMN_PASSWORD"])
+    ftp.cwd(year)
+    filenames = ftp.nlst()
+    #Load all files into folder
+    #it should check if already exists
+    for filename in filenames:
+        local_filename = os.path.join('../data/SMN', filename)
+        file = open(local_filename, 'wb')
+        ftp.retrbinary('RETR '+ filename, file.write)
+
+    ftp.quit()

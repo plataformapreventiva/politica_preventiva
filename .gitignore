@@ -10,3 +10,12 @@
 *.mdb
 .dropbox
 *.pyc
+conf_profile.json
+*.zip
+*.shx
+*.sbx
+*.shp
+*.sbn
+*.prj
+*.xml
+
