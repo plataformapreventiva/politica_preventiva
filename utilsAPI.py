@@ -116,7 +116,6 @@ def get_cenapred_data(servicio="ANR",subservicio="MuniAPPInfo",geometria="si"):
     return db
 
 
-
 def get_inpc_ciudad_data(year = "2016"):
     """
     Returns a Pandas with INPC [nourishment] information from INEGI services
@@ -134,61 +133,63 @@ def get_inpc_ciudad_data(year = "2016"):
         - data, metadata = get_inpc_ciudad_data()
 
     """
+
     data = pd.DataFrame()
     metadata = {}
 
-    dict_ciudades = [
-        "7. Area Metropolitana de la Cd. de México",
-        "Acapulco,%20Gro.",
-        "Aguascalientes, Ags.",  
-        "Campeche, Camp.",  
-        "Cd. Acuña, Coah.",  
-        "Cd. Jiménez, Chih.",  
-        "Cd. Juárez, Chih.",  
-        "Colima, Col.",  
-        "Córdoba, Ver.",  
-        "Cortazar, Gto.",  
-        "Cuernavaca, Mor.",  
-        "Culiacán, Sin.",  
-        "Chetumal, Q.R.",  
-        "Chihuahua, Chih.",  
-        "Durango, Dgo.",  
-        "Fresnillo, Zac.",  
-        "Guadalajara, Jal.",  
-        "Hermosillo, Son.",  
-        "Huatabampo, Son.",  
-        "Iguala, Gro.",  
-        "Jacona, Mich.",  
-        "La Paz, B.C.S.",  
-        "León, Gto.",  
-        "Matamoros, Tamps.",  
-        "Mérida, Yuc.",  
-        "Mexicali, B.C.",  
-        "Monclova, Coah.",  
-        "Monterrey, N.L.",  
-        "Morelia, Mich.",  
-        "Oaxaca, Oax.",  
-        "Puebla, Pue.",  
-        "Querétaro, Qro.",  
-        "San Andrés Tuxtla, Ver.",  
-        "San Luis Potosí, S.L.P.",  
-        "Tampico, Tamps.",  
-        "Tapachula, Chis.",  
-        "Tehuantepec, Oax.",  
-        "Tepatitlán, Jal.",  
-        "Tepic, Nay.",  
-        "Tijuana, B.C.",  
-        "Tlaxcala, Tlax.",  
-        "Toluca, Edo. de Méx.",  
-        "Torreón, Coah.",  
-        "Tulancingo, Hgo.",  
-        "Veracruz, Ver.",  
-        "Villahermosa, Tab."]
-
-    ciudades = []
+    #dict of ciudades with state code
+    dict_ciudades = {
+        "7. Area Metropolitana de la Cd. de México":"09",
+        "Acapulco,%20Gro.":"12",
+        "Aguascalientes, Ags.":"01",  
+        "Campeche, Camp.":"04",  
+        "Cd. Acuña, Coah.":"05",  
+        "Cd. Jiménez, Chih.":"08",  
+        "Cd. Juárez, Chih.":"08",  
+        "Colima, Col.":"06",  
+        "Córdoba, Ver.":"30",  
+        "Cortazar, Gto.":"11",  
+        "Cuernavaca, Mor.":"17",  
+        "Culiacán, Sin.":"25",  
+        "Chetumal, Q.R.":"23",  
+        "Chihuahua, Chih.":"08",  
+        "Durango, Dgo.":"10",  
+        "Fresnillo, Zac.":"32",  
+        "Guadalajara, Jal.":"14",  
+        "Hermosillo, Son.":"26",  
+        "Huatabampo, Son.":"26",
+        "Iguala, Gro.":"12",  
+        "Jacona, Mich.":"16",  
+        "La Paz, B.C.S.":"03",  
+        "León, Gto.":"11",  
+        "Matamoros, Tamps.":"28",  
+        "Mérida, Yuc.":"31",  
+        "Mexicali, B.C.":"02",  
+        "Monclova, Coah.":"05",  
+        "Monterrey, N.L.":"19",  
+        "Morelia, Mich.":"16", 
+        "Oaxaca, Oax.":"20",  
+        "Puebla, Pue.":"21", 
+        "Querétaro, Qro.":"22",  
+        "San Andrés Tuxtla, Ver.":"30",  
+        "San Luis Potosí, S.L.P.":"24",  
+        "Tampico, Tamps.":"28",  
+        "Tapachula, Chis.":"07",  
+        "Tehuantepec, Oax.":"20",  
+        "Tepatitlán, Jal.":"14",  
+        "Tepic, Nay.":"18",  #error downloading data from tepic
+        "Tijuana, B.C.":"02",  
+        "Tlaxcala, Tlax.":"29",  
+        "Toluca, Edo. de Méx.":"15",  
+        "Torreón, Coah.":"05",  
+        "Tulancingo, Hgo.":"13",  
+        "Veracruz, Ver.":"30",  
+        "Villahermosa, Tab.":"27"
+        }
 
     for ciudad in dict_ciudades:
         ciudad_encoded = ciudad.replace(" ","+").encode("utf-8")
+        ciudad_id = dict_ciudades[ciudad]
         base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
         "&_formato=CSV")
 
@@ -207,20 +208,32 @@ def get_inpc_ciudad_data(year = "2016"):
 
         url = base + year_query + tipo + lugar + serie
 
+
         try:
             #download metadata
             metadata[ciudad] = pd.read_csv(url,error_bad_lines=False,nrows=5,usecols=[0],header=None).values
             #download new dataframe
             print('trying to download data from {}'.format(ciudad))
-            temp = pd.read_csv(url,error_bad_lines=False,skiprows=14,usecols=[0,1,2,3],header=None,\
-                names=["fecha","INPC-general{}".format(ciudad),"INPC-alimentos-bebidas-tabaco{}".\
-                format(ciudad),"INPC-alimentos{}".format(ciudad)])
+            
+            temp = pd.read_csv(url,error_bad_lines=False,skiprows=14,usecols=[1,2,3],header=None,\
+                names=["INPC-general_{}".format(ciudad_id),"INPC-alimentos-bebidas-tabaco_{}".\
+                format(ciudad_id),"INPC-alimentos_{}".format(ciudad_id)]) 
+
+            #Just keep one fecha column          
+            try:
+                data["fecha"] = temp["fecha"]
+                del temp["fecha"]
+            except:
+                pass    
+
             data = pd.concat([data, temp], axis=1)
             print("Query succesful for city {}".format(ciudad))
+
         except:
             print ("Error downloading data for : {}".format(ciudad))
-    return data, metadata
 
+
+    return data, metadata
 
 
 def get_avance_agricola(cultivo = "MAIZ GRANO"):
