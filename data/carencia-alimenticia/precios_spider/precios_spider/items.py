@@ -17,5 +17,6 @@ class PreciosSpiderItem(scrapy.Item):
     precio_max = scrapy.Field()
     precio_frec = scrapy.Field()
     obs = scrapy.Field()
+    producto = scrapy.Field()
 
     

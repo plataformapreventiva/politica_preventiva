@@ -20,7 +20,7 @@ NEWSPIDER_MODULE = 'precios_spider.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
-FEED_URI = 'precios_maiz.csv'
+FEED_URI = 'precios_granos_semanales.csv'
 FEED_FORMAT = 'csv'
 FEED_EXPORT_ENCODING = 'utf-8'
 
