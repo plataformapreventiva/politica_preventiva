@@ -5,6 +5,17 @@ date: "October 21, 2016"
 output: html_document
 ---
 
+## CONAGUA
+
+### Monitor de Sequía en México
+	El Servicio Meteorológico Nacional (SMN) es la dependencia oficial del gobierno mexicano encargada de proporcionar información meteorológica (estado del tiempo) y climatológica. Para ello utiliza las redes de observación tales como estaciones automáticas, observatorios sinópticos, radares, estaciones de radiosondeo y estaciones receptoras de imágenes de satélite. Uno de los fenómenos climáticos que más afecta a las actividades económicas del país es la sequía, el SMN se encarga de detectar el estado actual y la evolución de este fenómeno. Para ello se apoya en el Monitor de Sequía en México (MSM) que a su vez forma parte del Monitor de Sequía de América del Norte (NADM).
+
+### Metodología del MSM
+
+	Se basa en la obtención e interpretación de diversos índices o indicadores de sequía tales como el Índice Estandarizado de Precipitación (SPI) que cuantifica las condiciones de déficit o exceso de precipitación (30, 90, 180, 365 días), Anomalía de Lluvia en Porciento de lo Normal (30, 90, 180, 365 días), Índice Satelital de Salud de la Vegetación (VHI) que mide el grado de estrés de la vegetación a través de la radiancia observada, el Modelo de Humedad del Suelo Leaky Bucket CPC-NOAA que estima la humedad del suelo mediante un modelo hidrológico de una capa, el Índice Normalizado de Diferencia de la Vegetación (NDVI), la Anomalía de la Temperatura Media, el Porcentaje de Disponibilidad de Agua en las presas del país y la aportación de expertos locales. Estos índices se despliegan en capas o layers a través de un Sistema de Información Geográfica (SIG) y mediante un consenso se determinan las regiones afectadas por sequía, de acuerdo a la escala de intensidades que es común en los tres países que va desde anormalmente seco (D0), sequía moderada (D1), sequía severa (D2), sequía extrema (D3) hasta sequía excepcional (D4). Como resultado del consenso se trazan polígonos para cada intensidad de sequía, generando archivos tipo shapefile. Cuando los polígonos corresponden al análisis de mediados de mes (emitido los días 15 de cada mes) se utilizan para cuantificar la sequía sobre el territorio nacional y cuando corresponden a la evaluación final de cualquier mes complementa además al mapa regional o continental del NADM. 
+
+http://smn.cna.gob.mx/es/climatologia/monitor-de-sequia/monitor-de-sequia-en-mexico
+
 ## CENAPRED
 ###############
 
