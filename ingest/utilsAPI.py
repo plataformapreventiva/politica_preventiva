@@ -10,6 +10,7 @@ import datetime
 from itertools import product
 from bs4 import BeautifulSoup
 from ftplib import FTP
+import requests
 
 """
 issues:
@@ -23,8 +24,6 @@ with open("../conf/conf_profile.json", "r") as f:
     conf_profile = json.load(f)
     conf["SMN_USER"] = conf_profile["SMN_USER"]
     conf["SMN_PASSWORD"] = conf_profile["SMN_PASSWORD"]
-
-
 
 
 def get_cenapred_data(servicio="ANR", subservicio="MuniAPPInfo", geometria="si"):
@@ -401,6 +400,201 @@ def get_avance_agricola(cultivo = "MAIZ GRANO"):
     return pd.DataFrame(results, columns=col_names)
 
 
+def get_cierre_produccion(cultivo = "MAIZ GRANO"):
+    """
+    Returns a Pandas with Avance Nacional de Siembra for crop 'cultivo'
+    from SAGARPA-SIEP. The information is divided by municipality, and
+    contains info for hydrolocial mode and cicle of agricultural year.
+
+    Args:
+        (cultivo): Crop to monitor. List available from dict_cultivo-
+
+    Returns:
+        Pandas dataframe with columns:
+            (estado):
+            (distrito): division above municipality for agro-purposes
+            (municipio):
+            (sup_sembrada): sowed land (hc)
+            (sup_cosech): harvested land (hc)
+            (sup_siniest): lost land (hc)
+            (prod): produce (tons)
+            (rendim): yield (tons/hc)
+            (mes):
+            (anio):
+            (moda_hidr): hydrological mode
+                R: irrigated (riego)
+                T: rainfall (temporal)
+            (ciclo): cicle of agricultural year
+                OI: Fall-Winter
+                PV: Spring-Summer
+            (cultivo): crop to monitor (same as arg)
+    """
+    # Define necessary dictionaries
+    dict_moda = {1:"R", 2:"T"}
+
+    dict_ciclo = {1: 'OI', 2: 'PV'}
+
+    dict_cultivo = {'AJO': '700',
+     'AJONJOLI': '800',
+     'ALGODON HUESO': '1800',
+     'AMARANTO': '2800',
+     'ARROZ PALAY': '3300',
+     'AVENA FORRAJERA EN VERDE': '3900',
+     'AVENA GRANO': '4000',
+     'BERENJENA': '4600',
+     'BROCOLI': '5100',
+     'CALABACITA': '5800',
+     'CARTAMO': '6900',
+     'CEBADA GRANO': '7300',
+     'CEBOLLA': '7400',
+     'CHILE VERDE': '11400',
+     'COLIFLOR': '9000',
+     'CRISANTEMO': '10130',
+     'ELOTE': '12700',
+     'FRESA': '14000',
+     'FRIJOL': '14200',
+     'GARBANZO': '14700',
+     'GLADIOLA': '15400',
+     'LECHUGA': '18500',
+     'MAIZ FORRAJERO EN VERDE': '19800',
+     'MAIZ GRANO': '19700',
+     'MELON': '21200',
+     'PAPA': '24400',
+     'PEPINO': '24900',
+     'SANDIA': '28700',
+     'SORGO FORRAJERO EN VERDE': '29300',
+     'SORGO GRANO': '29500',
+     'SOYA': '29700',
+     'TABACO': '30000',
+     'TOMATE ROJO': '30800',
+     'TOMATE VERDE': '31000',
+     'TRIGO GRANO': '31500',
+     'ZANAHORIA': '32900'}
+    dict_edos = {
+    "1":  "11",
+    "2":  "5",
+    "3":  "5",
+    "4":  "11",
+    "5":  "38",
+    "6":  "10",
+    "7":  "118",
+    "8":  "67",
+    "9":  "16",
+    "10":  "39",
+    "11":  "46",
+    "12":  "81",
+    "13":  "84",
+    "14":  "125",
+    "15":  "125",
+    "16":  "113",
+    "17":  "33",
+    "18":  "20",
+    "19":  "51",
+    "20":  "570",
+    "21":  "217",
+    "22":  "18",
+    "23":  "9",
+    "24":  "58",
+    "25":  "18",
+    "26":  "72",
+    "27":  "17",
+    "28":  "43",
+    "29":  "60",
+    "30":  "212",
+    "31":  "106",
+    "32":  "58"}
+
+    url = "http://infosiap.siap.gob.mx/aagricola_siap_gb/ientidad/index.jsp"
+    now = datetime.datetime.now()
+
+    anios = list(range(2004,2017))
+    meses = list(range(1,13))
+    moda  = list(range(1,3))
+    ciclo = list(range(1,3))
+    municipios = list(range(1,500))
+    estados = list(range(1,33))
+
+    results = []
+
+    # Iterate over years, months, hidrologyc mode and cicle (otonio-invierno or primavera-verano)
+    for year, month, moda, ciclo, estado in product(anios, meses, moda, ciclo,estados):
+        for municipio in list(range(1,int(dict_edos[str(estado)]))):
+
+            #Test for dates that are yet to occur
+            if month < now.month or year < now.year:
+                print('Retrieving year={}, month={}, cicle={}, mode={},estado={},municipality={}'.format(year,
+                     month, dict_ciclo[ciclo], dict_moda[moda],estado,municipio))
+
+                #Create payload to post
+
+                payload = {'pComponente' : '', 'pCveCiclo':str(ciclo), 'pAnio':str(year),
+                'pCveEdo':str(estado),'pCveDDR':'0','pCveMpio':str(municipio),'pCveModalidad':str(moda),
+                'pTpoCultivo':"0",'pOrden':'0'}
+
+
+                #Get post response
+                try:
+                    response = requests.post(url, params=payload)
+                except Exception:
+                    print('##### Connection error for year={}, month={}, cicle={}, mode={}, state={}, mun={}'.format(year,
+                     month, dict_ciclo[ciclo], dict_moda[moda],estado,municipio))
+                    response = False
+
+                # Test for response
+                if response:
+                    print('Successful response!')
+
+                    # Get information table from HTLM response
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    #tree = html.fromstring(response.content)
+                    table = soup.find('table', attrs={'class': 'table table-striped table-bordered'})
+
+                    # help of a boolean variable 'keep' and  a response variable 'keep_state'
+                    if table:
+                        print(':D       Table found')
+                        records = []
+                        keep = True
+
+                        edo = soup.find("div", {"class": "textoTablaTitulo"}).text
+                        edo = re.findall("Estado ([A-Za-z]*)",edo)
+                        mun = soup.find("div", {"class": "textoTablaSubtitulo2"}).text
+                        mun = re.findall("Municipio: ([A-Za-z.]*.*)",mun)
+
+                        # Iterate over rows
+                        for row in table.findAll('tr'):
+                            tds = row.findAll('td')
+
+                            # Table format contains summaries of the data in the middle of the table;
+                            # since they are not <td>, we can simply test for their absence
+                            if tds:
+                                test = "".join(tds[0].text.split())
+                                if keep and test:
+                                    keep_state = tds[0]
+                                    keep = False
+                                tds[0] = keep_state
+                                records.append([' '.join(elem.text.lower().split()) for elem in tds])
+                            else:
+                                keep = True
+
+                        #Add payload information to the table
+                        for row in records:
+                            row.extend([month, year, dict_moda[moda], dict_ciclo[ciclo],edo[0],mun[0]])
+
+                        # Add successful response to the main table
+                        results.extend(records)
+                    else:
+                        print(':/       No table found')
+
+
+    col_names = ['n','A','B','cultivo','variedad', 'sup_sembrada_ha', 'sup_cosech_ha',
+     'Sup_Siniestrada','Producción_Ton', 'Rendimiento_Ton_Ha', 'PMR_$_Ton', 'valor_produccion_k','mes', 
+     'anio', 'moda_hidr', 'ciclo', 'estado', 'municipio']
+    temp = pd.DataFrame(results, columns=col_names)
+    temp.drop('B', 1,inplace=True)
+    temp.drop('A', 1,inplace=True)
+    return pd.DataFrame(results, columns=col_names)
+
+
 def get_smn_data(year='2016',location="s3"):
     """Downloads shp files from CONAGUA Monitor de Sequía de Mexico (smn) into
         specified location
@@ -425,3 +619,86 @@ def get_smn_data(year='2016',location="s3"):
         ftp.retrbinary('RETR '+ filename, file.write)
 
     ftp.quit()
+
+def get_muni_description():
+    dict_edos = {
+        "1":  "11",
+        "2":  "5",
+        "3":  "5",
+        "4":  "11",
+        "5":  "38",
+        "6":  "10",
+        "7":  "118",
+        "8":  "67",
+        "9":  "16",
+        "10":  "39",
+        "11":  "46",
+        "12":  "81",
+        "13":  "84",
+        "14":  "125",
+        "15":  "125",
+        "16":  "113",
+        "17":  "33",
+        "18":  "20",
+        "19":  "51",
+        "20":  "570",
+        "21":  "217",
+        "22":  "18",
+        "23":  "9",
+        "24":  "58",
+        "25":  "18",
+        "26":  "72",
+        "27":  "17",
+        "28":  "43",
+        "29":  "60",
+        "30":  "212",
+        "31":  "106",
+        "32":  "58"}
+    estados = list(range(1,33))
+    full_data = []
+    # Iterate over years, months, hidrologyc mode and cicle (otonio-invierno or primavera-verano)
+    for estado in estados:
+        for municipio in list(range(1,1+int(dict_edos[str(estado)]))):
+            cookies = {
+                'jquery-ui-theme': 'Smoothness',
+            }
+
+            headers = {
+                'Origin': 'http://www.snim.rami.gob.mx',
+                'Accept-Encoding': 'gzip, deflate',
+                'Accept-Language': 'es-MX,es;q=0.8,es-419;q=0.6,en;q=0.4',
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': '*/*',
+                'Referer': 'http://www.snim.rami.gob.mx/',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Connection': 'keep-alive',
+            }
+
+            data = {
+              'edo': '{0}'.format(str(estado)),
+              'mun': '{0}'.format(str(municipio)),
+              'tipo': 'm',
+              'reporte': 'dg2010'
+            }
+
+
+            try:
+                response = requests.post('http://www.snim.rami.gob.mx/tbl_poblacion.php', headers=headers, cookies=cookies, data=data)
+            except:
+                pass
+
+            #parse text
+            soup = BeautifulSoup(response.text, 'html.parser').find('tbody')
+            headers = [h.text.encode('utf-8') for h in soup.find_all("th")]
+            values = [h.text.encode('utf-8') for h in soup.find_all("td")]
+            json_data = {}
+
+            json_data["cve_muni"] = str(estado).zfill(2) + str(municipio).zfill(3) 
+            for header,value in zip(headers,values):
+                json_data[header] = value 
+            full_data.append(json_data)
+
+            print("getting data from municipality n: " + str(estado).zfill(2) + str(municipio).zfill(3))
+
+    return pn.DataFrame(full_data)
