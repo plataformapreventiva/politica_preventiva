@@ -5,6 +5,7 @@
 
 rm(list=ls())
 suppressPackageStartupMessages({
+  library(jsonlite)
   library(ggplot2)
   library(tidyverse)
   library(lubridate)
@@ -136,3 +137,72 @@ pub_localidades <- read_csv("../data/Tablero/localidad/pub_localidades.csv")
 
 
 
+
+
+
+
+################################################################
+################################################################
+# CONEVAL ESTATAL
+# Este script toma las bases de datos limpias de indicadores de coneval y sube a la base de datos estandarizadas a
+# postgres.
+# Lo hace para los años 
+# 2010, 2012 y 2014 Obtenidas de: http://www.coneval.org.mx/Medicion/MP/Paginas/Programas_BD_10_12_14.aspx
+
+#Para el caso 2010 la base se consiguió de otro lado porque el código de R de coneval tenía muchos bugs
+
+################################################################
+################################################################
+
+################################
+# CONEVAL ESTATAL 2010
+################################
+
+estatal_10 <- as_tibble(read.csv("../data/coneval/raw_estatal/Indicadores_10.csv",colClasses = c("character",rep('numeric',32))))
+colnames(estatal_10) <- paste(colnames(estatal_10),"10", sep = "_")
+estatal_10 <- dplyr::rename(estatal_10,cve_ent=cve_ent_10)
+
+################################
+# CONEVAL ESTATAL 2012
+################################
+
+tabstat_sum <- as_tibble(read.csv("../data/coneval/raw_estatal/Indicadores_total_12.csv",encoding = "latin1"))
+tabstat_mean<- as_tibble(read.csv("../data/coneval/raw_estatal/Indicadores_mean_12.csv",encoding = "latin1"))
+colnames(tabstat_sum) <- paste(colnames(tabstat_sum),"n", sep = "_")
+colnames(tabstat_mean) <- paste(colnames(tabstat_mean),"p", sep = "_")
+colnames(tabstat_sum) <- paste(colnames(tabstat_sum),"12", sep = "_")
+colnames(tabstat_mean) <- paste(colnames(tabstat_mean),"12", sep = "_")
+tabstat_sum <- mutate(tabstat_sum,cve_ent= str_pad(row.names(tabstat_sum),width = 2,pad="0"))
+tabstat_sum$X_n_12 <- NULL
+tabstat_mean <- mutate(tabstat_mean,cve_ent= str_pad(row.names(tabstat_sum),width = 2,pad="0")) 
+tabstat_mean$X_p_12 <- NULL
+estatal_12 <- left_join(tabstat_sum, tabstat_mean)
+
+################################
+# CONEVAL ESTATAL 2014
+################################
+
+tabstat_sum <- as_tibble(read.csv("../data/coneval/raw_estatal/Indicadores_total_14.csv",encoding = "utf-8"))
+tabstat_mean<- as_tibble(read.csv("../data/coneval/raw_estatal/Indicadores_mean_14.csv",encoding = "utf-8"))
+colnames(tabstat_sum) <- paste(colnames(tabstat_sum), "n", sep = "_")
+colnames(tabstat_mean) <- paste(colnames(tabstat_mean), "p", sep = "_")
+colnames(tabstat_sum) <- paste(colnames(tabstat_sum),"14", sep = "_")
+colnames(tabstat_mean) <- paste(colnames(tabstat_mean),"14", sep = "_")
+
+tabstat_sum <- mutate(tabstat_sum,cve_ent = str_pad(row.names(tabstat_sum),width = 2,pad="0"))
+tabstat_sum$X_n_14 <- NULL
+tabstat_mean <- mutate(tabstat_mean,cve_ent= str_pad(row.names(tabstat_sum),width = 2,pad="0"))
+tabstat_mean$X_p_14 <- NULL
+estatal_14 <- left_join(tabstat_sum, tabstat_mean)
+
+
+
+################################
+# CONEVAL CLEAN 2010 - 2014
+################################
+
+estatal <- left_join(estatal_10,estatal_12) %>% left_join(estatal_14)
+estatal_dic <- read_csv("../data/coneval/clean_estatal/coneval_estatal_dic.csv")
+
+dbWriteTable(con, c("raw",'coneval_estados'),estatal, row.names=FALSE)
+dbWriteTable(con, c("raw",'coneval_estados_dic'),estatal_dic, row.names=FALSE)
