@@ -9,9 +9,13 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(tidyverse)
   library(lubridate)
+  require(zoo)
   library(stringr)
   library('RPostgreSQL')
-  source("./utils_shameful.R")
+  source("../shameful/utils_shameful.R")
+  source("./utilsAPI.R")
+  library(clusterSim)
+  library(foreign)
 })
 
 
@@ -22,6 +26,45 @@ conf <- fromJSON("../conf/conf_profile.json")
 pg = dbDriver("PostgreSQL")
 con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
                 host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
+
+
+##################
+## CENAPRED (APP)
+# www.atlasnacionalderiesgos.gob.mx
+##################
+cenapred <-  read_csv("../data/cenapred/cenapred_app.csv")
+cenapred_dic <-  read_csv("../data/cenapred/cenapred_app_dic.csv")
+dbWriteTable(con, c("raw",'cenapred_app_municipios'),cenapred, row.names=FALSE)
+dbWriteTable(con, c("raw",'cenapred_app_municipios_dic'),cenapred, row.names=FALSE)
+
+
+
+
+##################
+## INPC (INEGI)
+# http://www.inegi.org.mx/sistemas/bie/?idserPadre=11100070001000100050#D11100070001000100050
+##################
+INPC  <- read_csv("../data/INPC/BIE_BIE20170105193841.csv") %>%
+  rename(date=Periodo) %>% mutate(date=as_datetime(as.yearmon(date,"%Y/%m")))
+colnames(INPC) <- dbSafeNames(colnames(INPC))
+
+#dbWriteTable(con, c("raw",'inpc_ciudades'),INPC, row.names=FALSE)
+
+INPC = as_tibble(dbGetQuery(con, "select * from raw.inpc_ciudades;"))
+INPC_colname  <- read_csv("../data/INPC/dict_ciudades.csv") %>% 
+  select(cve_ent) %>% as.list() 
+colnames(INPC) <- c(colnames(INPC)[1],INPC_colname$cve_ent)
+
+names <- colnames(INPC)[2:length(colnames(INPC))]
+INPC.t <- t(INPC[nrow(INPC),2:ncol(INPC)]) %>% as_tibble() %>%
+  rename(INPC=V1)
+INPC.t["cve_ent"] <- names
+INPC <- INPC.t %>% group_by(cve_ent) %>% summarise(INPC=mean(INPC))
+
+#scale(INPC$INPC)
+#scale(data.Normalization(INPC$INPC,type="n1",normalization="column"))
++#n1 - standardization ((x-mean)/sd)
+
 
 ##################
 ## INDICE REZAGO SOCIAL (CONEVAL)
@@ -136,9 +179,9 @@ pub_localidades <- read_csv("../data/Tablero/localidad/pub_localidades.csv")
 #write.csv(homicidio,"../data/incidencia_delictiva/homicidios.csv",row.names = FALSE)  
 
 
-
-
-
+fuero_comun <- read_csv("../data/incidencia_delictiva/fuero_comun_diego_valle/fuero-comun-municipios.csv")
+fuero_comun <- fuero_comun %>% mutate(date=as_date(as.yearmon(date,"%Y-%m")))
+dbWriteTable(con, c("raw",'fuero_comun_municipios'),fuero_comun, row.names=FALSE)
 
 
 ################################################################
@@ -206,3 +249,10 @@ estatal_dic <- read_csv("../data/coneval/clean_estatal/coneval_estatal_dic.csv")
 
 dbWriteTable(con, c("raw",'coneval_estados'),estatal, row.names=FALSE)
 dbWriteTable(con, c("raw",'coneval_estados_dic'),estatal_dic, row.names=FALSE)
+
+
+##################
+## Disconnect to DB
+##################
+
+dbDisconnect(con)

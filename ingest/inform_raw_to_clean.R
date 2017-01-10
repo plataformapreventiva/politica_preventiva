@@ -36,6 +36,8 @@ con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
 
 # FALTA - JAVI
 
+
+
 ##########################
 #### ÍNDICE DE VULNERABILIDAD
 ##########################

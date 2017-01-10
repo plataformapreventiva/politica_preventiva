@@ -13,9 +13,15 @@ INEGI -INPC
 """
 
 from utilsAPI import *
+#import psycopg2
+
+#con = psycopg2.connect(dbname= conf["PGDATABASE"], host=conf["PGHOST"], 
+#	port= conf["PGPORT"], user= conf["PGUSER"], password= conf["PGPASSWORD"])
+
 
 # Get Riesgos from CENAPRED
 cenapred = get_cenapred_data()
+
 
 # Get Precios from inegi
 INPC, metadata = get_inpc_ciudad_data()

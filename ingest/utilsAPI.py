@@ -24,6 +24,15 @@ with open("../conf/conf_profile.json", "r") as f:
     conf_profile = json.load(f)
     conf["SMN_USER"] = conf_profile["SMN_USER"]
     conf["SMN_PASSWORD"] = conf_profile["SMN_PASSWORD"]
+    conf["PGPORT"] = conf_profile["PGPORT"]
+    conf["PGHOST"] = conf_profile["PGHOST"]
+    conf["PGDATABASE"] = conf_profile["PGDATABASE"]
+    conf["PGUSER"] = conf_profile["PGUSER"]
+    conf["PGPASSWORD"] = conf_profile["PGPASSWORD"]
+    conf["SMN_USER"] = conf_profile["SMN_USER"]
+    conf["SMN_PASSWORD"] = conf_profile["SMN_PASSWORD"]
+
+
 
 
 def get_cenapred_data(servicio="ANR", subservicio="MuniAPPInfo", geometria="si"):
@@ -58,7 +67,7 @@ def get_cenapred_data(servicio="ANR", subservicio="MuniAPPInfo", geometria="si")
 
     dict_subservicio = {
         #ANR/MuniAPP - Servicio usado en
-        "MuniAPPInfo":("&outFields=POBTOT_%2CNOM_MUN%2CNOM_ENT_%2CTVIVHAB_%2CSEP%2CHOSPITALES"
+        "MuniAPPInfo":("&outFields=clave_edo%2CCLAVE_MU_1%2CPOBTOT_%2CNOM_MUN%2CNOM_ENT_%2CTVIVHAB_%2CSEP%2CHOSPITALES"
         "%2CBancos%2CGasolinera%2Choteles%2CSupermerca%2CAeropuerto%2Cnum_col%2CShape_Area%"
         "2CGVS_ISE10%2CG_RezagoSo%2CG_Marginac%2CG_Resilien%2CGP_ondasca%2CGP_Inundac%2CGP_Ciclnes%"
         "2CGP_BajasTe%2CGP_Nevadas%2CGP_Granizo%2CGP_TormEle%2CGP_Sequia2%2CGP_Sismico%2CGP_SusTox%"
@@ -126,6 +135,8 @@ def get_cenapred_data(servicio="ANR", subservicio="MuniAPPInfo", geometria="si")
         # If response code is not ok (200), print the resulting http error code with description
         print(myResponse_ids.raise_for_status())
         print("query of Id's unsuccessful")
+
+    db.rename(columns = {u'clave_edo':'cve_ent',u'CLAVE_MU_1':'cve_muni'},inplace=True)
 
 
     return db
@@ -611,6 +622,7 @@ def get_smn_data(year='2016',location="s3"):
     ftp.login(conf["SMN_USER"],conf["SMN_PASSWORD"])
     ftp.cwd(year)
     filenames = ftp.nlst()
+
     #Load all files into folder
     #it should check if already exists
     for filename in filenames:
@@ -619,6 +631,7 @@ def get_smn_data(year='2016',location="s3"):
         ftp.retrbinary('RETR '+ filename, file.write)
 
     ftp.quit()
+
 
 def get_muni_description():
     dict_edos = {
