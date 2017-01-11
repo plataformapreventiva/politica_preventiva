@@ -18,6 +18,18 @@ suppressPackageStartupMessages({
 })
 
 
+##################
+## Create Connection to DB
+##################
+conf <- fromJSON("../conf/conf_profile.json")
+pg = dbDriver("PostgreSQL")
+con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
+                host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
+
+
+fuero_comun = as_tibble(dbGetQuery(con, "select * from raw.fuero_comun_municipios;"))
+
+
 ## Clean ##
 temp<-fuero_comun %>% mutate(cve_ent = str_pad(state_code,width = 2,pad="0"),
                              cve_mun = str_pad(mun_code,width = 3,pad="0")) %>%

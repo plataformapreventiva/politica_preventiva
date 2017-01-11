@@ -1,14 +1,14 @@
 # coding: utf-8
-""" Check and download most resent raw data for the proyect política preventiva
+"""
+###############################################################################
+# Source to CSV/S3 
+###############################################################################
+
+Check and download most resent raw data for the proyect política preventiva
 and upload it in an AWS s3 bucket.  [run this script from /ingest]
 
-This is a script that downloads all the non sedesol databases from internet and
-ftp sources.
-
-
-CENAPRED
-
-INEGI -INPC
+# CENAPRED
+# INEGI -INPC
 
 """
 
