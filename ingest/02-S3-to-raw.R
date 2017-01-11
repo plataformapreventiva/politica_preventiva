@@ -1,5 +1,5 @@
 ###############################################################################
-# CSV to RAW 
+# CSV o S3 to RAW 
 # ETL's en R para migrar las bases de datos a postgres.
 ###############################################################################
 
@@ -34,6 +34,7 @@ con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
 ##################
 cenapred <-  read_csv("../data/cenapred/cenapred_app.csv")
 cenapred_dic <-  read_csv("../data/cenapred/cenapred_app_dic.csv")
+
 dbWriteTable(con, c("raw",'cenapred_app_municipios'),cenapred, row.names=FALSE)
 dbWriteTable(con, c("raw",'cenapred_app_municipios_dic'),cenapred, row.names=FALSE)
 
@@ -178,10 +179,9 @@ pub_localidades <- read_csv("../data/Tablero/localidad/pub_localidades.csv")
 #  rename(cve_muni=code) %>%   mutate(cve_muni = str_pad(cve_muni,width = 5,pad = "0")) 
 #write.csv(homicidio,"../data/incidencia_delictiva/homicidios.csv",row.names = FALSE)  
 
-
 fuero_comun <- read_csv("../data/incidencia_delictiva/fuero_comun_diego_valle/fuero-comun-municipios.csv")
 fuero_comun <- fuero_comun %>% mutate(date=as_date(as.yearmon(date,"%Y-%m")))
-dbWriteTable(con, c("raw",'fuero_comun_municipios'),fuero_comun, row.names=FALSE)
+#dbWriteTable(con, c("raw",'fuero_comun_municipios'),fuero_comun, row.names=FALSE)
 
 
 ################################################################
