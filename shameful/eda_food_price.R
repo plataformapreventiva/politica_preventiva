@@ -15,15 +15,22 @@ suppressPackageStartupMessages({
   #library(raster)
   })
 
+
+##################
+## Create Connection to DB
+##################
+conf <- fromJSON("../conf/conf_profile.json")
+pg = dbDriver("PostgreSQL")
+con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
+                host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
+
+
+
+
 ##################
 ## Load municipality lat/long
 ##################
 
-pg = dbDriver("PostgreSQL")
-# Local Postgres.app database; no password by default
-# Of course, you fill in your own database information here.
-con = dbConnect(pg, user="maestrosedesol", password="maestropassword",
-                host="predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com", port=5432, dbname="predictivadb")
 mun_lat_long = as_tibble(dbGetQuery(con, "select cve_muni, latitud, longitud from raw.geom_municipales_mar2016;"))
 
 

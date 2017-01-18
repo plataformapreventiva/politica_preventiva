@@ -14,6 +14,17 @@ suppressPackageStartupMessages({
   library(stats)
 })
 
+
+
+##################
+## Create Connection to DB
+##################
+conf <- fromJSON("../conf/conf_profile.json")
+pg = dbDriver("PostgreSQL")
+con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
+                host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
+
+
 disminucion_extrema <- .10
 
 ####################

@@ -1,9 +1,22 @@
 rm(list=ls())
-library(tidyverse)
-library(stringr)
-source("utils_shameful.R")
-library(mice)
-library('RPostgreSQL')
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(stringr)
+  source("utils_shameful.R")
+  library(mice)
+  library('RPostgreSQL')
+}
+
+
+##################
+## Create Connection to DB
+##################
+conf <- fromJSON("../conf/conf_profile.json")
+pg = dbDriver("PostgreSQL")
+con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
+                host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
+
+
 
 ### ECI Economic Complexity Index 
 # complexity of a country's exports. 
@@ -66,6 +79,8 @@ mun <- read_csv("pci_municipality.csv") %>%
   mutate(cve_muni = str_pad(cve_muni, width=5, pad="0")) %>%
   mutate(cve_ent = str_extract(cve_muni,"^[0-9]{2}"))
 
+summary(mun)
+
 # impute missing values
 md.pattern(mun)
 tempData <- mice(mun,m=5,maxit=50,meth='pmm',seed=500)
@@ -75,9 +90,7 @@ completedData <- complete(tempData,1)
 mun_complejidad <- completedData %>% mutate_each(funs(normalize), starts_with("complejidad"))
 
 complejidad_dict <- read_csv("../data/complejidad/complejidad_municipios_dic.csv")
-pg = dbDriver("PostgreSQL")
-con = dbConnect(pg, user="maestrosedesol", password="maestropassword",
-                host="predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com", port=5432, dbname="predictivadb")
+
 
 dbWriteTable(con, c("raw",'complejidad_municipios'),mun_complejidad, row.names=FALSE)
 dbWriteTable(con, c("raw",'complejidad_municipios_dic'),complejidad_dict, row.names=FALSE)
@@ -86,8 +99,37 @@ dbWriteTable(con, c("raw",'complejidad_municipios_dic'),complejidad_dict, row.na
 
 
 # Estatal
-temp<-read.csv("../data/complejidad/products_department.csv")
+temp<-as_tibble(read.csv("../data/complejidad/products_department.csv",nrows = 100))
 
-temp %>% group_by(location_name,year) %>% 
-  summarise(eci_mean=mean(eci)) %>% 
-  spread(key = year,value = eci_mean) %>% View()
+as_tibble(read.csv("../data/complejidad/products_department.csv")) %>% 
+  group_by(year,location_code,location_name) %>% 
+  summarise(media = mean(eci)) %>% 
+  spread(key = year,value = media) %>% 
+  write.csv("pci_estados.csv",row.names=FALSE) 
+
+ent <- read_csv("pci_estados.csv") %>%
+  rename(cve_ent = location_code,nom_ent = location_name, complejidad_2004 = `2004`, complejidad_2005 = `2005`,complejidad_2006 = `2006`,
+         complejidad_2007 = `2007`,complejidad_2008 = `2008`,complejidad_2009 = `2009`,
+         complejidad_2010 = `2010`,complejidad_2011 = `2011`,complejidad_2012 = `2012`,
+         complejidad_2013 = `2013`,complejidad_2014 = `2014`) %>% 
+  mutate(cve_ent = str_pad(cve_ent, width=2, pad="0")) 
+
+ggplot(ent,aes(complejidad_2014)) + geom_histogram()
+
+summary(ent)
+
+# impute missing values
+md.pattern(ent)
+tempData <- mice(ent,m=5,maxit=50,meth='pmm',seed=500)
+summary(tempData)
+completedData <- complete(tempData,1)
+
+ent_complejidad <- completedData %>% mutate_each(funs(normalize), starts_with("complejidad"))
+#ggplot(ent_complejidad,aes(complejidad_2010)) + geom_histogram()
+complejidad_dict <- read_csv("../data/complejidad/complejidad_municipios_dic.csv")
+
+
+dbWriteTable(con, c("raw",'complejidad_estados'),ent_complejidad, row.names=FALSE)
+dbWriteTable(con, c("raw",'complejidad_dic'),complejidad_dict, row.names=FALSE)
+
+
