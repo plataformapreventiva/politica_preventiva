@@ -16,6 +16,8 @@ suppressPackageStartupMessages({
   source("./utilsAPI.R")
   library(clusterSim)
   library(foreign)
+  library(mice)
+  library(psych)
 })
 
 
@@ -28,6 +30,49 @@ con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
                 host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
 
 
+
+
+
+
+##################
+## COMPLEJIDAD PRODUCTIVA
+##################
+
+# Municipal
+# load complejidad datasets
+as_tibble(read.csv("../data/complejidad/products_rcpy_municipality.csv")) %>% group_by(location_code,location_name,year) %>% 
+  summarise(media=mean(pci)) %>% 
+  spread(key = year,value = media) %>% write.csv("../data/complejidad/pci_municipality.csv",row.names=FALSE) 
+
+mun <- read_csv("../data/complejidad/pci_municipality.csv") %>%
+  rename(cve_muni = location_code,nom_muni = location_name, complejidad_2004 = `2004`, complejidad_2005 = `2005`,complejidad_2006 = `2006`,
+         complejidad_2007 = `2007`,complejidad_2008 = `2008`,complejidad_2009 = `2009`,
+         complejidad_2010 = `2010`,complejidad_2011 = `2011`,complejidad_2012 = `2012`,
+         complejidad_2013 = `2013`,complejidad_2014 = `2014`) %>% 
+  mutate(cve_muni = str_pad(cve_muni, width=5, pad="0")) %>%
+  mutate(cve_ent = str_extract(cve_muni,"^[0-9]{2}"))
+
+# impute missing values
+
+md.pattern(mun)
+tempData <- mice(mun,m=5,maxit=50,meth='pmm',seed=500)
+summary(tempData)
+completedData <- complete(tempData,1)
+
+mun_complejidad <- completedData %>% mutate_each(funs(normalize), starts_with("complejidad"))
+complejidad_dict <- read_csv("../data/complejidad/complejidad_municipios_dic.csv")
+
+
+
+dbWriteTable(con, c("raw",'complejidad_municipios'),mun_complejidad, row.names=FALSE)
+dbWriteTable(con, c("raw",'complejidad_municipios_dic'),complejidad_dict, row.names=FALSE)
+
+
+
+
+
+
+
 ##################
 ## CENAPRED (APP)
 # www.atlasnacionalderiesgos.gob.mx
@@ -36,7 +81,7 @@ cenapred <-  read_csv("../data/cenapred/cenapred_app.csv")
 cenapred_dic <-  read_csv("../data/cenapred/cenapred_app_dic.csv")
 
 dbWriteTable(con, c("raw",'cenapred_app_municipios'),cenapred, row.names=FALSE)
-dbWriteTable(con, c("raw",'cenapred_app_municipios_dic'),cenapred, row.names=FALSE)
+dbWriteTable(con, c("raw",'cenapred_app_municipios_dic'),cenapred_dic, row.names=FALSE)
 
 
 
@@ -45,26 +90,39 @@ dbWriteTable(con, c("raw",'cenapred_app_municipios_dic'),cenapred, row.names=FAL
 ## INPC (INEGI)
 # http://www.inegi.org.mx/sistemas/bie/?idserPadre=11100070001000100050#D11100070001000100050
 ##################
+
+# Ciudades
 INPC  <- read_csv("../data/INPC/BIE_BIE20170105193841.csv") %>%
   rename(date=Periodo) %>% mutate(date=as_datetime(as.yearmon(date,"%Y/%m")))
 colnames(INPC) <- dbSafeNames(colnames(INPC))
-
 #dbWriteTable(con, c("raw",'inpc_ciudades'),INPC, row.names=FALSE)
+
+# Estados
+# Obtener el promedio de INPC por estado como el promedio de las ciudades.
 
 INPC = as_tibble(dbGetQuery(con, "select * from raw.inpc_ciudades;"))
 INPC_colname  <- read_csv("../data/INPC/dict_ciudades.csv") %>% 
-  select(cve_ent) %>% as.list() 
+  dplyr::select(cve_ent) %>% as.list() 
 colnames(INPC) <- c(colnames(INPC)[1],INPC_colname$cve_ent)
 
+# quita date
 names <- colnames(INPC)[2:length(colnames(INPC))]
-INPC.t <- t(INPC[nrow(INPC),2:ncol(INPC)]) %>% as_tibble() %>%
-  rename(INPC=V1)
-INPC.t["cve_ent"] <- names
-INPC <- INPC.t %>% group_by(cve_ent) %>% summarise(INPC=mean(INPC))
+dates <- paste("inpc",year(INPC$date), month(INPC$date),sep="-")
 
-#scale(INPC$INPC)
-#scale(data.Normalization(INPC$INPC,type="n1",normalization="column"))
-+#n1 - standardization ((x-mean)/sd)
+length(dates)
+INPC.t <- t(INPC[1:nrow(INPC),2:ncol(INPC)]) %>% as_tibble() 
+length(INPC.t)
+
+colnames(INPC.t) <- dates
+INPC.t["cve_ent"] <- names
+
+
+INPC <- INPC.t %>% group_by(cve_ent) %>% summarise_each(funs(mean))
+INPC <- INPC %>% mutate_each(funs(normalize), starts_with("inpc"))
+
+dbWriteTable(con, c("raw",'INPC_estados'),INPC, row.names=FALSE)
+
+
 
 
 ##################
@@ -143,20 +201,31 @@ dbWriteTable(con, c("raw",'personal_medico_dic'),medicos_dic, row.names=FALSE)
 ##########################
 
 diconsa = read_csv("../data/Tablero/20161116MIER1900/08INFRASOCIAL/DICONSA/V_IIS_DIC_L.csv")  %>%
-  select(CVE_LOCC, TOT_TIENDAS) %>% rename(cve_locc=CVE_LOCC,tot_diconsa=TOT_TIENDAS)
+  dplyr::select(CVE_LOCC, TOT_TIENDAS) %>% rename(cve_locc=CVE_LOCC,tot_diconsa=TOT_TIENDAS)
 comedores = read_csv("../data/Tablero/20161116MIER1900/08INFRASOCIAL/COMEDORES_COMUN/V_IIS_COM_L.csv")  %>%
-  select(CVE_LOCC, TOT_COME) %>% rename(cve_locc=CVE_LOCC,tot_comedores=TOT_COME)
+  dplyr::select(CVE_LOCC, TOT_COME) %>% rename(cve_locc=CVE_LOCC,tot_comedores=TOT_COME)
 estancias = read_csv("../data/Tablero/20161116MIER1900/08INFRASOCIAL/ESTANCIAS_INF/V_IIS_ESTINF_L.csv")  %>%
-  select(CVE_LOCC, TOT_ESTANCIAS) %>% rename(cve_locc=CVE_LOCC,tot_estancias=TOT_ESTANCIAS)
+  dplyr::select(CVE_LOCC, TOT_ESTANCIAS) %>% rename(cve_locc=CVE_LOCC,tot_estancias=TOT_ESTANCIAS)
 liconsa = read_csv("../data/Tablero/20161116MIER1900/08INFRASOCIAL/LICONSA/V_IIS_LIC_L.csv")  %>%
-  select(CVE_LOCC, TOT_LECHE) %>% rename(cve_locc=CVE_LOCC,tot_liconsa=TOT_LECHE)
+  dplyr::select(CVE_LOCC, TOT_LECHE) %>% rename(cve_locc=CVE_LOCC,tot_liconsa=TOT_LECHE)
 infraestructura_social <- full_join(diconsa,comedores) %>% full_join(estancias) %>% full_join(liconsa)
 infraestructura_social <- infraestructura_social %>% mutate(cve_muni = str_extract(cve_locc,"[0-9]{5}$")) 
+infraestructura_social <- infraestructura_social %>% dplyr::mutate(cve_muni = substr(cve_locc,start = 0,stop = 5))
+
+infraestructura_social_muni <- infraestructura_social %>% dplyr::group_by(cve_muni) %>%
+  summarise()
+
+
 dbWriteTable(con, c("raw",'inf_social_localidades'),infraestructura_social, row.names=FALSE)
 infraestructura_social_dic <- read_csv("../data/Tablero/20161116MIER1900/08INFRASOCIAL/infra_social_dic.csv") 
 dbWriteTable(con, c("raw",'inf_social_localidades_dic'),infraestructura_social_dic, row.names=FALSE)
 
 
+
+##########################
+#### PUB ESTADOS 
+##########################
+# aún no está este proceso
 
 ##########################
 #### PUB LOCALIDADES 
@@ -181,7 +250,7 @@ pub_localidades <- read_csv("../data/Tablero/localidad/pub_localidades.csv")
 
 fuero_comun <- read_csv("../data/incidencia_delictiva/fuero_comun_diego_valle/fuero-comun-municipios.csv")
 fuero_comun <- fuero_comun %>% mutate(date=as_date(as.yearmon(date,"%Y-%m")))
-#dbWriteTable(con, c("raw",'fuero_comun_municipios'),fuero_comun, row.names=FALSE)
+dbWriteTable(con, c("raw",'fuero_comun_municipios'),fuero_comun, row.names=FALSE)
 
 
 ################################################################
@@ -256,3 +325,5 @@ dbWriteTable(con, c("raw",'coneval_estados_dic'),estatal_dic, row.names=FALSE)
 ##################
 
 dbDisconnect(con)
+
+

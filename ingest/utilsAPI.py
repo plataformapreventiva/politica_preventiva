@@ -214,7 +214,8 @@ def get_inpc_ciudad_data(year = "2016"):
         }
 
     for ciudad in dict_ciudades:
-        ciudad_encoded = ciudad.replace(" ","+").encode("utf-8")
+        ciudad_encoded = ciudad.replace(" ","+")
+        #.encode("utf-8")
         ciudad_id = dict_ciudades[ciudad]
         base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
         "&_formato=CSV")
