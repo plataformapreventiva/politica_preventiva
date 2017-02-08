@@ -31,6 +31,14 @@ pg = dbDriver("PostgreSQL")
 con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
                 host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
 
+##################
+## semantic localidades
+##################
+#sematic_localidades = as_tibble(dbGetQuery(con, "select * from raw.semantic_localidades;"))
+
+#dbGetQuery(con, "DROP TABLE clean.amenazas_naturales_municipios;")
+#dbWriteTable(con, c("clean",'amenazas_naturales_municipios'),amenazas_naturales, row.names=FALSE)
+
 
 ##################
 ## road density
@@ -127,8 +135,6 @@ dbWriteTable(con, c("clean",'amenazas_humana_violencia_estados'),homicidios_ent,
 ##########################
 #### Amenazas Humanas
 ##########################
-INPC = as_tibble(dbGetQuery(con, "select cve_muni, capacidades_economia_inpc_i from clean.capacidades_economia_municipios;")) %>%
-  rename(a_h_inpc_i=capacidades_economia_inpc_i)
 
 volatilidad_anual = as_tibble(dbGetQuery(con, 
                             "select * from raw.ipa_food_price where año >= 2014;"))
@@ -138,15 +144,56 @@ volatilidad_anual<-volatilidad_anual %>% group_by(estado,año) %>%
   summarise(a_h_volatilidad_i = median(Q_n,na.rm = TRUE))  %>% 
   mutate(a_h_volatilidad_i = normalize(a_h_volatilidad_i))
 
-FALTA
-06
-12
-17
-23
-29
+# 04 Campeche- Tabasca
+campeche = volatilidad_anual[volatilidad_anual$estado=="27", ]["a_h_volatilidad_i"]  %>% unlist(use.names = FALSE)
+# 06 colima-Jalisco
+colima = volatilidad_anual[volatilidad_anual$estado=="14", ]["a_h_volatilidad_i"]  %>% unlist(use.names = FALSE)
+# 12 guerrero-oaxaca
+guerrero = volatilidad_anual[volatilidad_anual$estado=="20", ]["a_h_volatilidad_i"]  %>% unlist(use.names = FALSE)
+# 17 morelos-mexico
+morelos = volatilidad_anual[volatilidad_anual$estado=="15", ]["a_h_volatilidad_i"]  %>% unlist(use.names = FALSE)
+# 23 quintana-roo-yucatan
+quintana_roo = volatilidad_anual[volatilidad_anual$estado=="31", ]["a_h_volatilidad_i"]  %>% unlist(use.names = FALSE)
+# 29 tlaxcala-puebla
+tlaxcala = volatilidad_anual[volatilidad_anual$estado=="21", ]["a_h_volatilidad_i"]  %>% unlist(use.names = FALSE)
+
+volatilidad_anual <- volatilidad_anual %>% 
+  add_row(estado = "04", a_h_volatilidad_i = campeche) %>%
+  add_row(estado = "06", a_h_volatilidad_i = colima) %>%
+  add_row(estado = "12", a_h_volatilidad_i = guerrero) %>%
+  add_row(estado = "17", a_h_volatilidad_i = morelos) %>%
+  add_row(estado = "23", a_h_volatilidad_i = quintana_roo) %>%
+  add_row(estado = "29", a_h_volatilidad_i = tlaxcala) %>%
+  rename(cve_ent=estado)
+
+INPC = as_tibble(dbGetQuery(con, "select * from raw.inpc_estados where fecha ='2016-9';")) %>% 
+  dplyr::select(cve_ent,inpc)
 
 
-#dbWriteTable(con, c("clean",'fuero_comun_municipios'),homicidios, row.names=FALSE)
+
+# estados
+
+
+homicidios_ent = as_tibble(dbGetQuery(con, "select * from clean.amenazas_humana_violencia_estados;")) 
+
+amenazas_humanas_ent <- homicidios_ent %>% left_join(volatilidad_anual) %>% left_join(INPC) %>% 
+  rename(a_h_e_inpc_i=inpc) %>%  mutate(amenazas_humana_i = (amenazas_humana_violencia_i*a_h_volatilidad_i*a_h_e_inpc_i)**(1/3)) %>%
+  dplyr::select(-POB_TOT)
+
+dbGetQuery(con, "DROP TABLE clean.amenazas_humanas_estados;")
+dbWriteTable(con, c("clean",'amenazas_humanas_estados'),amenazas_humanas_ent, row.names=FALSE)
+
+# municipios
+homicidios_muni = as_tibble(dbGetQuery(con, "select * from clean.amenazas_humana_violencia_municipios;")) %>%
+  mutate(cve_ent = str_sub(cve_muni,0,2))
+
+
+amenazas_humanas_muni <- homicidios_muni %>% left_join(volatilidad_anual) %>% left_join(INPC) %>% 
+  rename(a_h_e_inpc_i=inpc) %>%  mutate(amenazas_humana_i = (amenazas_humana_violencia_i*a_h_volatilidad_i*a_h_e_inpc_i)**(1/3)) %>%
+  dplyr::select(-POB_TOT)
+
+dbGetQuery(con, "DROP TABLE clean.amenazas_humanas_municipios;")
+dbWriteTable(con, c("clean",'amenazas_humanas_municipios'),amenazas_humanas_muni, row.names=FALSE)
 
 
 
@@ -172,8 +219,8 @@ alerta_produccion = as_tibble(dbGetQuery(con,
 # %>%ggplot(aes(a_n_produccion_i)) + geom_density()
 
 amenazas_naturales_i <- amenazas_naturales %>%
-  mutate_each(funs(recode(.,"Muy alto"=5, "Alto" = 4, 
-                          "Medio"=3, "Bajo"=2, "Muy bajo"= 1,"Sin peligro"=0,"Nd"=0)), matches("^G.*", ignore.case=FALSE))
+  mutate_each(funs(recode(.,"Muy alto"=10, "Alto" = 8, 
+                          "Medio"=4, "Bajo"=2, "Muy bajo"= 1,"Sin peligro"=0,"Nd"=0)), matches("^G.*", ignore.case=FALSE))
 amenazas_naturales_i <- amenazas_naturales_i %>%
   mutate_each(funs(normalize(scale(.))), matches("^G.*", ignore.case=FALSE))
 
@@ -330,21 +377,32 @@ dbWriteTable(con, c("clean",'pub_localidades'),pub_localidades, row.names=FALSE)
 pub_municipios = as_tibble(dbGetQuery(con, 
                                        "select * from raw.pub_municipios;"))
 a = colnames(pub_municipios)
-a[3] = "n_0424"
-a[16] = "n_0196"
-a[19] = "n_0342"
+a[3] = "p_0424"
+a[16] = "p_0196"
+a[19] = "p_0342"
 colnames(pub_municipios) = a
-write.csv(pub_municipios,"../data/Tablero/pub/pub_municipios_raw.csv",row.names = FALSE)
-dbWriteTable(con, c("clean",'pub_municipios'),pub_localidades, row.names=FALSE)
+# write.csv(pub_municipios,"../data/Tablero/pub/pub_municipios_raw.csv",row.names = FALSE)
+dbGetQuery(con, "DROP TABLE clean.pub_municipios;")
+dbWriteTable(con, c("clean",'pub_municipios'),pub_municipios, row.names=FALSE)
 
 ##########################
 #### PUB dict 
 ##########################
-# LOAD FROM csv
-pub_dict = read_csv("../data/Tablero/pub/pub_diccionario_programas.csv")
-dbWriteTable(con, c("clean",'pub_diccionario_programas'),pub_dict, row.names=FALSE)
+
+pub_municipios_dic = as_tibble(dbGetQuery(con, 
+                                          "select * from clean.semantic_municipios_dic;"))
+write_csv(pub_municipios_dic,"pub_municipios_dic.csv")
 
 
+pub_municipios_dic = as_tibble(dbGetQuery(con, 
+                                      "select * from clean.pub_diccionario_programas;"))
+pub_municipios_dic$cve_prog_dggpb <- dbSafeNames(pub_municipios_dic$cve_prog_dggpb)
+
+write_csv(pub_municipios_dic,"pub_municipios_dic.csv")
+pub_municipios_dic <- read_csv("pub_municipios_dic.csv")
+
+dbGetQuery(con, "DROP TABLE clean.pub_diccionario_programas;")
+dbWriteTable(con, c("clean",'pub_diccionario_programas'),pub_municipios_dic, row.names=FALSE)
 
 ##########################
 #### Amenazas 
@@ -352,4 +410,3 @@ dbWriteTable(con, c("clean",'pub_diccionario_programas'),pub_dict, row.names=FAL
 
 # LOAD FROM RAW
 amenazas_naturales = as_tibble(dbGetQuery(con, "select * from clean.cenapred_app_municipios;"))
-

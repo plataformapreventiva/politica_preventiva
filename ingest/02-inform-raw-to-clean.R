@@ -24,19 +24,6 @@ con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
 
 
 
-##########################
-#### ÍNDICE DE CAPACIDADES
-##########################
-
-# FALTA - JAVI
-
-##########################
-#### ÍNDICE DE AMENAZAS
-##########################
-
-# FALTA - JAVI
-
-
 
 ##########################
 #### ÍNDICE DE VULNERABILIDAD
@@ -88,3 +75,6 @@ dbWriteTable(con, c("raw",'semantic_vulnerabilidad_dic'),full_db_dic, row.names=
 
 semantic_index = as_tibble(dbGetQuery(con, 'select * from "raw"."semantic_index";')) 
 write.csv(semantic_index,"./semantic_index.csv",row.names = FALSE)
+
+
+municipios = as_tibble(dbGetQuery(con, "select * from semantic.semantic_municipios;"))
