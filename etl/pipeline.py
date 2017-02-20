@@ -9,7 +9,7 @@ import luigi.postgres
 from luigi import configuration
 
 from utils.pg_sedesol import parse_cfg_string
-from utils.run_models import RunModels
+from utils.load_data import s3toclean
 
 logging_conf = configuration.get_config().get("core", "logging_conf_file")
 logging.config.fileConfig(logging_conf)
@@ -19,6 +19,7 @@ logger = logging.getLogger("sedesol.pipeline")
 class SedesolPipelines(luigi.WrapperTask):
     """
     This wrapper task executes several pipelines simultaneously
+    Takes the selected pipelines from luigi.cfg
     """
     conf = configuration.get_config()
     pipelines = parse_cfg_string(conf.get("etl", "pipelines"))
@@ -27,7 +28,6 @@ class SedesolPipelines(luigi.WrapperTask):
         tasks = []
         for pipeline in self.pipelines:
             tasks.append(SedesolPipeline(pipeline))
-
         return tasks
 
 
@@ -39,9 +39,10 @@ class SedesolPipeline(luigi.WrapperTask):
     extract configuration options from.
     """
     pipeline_task = luigi.Parameter()
+    print pipeline_task
 
     def requires(self):
-        return RunModels(pipeline_task=self.pipeline_task)
+        return s3toclean(pipeline_task=self.pipeline_task)
 
 
 if __name__ == "__main__":
