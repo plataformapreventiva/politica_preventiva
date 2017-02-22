@@ -1,40 +1,26 @@
 ###############################################################################
 # Clean to Explorador Municipios y Estados 
+
+#Script to create semantic.explorador_* tables - explorador module
+#Dependence: S3-to-raw.sh
+#            raw-to-clean-monitor
+
+#Assumes existence of:
+#  Municipios
+#    clean.explorador_municipios + dic
+#  Estados
+#    clean.explorador_estados + dic
 ###############################################################################
 
 rm(list=ls())
-suppressPackageStartupMessages({
-  library(psych)
-  library(jsonlite)
-  library(ggplot2)
-  library(tidyverse)
-  library(lubridate)
-  require(zoo)
-  library(stringr)
-  library('RPostgreSQL')
-  source("../shameful/utils_shameful.R")
-  source("./utilsAPI.R")
-  library(clusterSim)
-  library(foreign)
-  library("rgdal")
-  library("rgeos")
-  library("dplyr")
-  library(mice)
-})
+source("./utilsAPI.R")
 
 
 ##################
-## Create Connection to DB
+## Explorador municipios
 ##################
-conf <- fromJSON("../conf/conf_profile.json")
-pg = dbDriver("PostgreSQL")
-con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
-                host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
+municipios = as_tibble(dbGetQuery(con, "select * from clean.explorador_municipios;"))
 
-##################
-## Semantic municipios
-##################
-municipios = as_tibble(dbGetQuery(con, "select * from raw.semantic_municipios;"))
 colnames(municipios) = dbSafeNames(colnames(municipios))
 municipios<-round_df(municipios, digits=3)
 
@@ -48,37 +34,46 @@ municipios<-municipios %>% dplyr::select(cve_muni,nom_mun,cve_ent,pobreza_p_10,p
                                          carencias_p_10,ic_ali_p_10,ic_segsoc_p_10,ic_sbv_p_10,ic_asalud_p_10,ic_cev_p_10,ic_rezedu_p_10)
 
 
-municipios <- municipios %>% dplyr::mutate_each(funs(as.numeric(.)),matches("^[s|p\\_|e|u][0-9]+", ignore.case=FALSE))
+municipios <- municipios %>% dplyr::mutate_each(funs(as.numeric(.)),matches("^[s|p[_]|e|u][0-9]+", ignore.case=FALSE))
+dbGetQuery(con, "DROP TABLE semantic.explorador_municipios;")
+dbWriteTable(con, c("semantic",'explorador_municipios'),municipios, row.names=FALSE)
 
-colnames(municipios) <- dbSafeNames_explorador(colnames(municipios),9)
-dbGetQuery(con, "DROP TABLE semantic.semantic_municipios;")
-dbWriteTable(con, c("semantic",'semantic_municipios'),municipios, row.names=FALSE)
+##################
+## Explorador DIC municipios
+##################
 
 clean_dic <- colnames(municipios)
-
-
-#municipios_dic = as_tibble(dbGetQuery(con, "select * from raw.pub_diccionario_programas;"))
-municipios_dic = as_tibble(dbGetQuery(con, "select * from raw.semantic_municipios_dic;"))
+municipios_dic = as_tibble(dbGetQuery(con, "select * from clean.explorador_municipios_dic;"))
 municipios_dic$id = dbSafeNames(municipios_dic$id)
-municipios_dic$id <- dbSafeNames_explorador(municipios_dic$id,9)
-
-municipios_dic <- municipios_dic %>% dplyr::filter(id %in% clean_dic)
-
-
-
-write_csv(municipios_dic,"semantic_municipios_dic.csv")
-municipios_dic<- read_csv("semantic_municipios_dic.csv")
-
-# Menos Variables
-#municipios_dic<- read_csv("mun_dic_temp_2.csv")
-#municipios_dic$id <- dbSafeNames(municipios_dic$id)
-#municipios_dic$id <- dbSafeNames_explorador(municipios_dic$id,n)
-
-dbGetQuery(con, "DROP TABLE semantic.semantic_municipios_dic;")
-dbWriteTable(con, c("semantic",'semantic_municipios_dic'),municipios_dic, row.names=FALSE)
+municipios_dic <- municipios_dic %>% filter(municipios_dic$id %in% clean_dic)
+#write_csv(municipios_dic,"semantic_municipios_dic.csv")
+#municipios_dic<- read_csv("semantic_municipios_dic.csv")
+dbGetQuery(con, "DROP TABLE semantic.explorador_municipios_dic;")
+dbWriteTable(con, c("semantic",'explorador_municipios_dic'),municipios_dic, row.names=FALSE)
 
 
 
+##################
+## Explorador Estados
+##################
+estados = as_tibble(dbGetQuery(con, "select * from clean.explorador_estados;"))
+colnames(estados) = dbSafeNames(colnames(estados))
+estados<-round_df(estados, digits=3)
 
-dbGetQuery(con, "DROP TABLE raw.semantic_municipios_dic;")
-dbWriteTable(con, c("raw",'semantic_municipios_dic'),municipios_dic, row.names=FALSE)
+#select variables
+#estados<-estados %>% dplyr::select()
+
+estados <- estados %>% dplyr::mutate_each(funs(as.numeric(.)),matches("^[s|p[_]|n[_]|e|u][0-9]+", ignore.case=FALSE))
+dbGetQuery(con, "DROP TABLE semantic.explorador_estados;")
+dbWriteTable(con, c("semantic",'explorador_estados'),estados, row.names=FALSE)
+clean_dic <- colnames(estados)
+
+##################
+## Explorador DIC Estados
+##################
+
+estados_dic = as_tibble(dbGetQuery(con, "select * from clean.explorador_estados_dic;"))
+estados_dic$id = dbSafeNames(estados_dic$id)
+estados_dic <- estados_dic %>% filter(estados_dic$id %in% clean_dic)
+dbGetQuery(con, "DROP TABLE semantic.explorador_estados_dic;")
+dbWriteTable(con, c("semantic",'explorador_estados_dic'),estados_dic, row.names=FALSE)
