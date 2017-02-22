@@ -11,12 +11,10 @@ Load Sedesol data into an existing schema in a postgres database.
 # ami Role for our EC2. 
 ########
 
-# PWD='123123123'
-# USR='test_user';
-# SQLALCHEMY_DATABASE_URI = 'mysql://{}:{}@localhost:3306/test_db'.format(USR, PWD)
-# csvsql --db  dialect+driver://username:password@host:port/database --table *schema.table* --db-schema *DB_SCHEMA* --insert pub_estados.csv
+# Environment variables
+# PGUSER; PGPASSWORD; PGEC2
 
-########
+# AWS-S3
 # Define Path  
 # Define the location of the RAW files
 
@@ -29,17 +27,16 @@ year=`date +'%Y'`
 ########
 
 # Raw PUB_Muncipal
-$( PGOPTIONS="--search_path=raw"  psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "DROP TABLE pub_municipios;" )
-$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb --no-inference --table pub_municipios --insert pub_municipios.csv )
+$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c "DROP TABLE pub_municipios;" )
+$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb --no-inference --table pub_municipios --insert pub_municipios.csv )
 
 # Raw PUB_Estatal 
-$( PGOPTIONS="--search_path=raw"  psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "DROP TABLE raw.pub_estados;" )
-$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb --no-inference --table pub_estados --insert pub_estados.csv )
-
+$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c "DROP TABLE raw.pub_estados;" )
+$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb --no-inference --table pub_estados --insert pub_estados.csv )
 
 # ## create raw dic
-$( PGOPTIONS="--search_path=raw"  psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c 'DROP TABLE pub_diccionario_programas;' )
-$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb --table pub_diccionario_programas --insert pub_diccionario_programas.csv )
+$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c 'DROP TABLE pub_diccionario_programas;' )
+$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb --table pub_diccionario_programas --insert pub_diccionario_programas.csv )
 
 
 ########
