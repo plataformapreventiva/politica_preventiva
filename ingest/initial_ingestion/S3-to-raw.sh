@@ -12,7 +12,7 @@ Load Sedesol data into an existing schema in a postgres database.
 ########
 
 # Environment variables
-# PGUSER; PGPASSWORD; PGEC2
+# PGUSER; PGPASSWORD; PGHOST:
 
 # AWS-S3
 # Define Path  
@@ -27,16 +27,16 @@ year=`date +'%Y'`
 ########
 
 # Raw PUB_Muncipal
-$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c "DROP TABLE pub_municipios;" )
-$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb --no-inference --table pub_municipios --insert pub_municipios.csv )
+$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c "DROP TABLE pub_municipios;" )
+$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb --no-inference --table pub_municipios --insert pub_municipios.csv )
 
 # Raw PUB_Estatal 
-$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c "DROP TABLE raw.pub_estados;" )
-$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb --no-inference --table pub_estados --insert pub_estados.csv )
+$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c "DROP TABLE raw.pub_estados;" )
+$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb --no-inference --table pub_estados --insert pub_estados.csv )
 
 # ## create raw dic
-$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c 'DROP TABLE pub_diccionario_programas;' )
-$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb --table pub_diccionario_programas --insert pub_diccionario_programas.csv )
+$( PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c 'DROP TABLE pub_diccionario_programas;' )
+$( PGOPTIONS="--search_path=raw"  csvsql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb --table pub_diccionario_programas --insert pub_diccionario_programas.csv )
 
 
 ########

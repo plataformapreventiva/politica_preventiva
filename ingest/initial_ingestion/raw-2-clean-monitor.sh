@@ -20,10 +20,10 @@ Assumes existence of:
 ###############################
 
 ## Delete raw explorador
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c 'DROP TABLE clean.explorador_municipios;'
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c 'DROP TABLE clean.explorador_municipios;'
 
 ## create raw explorador
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 'CREATE TABLE clean.explorador_municipios AS SELECT
   A.cve_ent, A.nom_ent, A.cve_muni, A.nom_mun, A.pobtot_ajustada, A.pobreza_p_10 , A.pobreza_e_p_10 , A.pobreza_m_p_10 , A.vul_car_p_10 , A.vul_ing_p_10 , A.no_pobv_p_10 , A.ic_rezedu_p_10 , A.ic_asalud_p_10 , A.ic_segsoc_p_10 , A.ic_cev_p_10 , A.ic_sbv_p_10 , A.ic_ali_p_10 , A.carencias_p_10 , A.carencias3_p_10 , A.plb_p_10 , A.pblm_p_10 , A.rankin_p_10, A.rankin_pe_10, A.pobreza_n_10, A.pobreza_e_n_10, A.pobreza_m_n_10, A.vul_car_n_10, A.vul_ing_n_10, A.no_pobv_n_10, A.ic_rezedu_n_10, A.ic_asalud_n_10, A.ic_segsoc_n_10, A.ic_cev_n_10, A.ic_sbv_n_10, A.ic_ali_n_10, A.carencias_n_10, A.carencias3_n_10, A.plb_n_10, A.pblm_n_10, A.perrankin_p_10, A.perrankin_pe_10, A.cppobreza , A.cppobreza_e , A.cppobreza_m , A.cpvul_car , A.cpic_rezedu , A.cpic_asalud , A.cpic_segsoc , A.cpic_cv , A.cpic_sbv , A.cpic_ali , A.cpcarencias , A.cpcarencias3 , A.cpplb , A.cpplbm , A.p_rez_edu_90 , A.p_rez_edu_00 , A.p_rez_edu_10 , A.p_ser_sal_00 , A.p_ser_sal_10 , A.p_viv_pisos_90 , A.p_viv_pisos_00 , A.p_viv_pisos_10 , A.p_viv_muros_90 , A.p_viv_muros_00 , A.p_viv_muros_10 , A.p_viv_techos_90 , A.p_viv_techos_00 , A.p_viv_techos_10 , A.p_viv_hacin_90 , A.p_viv_hacin_00 , A.p_viv_hacin_10 , A.p_viv_agu_entub_90 , A.p_viv_agu_entub_00 , A.p_viv_agu_entub_10 , A.p_viv_dren_90 , A.p_viv_dren_00 , A.p_viv_dren_000 , A.p_viv_elect_90 , A.p_viv_elect_00 , A.p_viv_elect_10 , A.pobreza_alim_90 , A.pobreza_alim_00 , A.pobreza_alim_10 , A.pobreza_cap_90 , A.pobreza_cap_00 , A.pobreza_cap_10 , A.pobreza_patrim_90 , A.pobreza_patrim_00 , A.pobreza_patrim_10 , A.gini_90 , A.gini_00 , A.gini_10,
   B."S052", B."0424" , B."S057" , B."S061" , B."S065" , B."S071" , B."S072" , B."S118" , B."S174" , B."S176" , B."S216" , B."S241", B."U009" , B."E003" , B."0196" , B."S017" , B."E016" , B."0342",
@@ -36,7 +36,7 @@ PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2
   FULL OUTER JOIN raw.complejidad_municipios E on A.cve_muni = E.cve_muni;' 
 
 # Create index explorador municipios
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 'CREATE INDEX raw_semantic_mun   ON clean.explorador_municipios   USING btree   (cve_muni COLLATE pg_catalog."default");' 
 
 #CREATE INDEX semantic_mun_ent
@@ -47,12 +47,12 @@ PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2
 
 ## create raw explorador dic
 
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 'DROP TABLE clean.explorador_municipios_dic;'
 
 ## create raw semantic dic 
 # CHECAR ** NO CORRE EN BASH
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 "CREATE TABLE clean.explorador_municipios_dic
   AS
   SELECT A.id, A.indicador as nombre, A.fuente, A.tipo, A.periodo, A.metadata from raw.coneval_municipios_dic A WHERE A.id IN (select column_name FROM information_schema.columns WHERE
@@ -76,10 +76,10 @@ PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2
 ###############################
 #todo(change cve_edo por cve_ent)
 
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 'DROP TABLE clean.explorador_estados;'
 
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 'CREATE TABLE clean.explorador_estados
   AS
   SELECT
@@ -107,17 +107,17 @@ PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2
 
 
 # Create index explorador
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 'CREATE INDEX raw_semantic_ent   ON clean.explorador_estados   USING btree   (cve_ent COLLATE pg_catalog."default");' 
 
 
 ## create raw explorador dic
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 'DROP TABLE clean.explorador_estados_dic;'
 
 ## create raw semantic dic 
 # CHECAR ** NO CORRE EN BASH
-PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGEC2/predictivadb -c \
+PGOPTIONS="--search_path=raw"  psql --db postgresql://$PGUSER:$PGPASSWORD@$PGHOST/predictivadb -c \
 "CREATE TABLE clean.explorador_estados_dic
   AS
   SELECT A.id, A.nombre, A.fuente, A.tipo, A.periodo, A.metadata from raw.coneval_estados_dic A WHERE A.id IN (select column_name FROM information_schema.columns WHERE
