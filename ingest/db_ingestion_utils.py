@@ -1,27 +1,47 @@
 """ Ingest files to a postgres database
 
-This module contains utilities for taking raw flatfiles and uploading them to
-a postgres database using psql. Currently, this only supports uploading csv
-files.
+This module contains utilities for uploading:
+
+supports:
+    raw flatfiles csv
+    pandas 
+
 """
 
 import os
+import json
 import glob
 import tempfile
 import zipfile
 import shutil
-import rarfile
+#import rarfile
 import logging
 import logging.config
+import boto
+from boto.s3.key import Key
+
+
+conf = {}
+with open("../conf/conf_profile.json", "r") as f:
+    conf_profile = json.load(f)
+    conf["SMN_USER"] = conf_profile["SMN_USER"]
+    conf["SMN_PASSWORD"] = conf_profile["SMN_PASSWORD"]
+    conf["PGPORT"] = conf_profile["PGPORT"]
+    conf["PGHOST"] = conf_profile["PGHOST"]
+    conf["PGDATABASE"] = conf_profile["PGDATABASE"]
+    conf["PGUSER"] = conf_profile["PGUSER"]
+    conf["PGPASSWORD"] = conf_profile["PGPASSWORD"]
+    conf["SMN_USER"] = conf_profile["SMN_USER"]
+    conf["SMN_PASSWORD"] = conf_profile["SMN_PASSWORD"]
+
+
 
 LOGGING_CONF = "../etl/sedesol_logging.conf"
 logging.config.fileConfig(LOGGING_CONF)
-logger = logging.getLogger("sedesol.pipeline")
 
 
-def unpack_in_place(archive_dir, archive_file, archive_type="rar",
-                    password=None):
-    """ Unrar a .rar / Unzip a zip file
+"""def unpack_in_place(archive_dir, archive_file, archive_type="rar",password=None):
+     Unrar a .rar / Unzip a zip file
 
     This is just a wrapper for zipfile.ZipFile and rarfile.RarFile's
     extractall  methods.
@@ -34,7 +54,7 @@ def unpack_in_place(archive_dir, archive_file, archive_type="rar",
     :return None
     :side-effects Extracts the archive_file, creating the inflated version in rar_dir.
     :rtype None
-    """
+    
     archive_path = os.path.join(archive_dir, archive_file)
     logger.info("Unpacking %s" % archive_path)
 
@@ -44,7 +64,7 @@ def unpack_in_place(archive_dir, archive_file, archive_type="rar",
         archive_obj = zipfile.ZipFile(archive_path)
 
     archive_obj.extractall(archive_dir, password)
-
+"""
 
 def unpack_all_in_dir(archive_dir, archive_type="rar", password=None):
     """ Wrap unpack_in_place() to unpack all compressed files in a directory
@@ -141,8 +161,7 @@ def merge_csvs_in_dir(csv_dir, output_name):
     shutil.move(temp_output, output_path)
 
 
-def csv_to_db_cmds(csv_path, conf, table_name=None, schema_name=None,
-                   header_present=True):
+def csv_to_db_cmds(csv_path, conf, table_name=None, schema_name=None,header_present=True):
     """Generate commands for uploading a CSV to a postgres database
 
     This automates the task of uploading csv file to an existing schema in a
@@ -226,8 +245,7 @@ def csv_to_db_cmds(csv_path, conf, table_name=None, schema_name=None,
     return csvsql_cmd, schema_cmd, psql_drop, psql_create, psql_load
 
 
-def csv_to_db_table(csv_path, conf, table_name=None, schema_name=None,
-                    header_present=True):
+def csv_to_db_table(csv_path, conf, table_name=None, schema_name=None,header_present=True):
     """Upload a CSV file a postgres database.
 
     Execute commands from csv_to_db_cmds(), to upload a csv file to an existing
@@ -281,8 +299,7 @@ def csv_to_db_table_wrapper(csv_paths, conf, schema_name):
         csv_to_db_table(path, conf, table, schema_name)
 
 
-def geo_to_sql(shp_dir, schema_name, table_name, output_path,
-               encoding="utf-8"):
+def geo_to_sql(shp_dir, schema_name, table_name, output_path,encoding="utf-8"):
     """Convert a directory containing shapefiles to a SQL database
 
     This function uses the shp2pgsql command in Postgis to convert a
@@ -399,8 +416,7 @@ def move_to_subdir(files, base_dir, subdir_name):
     [shutil.move(os.path.join(base_dir, x), subdir) for x in files]
 
 
-def load_spatial_from_archive(archive_dir, conf, schema_name, table_name,
-                              encoding="utf-8", archive_type="rar"):
+def load_spatial_from_archive(archive_dir, conf, schema_name, table_name,encoding="utf-8", archive_type="rar"):
     """ Given a directory of compressed files containing spatial data,
     upload the unarchived data to a database
 
@@ -435,3 +451,44 @@ def load_spatial_from_archive(archive_dir, conf, schema_name, table_name,
     # load to a database
     load_geo(os.path.join(archive_dir, "unpacked_shps"), conf, schema_name,
              table_name, encoding)
+
+
+def upload_to_s3(aws_access_key_id, aws_secret_access_key, file, bucket, key, callback=None, md5=None, reduced_redundancy=False, content_type=None):
+    """
+    Uploads the given file to the AWS S3
+    bucket and key specified.
+
+    callback is a function of the form:
+
+    def callback(complete, total)
+
+    The callback should accept two integer parameters,
+    the first representing the number of bytes that
+    have been successfully transmitted to S3 and the
+    second representing the size of the to be transmitted
+    object.
+
+    Returns boolean indicating success/failure of upload.
+    """
+    try:
+        size = os.fstat(file.fileno()).st_size
+    except:
+        # Not all file objects implement fileno(),
+        # so we fall back on this
+        file.seek(0, os.SEEK_END)
+        size = file.tell()
+
+    conn = boto.connect_s3(aws_access_key_id, aws_secret_access_key)
+    bucket = conn.get_bucket(bucket, validate=True)
+    k = Key(bucket)
+    k.key = key
+    if content_type:
+        k.set_metadata('Content-Type', content_type)
+    sent = k.set_contents_from_file(file, cb=callback, md5=md5, reduced_redundancy=reduced_redundancy, rewind=True)
+
+    # Rewind for later use
+    file.seek(0)
+
+    if sent == size:
+        return True
+    return False

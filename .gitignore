@@ -18,4 +18,5 @@ conf_profile.json
 *.sbn
 *.prj
 *.xml
-
+*.pem
+data/*
