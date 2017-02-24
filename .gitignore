@@ -19,4 +19,4 @@ conf_profile.json
 *.prj
 *.xml
 *.pem
-data/*
+
