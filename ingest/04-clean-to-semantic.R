@@ -77,3 +77,51 @@ estados_dic$id = dbSafeNames(estados_dic$id)
 estados_dic <- estados_dic %>% filter(estados_dic$id %in% clean_dic)
 dbGetQuery(con, "DROP TABLE semantic.explorador_estados_dic;")
 dbWriteTable(con, c("semantic",'explorador_estados_dic'),estados_dic, row.names=FALSE)
+
+
+################
+# Riesgo General Municipios
+###############
+
+capacidades = as_tibble(dbGetQuery(con, "select * from clean.capacidades_municipios;"))
+capacidades_in = as_tibble(dbGetQuery(con, "select * from clean.capacidades_infraestructura_municipios;")) %>% 
+  dplyr::select(-capacidades_infraestructura_indice)
+capacidades_it = as_tibble(dbGetQuery(con, "select * from clean.capacidades_institucional_municipios;")) %>% 
+  dplyr::select(cve_muni, ends_with('_i'))
+capacidades_co = as_tibble(dbGetQuery(con, "select * from clean.capacidades_comunicacion_municipios;")) %>% 
+  dplyr::select(cve_muni, ends_with('_i'))
+capacidades_if = as_tibble(dbGetQuery(con, "select * from clean.capacidades_infraestructurafisica_municipios;")) %>% 
+  dplyr::select(cve_muni, ends_with('_i'))
+capacidades_sa = as_tibble(dbGetQuery(con, "select * from clean.capacidades_salud_municipios;")) %>% 
+  dplyr::select(cve_muni, ends_with('_i'))
+capacidades_ec = as_tibble(dbGetQuery(con, "select * from clean.capacidades_economia_municipios;")) %>% 
+  dplyr::select(cve_muni, ends_with('_i'))
+
+vulnerab = as_tibble(dbGetQuery(con, "select * from clean.vulnerabilidades_municipios;"))
+vulnerab_pz = as_tibble(dbGetQuery(con, "select * from clean.vulnerabilidades_pobreza_municipios;"))  %>% 
+  dplyr::select(cve_muni, ends_with('_i'))
+vulnerab_dg = as_tibble(dbGetQuery(con, "select * from clean.vulnerabilidades_desigualdad_municipios;")) %>%
+  dplyr::select(cve_muni, ends_with('_i'), vulnerabilidades_poblacion_indice)
+vulnerab_pb = as_tibble(dbGetQuery(con, "select * from clean.vulnerabilidades_poblacion_municipios;")) %>%
+  dplyr::select(cve_muni, ends_with('_i'))
+
+amenazas = as_tibble(dbGetQuery(con, "select cve_muni, amenazas_i from clean.amenazas_municipios;")) 
+amenazas_hu = vulnerab = as_tibble(dbGetQuery(con, "select * from clean.amenazas_humanas_municipios;")) %>% 
+  dplyr::select(cve_muni, ends_with('_i'))
+amenazas_na = vulnerab = as_tibble(dbGetQuery(con, "select * from clean.amenazas_naturales_municipios;")) %>%
+  dplyr::select(cve_muni, ends_with('_i'))
+
+r_municipios <- capacidades %>%
+  merge(capacidades_in, by='cve_muni') %>%
+  merge(capacidades_it, by='cve_muni') %>%
+  merge(capacidades_co, by='cve_muni') %>%
+  merge(capacidades_if, by='cve_muni') %>%
+  merge(capacidades_sa, by='cve_muni') %>%
+  merge(capacidades_ec, by='cve_muni') %>%
+  merge(vulnerab, by='cve_muni') %>%
+  merge(vulnerab_pz, by='cve_muni') %>%
+  merge(vulnerab_dg, by='cve_muni') %>%
+  merge(vulnerab_pb, by='cve_muni') %>%
+  merge(amenazas, by='cve_muni') %>%
+  merge(amenazas_hu, by='cve_muni') %>%
+  merge(amenazas_na, by='cve_muni')
