@@ -106,22 +106,31 @@ vulnerab_pb = as_tibble(dbGetQuery(con, "select * from clean.vulnerabilidades_po
   dplyr::select(cve_muni, ends_with('_i'))
 
 amenazas = as_tibble(dbGetQuery(con, "select cve_muni, amenazas_i from clean.amenazas_municipios;")) 
-amenazas_hu = vulnerab = as_tibble(dbGetQuery(con, "select * from clean.amenazas_humanas_municipios;")) %>% 
+amenazas_hu = as_tibble(dbGetQuery(con, "select * from clean.amenazas_humanas_municipios;")) %>% 
   dplyr::select(cve_muni, ends_with('_i'))
-amenazas_na = vulnerab = as_tibble(dbGetQuery(con, "select * from clean.amenazas_naturales_municipios;")) %>%
+amenazas_na  = as_tibble(dbGetQuery(con, "select * from clean.amenazas_naturales_municipios;")) %>%
   dplyr::select(cve_muni, ends_with('_i'))
 
 r_municipios <- capacidades %>%
-  merge(capacidades_in, by='cve_muni') %>%
-  merge(capacidades_it, by='cve_muni') %>%
-  merge(capacidades_co, by='cve_muni') %>%
-  merge(capacidades_if, by='cve_muni') %>%
-  merge(capacidades_sa, by='cve_muni') %>%
-  merge(capacidades_ec, by='cve_muni') %>%
-  merge(vulnerab, by='cve_muni') %>%
-  merge(vulnerab_pz, by='cve_muni') %>%
-  merge(vulnerab_dg, by='cve_muni') %>%
-  merge(vulnerab_pb, by='cve_muni') %>%
-  merge(amenazas, by='cve_muni') %>%
-  merge(amenazas_hu, by='cve_muni') %>%
-  merge(amenazas_na, by='cve_muni')
+  merge(capacidades_in, by='cve_muni', all.x=T) %>%
+  merge(capacidades_it, by='cve_muni', all.x=T) %>%
+  merge(capacidades_co, by='cve_muni', all.x=T) %>%
+  merge(capacidades_if, by='cve_muni', all.x=T) %>%
+  merge(capacidades_sa, by='cve_muni', all.x=T) %>%
+  merge(capacidades_ec, by='cve_muni', all.x=T) %>%
+  merge(vulnerab, by='cve_muni', all.x=T) %>%
+  merge(vulnerab_pz, by='cve_muni', all.x=T) %>%
+  merge(vulnerab_dg, by='cve_muni', all.x=T) %>%
+  merge(vulnerab_pb, by='cve_muni', all.x=T) %>%
+  merge(amenazas, by='cve_muni', all.x=T) %>%
+  merge(amenazas_hu, by='cve_muni', all.x=T) %>%
+  merge(amenazas_na, by='cve_muni', all.x=T)
+
+colnames(r_municipios) = dbSafeNames(colnames(r_municipios))
+r_municipios <-round_df(r_municipios, digits=3)
+
+#r_municipios <- r_municipios %>% dplyr::mutate_each(funs(as.numeric(.)),matches("^[s|p[_]|n[_]|e|u][0-9]+", ignore.case=FALSE))
+dbGetQuery(con, "DROP TABLE semantic.r_municipios;")
+dbWriteTable(con, c("semantic",'r_municipios'), r_municipios, row.names=FALSE)
+clean_dic <- colnames(r_municipios)
+
