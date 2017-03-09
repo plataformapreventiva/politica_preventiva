@@ -1,9 +1,6 @@
 ##### FUNCTION FOR PERFORMING SPATIAL IMPUTAION ####
 library(tidyverse)
 library(RPostgreSQL)
-pg = dbDriver("PostgreSQL")
-con = dbConnect(pg, user="maestrosedesol", password="maestropassword",
-                host="predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com", port=5432, dbname="predictivadb")
 
 #coords <- as_tibble(dbGetQuery(con, "SELECT cve_muni , latitud AS lat, longitud AS long FROM geoms.geom_municipios;"))
 
@@ -63,3 +60,17 @@ normalize <- function(x, top_is_better=TRUE){
   }
   else{return(y)}
 }
+
+
+remove_na <- function(x){
+  bina <- is.na(x)
+  if (any(bina)){
+    n <- length(x[bina])
+    x[bina] <- rep(mean(x, na.rm=T), n)
+    return(x)
+  }
+  else {
+    return(x)
+  }
+}
+
