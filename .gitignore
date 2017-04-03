@@ -20,3 +20,4 @@ conf_profile.json
 *.xml
 *.pem
 data/*
+.python-version
