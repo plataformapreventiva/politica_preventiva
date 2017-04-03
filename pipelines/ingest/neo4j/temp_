@@ -1,0 +1,84 @@
+psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "
+CREATE TABLE sifode.sifode_198_3_17_muni AS 
+	(
+	SELECT s_cve_municipio as cve_muni, 
+	sum(CAST(nullif(pob_lbm, '') AS integer)) as pob_lbm_sifode, 
+	sum(CAST(nullif(pob_lb, '') AS integer)) as pob_lb_sifode,
+	sum(CAST(nullif(pobrezap, '') AS integer)) as pobrezap_sifode, 
+	sum(CAST(nullif(pob_extremp, '') AS integer)) as pob_extremp_sifode,
+	sum(CAST(nullif(pob_extrem_alimp, '') AS integer)) as pob_extrem_alimp_sifode,
+	sum(CAST(nullif(pob_modp, '') AS integer)) as pob_modp_sifode, 
+	sum(CAST(nullif(vul_carenp, '') AS integer)) as vul_carenp_sifode, 
+	sum(CAST(nullif(vul_ingresop, '') AS integer)) as vul_ingresop_sifode, 
+	sum(CAST(nullif(np_nvp, '') AS integer)) as np_nvp_sifode, 
+	sum(CAST(nullif(carenciadap, '') AS integer)) as carenciadap_sifode, 
+	sum(CAST(nullif(carencias3p, '') AS integer)) as carencias3p_sifode, 
+	sum(CAST(nullif(ic_rezedu_1, '') AS integer)) as ic_rezedu_1_sifode, 
+	sum(CAST(nullif(ic_asalud, '') AS integer)) as ic_asalud FROM sifode.sifode_198_3_17 GROUP BY s_cve_municipio
+);"
+
+sifode.sifode_198_3_17_muni 
+
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "SELECT pobrezap FROM sifode.sifode_198_3_17;"
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "CREATE UNIQUE INDEX sifode_idx ON sifode.sifode_198_3_17 (s_cve_municipio);"
+
+
+
+psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c " CREATE TABLE sifode.sifode_198_3_17_coneval AS
+	(SELECT * FROM  (SELECT s_cve_municipio as cve_muni_A, 
+		sum(CAST(nullif(pob_lbm, '') AS integer)) as pob_lbm_sifode, 
+		sum(CAST(nullif(pob_lb, '') AS integer)) as pob_lb_sifode,
+		sum(CAST(nullif(pobrezap, '') AS integer)) as pobrezap_sifode, 
+		sum(CAST(nullif(pob_extremp, '') AS integer)) as pob_extremp_sifode,
+		sum(CAST(nullif(pob_extrem_alimp, '') AS integer)) as pob_extrem_alimp_sifode,
+		sum(CAST(nullif(pob_modp, '') AS integer)) as pob_modp_sifode, 
+		sum(CAST(nullif(vul_carenp, '') AS integer)) as vul_carenp_sifode, 
+		sum(CAST(nullif(vul_ingresop, '') AS integer)) as vul_ingresop_sifode, 
+		sum(CAST(nullif(np_nvp, '') AS integer)) as np_nvp_sifode, 
+		sum(CAST(nullif(carenciadap, '') AS integer)) as carenciadap_sifode, 
+		sum(CAST(nullif(carencias3p, '') AS integer)) as carencias3p_sifode, 
+		sum(CAST(nullif(ic_rezedu_1, '') AS integer)) as ic_rezedu_1_sifode, 
+		sum(CAST(nullif(ic_asalud, '') AS integer)) as ic_asalud FROM sifode.sifode_198_3_17 GROUP BY s_cve_municipio) A
+		FULL OUTER JOIN raw.coneval_municipios B 
+		ON A.cve_muni_A = B.cve_muni);"
+
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb 
+		-c "ALTER TABLE sifode.sifode_198_3_17_coneval ADD COLUMN pct_sifode_coneval double precision;"
+
+	psql --db postgresql://$PGUSER:$PGPASSWORD@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c " UPDATE sifode.sifode_198_3_17_coneval SET pct_sifode_coneval = pobrezap_sifode / pobreza_n_10::float;"
+
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb - c "SELECT pobrezap_sifode / pobreza_n_10::float FROM sifode.sifode_198_3_17_coneval limit 5;"
+
+update table_c set column_a = column_b || column_c 
+
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "SELECT cve_muni pobrezap_sifode, pobreza_n_10, pct_sifode_coneval FROM sifode.sifode_198_3_17_coneval WHERE pct_sifode_coneval<1;"
+
+
+
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb 
+		-c "SELECT avg(pct_sifode_coneval) FROM sifode.sifode_198_3_17_coneval WHERE pct_sifode_coneval>1;"
+
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb  -c "SELECT sum(pobreza_n_10) FROM raw.coneval_municipios;"
+
+	52089570
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb  -c "SELECT sum(pobreza_n_10) FROM sifode.sifode_198_3_17_coneval;"
+
+	52089570
+
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "SELECT sum(pobrezap_sifode) FROM sifode.sifode_198_3_17_coneval;"
+
+	18587881
+	
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "SELECT sum(CAST(nullif(pobrezap, '') AS integer)) FROM sifode.sifode_198_3_17;"
+	18587881
+
+	psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "SELECT sum(pobrezap) FROM sifode.sifode_198_3_17;"

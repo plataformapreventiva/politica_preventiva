@@ -1,3 +1,29 @@
+suppressPackageStartupMessages({
+  library(psych)
+  library(jsonlite)
+  library(ggplot2)
+  library(tidyverse)
+  library(lubridate)
+  require(zoo)
+  library(stringr)
+  library('RPostgreSQL')
+  source("../shameful/utils_shameful.R")
+  library(foreign)
+  library("rgdal")
+  library("rgeos")
+  library("dplyr")
+})
+
+##################
+## Create Connection to DB
+##################
+
+conf <- fromJSON("../conf/conf_profile.json")
+pg = dbDriver("PostgreSQL")
+con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
+                host=conf$PGHOST, port=5432, dbname=conf$PGDATABASE)
+
+
 dbSafeNames = function(names) {
   names = gsub('_$','',names)
   names = gsub('[^a-z0-9]+','_',tolower(names))
@@ -10,6 +36,7 @@ dbSafeNames = function(names) {
 substrRight <- function(x, n){
   substr(x, nchar(x)-n+1, nchar(x))
 }
+
 dbSafeNames_explorador = function(names,n) {
   names = gsub('_$','',names)
   names = gsub('[^a-z0-9]+','_',tolower(names))

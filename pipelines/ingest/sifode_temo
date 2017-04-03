@@ -1,0 +1,8 @@
+aws s3 cp s3://dssg-sedesol/raw/SIFODE198.tgz SIFODE198.tgz
+tar -xf SIFODE198.tgz
+
+# Create schema and table
+head SIFODE198_CLEAN.csv | tr [:upper:] [:lower:] | tr ' ' '_' | csvsql -i postgresql --tables sifode.sifode_198_3_17 --no-constraints --no-inference  > sifode_198_3_17.sql;
+
+# Upload Data to table
+cat SIFODE198_CLEAN.csv | psql --db postgresql://maestrosedesol:maestropassword@predictivadb.cshyqil2j46y.us-west-2.rds.amazonaws.com/predictivadb -c "copy sifode.sifode_198_3_17 from stdin with csv header delimiter ',' ;"
