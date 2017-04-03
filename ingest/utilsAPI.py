@@ -407,7 +407,7 @@ def get_avance_agricola(cultivo = "MAIZ GRANO"):
                     print(':/       No table found')
 
     col_names = ['estado', 'distrito', 'municipio', 'sup_sembrada', 'sup_cosech',
-     'sup_siniest', 'prod', 'rendim', 'mes', 'anio', 'moda_hidr', 'ciclo', 'cultivo']
+     'sup_siniest', 'produccion', 'rendim', 'mes', 'anio', 'moda_hidr', 'ciclo', 'cultivo']
 
     return pd.DataFrame(results, columns=col_names)
 
