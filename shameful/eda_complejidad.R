@@ -5,7 +5,7 @@ suppressPackageStartupMessages({
   source("utils_shameful.R")
   library(mice)
   library('RPostgreSQL')
-}
+})
 
 
 ##################
@@ -124,7 +124,7 @@ tempData <- mice(ent,m=5,maxit=50,meth='pmm',seed=500)
 summary(tempData)
 completedData <- complete(tempData,1)
 
-ent_complejidad <- completedData %>% mutate_each(funs(normalize), starts_with("complejidad"))
+< <- completedData %>% mutate_each(funs(normalize), starts_with("complejidad"))
 #ggplot(ent_complejidad,aes(complejidad_2010)) + geom_histogram()
 complejidad_dict <- read_csv("../data/complejidad/complejidad_municipios_dic.csv")
 

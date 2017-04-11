@@ -1,5 +1,5 @@
 ###############################################################################
-# Clean to HAZARD - INDEX SEMANTIC
+# Clean to HAZARD - INDEX SEMANTIC 
 # Get data from clean databases to create the semantic index db
 ###############################################################################
 
@@ -30,7 +30,7 @@ con = dbConnect(pg, user=conf$PGUSER, password=conf$PGPASSWORD,
 ##########################
 
 ##### Socioeconómica
-rezago_soc = as_tibble(dbGetQuery(con, 'select cve_muni, irez_soc15 from "raw"."ISR_municipios";'))
+rezago_soc = as_tibble(dbGetQuery(con, 'select cve_muni, irez_soc15 from "raw"."ISR_municipios";')) 
 gini = as_tibble(dbGetQuery(con, "select cve_muni, gini_10 from raw.coneval_municipios;"))
 
 
@@ -51,14 +51,14 @@ infantil <- read_csv("../data/grupos_vulnerables/mortalidad_infantil_2005.csv",s
   select(X1,X3) %>% rename(cve_muni=X1, tasa_mortalidad_infantil=X3) %>%
   mutate(cve_muni = str_pad(cve_muni,5,pad="0"),tasa_mortalidad_infantil_esc = normalize(tasa_mortalidad_infantil)) %>%
   select(cve_muni,tasa_mortalidad_infantil_esc)
-precio_maiz <- read_csv("../data/precios_maiz/precio_maiz_2015.csv")
+precio_maiz <- read_csv("../data/precios_maiz/precio_maiz_2015.csv") 
 full_db <- full_join(rezago_soc, gini) %>% full_join(unprooted_people) %>%full_join(ic_asalud_alim) %>% full_join(infantil) %>%
   full_join(precio_maiz)
-full_db <- full_db %>% mutate(irez_soc15 = na.locf(irez_soc15),gini_10 = na.locf(gini_10),
+full_db <- full_db %>% mutate(irez_soc15 = na.locf(irez_soc15),gini_10 = na.locf(gini_10), 
                               unprooted = na.locf(unprooted), ic_asalud = na.locf(ic_asalud), precio_maiz_2015 = na.locf(precio_maiz_2015))
 full_db <- full_db %>% mutate(irez_soc15 = normalize(std(irez_soc15)),gini_10 = normalize(std(gini_10)),
                               unprooted = normalize(std(unprooted)), ic_asalud = normalize(std(ic_asalud)), precio_maiz_2015 = normalize(std(precio_maiz_2015)))
-full_db <- full_db %>% rowwise() %>% mutate(socioeconomica = mean(irez_soc15,gini_10) , o_vulnerable = mean(ic_asalud,precio_maiz_2015))
+full_db <- full_db %>% rowwise() %>% mutate(socioeconomica = mean(irez_soc15,gini_10) , o_vulnerable = mean(ic_asalud,precio_maiz_2015)) 
 
 #tasa_mortalidad_infantil_esc
 full_db <- full_db %>%  rowwise() %>% mutate(vulnerable_groups = mean(unprooted, o_vulnerable),vulnerable = mean(socioeconomica,vulnerable_groups))
@@ -73,7 +73,7 @@ dbWriteTable(con, c("raw",'semantic_vulnerabilidad_dic'),full_db_dic, row.names=
 #### BASE SEMANTICA INDEX
 ##########################
 
-semantic_index = as_tibble(dbGetQuery(con, 'select * from "raw"."semantic_index";'))
+semantic_index = as_tibble(dbGetQuery(con, 'select * from "raw"."semantic_index";')) 
 write.csv(semantic_index,"./semantic_index.csv",row.names = FALSE)
 
 

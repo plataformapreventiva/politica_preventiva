@@ -1,3 +1,10 @@
+####### BORRAR ESTA FUNCIÓN O PASARLA A ingest_utils.py
+####### BORRAR ESTA FUNCIÓN O PASARLA A ingest_utils.py
+####### BORRAR ESTA FUNCIÓN O PASARLA A ingest_utils.py
+####### BORRAR ESTA FUNCIÓN O PASARLA A ingest_utils.py
+####### BORRAR ESTA FUNCIÓN O PASARLA A ingest_utils.py
+
+
 import os
 import sys
 

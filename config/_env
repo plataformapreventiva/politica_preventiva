@@ -1,0 +1,17 @@
+## Variables de la API
+API_PORT=
+
+## Variables de PostgreSQL
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+PGPORT=
+PGHOST=
+PGDATABASE=
+
+#Sistema Meteorológico Nacional
+SMN_USER=
+SMN_PASSWORD=
+
+# AWS
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=

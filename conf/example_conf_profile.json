@@ -1,7 +1,0 @@
-{
-    "PGPORT": 1234,
-    "PGHOST": "pghost",
-    "PGDATABASE": "dbname",
-    "PGUSER": "user",
-    "PGPASSWORD": "secretpassword"
-}

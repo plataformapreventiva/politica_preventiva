@@ -1,24 +1,35 @@
-""" Ingest files to a postgres database
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import os
+import sys
+import json
+import glob
+import tempfile
+import zipfile
+import datetime
+import shutil
+#import rarfile
+import requests
+from requests.auth import HTTPDigestAuth
+import logging
+import logging.config
+import boto
+import numpy as np
+import pandas as pd
+from itertools import product
+from bs4 import BeautifulSoup
+from ftplib import FTP
+from boto.s3.key import Key
 
-This module contains utilities for uploading:
+""" Ingest Utils
+
+This module contains utilities for python Ingestion scripts:
 
 supports:
     raw flatfiles csv
     pandas 
 
 """
-
-import os
-import json
-import glob
-import tempfile
-import zipfile
-import shutil
-#import rarfile
-import logging
-import logging.config
-import boto
-from boto.s3.key import Key
 
 
 conf = {}
@@ -492,3 +503,14 @@ def upload_to_s3(aws_access_key_id, aws_secret_access_key, file, bucket, key, ca
     if sent == size:
         return True
     return False
+
+
+def maybe_download(url,filename, force=False):
+  """Download a file if not present in path."""
+  if force or not os.path.exists(filename):
+    print('Attempting to download:', filename) 
+    filename, _ = urlretrieve(url + filename, filename, reporthook=download_progress_hook)
+    print('\nDownload Complete!')
+  statinfo = os.stat(filename)
+  print('Expected file size', filename)
+  return filename
