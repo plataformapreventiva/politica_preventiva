@@ -18,7 +18,7 @@ from luigi import configuration
 #import sqlalchemy
 #import dummy.config_ini
 #import os
-#import subprocess
+#import subprocess  ls
 #import pandas as pd
 #import csv
 #import datetime
@@ -26,6 +26,7 @@ from luigi import configuration
 logger = logging.getLogger("dpa-sedesol.dummy")
 from utils.pipeline_utils import parse_cfg_list
 from ingest.ingest_orchestra import bash_ingestion_s3
+from ingest.ingest_orchestra import python_ingestion_s3
 
 ## Variables de ambiente
 path = os.path.abspath('__file__' + "/../../config/")
@@ -35,9 +36,6 @@ load_dotenv(dotenv_path)
 ## Obtenemos las llaves de AWS
 aws_access_key_id =  os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-aws_access_key_id="AKIAIRLNSTJUPRAPLISA"
-aws_secret_access_key="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"
-
 
 class RunPipelines(luigi.WrapperTask):
     """
@@ -60,13 +58,14 @@ class Ingestpipeline(luigi.WrapperTask):
     year_month = luigi.Parameter()
     conf = configuration.get_config()
     bash_pipelines = parse_cfg_list(conf.get("Ingestpipeline", "bash_pipelines"))
-    #python_pipelines = parse_cfg_list(conf.get("Ingestpipeline", "python_pipelines"))
+    python_pipelines = parse_cfg_list(conf.get("Ingestpipeline", "python_pipelines"))
 
     def requires(self):
         for pipeline in self.bash_pipelines:
             yield bash_ingestion_s3(pipeline_task=pipeline, year_month=self.year_month)
-        #for pipeline in self.docker_pipelines:
-        #    yield docker_ingestion_s3(pipeline)
+
+        for pipeline in self.python_pipelines:
+            yield python_ingestion_s3(pipeline_task=pipeline, year_month=self.year_month)
 
 
 if __name__ == "__main__":
