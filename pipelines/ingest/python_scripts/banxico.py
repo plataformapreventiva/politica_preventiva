@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """Utilidades Banxico
+    Funciones de Descarga y limpieza de Task Banxico
+    cajeros actualizados de la base http://www.banxico.org.mx/consultas-atm/cajeros.json
+    Descarga información del cajero y guarda en ../data/ingest/
 
-Funciones de Descarga y limpieza de Task Banxico
+ToDo()
+Guardar cajeros no encontrados.
 """
-
-# INCOMPLETO!!!
-
-
 import os
 import requests
 import numpy as np
@@ -20,16 +19,13 @@ from itertools import product
 from bs4 import BeautifulSoup
 from ftplib import FTP
 import requests
+import argparse
+import datetime
+import requests
 
+def banxico(latlon='19.432608,-99.133209',radio='100000000000000000000000'):
 
-def ingest_banxico_cajeros():
-    wget - q - O - 'http://www.banxico.org.mx/consultas-atm/cajeros.json?l=19.432608,-99.133209&b=&r=100000000000000000000000' | jq - -compact-output - r '.contenido[]' > temp.txt
-
-    import argparse
-    import datetime
-    import requests
-
-    NOMBRES = {
+    dict_cajeros = {
         40138: 'ABC CAPITAL',
         40062: 'AFIRME',
         40128: 'AUTOFIN',
@@ -64,27 +60,49 @@ def ingest_banxico_cajeros():
         7: 'SUPERAMA'
     }
 
-    parser = argparse.ArgumentParser(
-        description='Ubicajeros API actualizar db')
-    parser.add_argument('-r', '--radio', required=False, help='Radio de busqueda en kms.',
-                        default='1000')
-    parser.add_argument('-l', '--latlon', required=False, help='Latlon de busqueda',
-                        default='19.432608,-99.133209')
-
-    args = parser.parse_args()
 
     CAJEROS_URL = ('http://www.banxico.org.mx/consultas-atm/cajeros.json?l=' +
-                   args.latlon + '&b=&r=' + args.radio)
-
-    CAJEROS_URL = (
-        'http://www.banxico.org.mx/consultas-atm/cajeros.json?l=19.432608,-99.133209&b=&r=100000000000000000000000')
+                   latlon + '&b=&r=' + radio)
 
     CAJERO_URL = 'http://www.banxico.org.mx/consultas-atm/cajeros/info.json'
 
-    print 'Buscando cajeros en ' + CAJEROS_URL
+    print('Buscando cajeros en ' + CAJEROS_URL)
+
     cajeros_json = requests.get(CAJEROS_URL).json()['contenido']
-    total_cajeros = len(cajeros_json)
 
-    CAJEROS_URL = ('http://www.banxico.org.mx/consultas-atm/cajeros.json?l=' +
-                   args.latlon + '&b=&r=' + args.radio)
-    CAJERO_URL = 'http://www.banxico.org.mx/consultas-atm/cajeros/info.json'
+    total_cajeros = []
+    cajeros_no_encontrados = []
+
+    print("Buscando Información por Cajero")
+
+    for i, cajero_json in enumerate(cajeros_json):
+
+        try:
+            cajero = {}
+            cajero['id'] = cajero_json['id']
+            cajero['clave_institucion'] = cajero_json['cb']
+            cajero['lat'] = cajero_json['l']['lat']
+            cajero['lon'] = cajero_json['l']['lng']
+            cajero['nombre_institucion'] = dict_cajeros[cajero['clave_institucion']]
+            url_cajero = (CAJERO_URL + '?id=' + str(cajero['id']) + '&banco=' +
+                          str(cajero['clave_institucion']))
+            cajero_json = requests.get(url_cajero).json()['contenido']
+            cajero['cp'] = str(cajero_json['cp'])
+            cajero['horario'] = cajero_json['hs']
+            cajero['direccion'] = cajero_json['d']
+            cajero['actualizacion'] = str(datetime.datetime.now())
+            total_cajeros.append(cajero)
+            print("Buscando cajero número" + str(i) + "de " + str(len(cajero_json)))
+
+        except:
+            cajeros_no_encontrados.append([cajero_json['id']])
+            pass
+
+    print 'Cajeros agregados: ' + len(total_cajeros)
+    data = pd.DataFrame(total_cajeros)
+    data.to_csv("../data/ingest/banxico.csv")   
+    return True
+
+
+if __name__ == '__main__':
+    banxico()
