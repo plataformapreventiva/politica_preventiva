@@ -35,6 +35,7 @@ load_dotenv(dotenv_path)
 ## Obtenemos las llaves de AWS
 aws_access_key_id =  os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
 aws_access_key_id="AKIAIRLNSTJUPRAPLISA"
 aws_secret_access_key="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"
 
