@@ -1,12 +1,9 @@
 # coding: utf-8
-# Run as: PYTHONPATH='.' luigi --module pipeline Ingestpipelines --local-scheduler
+# Run as: luigid & PYTHONPATH='.' python pipeline.py  RunPipelines --workers 3
 
 import os
-from os.path import join, dirname
-import logging
-from luigi import configuration
-from dotenv import load_dotenv
 import datetime
+from os.path import join, dirname
 import logging
 from dotenv import load_dotenv
 import boto3
@@ -14,19 +11,12 @@ import luigi
 import luigi.s3
 from luigi.s3 import S3Target, S3Client
 from luigi import configuration
-
-#import sqlalchemy
-#import dummy.config_ini
-#import os
-#import subprocess  ls
-#import pandas as pd
-#import csv
-#import datetime
+from joblib import Parallel, delayed
+import multiprocessing
 
 logger = logging.getLogger("dpa-sedesol.dummy")
 from utils.pipeline_utils import parse_cfg_list
-from ingest.ingest_orchestra import bash_ingestion_s3
-from ingest.ingest_orchestra import python_ingestion_s3
+from ingest.ingest_orchestra import classic_pipeline
 
 ## Variables de ambiente
 path = os.path.abspath('__file__' + "/../../config/")
@@ -45,6 +35,7 @@ class RunPipelines(luigi.WrapperTask):
     #start_year_month= el pipe de adolfo incluye un start month -> ver rita
     today = datetime.date.today()
     year_month = str(today.year) + "-"+ str(today.month)
+    year_month_day = year_month + "-" + str(today.day)
 
     def requires(self):
         yield Ingestpipeline(self.year_month)
@@ -55,17 +46,16 @@ class Ingestpipeline(luigi.WrapperTask):
     This wrapper task executes ingest pipeline
     It expects a list specifying which ingest pipelines to run
     """
+    #ToDo() Checar la temporalidad de la ingesta: (e.g. si es mensual y toca correr)
+
     year_month = luigi.Parameter()
     conf = configuration.get_config()
-    bash_pipelines = parse_cfg_list(conf.get("Ingestpipeline", "bash_pipelines"))
-    python_pipelines = parse_cfg_list(conf.get("Ingestpipeline", "python_pipelines"))
-
+    pipelines = parse_cfg_list(conf.get("Ingestpipeline", "pipelines"))
+    #python_pipelines = parse_cfg_list(conf.get("Ingestpipeline", "python_pipelines"))
+    num_cores = multiprocessing.cpu_count()
     def requires(self):
-        for pipeline in self.bash_pipelines:
-            yield bash_ingestion_s3(pipeline_task=pipeline, year_month=self.year_month)
-
-        for pipeline in self.python_pipelines:
-            yield python_ingestion_s3(pipeline_task=pipeline, year_month=self.year_month)
+        yield Parallel(n_jobs=self.num_cores)(delayed(classic_pipeline)(pipeline_task=pipeline, year_month=self.year_month) for 
+        pipeline in self.pipelines)
 
 
 if __name__ == "__main__":
