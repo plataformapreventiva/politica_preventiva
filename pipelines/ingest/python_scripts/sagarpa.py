@@ -19,7 +19,7 @@ from ftplib import FTP
 import requests
 
 def ingest_sagarpa_avance_agricola(end_date, start_date='2004-1', 
-    cultivo="MAIZ GRANO"):
+    cultivo="maiz-grano"):
     """
     Returns a Pandas with Avance Nacional de Siembra for crop 'cultivo'
     from SAGARPA-SIEP. The information is divided by municipality, and
@@ -55,42 +55,43 @@ def ingest_sagarpa_avance_agricola(end_date, start_date='2004-1',
 
     dict_ciclo = {1: 'OI', 2: 'PV'}
 
-    dict_cultivo = {'AJO': '700',
-                    'AJONJOLI': '800',
-                    'ALGODON HUESO': '1800',
-                    'AMARANTO': '2800',
-                    'ARROZ PALAY': '3300',
-                    'AVENA FORRAJERA EN VERDE': '3900',
-                    'AVENA GRANO': '4000',
-                    'BERENJENA': '4600',
-                    'BROCOLI': '5100',
-                    'CALABACITA': '5800',
-                    'CARTAMO': '6900',
-                    'CEBADA GRANO': '7300',
-                    'CEBOLLA': '7400',
-                    'CHILE VERDE': '11400',
-                    'COLIFLOR': '9000',
-                    'CRISANTEMO': '10130',
-                    'ELOTE': '12700',
-                    'FRESA': '14000',
-                    'FRIJOL': '14200',
-                    'GARBANZO': '14700',
-                    'GLADIOLA': '15400',
-                    'LECHUGA': '18500',
-                    'MAIZ FORRAJERO EN VERDE': '19800',
-                    'MAIZ GRANO': '19700',
-                    'MELON': '21200',
-                    'PAPA': '24400',
-                    'PEPINO': '24900',
-                    'SANDIA': '28700',
-                    'SORGO FORRAJERO EN VERDE': '29300',
-                    'SORGO GRANO': '29500',
-                    'SOYA': '29700',
-                    'TABACO': '30000',
-                    'TOMATE ROJO': '30800',
-                    'TOMATE VERDE': '31000',
-                    'TRIGO GRANO': '31500',
-                    'ZANAHORIA': '32900'}
+    dict_cultivo = {'ajo': '700',
+                    'ajonjoli': '800',
+                    'algodon-hueso': '1800',
+                    'amaranto': '2800',
+                    'arroz-palay': '3300',
+                    'avena-forrajera-en-verde': '3900',
+                    'avena-grano': '4000',
+                    'berenjena': '4600',
+                    'brocoli': '5100',
+                    'calabacita': '5800',
+                    'cartamo': '6900',
+                    'cebada-grano': '7300',
+                    'cebolla': '7400',
+                    'chile-verde': '11400',
+                    'coliflor': '9000', 
+                    'crisantemo': '10130',
+                    'elote': '12700',
+                    'fresa': '14000',
+                    'frijol': '14200',
+                    'garbanzo': '14700',
+                    'gladiola': '15400',
+                    'lechuga': '18500',
+                    'maiz-forrajero-en-verde': '19800',
+                    'maiz-grano': '19700',
+                    'melon': '21200',
+                    'papa': '24400',
+                    'pepino': '24900',
+                    'sandia': '28700',
+                    'sorgo-forrajero-en-verde': '29300',
+                    'sorgo-grano': '29500',
+                    'soya': '29700',
+                    'tabaco': '30000',
+                    'tomate-rojo': '30800',
+                    'tomate-verde': '31000',
+                    'trigo-grano': '31500',
+                    'zanahoria': '32900'}
+
 
     url = "http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do"
     start_year = int(start_date.split('-')[0])
@@ -177,21 +178,20 @@ def ingest_sagarpa_avance_agricola(end_date, start_date='2004-1',
                  'sup_siniest', 'produccion', 'rendim', 'mes', 'anio', 'moda_hidr', 'ciclo', 'cultivo']
     
     # Write file trto csv
-    dates = start_date + '_' + end_date
-    file_name = '../data/sagarpa/' + dates + cultivo.replace(' ', '').lower()
+    dates = end_date + '--sagarpa--' + start_date + '--'
+    file_name = '../data/sagarpa/' + dates + cultivo
     
     if results:
         result = pd.DataFrame(results, columns=col_names)
-        result.to_csv('../data/sagarpa/' + dates + '_' + cultivo.replace(' ', '-').lower() +'.csv')
+        result.to_csv(file_name +'.csv')
     
     else:
-        file = open(file_name + '_missing.txt','w')
+        file = open(file_name + '.txt','w')
         file.close() 
 
     return pd.DataFrame(results, columns=col_names)
 
 if __name__ == '__main__':
-    # Add to be able to run from terminal. Specify which variables to run. 
     import argparse
     parser = argparse.ArgumentParser(description='Dowload SAGARPAs Avance Agricola')
     
@@ -199,8 +199,8 @@ if __name__ == '__main__':
         help= 'Last month to download, as string format yyyy-m')
     parser.add_argument('--start', type=str, default='2004-1',
         help= 'Last month to download, as string format yyyy-m')
-    parser.add_argument('--cult', type=str, default='MAIZ GRANO',
-        help = 'Crop to download from SAGARPA, in capital letters')
+    parser.add_argument('--cult', type=str, default='maiz-grano',
+        help = 'Crop to download from SAGARPA, in low case, words separated by hyphen')
     
     args = parser.parse_args()
     

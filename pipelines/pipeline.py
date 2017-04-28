@@ -1,6 +1,11 @@
 # coding: utf-8
 # Run as: luigid & PYTHONPATH='.' python pipeline.py  RunPipelines --workers 3
 
+#-local_ingest
+#-local_to_s3
+#-update_s3
+#-s3_to_postgres
+
 import os
 import datetime
 from os.path import join, dirname
@@ -13,10 +18,11 @@ from luigi.s3 import S3Target, S3Client
 from luigi import configuration
 from joblib import Parallel, delayed
 import multiprocessing
+from itertools import product
 
 logger = logging.getLogger("dpa-sedesol.dummy")
-from utils.pipeline_utils import parse_cfg_list
-from ingest.ingest_orchestra import classic_pipeline
+from utils.pipeline_utils import parse_cfg_list, extra_parameters
+from ingest.ingest_orchestra import classic_ingest, local_to_s3
 
 ## Variables de ambiente
 path = os.path.abspath('__file__' + "/../../config/")
@@ -50,13 +56,18 @@ class Ingestpipeline(luigi.WrapperTask):
 
     year_month = luigi.Parameter()
     conf = configuration.get_config()
+    
+    # List all pipelines to run 
     pipelines = parse_cfg_list(conf.get("Ingestpipeline", "pipelines"))
-    #python_pipelines = parse_cfg_list(conf.get("Ingestpipeline", "python_pipelines"))
+    # Get number of cores in which to run pipeline 
     num_cores = multiprocessing.cpu_count()
-    def requires(self):
-        yield Parallel(n_jobs=self.num_cores)(delayed(classic_pipeline)(pipeline_task=pipeline, year_month=self.year_month) for 
-        pipeline in self.pipelines)
 
+    def requires(self):
+        params = {pipeline: parse_cfg_list(configuration.get_config().get(pipeline, "extra_parameters")) for pipeline in self.pipelines}
+        extra = {pipeline: extra_parameters(pipeline, params[pipeline]) for pipeline in self.pipelines}
+        yield Parallel(n_jobs=self.num_cores)(delayed(local_to_s3)(pipeline_task=pipeline, year_month=self.year_month, extra=extra_p) for 
+        pipeline in self.pipelines for extra_p in extra[pipeline])
+        
 
 if __name__ == "__main__":
     luigi.run()

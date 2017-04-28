@@ -18,7 +18,7 @@ aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 
-class classic_pipeline(luigi.Task):
+class classic_ingest(luigi.Task):
     client = luigi.s3.S3Client()
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
@@ -58,43 +58,39 @@ class local_to_s3(luigi.Task):
     year_month = luigi.Parameter()
     # name of task, both scripts and csv will be stored this way
     pipeline_task = luigi.Parameter()
-
     client = luigi.s3.S3Client()
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
+    extra = luigi.Parameter()
 
     def requires(self):
-        local_ingest_file = self.local_path+self.pipeline_task + \
-            "/" + self.year_month + "--"+self.pipeline_task + ".csv"
-        return local_ingest(self.pipeline_task, self.year_month, local_ingest_file)
+        local_ingest_file = self.local_path + self.pipeline_task + \
+            "/" + self.year_month + "--"+self.pipeline_task + "--" + self.extra + ".csv"
+        return local_ingest(pipeline_task=self.pipeline_task, year_month=self.year_month, local_ingest_file=local_ingest_file, extra=self.extra)
 
     def run(self):
         local_ingest_file = self.local_path + self.pipeline_task + \
-            "/" + self.year_month + "--"+self.pipeline_task + ".csv"
+            "/" + self.year_month + "--"+self.pipeline_task + "--" + self.extra + ".csv"
         return self.client.put(local_path=local_ingest_file,
                                destination_s3_path=self.raw_bucket + self.pipeline_task + "/raw/" + 
-                               self.year_month + "--" +
-                               self.pipeline_task + ".csv")
+                               self.year_month + "--" + 
+                               self.pipeline_task +  "--" + self.extra + ".csv")
 
     def output(self):
-        return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" + self.year_month + "--" +
-                        self.pipeline_task + ".csv")
-
+        return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" + 
+            self.year_month + "--" +self.pipeline_task + "--" + self.extra + ".csv")
 
 class local_ingest(luigi.Task):
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-
+    extra = luigi.Parameter()
     def requires(self):
-
         classic_tasks = eval(self.pipeline_task)
-
         return classic_tasks(year_month=self.year_month, pipeline_task=self.pipeline_task,
-                             local_ingest_file=self.local_ingest_file)
+                             local_ingest_file=self.local_ingest_file, extra=self.extra)
 
     def output(self):
-
         return luigi.LocalTarget(self.local_ingest_file)
 
 
@@ -128,23 +124,6 @@ class transparencia(luigi.Task):
         return luigi.LocalTarget(self.local_ingest_file)
 
 
-class sagarpa_maiz(luigi.Task):
-    client = luigi.s3.S3Client()
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-    start_date = luigi.Parameter()
-    grano = luigi.Parameter()
-
-    def requires(self):
-        return sagarpa(pipeline_task=self.pipeline_task, grano=self.grano,
-                       year_month=self.year_month,
-                       start_date=self.start_date, local_ingest_file=self.local_ingest_file)
-
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
-
-
 class sagarpa(luigi.Task):
     client = luigi.s3.S3Client()
     year_month = luigi.Parameter()
@@ -156,27 +135,23 @@ class sagarpa(luigi.Task):
     local_path = luigi.Parameter('DEFAULT')
     raw_bucket = luigi.Parameter('DEFAULT')
 
-    start_date = luigi.Parameter()
-    grano = luigi.Parameter()
+    extra = luigi.Parameter()
 
     def run(self):
         print("********************************")
-        print("Runing Task Class: "+self.pipeline_task)
+        print("Runing Task Class: " + self.pipeline_task)
         print("********************************")
 
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
+        extra_cmd = self.extra.split('--')
+        start_date = extra_cmd[0]
+        cultivo = extra_cmd[1]
 
         command_list = ['python', self.python_scripts + "sagarpa.py",
-                        '--start', self.start_date, self.year_month, '--output_path', self.local_ingest_file]
+                        '--start', start_date, '--cult', cultivo,  self.year_month] #, '--output_path', self.local_ingest_file
         cmd = " ".join(command_list)
-
-        #dates = self.start_date + '_' + self.year_month
-        # destination_s3_path = self.raw_bucket + self.pipeline_task + \
-        #    "/raw/" + dates + "_" + grano + ".csv"
-        # self.client.put(local_path=self.local_path + self.pipeline_task + '/' + dates + "_" + grano + ".csv",
-        #                       destination_s3_path=destination_s3_path)
-
+        print(cmd)
         return subprocess.call([cmd], shell=True)
 
     def output(self):
