@@ -149,7 +149,38 @@ class sagarpa(luigi.Task):
         cultivo = extra_cmd[1]
 
         command_list = ['python', self.python_scripts + "sagarpa.py",
-                        '--start', start_date, '--cult', cultivo,  self.year_month] #, '--output_path', self.local_ingest_file
+                        '--start', start_date, '--cult', cultivo,  self.year_month] 
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+
+class sagarpa_cierre(luigi.Task):
+    client = luigi.s3.S3Client()
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    python_scripts = luigi.Parameter('DEFAULT')
+
+    local_path = luigi.Parameter('DEFAULT')
+    raw_bucket = luigi.Parameter('DEFAULT')
+
+    extra = luigi.Parameter()
+
+    def run(self):
+
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+        extra_cmd = self.extra.split('--')
+        start_date = extra_cmd[0]
+        cultivo = extra_cmd[1]
+
+        command_list = ['python', self.python_scripts + "sagarpa.py",
+                        '--start', start_date, '--cult', cultivo, '--cierre', 'True', self.year_month]
         cmd = " ".join(command_list)
         print(cmd)
         return subprocess.call([cmd], shell=True)
