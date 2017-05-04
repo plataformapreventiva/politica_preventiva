@@ -7,12 +7,6 @@ import datetime
 import psycopg2
 import numpy as np
 import pandas as pd
-#import json
-#import re
-#import hashlib
-#import logging
-#import logging.config
-#from pandas.compat import range, lzip, map
 
 import luigi
 import luigi.postgres
@@ -20,10 +14,6 @@ from luigi import configuration
 from luigi import six
 from itertools import product
 
-
-#LOGGING_CONF = configuration.get_config().get("core", "logging_conf_file")
-#logging.config.fileConfig(LOGGING_CONF)
-#logger = logging.getLogger("compranet.pipeline")
 
 
 def parse_cfg_list(string):
@@ -33,23 +23,72 @@ def parse_cfg_list(string):
     string = string.split(",")
     return [m.strip() for m in string]
 
-def extra_parameters(pipeline, parameters):
+def extra_parameters(pipeline, parameters, end_date=None):
     """
-    Create 'extra' argument to pass to pipelines
+    Create 'extra' argument to pass to pipelines. 
+    If 'start_date' is an extra parameter, then it must be the first 
+    element in 'parameters'
     Arguments: 
         pipeline: name of pipeline 
         parameters: list containing extra parameters
+        end_date: only necessary if using an extra parameter.
     """
+
     if len(parameters) == 1 & len(parameters[0]) > 0:
-        extra = parse_cfg_list(configuration.get_config().get(pipeline, parameters[0]))
+        parsed = parse_cfg_list(configuration.get_config().get(pipeline, parameters[0]))
+        if 'start_date' in parameters:
+            if end_date:
+                dates = date_ranges(parsed[0], end_date)
+            else:
+                today = datetime.date.today()
+                end_date = str(today.year) + "-"+ str(today.month)
+                dates = date_ranges(parsed[0], end_date)
+            extra = ['']
+        else:
+            extra = parsed
+
     elif len(parameters) == 2:
         p1 = parse_cfg_list(configuration.get_config().get(pipeline, parameters[0]))
         p2 = parse_cfg_list(configuration.get_config().get(pipeline, parameters[1]))
-        extra = [v1 + '--' + v2 for v1, v2 in product(p1, p2)]
+        if 'start_date' in parameters:
+            if end_date:
+                dates = date_ranges(p1[0], end_date)
+            else:
+                today = datetime.date.today()
+                end_date = str(today.year) + "-"+ str(today.month)
+                dates = date_ranges(p1[0], end_date)
+            extra = p2
+        else:
+            extra = [v1 + '--' + v2 for v1, v2 in product(p1, p2)]
+            dates = [end_date if end_date else '']
     else:
         extra = ['']
-    return extra 
+        dates = [end_date if end_date else '']
+    return [dates, extra]
 
+def date_ranges(start_date, end_date):
+    """
+    Creates date ranges and returns them in a list. 
+    Args:
+        (start_date): a string, either YYYY or YYYY-MM
+        (end_date): a string, probably a year_month var, YYYY-MM
+    Returns:
+        (dates): list containg date ranges. Either a list of years or a list of year-monthts
+    """
+    if '-' in start_date:
+        start_year = int(start_date.split('-')[0])
+        start_month = int(start_date.split('-')[1])
+        end_year = int(end_date.split('-')[0])
+        end_month = int(end_date.split('-')[1])
+        years = list(range(start_year, end_year + 1))
+        months = list(range(1, 13))
+
+        dates = [str(year) + '-' + str(month) for year, month in product(years, months) if (month < end_month or year < end_year) and (month >= start_month or year > start_year)]
+    else:
+        end_year = int(end_date.split('-')[0])
+        dates = [int(year) for year in range(int(start_date), end_year + 1)]
+
+    return dates
 
 class TableCopyToS3(luigi.Task):
     """Dump a table from postgresql to S3."""
