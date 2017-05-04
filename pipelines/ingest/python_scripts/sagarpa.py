@@ -14,9 +14,9 @@ from itertools import product
 from bs4 import BeautifulSoup
 from ftplib import FTP
 from re import findall
-from logging import basicConfig, info
 from requests import post
 from os import path, makedirs
+import logging
 
 def ingest_sagarpa_avance_agricola(start_date, end_date=None, 
     cultivo="maiz-grano", output=None):
@@ -52,7 +52,7 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
     """
     if not path.exists('logs'):
         makedirs('logs')
-    basicConfig(filename='logs/sagarpa.log')
+    logging.basicConfig(filename='logs/sagarpa.log')
 
     # Define necessary dictionaries
 
@@ -170,7 +170,7 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
             try:
                 response = post(url, params=payload)
             except Exception:
-                logging('Connection error: year={}, month={}, cicle={}, mode={}'.format(year, 
+                logging.info('Connection error: year={}, month={}, cicle={}, mode={}'.format(year, 
                     month, dict_ciclo[ciclo], dict_moda[moda]))
                 print('Connection error: year={}, month={}, cicle={}, mode={}'.format(year, 
                     month, dict_ciclo[ciclo], dict_moda[moda]))
@@ -280,7 +280,7 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
     """
     if not path.exists('logs'):
         makedirs('logs')
-    basicConfig(filename='logs/sagarpa-cierre.log')
+    logging.basicConfig(filename='logs/sagarpa-cierre.log')
 
 
     # Define necessary dictionaries
@@ -363,7 +363,7 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
                 try:
                     response = post(url, params=payload)
                 except Exception:
-                    info('Connection error for year={}, cicle={}, mode={}, state={}, mun={}'.format(year,
+                    logging.info('Connection error for year={}, cicle={}, mode={}, state={}, mun={}'.format(year,
                         dict_ciclo[ciclo], dict_moda[moda], estado, municipio))
                     print('##### Connection error for year={}, cicle={}, mode={}, state={}, mun={}'.format(year,
                         dict_ciclo[ciclo], dict_moda[moda], estado, municipio))

@@ -17,16 +17,19 @@ from itertools import product
 from bs4 import BeautifulSoup
 from ftplib import FTP
 import requests
+import logging
+from os import path, makedirs
 
 
-def ingest_inpc_ciudad(single_year='2017', historic_until=None,
+
+def ingest_inpc_ciudad(year='2017', historic=False,
  output=None):
     """
     Returns a Pandas with IPC information from INEGI services
 
     Args:
         (single_year): Download info from a single year
-        (historic_until): To download historic data from year 1969.
+        (historic_until): IF True, download data from 1969 until year
         (output): CSV where to write the results
 
     Returns:
@@ -38,24 +41,27 @@ def ingest_inpc_ciudad(single_year='2017', historic_until=None,
         - data, metadata = get_inpc_ciudad_data()
 
     """
+    if not path.exists('logs'):
+        makedirs('logs')
+    logging.basicConfig(filename='logs/inpc.log', level=logging.DEBUG)
 
     data = pd.DataFrame()
     metadata = {}
 
     #dict of ciudades with state code
     dict_ciudades = {
-        "Area Metropolitana de la Cd. de México":"09",
-        "Acapulco,%20Gro.":"12",
+        "7. Area Metropolitana de la Cd. de Mexico":"09",
+        "Acapulco, Gro.":"12",
         "Aguascalientes, Ags.":"01",
         "Campeche, Camp.":"04",
-        "Cd. Acuña, Coah.":"05",
-        "Cd. Jiménez, Chih.":"08",
-        "Cd. Juárez, Chih.":"08",
+        "Cd. Acuna, Coah.":"05",
+        "Cd. Jimenez, Chih.":"08",
+        "Cd. Juarez, Chih.":"08",
         "Colima, Col.":"06",
-        "Córdoba, Ver.":"30",
+        "Cordoba, Ver.":"30",
         "Cortazar, Gto.":"11",
         "Cuernavaca, Mor.":"17",
-        "Culiacán, Sin.":"25",
+        "Culiacan, Sin.":"25",
         "Chetumal, Q.R.":"23",
         "Chihuahua, Chih.":"08",
         "Durango, Dgo.":"10",
@@ -66,27 +72,27 @@ def ingest_inpc_ciudad(single_year='2017', historic_until=None,
         "Iguala, Gro.":"12",
         "Jacona, Mich.":"16",
         "La Paz, B.C.S.":"03",
-        "León, Gto.":"11",
+        "Leon, Gto.":"11",
         "Matamoros, Tamps.":"28",
-        "Mérida, Yuc.":"31",
+        "Merida, Yuc.":"31",
         "Mexicali, B.C.":"02",
         "Monclova, Coah.":"05",
         "Monterrey, N.L.":"19",
         "Morelia, Mich.":"16",
         "Oaxaca, Oax.":"20",
         "Puebla, Pue.":"21",
-        "Querétaro, Qro.":"22",
-        "San Andrés Tuxtla, Ver.":"30",
+        "Queretaro, Qro.":"22",
+        "San Andres Tuxtla, Ver.":"30",
         "San Luis Potosí, S.L.P.":"24",
         "Tampico, Tamps.":"28",
         "Tapachula, Chis.":"07",
         "Tehuantepec, Oax.":"20",
-        "Tepatitlán, Jal.":"14",
+        "Tepatitlan, Jal.":"14",
         "Tepic, Nay.":"18",  #error downloading data from tepic
         "Tijuana, B.C.":"02",
         "Tlaxcala, Tlax.":"29",
         "Toluca, Edo. de Méx.":"15",
-        "Torreón, Coah.":"05",
+        "Torreon, Coah.":"05",
         "Tulancingo, Hgo.":"13",
         "Veracruz, Ver.":"30",
         "Villahermosa, Tab.":"27"
@@ -121,13 +127,13 @@ def ingest_inpc_ciudad(single_year='2017', historic_until=None,
     'scian_3'
     ]
 
-    if historic_until:
-        year_query = "&_anioI=1969&_anioF={0}".format(historic_until)
+    if historic:
+        year_query = "&_anioI=1969&_anioF={0}".format(year)
     else:
-        year_query = "&_anioI={0}&_anioF={0}".format(single_year)
+        year_query = "&_anioI={0}&_anioF={0}".format(year)
 
     for ciudad in dict_ciudades:
-        ciudad_encoded = ciudad.replace(" ","+")
+        ciudad_encoded = ciudad.replace(" ","%20")
         #.encode("utf-8")
         ciudad_id = dict_ciudades[ciudad]
         base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
@@ -153,17 +159,18 @@ def ingest_inpc_ciudad(single_year='2017', historic_until=None,
             #download new dataframe
             print('trying to download data from {}'.format(ciudad))
 
-            temp = pd.read_csv(url,error_bad_lines=False,skiprows=14,header=None, names=cols)
+            temp = pd.read_csv(url, error_bad_lines=False,skiprows=14,header=None, names=cols)
             temp['ciudad'] = ciudad
 
             data = pd.concat([data, temp])
             print("Query succesful for city {}".format(ciudad))
 
         except:
-            print ("Error downloading data for : {}".format(ciudad))
+            print ("Error downloading data for: {}".format(ciudad))
+            logging.info("Error downloading data for: year={}, historic={}, city={}".format(year, historic, ciudad))
 
     if output:
-        data.to_csv(output)
+        data.to_csv(output + '.csv')
     else:
         return data, metadata
 
@@ -171,18 +178,25 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Download IPC for cities')
     
-    parser.add_argument('--single_year', type=str, default='2017',
+    parser.add_argument('year', type=str, default='2017',
         help= 'First month to download, as string format yyyy-m')
-    parser.add_argument('--historic', type=str, default='2017',
-        help= 'Last month to download, as string format yyyy-m. If')
-    parser.add_argument('--output', type=str, default=False,
+    parser.add_argument('--historic', type=bool, default=False,
+        help= 'If True, download all data until the specified year')
+    parser.add_argument('--output', type=str, default='inpc',
         help = 'Name of outputfile')
     
     args = parser.parse_args()
     
-    s_year = args.single_year
+    year = args.year
     historic = args.historic
     output = args.output
+
+    if historic:
+        ingest_inpc_ciudad(year=year, historic_until=True, output=output)
+    else:
+        ingest_inpc_ciudad(year=year, output=output)
+
+
 
 # cols = {
 # 'indice':'Indice general',
