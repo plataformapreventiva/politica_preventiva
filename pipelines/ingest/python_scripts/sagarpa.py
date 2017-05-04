@@ -6,18 +6,17 @@
 Funciones de Descarga y limpieza de Task Sagarpa
 """
 
-import os
-import requests
 import numpy as np
 import pandas as pd
 import json
 from requests.auth import HTTPDigestAuth
-import datetime
 from itertools import product
 from bs4 import BeautifulSoup
 from ftplib import FTP
-import requests
-import re
+from re import findall
+from logging import basicConfig, info
+from requests import post
+from os import path, makedirs
 
 def ingest_sagarpa_avance_agricola(start_date, end_date=None, 
     cultivo="maiz-grano", output=None):
@@ -51,10 +50,15 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
                 PV: Spring-Summer
             (cultivo): crop to monitor (same as arg)
     """
+    if not path.exists('logs'):
+        makedirs('logs')
+    basicConfig(filename='logs/sagarpa.log')
+
     # Define necessary dictionaries
+
     dict_moda = {1: "R", 2: "T"}
 
-    dict_ciclo = {1: 'OI', 2: 'PV'}
+    dict_ciclo = {1: 'OI', 2: 'PV', 3: 'PE'}
 
     dict_cultivo = {'ajo': '700',
                     'ajonjoli': '800',
@@ -91,7 +95,35 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
                     'tomate-rojo': '30800',
                     'tomate-verde': '31000',
                     'trigo-grano': '31500',
-                    'zanahoria': '32900'}
+                    'zanahoria': '32900',
+                    'agave':'500',
+                    'aguacate':'600',
+                    'alfalfa-verde':'1500',
+                    'cacao':'5400',
+                    'cafe-cereza':'5500',
+                    'cana-de-azucar':'6500',
+                    'copra':'9700',
+                    'durazno':'12400',
+                    'esparrago':'13100',
+                    'frambuesa':'13900', 
+                    'gerbera':'14900', 
+                    'guayaba':'16000', 
+                    'limon':'19000', 
+                    'maguey-pulquero':'19600', 
+                    'mango':'20400', 
+                    'manzana':'20600', 
+                    'naranja':'22400', 
+                    'nopalitos':'23000', 
+                    'nuez':'23200', 
+                    'papaya':'24700', 
+                    'pera':'25100',
+                    'pina':'25800',
+                    'platano':'26700', 
+                    'rosa':'28200', 
+                    'toronja':'31200', 
+                    'tuna':'31900', 
+                    'uva':'32000', 
+                    'zarzamora':'33300'}
 
 
     url = "http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do"
@@ -106,10 +138,17 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
         end_month = int(end_date.split('-')[1])
 
 
+    perennes = {'agave', 'aguacate', 'alfalfa-verde', 'cacao', 'cafe-cereza', 'cana-de-azucar',
+    'copra', 'durazno', 'esparrago', 'frambuesa', 'gerbera', 'guayaba','limon', 'maguey-pulquero', 
+    'mango', 'manzana', 'naranja', 'nopalitos', 'nuez','papaya', 'pera', 'pina', 'platano', 'rosa', 
+    'toronja', 'tuna', 'uva', 'zarzamora'}
+
     anios = list(range(start_year, end_year + 1))
     meses = list(range(1, 13))
     moda = list(range(1, 3))
     ciclo = list(range(1, 3))
+    if cultivo in perennes:
+        ciclo = [3]
     results = []
 
     # Iterate over years, months, hidrologyc mode and cicle (otonio-invierno
@@ -129,10 +168,12 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
 
             # Get post response
             try:
-                response = requests.post(url, params=payload)
+                response = post(url, params=payload)
             except Exception:
-                print('##### Connection error for year={}, month={}, cicle={}, mode={}'.format(year,
-                                                                                               month, dict_ciclo[ciclo], dict_moda[moda]))
+                logging('Connection error: year={}, month={}, cicle={}, mode={}'.format(year, 
+                    month, dict_ciclo[ciclo], dict_moda[moda]))
+                print('Connection error: year={}, month={}, cicle={}, mode={}'.format(year, 
+                    month, dict_ciclo[ciclo], dict_moda[moda]))
                 response = False
 
             # Test for response
@@ -205,8 +246,8 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
     return pd.DataFrame(results, columns=col_names)
 
 
-def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, 
-    cultivo="maiz-grano", output=None):
+def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
+    output=None):
     """
     Returns a Pandas with Avance Nacional de Siembra for crop 'cultivo'
     from SAGARPA-SIEP. The information is divided by municipality, and
@@ -237,47 +278,16 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None,
                 PV: Spring-Summer
             (cultivo): crop to monitor (same as arg)
     """
+    if not path.exists('logs'):
+        makedirs('logs')
+    basicConfig(filename='logs/sagarpa-cierre.log')
+
+
     # Define necessary dictionaries
     dict_moda = {1: "R", 2: "T"}
 
-    dict_ciclo = {1: 'OI', 2: 'PV'}
+    dict_ciclo = {1: 'OI', 2: 'PV', 3:'PE'}
 
-    dict_cultivo = {'ajo': '700',
-                    'ajonjoli': '800',
-                    'algodon-hueso': '1800',
-                    'amaranto': '2800',
-                    'arroz-palay': '3300',
-                    'avena-forrajera-en-verde': '3900',
-                    'avena-grano': '4000',
-                    'berenjena': '4600',
-                    'brocoli': '5100',
-                    'calabacita': '5800',
-                    'cartamo': '6900',
-                    'cebada-grano': '7300',
-                    'cebolla': '7400',
-                    'chile-verde': '11400',
-                    'coliflor': '9000', 
-                    'crisantemo': '10130',
-                    'elote': '12700',
-                    'fresa': '14000',
-                    'frijol': '14200',
-                    'garbanzo': '14700',
-                    'gladiola': '15400',
-                    'lechuga': '18500',
-                    'maiz-forrajero-en-verde': '19800',
-                    'maiz-grano': '19700',
-                    'melon': '21200',
-                    'papa': '24400',
-                    'pepino': '24900',
-                    'sandia': '28700',
-                    'sorgo-forrajero-en-verde': '29300',
-                    'sorgo-grano': '29500',
-                    'soya': '29700',
-                    'tabaco': '30000',
-                    'tomate-rojo': '30800',
-                    'tomate-verde': '31000',
-                    'trigo-grano': '31500',
-                    'zanahoria': '32900'}
     dict_edos = {
         "1":  "11",
         "2":  "5",
@@ -313,34 +323,34 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None,
         "32":  "58"}
 
     url = "http://infosiap.siap.gob.mx/aagricola_siap_gb/ientidad/index.jsp"
-    now = datetime.datetime.now()
 
     start_year = int(start_date.split('-')[0])
-    start_month = int(start_date.split('-')[1])
+    #start_month = int(start_date.split('-')[1])
 
     if not end_date:
         end_year = start_year
-        end_month = start_month + 1
+
     else:
         end_year = int(end_date.split('-')[0])
-        end_month = int(end_date.split('-')[1])
+
 
     anios = list(range(start_year, end_year + 1))
     moda = list(range(1, 3))
-    ciclo = list(range(1, 3))
+    # Nota: dado que en este caso no hay cultivos, no hay por qué separar ciclos 
+    ciclo = list(range(1, 4))
     municipios = list(range(1, 700))
-    estados = list(range(1, 33))
-
+    #estados = list(range(1, 3))
     results = []
+
 
     # Iterate over years, hydrologic mode and cicle (otonio-invierno
     # or primavera-verano)
-    for year, moda, ciclo, estado in product(anios, moda, ciclo, estados):
+    for year, moda, ciclo in product(anios, moda, ciclo):
         for municipio in list(range(1, int(dict_edos[str(estado)]))):
 
             # Test for dates that are yet to occur
             if (year < end_year+1) and (year >= start_year):
-                print('Retrieving year={}, cicle={}, mode={},estado={},municipality={}'.format(year,
+                print('Retrieving year={}, cicle={}, mode={}, estado={},municipality={}'.format(year,
                     dict_ciclo[ciclo], dict_moda[moda], estado, municipio))
 
                 # Create payload to post
@@ -351,8 +361,10 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None,
 
                 # Get post response
                 try:
-                    response = requests.post(url, params=payload)
+                    response = post(url, params=payload)
                 except Exception:
+                    info('Connection error for year={}, cicle={}, mode={}, state={}, mun={}'.format(year,
+                        dict_ciclo[ciclo], dict_moda[moda], estado, municipio))
                     print('##### Connection error for year={}, cicle={}, mode={}, state={}, mun={}'.format(year,
                         dict_ciclo[ciclo], dict_moda[moda], estado, municipio))
                     response = False
@@ -376,10 +388,10 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None,
 
                         edo = soup.find(
                             "div", {"class": "textoTablaTitulo"}).text
-                        edo = re.findall("Estado ([A-Za-z]*)", edo)
+                        edo = findall("Estado ([A-Za-z]*)", edo)
                         mun = soup.find(
                             "div", {"class": "textoTablaSubtitulo2"}).text
-                        mun = re.findall("Municipio: ([A-Za-z.]*.*)", mun)
+                        mun = findall("Municipio: ([A-Za-z.]*.*)", mun)
 
                         # Iterate over rows
                         for row in table.findAll('tr'):
@@ -434,7 +446,9 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None,
 
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser(description='Dowload SAGARPAs Avance Agricola')
+    parser = argparse.ArgumentParser(description='Download SAGARPAs Avance Agrícola \
+        and Cierre de Cultivo. Avance Agrícola is downloaded by crop (--cult), Cierre \
+        is downloaded by state (--estado) in INEGI codes (1-32).')
     
     parser.add_argument('--start', type=str, default='2004-1',
         help= 'First month to download, as string format yyyy-m')
@@ -444,7 +458,9 @@ if __name__ == '__main__':
         help = 'Crop to download from SAGARPA, in low case, words separated by hyphen')
     parser.add_argument('--cierre', type=bool, default=False,
         help = 'Option for end-of-season data')
-    parser.add_argument('--output', type=bool, default=False,
+    parser.add_argument('--estado', type=str, default='1', 
+        help = 'Estado to download for cierre de cultivo')
+    parser.add_argument('--output', type=str, default='',
         help = 'Name of outputfile')
     
     args = parser.parse_args()
@@ -452,9 +468,11 @@ if __name__ == '__main__':
     start_date = args.start
     end_date = args.end
     cultivo = args.cult
+    estado = args.estado
     cierre = args.cierre
     output = args.output
+
     if cierre:
-        ingesta_sagarpa_cierre_produccion(start_date, end_date, cultivo)
+        ingesta_sagarpa_cierre_produccion(start_date=start_date, end_date=end_date, estado=estado, output=output)
     else:
-        ingest_sagarpa_avance_agricola(start_date, end_date, cultivo)
+        ingest_sagarpa_avance_agricola(start_date=start_date, end_date=end_date, cultivo=cultivo, output=output)

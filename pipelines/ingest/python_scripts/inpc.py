@@ -167,6 +167,22 @@ def ingest_inpc_ciudad(single_year='2017', historic_until=None,
     else:
         return data, metadata
 
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Download IPC for cities')
+    
+    parser.add_argument('--single_year', type=str, default='2017',
+        help= 'First month to download, as string format yyyy-m')
+    parser.add_argument('--historic', type=str, default='2017',
+        help= 'Last month to download, as string format yyyy-m. If')
+    parser.add_argument('--output', type=str, default=False,
+        help = 'Name of outputfile')
+    
+    args = parser.parse_args()
+    
+    s_year = args.single_year
+    historic = args.historic
+    output = args.output
 
 # cols = {
 # 'indice':'Indice general',
