@@ -5,6 +5,7 @@
 
 Funciones de Descarga y limpieza de Task Cenapred
 """
+
 import os
 import requests
 import numpy as np
@@ -18,13 +19,15 @@ from ftplib import FTP
 import requests
 
 
-def ingest_inpc_ciudad(year = "2016"):
+def ingest_inpc_ciudad(single_year='2017', historic_until=None,
+ output=None):
     """
-    Returns a Pandas with INPC [nourishment] information from INEGI services
+    Returns a Pandas with IPC information from INEGI services
 
     Args:
-        (str): [Pendiente descripción].
-        (str): [Pendiente].
+        (single_year): Download info from a single year
+        (historic_until): To download historic data from year 1969.
+        (output): CSV where to write the results
 
     Returns:
         Returns two objects
@@ -41,7 +44,7 @@ def ingest_inpc_ciudad(year = "2016"):
 
     #dict of ciudades with state code
     dict_ciudades = {
-        "7. Area Metropolitana de la Cd. de México":"09",
+        "Area Metropolitana de la Cd. de México":"09",
         "Acapulco,%20Gro.":"12",
         "Aguascalientes, Ags.":"01",
         "Campeche, Camp.":"04",
@@ -89,14 +92,46 @@ def ingest_inpc_ciudad(year = "2016"):
         "Villahermosa, Tab.":"27"
         }
 
+    cols = [
+    'fecha', 
+    'indice', 
+    'alim_bt',
+    'alim',
+    'alim_pantc',
+    'alim_car',
+    'alim_pescm',
+    'alim_lech',
+    'alim_aceig',
+    'alim_fruth',
+    'alim_azucf',
+    'alim_otr',
+    'alim_alcht',
+    'ropa',
+    'viv',
+    'mueb',
+    'salu',
+    'transp',
+    'edu',
+    'otro',
+    'cmae_1',
+    'cmae_2',
+    'cmae_2',
+    'scian_1',
+    'scian_2',
+    'scian_3'
+    ]
+
+    if historic_until:
+        year_query = "&_anioI=1969&_anioF={0}".format(historic_until)
+    else:
+        year_query = "&_anioI={0}&_anioF={0}".format(single_year)
+
     for ciudad in dict_ciudades:
         ciudad_encoded = ciudad.replace(" ","+")
         #.encode("utf-8")
         ciudad_id = dict_ciudades[ciudad]
         base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
         "&_formato=CSV")
-
-        year_query = "&_anioI=1969&_anioF={0}".format(year)
 
         #tipo niveles
         tipo = ("&_meta=1&_tipo=Niveles&_info=%C3%8Dndices&_orient=vertical&esquema=0&"
@@ -118,22 +153,46 @@ def ingest_inpc_ciudad(year = "2016"):
             #download new dataframe
             print('trying to download data from {}'.format(ciudad))
 
-            temp = pd.read_csv(url,error_bad_lines=False,skiprows=14,usecols=[1,2,3],header=None,\
-                names=["INPC-general_{}".format(ciudad_id),"INPC-alimentos-bebidas-tabaco_{}".\
-                format(ciudad_id),"INPC-alimentos_{}".format(ciudad_id)])
+            temp = pd.read_csv(url,error_bad_lines=False,skiprows=14,header=None, names=cols)
+            temp['ciudad'] = ciudad
 
-            #Just keep one fecha column
-            try:
-                data["fecha"] = temp["fecha"]
-                del temp["fecha"]
-            except:
-                pass
-
-            data = pd.concat([data, temp], axis=1)
+            data = pd.concat([data, temp])
             print("Query succesful for city {}".format(ciudad))
 
         except:
             print ("Error downloading data for : {}".format(ciudad))
 
+    if output:
+        data.to_csv(output)
+    else:
+        return data, metadata
 
-    return data, metadata
+
+# cols = {
+# 'indice':'Indice general',
+# 'alim_bt':'Alimentos, bebidas y tabaco',
+# 'alim':'Alimentos',
+# 'alim_pantc':'Pan, tortillas y cereales',
+# 'alim_car':'Carnes',
+# 'alim_pescm':'Pescados y mariscos',
+# 'alim_lech':'Leche, derivados de leche y huevo',
+# 'alim_aceig':'Aceites y grasas comestibles',
+# 'alim_fruth':'Frutas y hortalizas',
+# 'alim_azucf':'Azucar, cafe y refrescos envasados',
+# 'alim_otr':'Otros alimentos',
+# 'alim_alcht':'Bebidas alcoholicas y tabaco',
+# 'ropa':'Ropa, calzado y accesorios',
+# 'viv':'Vivienda',
+# 'mueb':'Muebles, aparatos y accesorios domesticos',
+# 'salu':'Salud y cuidado personal',
+# 'transp':'Transporte',
+# 'edu':'Educacion y esparcimiento',
+# 'otro':'Otros servicios',
+# 'cmae_1':'CMAE: Sector economico primario',
+# 'cmae_2':'CMAE: Sector economico secundario',
+# 'cmae_2':'CMAE: Sector economico terciario',
+# 'scian_1':'SCIAN: Sector economico primario',
+# 'scian_2':'SCIAN: Sector economico secundario',
+# 'scian_3':'SCIAN: Sector economico terciario'
+# }
+
