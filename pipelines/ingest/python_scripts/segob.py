@@ -10,7 +10,7 @@ Funciones de Descarga y limpieza de Task Segob
 import os
 import requests
 import numpy as np
-import pandas as pd
+import pandas as pn
 import json
 from requests.auth import HTTPDigestAuth
 import datetime
@@ -20,7 +20,7 @@ from ftplib import FTP
 import requests
 
 
-def ingest_segob_snim():
+def ingest_segob_snim(output):
 
     estados = list(range(1, 33))
     full_data = []
@@ -57,8 +57,7 @@ def ingest_segob_snim():
         "30":  "212",
         "31":  "106",
         "32":  "58"}
-    # Iterate over years, months, hidrologyc mode and cicle (otonio-invierno
-    # or primavera-verano)
+    
     for estado in estados:
         for municipio in list(range(1, 1+int(dict_edos[str(estado)]))):
             cookies = {
@@ -102,7 +101,21 @@ def ingest_segob_snim():
                 json_data[header] = value
             full_data.append(json_data)
 
-            print("getting data from municipality n: " +
+            print("getting data from municipality : " +
                   str(estado).zfill(2) + str(municipio).zfill(3))
 
-    return pn.DataFrame(full_data)
+    file = pn.DataFrame(full_data)
+    file.to_csv(output)
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Download SEGOB data for municipalities')
+
+    parser.add_argument('output', type=str, default='segob',
+        help = 'Name of output file')
+    
+    args = parser.parse_args()
+    output = args.output
+    
+    ingest_inpc_ciudad(output)
+

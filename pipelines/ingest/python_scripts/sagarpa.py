@@ -346,7 +346,7 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
     # Iterate over years, hydrologic mode and cicle (otonio-invierno
     # or primavera-verano)
     for year, moda, ciclo in product(anios, moda, ciclo):
-        for municipio in list(range(1, int(dict_edos[str(estado)]))):
+        for municipio in list(range(1, 1+int(dict_edos[str(estado)]))):
 
             # Test for dates that are yet to occur
             if (year < end_year+1) and (year >= start_year):

@@ -129,16 +129,12 @@ class transparencia(luigi.Task):
 
 
 class sagarpa(luigi.Task):
-    client = luigi.s3.S3Client()
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
 
     python_scripts = luigi.Parameter('DEFAULT')
-
     local_path = luigi.Parameter('DEFAULT')
-    raw_bucket = luigi.Parameter('DEFAULT')
-
     extra = luigi.Parameter()
 
     def run(self):
@@ -160,16 +156,12 @@ class sagarpa(luigi.Task):
 
 
 class sagarpa_cierre(luigi.Task):
-    client = luigi.s3.S3Client()
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
 
     python_scripts = luigi.Parameter('DEFAULT')
-
     local_path = luigi.Parameter('DEFAULT')
-    raw_bucket = luigi.Parameter('DEFAULT')
-
     extra = luigi.Parameter()
 
     def run(self):
@@ -177,11 +169,61 @@ class sagarpa_cierre(luigi.Task):
             os.makedirs(self.local_path + self.pipeline_task)
         extra_cmd = self.extra.split('--')
         start_date = extra_cmd[0]
-        cultivo = extra_cmd[1]
+        estado = extra_cmd[1]
 
         command_list = ['python', self.python_scripts + "sagarpa.py",
-                        '--start', self.year_month, '--cult', cultivo, 
+                        '--start', self.year_month, '--estado', estado, 
                         '--cierre', 'True', '--output', self.local_ingest_file]
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+class inpc(luigi.Task):
+    # Las clases específicas definen el tipo de llamada por hacer
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+    type_script = luigi.Parameter('sh')
+
+    bash_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    raw_bucket = luigi.Parameter('DEFAULT')
+
+    def run(self):
+        # Todo() this can be easily dockerized
+
+        cmd = '''
+            {}/{}.{}
+            '''.format(self.bash_scripts, self.pipeline_task, self.type_script)
+
+        return subprocess.call(cmd, shell=True)
+
+    def output(self):
+
+        return luigi.LocalTarget(self.local_ingest_file)
+
+
+class segob(luigi.Task):
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    python_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter()
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+        
+        extra_cmd = self.extra.split('--')
+        cultivo = extra_cmd[0]
+
+        command_list = ['python', self.python_scripts + "segob.py",
+                        self.local_ingest_file] 
         cmd = " ".join(command_list)
         print(cmd)
         return subprocess.call([cmd], shell=True)
