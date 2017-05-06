@@ -21,7 +21,7 @@ import logging
 def ingest_sagarpa_avance_agricola(start_date, end_date=None, 
     cultivo="maiz-grano", output=None):
     """
-    Returns a Pandas with Avance Nacional de Siembra for crop 'cultivo'
+    Creates csv file with Avance Nacional de Siembra for crop 'cultivo'
     from SAGARPA-SIEP. The information is divided by municipality, and
     contains info for hydrolocial mode and cicle of agricultural year.
 
