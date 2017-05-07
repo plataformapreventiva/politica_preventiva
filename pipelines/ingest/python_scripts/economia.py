@@ -17,7 +17,8 @@ from ftplib import FTP
 from re import findall
 from os import path, makedirs
 import logging
-def ingest_precios(start_date, end_date=None, output=None):
+
+def ingest_precios(start_date, end_date='', output=''):
     """
     Creates a CSV file with weekly prices from centrales de abasto. 
 
@@ -97,6 +98,8 @@ def ingest_precios(start_date, end_date=None, output=None):
     anios = list(range(start_year, end_year + 1))
     meses = list(range(1, 13))
 
+    # helper for getting a semana right 
+    helper = 'a Semana'
 # TODO : ADAPT THIS FOR FrutasYHortalizas
     # Iterate over years, months, hidrologyc mode and cicle (otonio-invierno
     # or primavera-verano)
@@ -144,6 +147,7 @@ def ingest_precios(start_date, end_date=None, output=None):
                         # Table format contains summaries of the data in the middle of the table;
                         # since they are not <td>, we can simply test for their
                         # absence
+
                         if tds:
             # TODO: CHECK WHICH DATA IS NOT REPLICATED (MAYBE Producto)
                             test = "".join(tds[0].text.split())
@@ -156,7 +160,10 @@ def ingest_precios(start_date, end_date=None, output=None):
                         else:
                             keep = True
 
-            # TODO: CHECK THAT THERE ARE INDEED FIVE COLUMNS (FOR FIVE WEEKS A MONTH)
+                    # Check that there are indeed five columns (for five weeks a month)
+                    records = five_weeks(table, records)
+
+                    # Add month, year, central de abasto
                     for row in records:
                         row.extend([month, year, central])
 
@@ -165,8 +172,8 @@ def ingest_precios(start_date, end_date=None, output=None):
                 else:
                     print(':/       No table found')
 
-    col_names = ['estado', 'distrito', 'municipio', 'sup_sembrada', 'sup_cosech',
-                 'sup_siniest', 'produccion', 'rendim', 'mes', 'anio', 'moda_hidr', 'ciclo', 'cultivo']
+    col_names = ['producto', 'origen', 'sem_1', 'sem_2', 'sem_3', 'sem_4',
+    'sem_5', 'prom_mes', 'mes','anio', 'central']
     
     # Write file trto csv
     if output:
@@ -176,10 +183,12 @@ def ingest_precios(start_date, end_date=None, output=None):
         file_name = '../data/economia/' + dates + cultivo
     
     if results:
+
         result = pd.DataFrame(results, columns=col_names)
         result.to_csv(file_name +'.csv')
-    
+
     else:
+
         file = open(file_name + '.csv','w')
         file.close()
         file = open('missing.txt','w')
@@ -188,4 +197,38 @@ def ingest_precios(start_date, end_date=None, output=None):
 
     return pd.DataFrame(results, columns=col_names)
 
+def five_weeks(table, records):
+    """
+        Checks that there are 5 week columns per month. If not, 
+        fills in the necessary weeks as '--' 
+    """
+    week_5 = table.find_all('td', attrs={'class':'titDATTab2'})
+    week_5 = [entry.text for entry in week_5]
+    for i in range(2, 7):
+        if not week_5[i] == str(i-1) + helper:
+            week_5.insert(i, str(i-1) + helper)
+            for row in records:
+                row.insert(i,'--')   
+    return records 
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description="Download the Secretariat of Economy's \
+        Prices for different centrales de abasto")
+    
+    parser.add_argument('start', type=str, default='2004-1',
+        help= 'First month to download, as string format yyyy-m')
+    parser.add_argument('--end', type=str, default=None,
+        help= 'Last month to download, as string format yyyy-m. If')
+    parser.add_argument('--output', type=str, default='',
+        help = 'Name of outputfile')
+    
+    args = parser.parse_args()
+    
+    start_date = args.start
+    end_date = args.end
+    output = args.output
+
+
+    ingesta_precios(start_date=start_date, end_date=end_date, output=output)
 

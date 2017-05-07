@@ -222,8 +222,34 @@ class segob(luigi.Task):
         extra_cmd = self.extra.split('--')
         cultivo = extra_cmd[0]
 
-        command_list = ['python', self.python_scripts + "segob.py",
+        command_list = ['python', self.python_scripts + "economia.py",
                         self.local_ingest_file] 
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+class economia(luigi.Task):
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    python_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter()
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+        
+        extra_cmd = self.extra.split('--')
+        end_date = extra_cmd[0]
+
+        command_list = ['python', self.python_scripts + "economia.py",
+                        '--end', end_date, '--output', self.local_ingest_file, 
+                        self.year_month] 
         cmd = " ".join(command_list)
         print(cmd)
         return subprocess.call([cmd], shell=True)
