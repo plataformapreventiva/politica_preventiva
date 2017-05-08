@@ -44,7 +44,7 @@ class RunPipelines(luigi.WrapperTask):
 
     def requires(self):
         yield Ingestpipeline(self.year_month)
-
+        
 
 class Ingestpipeline(luigi.WrapperTask):
     """
@@ -61,11 +61,19 @@ class Ingestpipeline(luigi.WrapperTask):
     # Get number of cores in which to run pipeline 
     num_cores = multiprocessing.cpu_count()
 
+
     def requires(self):
+        # Note: if there is a 'start_date' parameter, then the info is downloaded monthly and 
+        # year_date is assumed to be 
+        
+        # Obtan the extra parameters
         params = {pipeline: parse_cfg_list(configuration.get_config().get(pipeline, "extra_parameters")) for pipeline in self.pipelines}
-        extra = {pipeline: extra_parameters(pipeline, params[pipeline]) for pipeline in self.pipelines}
-        yield Parallel(n_jobs=self.num_cores)(delayed(local_to_s3)(pipeline_task=pipeline, year_month=self.year_month, extra=extra_p) for 
-        pipeline in self.pipelines for extra_p in extra[pipeline])
+
+        # Obtain extra parameters: each pipeline has two different parameters: dates and extra
+        extra = {pipeline: extra_parameters(pipeline, params[pipeline], self.year_month) for pipeline in self.pipelines}
+        # Obtain dates 
+        yield Parallel(n_jobs=self.num_cores)(delayed(local_to_s3)(pipeline_task=pipeline, year_month=date, extra=extra_p) for 
+        pipeline in self.pipelines for extra_p in extra[pipeline][1] for date in extra[pipeline][0])
         
 
 class Distance(luigi.WrapperTask):

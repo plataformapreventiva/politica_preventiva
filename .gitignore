@@ -21,3 +21,6 @@ conf_profile.json
 *.pem
 data/*
 .python-version
+*_temp
+*.temp
+*.env

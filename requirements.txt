@@ -5,6 +5,8 @@
 argparse==1.2.1
 rarfile==2.8
 PyYAML==3.10
+smart-open==1.4.0
+joblib
 
 ######  Packages for ML pipeline ######
 luigi==2.3.0
