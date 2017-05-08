@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Utilidades Secretaría de Economía - SNIIM
-
+"""
+    Utilidades Secretaría de Economía - SNIIM
 
 """
 
@@ -32,7 +32,7 @@ def ingest_precios(start_date, end_date='', output=''):
     """
     if not path.exists('logs'):
         makedirs('logs')
-    logging.basicConfig(filename='logs/precios.log')
+    logging.basicConfig(filename='logs/precios.log', level=logging.DEBUG)
 
     #Note: we scrape by central because 'Todos' option doesn't always yield all of the centrales
     centrales_dict = {
@@ -179,7 +179,7 @@ def ingest_precios(start_date, end_date='', output=''):
 
     else:
 
-        file = open(file_name + '.csv','w')
+        file = open(file_name,'w')
         file.close()
         file = open('missing.txt','w')
         file.write(file_name)
@@ -203,7 +203,7 @@ def ingest_frutos(start_date, end_date='', output=''):
     """
     if not path.exists('logs'):
         makedirs('logs')
-    logging.basicConfig(filename='logs/precios-frutos.log')
+    logging.basicConfig(filename='logs/precios-frutos.log', level=logging.DEBUG)
 
     # Note: we scrape by central because 'Todos' option doesn't always yield all of the centrales
     centrales_dict = {
@@ -348,7 +348,7 @@ def ingest_frutos(start_date, end_date='', output=''):
     if results:
 
         result = pd.DataFrame(results, columns=col_names)
-        result.to_csv(file_name +'.csv', index=False)
+        result.to_csv(file_name, index=False)
 
     else:
 
@@ -393,8 +393,9 @@ if __name__ == '__main__':
     
     parser.add_argument('start', type=str, default='2004-1',
         help= 'First month to download, as string format yyyy-m')
-    parser.add_argument('--end', type=str, default=None,
-        help= 'Last month to download, as string format yyyy-m. If')
+    parser.add_argument('--end', type=str, default='',
+        help= 'Last month to download, as string format yyyy-m. If None, \
+        only download the month specified in start')
     parser.add_argument('--frutos', type=bool, default=False,
         help = 'Name of outputfile')
     parser.add_argument('--output', type=str, default='',

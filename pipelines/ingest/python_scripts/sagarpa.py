@@ -52,7 +52,7 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
     """
     if not path.exists('logs'):
         makedirs('logs')
-    logging.basicConfig(filename='logs/sagarpa.log')
+    logging.basicConfig(filename='logs/sagarpa.log', level=logging.DEBUG)
 
     # Define necessary dictionaries
 
@@ -280,7 +280,7 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
     """
     if not path.exists('logs'):
         makedirs('logs')
-    logging.basicConfig(filename='logs/sagarpa-cierre.log')
+    logging.basicConfig(filename='logs/sagarpa-cierre.log', level=logging.DEBUG)
 
 
     # Define necessary dictionaries

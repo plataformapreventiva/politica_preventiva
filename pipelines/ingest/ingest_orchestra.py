@@ -17,7 +17,6 @@ load_dotenv(dotenv_path)
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
-
 class classic_ingest(luigi.Task):
 
     client = luigi.s3.S3Client()
@@ -231,7 +230,7 @@ class segob(luigi.Task):
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
 
-class economia(luigi.Task):
+class precios_granos(luigi.Task):
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
@@ -249,6 +248,37 @@ class economia(luigi.Task):
 
         command_list = ['python', self.python_scripts + "economia.py",
                         '--end', end_date, '--output', self.local_ingest_file, 
+                        self.year_month] 
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+class precios_frutos(luigi.Task):
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    python_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter()
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+        
+        extra_cmd = self.extra.split('--')
+        end_date = extra_cmd[0]
+        if end_date:
+            end_cmd = " ".join(['--end', end_date])
+        else:
+            end_cmd = ""
+
+
+        command_list = ['python', self.python_scripts + "economia.py", '--frutos True',
+                        end_cmd, '--output', self.local_ingest_file, 
                         self.year_month] 
         cmd = " ".join(command_list)
         print(cmd)

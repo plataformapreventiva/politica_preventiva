@@ -23,7 +23,7 @@ def parse_cfg_list(string):
     string = string.split(",")
     return [m.strip() for m in string]
 
-def extra_parameters(pipeline, parameters, end_date=None):
+def extra_parameters(pipeline, parameters, end_date):
     """
     Create 'extra' argument to pass to pipelines. 
     If 'start_date' is an extra parameter, then it must be the first 
@@ -34,7 +34,8 @@ def extra_parameters(pipeline, parameters, end_date=None):
         end_date: only necessary if using an extra parameter.
     """
 
-    if len(parameters) == 1 & len(parameters[0]) > 0:
+    if (len(parameters) == 1 and len(parameters[0]) > 0):
+
         parsed = parse_cfg_list(configuration.get_config().get(pipeline, parameters[0]))
         if 'start_date' in parameters:
             if end_date:
