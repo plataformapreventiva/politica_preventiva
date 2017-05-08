@@ -23,7 +23,6 @@ from itertools import product
 logger = logging.getLogger("dpa-sedesol.dummy")
 from utils.pipeline_utils import parse_cfg_list, extra_parameters
 from ingest.ingest_orchestra import classic_ingest, local_to_s3
-
 ## Variables de ambiente
 path = os.path.abspath('__file__' + "/../../config/")
 dotenv_path = join(path, '.env')
@@ -68,6 +67,11 @@ class Ingestpipeline(luigi.WrapperTask):
         yield Parallel(n_jobs=self.num_cores)(delayed(local_to_s3)(pipeline_task=pipeline, year_month=self.year_month, extra=extra_p) for 
         pipeline in self.pipelines for extra_p in extra[pipeline])
         
+
+class Distance(luigi.WrapperTask):
+    def requires(self):
+        return Find_distance_to_Services()
+
 
 if __name__ == "__main__":
     luigi.run()

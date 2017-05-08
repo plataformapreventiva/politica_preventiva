@@ -1,21 +1,26 @@
 # coding: utf-8
 import subprocess
+import sys
 import os
+import psycopg2
+import pandas as pn
 from os.path import join, dirname
 import luigi
 from luigi.s3 import S3Target, S3Client
 from luigi import configuration
-from utils.pipeline_utils import parse_cfg_list
-
 from dotenv import load_dotenv
 # Variables de ambiente
 path = os.path.abspath('__file__' + "/../../config/")
 dotenv_path = join(path, '.env')
 load_dotenv(dotenv_path)
+from utils.pipeline_utils import parse_cfg_list
+#sys.path.append('/../utils')
+from utils.google_utils import info_to_google_services
 
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 
 
 class classic_ingest(luigi.Task):
@@ -193,3 +198,48 @@ class sagarpa_cierre(luigi.Task):
     #    destination_s3_path = self.raw_bucket + self.pipeline_task + \
     #        "/raw/" + dates + "_" + grano + ".csv"
     #    return S3Target(destination_s3_path)
+
+
+class distance_to_services(luigi.Task):
+    client = luigi.s3.S3Client()
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    python_scripts = luigi.Parameter('DEFAULT')
+
+    local_path = luigi.Parameter('DEFAULT')
+    raw_bucket = luigi.Parameter('DEFAULT')
+
+    extra = luigi.Parameter()
+
+        def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        database = os.environ.get("PGDATABASE")
+        user = os.environ.get("POSTGRES_USER")
+        password = os.environ.get("POSTGRES_PASSWORD")
+        host = os.environ.get("PGHOST")
+        conn = psycopg2.connect(dbname=database,user=user,host=host,password=password)
+        cur = conn.cursor()
+        cur.execute("""SELECT
+        cve_muni, latitud, longitud FROM geoms.municipios""")
+        rows = pn.DataFrame(cur.fetchall(),columns=["cve_muni","lat","long"])
+        rows=rows[:5]
+
+        # ["Hospital","doctor","bus_station","airport","bank","gas_station","university","subway_station","police"]
+        for keyword in ["Hospital","bank","university","police"]:
+            print("looking for nearest {0}".format(keyword))
+            vector_dic = rows.apply(lambda x: info_to_google_services(x["lat"],x["long"],keyword),axis=1)           
+            rows[['driving_dist_{0}'.format(keyword), 'driving_time_{0}'.format(keyword),
+            'formatted_address_{0}'.format(keyword),'local_phone_number_{0}'.format(keyword), 
+            'name_{0}'.format(keyword), 'walking_dist_{0}'.format(keyword), 'walking_time_{0}'.format(keyword),
+            'website_{0}'.format(keyword)]] = pn.DataFrame(list(vector_dic))
+
+        return rows.to_csv(self.output().path,index=False,sep="|")
+
+

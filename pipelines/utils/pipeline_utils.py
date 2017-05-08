@@ -7,13 +7,9 @@ import datetime
 import psycopg2
 import numpy as np
 import pandas as pd
-#import json
-#import re
-#import hashlib
-#import logging
-#import logging.config
-#from pandas.compat import range, lzip, map
-
+import unicodedata
+import pandas as pn
+import numpy as np
 import luigi
 import luigi.postgres
 from luigi import configuration
@@ -74,3 +70,44 @@ class TableCopyToS3(luigi.Task):
             conn.cursor().copy_to(s3_file, self.table_name)
 
         conn.close()
+
+
+def remove_accents(input_str):
+    nfkd_form = unicodedata.normalize('NFKD', input_str)
+    only_ascii = nfkd_form.encode('ASCII', 'ignore')
+    return only_ascii
+
+def lower(df,column):
+    df[column] = df[column].map(lambda x: x if type(x)!=str else x.lower())
+    return df
+
+def strip_accents(text):
+    """
+    Strip accents from input String.
+
+    :param text: The input string.
+    :type text: String.
+
+    :returns: The processed String.
+    :rtype: String.
+    """
+    try:
+        text = unicode(text, 'utf-8')
+    except NameError: # unicode is a default on python 3
+        pass
+    text = unicodedata.normalize('NFD', text)
+    text = text.encode('ascii', 'ignore')
+    text = text.decode("utf-8")
+    return str(text)
+
+def cve_loc_construct(cve_ent,cve_mun,cve_loc):
+    try:
+        cve_ent=str(int(cve_ent)).zfill(2)
+        cve_mun=str(int(cve_mun)).zfill(3)
+        cve_loc=str(int(cve_loc)).zfill(4)
+        cve_locc=cve_ent + cve_mun + cve_loc
+        cve_mun=cve_ent + cve_mun
+
+    except:
+        cve_locc = ""
+    return  pn.Series({'cve_ent':cve_ent,'cve_mun':cve_mun,'cve_locc':cve_locc}) 
