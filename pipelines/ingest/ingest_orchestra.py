@@ -222,7 +222,7 @@ class segob(luigi.Task):
         extra_cmd = self.extra.split('--')
         cultivo = extra_cmd[0]
 
-        command_list = ['python', self.python_scripts + "economia.py",
+        command_list = ['python', self.python_scripts + "segob.py",
                         self.local_ingest_file] 
         cmd = " ".join(command_list)
         print(cmd)
