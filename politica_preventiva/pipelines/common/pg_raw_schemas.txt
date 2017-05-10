@@ -1,0 +1,13 @@
+# Este Archivo almacena el Schema de las tablas de Postgres
+# como un diccionario para ser consumidas por Luigi
+
+{ 
+     "Nombre_Table": 
+     {    "SCHEMA":
+               [("Var1", "INT"),
+               ("Var2", "TEXT")], 
+
+          "INDEX":
+          ['CLAVE_UC']s
+     }
+}
