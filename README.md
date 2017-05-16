@@ -1,41 +1,40 @@
-# Política Social Preventiva
+# Platforma Preventiva - 
 
-### Grado de inseguridad alimentaria
-- [X]  LIT REVIEW *2 Días*
-- [X] Búsqueda de Base de Datos *2 Días*
-- [ ] Selección de Modelos 
+## About:
+In order to improve the targeting of social programs, the System of Integral Social Information (Sistema de Información Social Integral - SISI) strives to create a platform to help analyse multi-dimensional data not usually taken into account when developing social policy in Mexico. The proposed approach is to create various compound indicators tailored to tackle different areas of interest in social policy; as such, all indicators would create a profile of geographical areas and help target social programs in a more thorough manner.
 
-### Rezago educativo promedio en el hogar 
-- [ ]  LIT REVIEW *2 Días*
-- [ ] Búsqueda de Base de Datos *2 Días*
-- [ ] Selección de Modelos 
 
-### Ingreso corriente per cápita
-- [ ]  LIT REVIEW *2 Días*
-- [ ] Búsqueda de Base de Datos *2 Días*
-- [ ] Selección de Modelos 
+## Installation
 
-### Acceso a los servicios de salud
-- [ ]  LIT REVIEW *2 Días*
-- [ ] Búsqueda de Base de Datos *2 Días*
-- [ ] Selección de Modelos 
+The analysis pipeline can be run after cloning this repository and
+calling `make init` and `make deploy`. 
 
-### Acceso a Seguridad Social
-- [ ]  LIT REVIEW *2 Días*
-- [ ] Búsqueda de Base de Datos *2 Días*
-- [ ] Selección de Modelos 
+### Dependencies
 
-### Calidad y espacios de la vivienda
-- [ ]  LIT REVIEW *2 Días*
-- [ ] Búsqueda de Base de Datos *2 Días*
-- [ ] Selección de Modelos 
+* Python 3.5.2
+* luigi
+* git
+* psql (PostgreSQL) 9.5.4
+* PostGIS 2.1.4
+* ...and other Python packages (see `requirements.txt`)
 
-### Acceso a los servicios básicos en la vivienda
-- [ ]  LIT REVIEW *2 Días*
-- [ ] Búsqueda de Base de Datos *2 Días*
-- [ ] Selección de Modelos 
+### Configuration Files
 
-### Acceso a los servicios básicos en la vivienda
-- [ ]  LIT REVIEW *2 Días*
-- [ ] Búsqueda de Base de Datos *2 Días*
-- [ ] Selección de Modelos 
+### Wishful
+
+### Contributors
+
+| [![javurena7][ph-javurena7]][gh-javurena7] | [![rsanchezavalos][ph-rsanchez]][gh-rsanchez] | [![andreanr][ph-andreanr]][gh-andreanr] |
+|                 :--:                 |                     :--:                      |                     :--:             |        
+|        [javurena7][gh-javurena7]         |         [rsanchezavalos][gh-rsanchez]           |          [andreanr][gh-andreanr]      | 
+
+
+[ph-javurena7]: https://avatars0.githubusercontent.com/u/14095871?v=3&s=460
+[gh-javurena7]: https://github.com/javurena7
+
+[ph-andreanr]: https://avatars1.githubusercontent.com/u/5949086?v=3&s=460
+[gh-andreanr]: https://github.com/andreanr
+
+[ph-rsanchez]: https://avatars.githubusercontent.com/u/10931011?v=3&s=460
+[gh-rsanchez]: https://github.com/rsanchezavalos
+
