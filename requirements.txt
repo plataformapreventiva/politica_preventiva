@@ -1,20 +1,12 @@
-#
-####### Requirements for SEDESOL project #######
-#
-######  Packages for data ingestion ######
-argparse==1.2.1
-rarfile==2.8
-PyYAML==3.10
-smart-open==1.4.0
-joblib
+luigi
+Click
+python-dotenv
+boto3
+joblib 
+pandas
+sqlalchemy
+boto
+boto3
+psycopg2
+s3fs
 
-######  Packages for ML pipeline ######
-luigi==2.3.0
-pandas==0.18.1
-psycopg2==2.4.5
-numpy==1.8.2
-scipy==0.13.3
-scikit-learn==0.17.1
-
-######  Packages for geocoding ######
-googlemaps==2.4.4

@@ -1,0 +1,36 @@
+version: "3"
+
+services:                                                                               
+  luigi-server:        
+    image: dpa/luigi-server:0.1                                                                 
+    ports:                                                                              
+      - "8082:8082"
+    env_file: .env
+    networks:
+      - compranet_net
+
+  luigi-worker:
+    image: dpa/luigi-worker:0.1
+    env_file: .env
+    networks:
+      - compranet_net
+
+
+  graphdb:
+    image: neo4j:3.1
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    networks:
+      - compranet_net
+
+
+volumes:
+  compranet_store:
+    external:
+      name: compranet_store
+
+networks:
+  compranet_net:
+    external: true
+

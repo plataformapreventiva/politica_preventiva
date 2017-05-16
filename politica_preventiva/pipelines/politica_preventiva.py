@@ -1,37 +1,32 @@
 # coding: utf-8
-# Run as: luigid & PYTHONPATH='.' python plataforma_preventiva.py  RunPipelines --workers 3
-
-#-local_ingest
-#-local_to_s3
-#-update_s3
-#-s3_to_postgres
+# Run as: luigid & PYTHONPATH='.' python politica_preventiva.py  RunPipelines --workers 3
 
 import os
 import datetime
-from os.path import join, dirname
 import logging
-from dotenv import load_dotenv
 import boto3
 import luigi
 import luigi.s3
+import multiprocessing
+from dotenv import load_dotenv
+from os.path import join, dirname
 from luigi.s3 import S3Target, S3Client
 from luigi import configuration
 from joblib import Parallel, delayed
-import multiprocessing
 from itertools import product
-
-logger = logging.getLogger("dpa-sedesol.dummy")
 from utils.pipeline_utils import parse_cfg_list, extra_parameters
 from ingest.ingest_orchestra import classic_ingest, local_to_s3
-## Variables de ambiente
-path = os.path.abspath('__file__' + "/../../config/")
-dotenv_path = join(path, '.env')
-load_dotenv(dotenv_path)
 
-## Obtenemos las llaves de AWS
+logger = logging.getLogger("dpa-sedesol.compranet")
+
+## Variables de ambiente
+load_dotenv(find_dotenv())
+
+
+## AWS
 aws_access_key_id =  os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
+ 
 class RunPipelines(luigi.WrapperTask):
     """
     Task principal para el pipeline 
@@ -44,7 +39,8 @@ class RunPipelines(luigi.WrapperTask):
 
     def requires(self):
         yield Ingestpipeline(self.year_month)
-        
+        yield EtlPipeline(self.year_month)
+
 
 class Ingestpipeline(luigi.WrapperTask):
     """
@@ -75,6 +71,43 @@ class Ingestpipeline(luigi.WrapperTask):
         yield Parallel(n_jobs=self.num_cores)(delayed(local_to_s3)(pipeline_task=pipeline, year_month=date, extra=extra_p) for 
         pipeline in self.pipelines for extra_p in extra[pipeline][1] for date in extra[pipeline][0])
         
+
+
+class EtlPipeline(luigi.WrapperTask):
+
+    """
+        Este wrapper ejecuta el ETL de cada pipeline-task.
+
+    """
+
+    year_month = luigi.Parameter()
+
+    def requires(self):
+
+        return IngestPipeline(self.year_month) 
+
+    def run(self):
+
+        yield ETL(year_month=self.year_month)
+
+
+# class ModelPipeline(luigi.WrapperTask):
+
+#     """
+#         Este wrapper ejecuta los modelos
+#     """
+
+#     year_month = luigi.Parameter()
+#     conf = configuration.get_config()
+
+#     def requires(self):
+
+#         yield MissingClassifier(year_month=self.year_month)
+#         yield SetNeo4J(year_month=self.year_month)
+#         yield PredictiveModel(year_month=self.year_month)
+
+
+
 
 class Distance(luigi.WrapperTask):
 
