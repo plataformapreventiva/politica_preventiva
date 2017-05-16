@@ -24,9 +24,9 @@ calling `make init` and `make deploy`.
 
 ### Contributors
 
-| [![javurena7][ph-javurena7]][gh-javurena7] | [![rsanchezavalos][ph-rsanchez]][gh-rsanchez] | [![andreanr][ph-andreanr]][gh-andreanr]| [![sedesol ][ph-sedesol ]][gh-sedesol ] |
+| [![javurena7][ph-javurena7]][gh-javurena7] | [![rsanchezavalos][ph-rsanchez]][gh-rsanchez] | [![andreanr][ph-andreanr]][gh-andreanr]| [![sedesol ][ph-sedesol]][gh-sedesol] |
 |                 :--:                 |                     :--:                      |                     :--:             |                     :--:             |              
-|        [javurena7][gh-javurena7]         |         [rsanchezavalos][gh-rsanchez]           |          [andreanr][gh-andreanr] |          [sedesol ][gh-sedesol ]      |      
+|        [javurena7][gh-javurena7]         |         [rsanchezavalos][gh-rsanchez]           |          [andreanr][gh-andreanr] |          [sedesol][gh-sedesol]      |      
 
 
 [ph-javurena7]: https://avatars0.githubusercontent.com/u/14095871?v=3&s=460
