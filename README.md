@@ -38,5 +38,5 @@ calling `make init` and `make deploy`.
 [ph-rsanchez]: https://avatars.githubusercontent.com/u/10931011?v=3&s=460
 [gh-rsanchez]: https://github.com/rsanchezavalos
 
-[ph-sedesol]: https://avatars0.githubusercontent.com/u/20521449?v=3&s=800
-[gh-sedesol]: https://github.com/20521448
+[ph-sedesol]: https://avatars0.githubusercontent.com/u/20521447
+[gh-sedesol]: https://github.com/20521447
