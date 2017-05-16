@@ -29,7 +29,7 @@ calling `make init` and `make deploy`.
 |        [javurena7][gh-javurena7]         |         [rsanchezavalos][gh-rsanchez]           |          [andreanr][gh-andreanr] |          [sedesol][gh-sedesol]      |      
 
 
-[ph-javurena7]: https://avatars0.githubusercontent.com/u/14095871?v=3&s=460
+[ph-javurena7]: https://avatars0.githubusercontent.com/u/14095871?v=3&s=550
 [gh-javurena7]: https://github.com/javurena7
 
 [ph-andreanr]: https://avatars1.githubusercontent.com/u/5949086?v=3&s=460
@@ -38,5 +38,5 @@ calling `make init` and `make deploy`.
 [ph-rsanchez]: https://avatars.githubusercontent.com/u/10931011?v=3&s=460
 [gh-rsanchez]: https://github.com/rsanchezavalos
 
-[ph-sedesol]: https://avatars0.githubusercontent.com/u/20521449?v=3&s=560
+[ph-sedesol]: https://avatars0.githubusercontent.com/u/20521449?v=3&s=800
 [gh-sedesol]: https://github.com/sedesol
