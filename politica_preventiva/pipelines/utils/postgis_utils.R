@@ -2,7 +2,9 @@ library(RPostgreSQL)
 library(rgeos)
 library(sp)
 
-GetConn <- function(dbname,host,user,password){
+
+GetConn <- function(dbname=PGDATABASE, host=PGHOST, user = POSTGRES_USER,
+               password = POSTGRES_PASSWORD){
   # Function to get a connection to db
   #
   # Args:
@@ -21,7 +23,7 @@ GetConn <- function(dbname,host,user,password){
   return (conn)
 }
 
-GetPoligonFromPostgis <- function (conn, schema, table, verbose = TRUE){
+GetPoligonFromPostgis <- function (conn, table, schema= "geoms", verbose = TRUE){
   # Function to get a poligon from postgis table
   #
   # Args:
@@ -32,24 +34,24 @@ GetPoligonFromPostgis <- function (conn, schema, table, verbose = TRUE){
   # Returns:
   #   SpatialPolygonDataframe
   
-  query <- "SELECT ST_AsText(geom) AS wkt_geometry , * FROM geoms.%s"
+  query <- "SELECT ST_AsText(geom) AS wkt_geometry , * FROM %s.%s"
   query <- sprintf(query, schema, table)
   
-  dfQuery <- dbGetQuery(conn, query)
-  dfQuery$geom <- NULL
+  df.query <- dbGetQuery(conn, query)
+  df.query$geom <- NULL
   
-  row.names(dfQuery) = dfQuery$gid
+  row.names(df.query) = df.query$gid
   
   # Create spatial polygons
   rWKT <- function (var1 , var2 ) { return (readWKT ( var1 , var2) @polygons) }
-  spL <- mapply( rWKT , dfQuery$wkt_geometry ,  dfQuery$gid )
-  spTemp <- SpatialPolygons( spL )
+  spl <- mapply( rWKT , df.query$wkt_geometry ,  df.query$gid )
+  sp.temp <- SpatialPolygons( spl )
   
   # Create SpatialPolygonsDataFrame, drop WKT field from attributes
-  spdf <- SpatialPolygonsDataFrame(spTemp, dfQuery[-1])
+  sp.df <- SpatialPolygonsDataFrame(sp.temp, df.query[-1])
   
   if (verbose)
     cat("Descargando geometría; ", table, "del schema: ",schema, sep = "")  
   
-  return (spdf)
+  return (sp.df)
 }
