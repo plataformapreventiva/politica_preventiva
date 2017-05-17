@@ -4,6 +4,11 @@
 """Utilidades Conagua
 
 Funciones de Descarga y limpieza de Task Conagua
+
+TODO()
+    #Load all files into folder
+    #it should check if already exists
+
 """
 
 import os
@@ -19,14 +24,16 @@ from ftplib import FTP
 import requests
 
 def conagua_smn(year='2016',location="s3"):
+
     """Downloads shp files from CONAGUA Monitor de Sequía de Mexico (smn) into
         specified location
 
     Args:
-        (year): give year wanted
-        (location):
-            local - it gets stored in /data/smn/
-            s3 - it gets stored in our favorite s3 bucket
+        year (str): give year wanted
+
+    Returns:
+        dataframe: Saves a DataFrame with all Bank cashier information from Banxico.
+
 
     """
 
@@ -35,8 +42,6 @@ def conagua_smn(year='2016',location="s3"):
     ftp.cwd(year)
     filenames = ftp.nlst()
 
-    #Load all files into folder
-    #it should check if already exists
     for filename in filenames:
         local_filename = os.path.join('../data/SMN', filename)
         file = open(local_filename, 'wb')

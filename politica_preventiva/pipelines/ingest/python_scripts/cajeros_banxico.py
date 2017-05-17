@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 Ingesta Cajeros Banxico
-    Funciones de Descarga y limpieza de Task Banxico
+    Función de Ingesta de Task Banxico
     cajeros actualizados de la base http://www.banxico.org.mx/consultas-atm/cajeros.json
 
-ToDO(Guardar cajeros no encontrados.)
+ToDO(Guardar cajeros no encontrados)
+ToDO(Task en dos etapas para no descargar los cajeros que ya están en la base)
 """
 
 import os
@@ -23,20 +24,19 @@ from bs4 import BeautifulSoup
 from ftplib import FTP
 
 
-def cajeros_banxico(local_path="../data/banxico/banxico.csv",latlon='19.432608,-99.133209', 
+def cajeros_banxico(local_path="../data/cajeros_banxico/cajeros_banxico.csv",latlon='19.432608,-99.133209', 
     radio='100000000000000000000000'):
 
     """
-    Función que descarga Retrieves rows pertaining to the given keys from the Table instance
-    represented by big_table.  Silly things may happen if
-    other_silly_variable is not None.
+    Función que descarga de la página de www.banxico.org.mx/consultas-atm/cajeros.json
+    todos los cajeros que existen en ese momento.
 
     Args:
-        latlon: String with latitud and longitud 
-        radio: Search radius in meters
+        latlon (str): String with latitud and longitud 
+        radio (str): Search radius in meters
 
     Returns:
-        Pandas DF with Bank cashier information.
+        dataframe: Saves a DataFrame with all Bank cashier information from Banxico.
 
     """
     print("Cajeros Banxico")
@@ -114,10 +114,10 @@ def cajeros_banxico(local_path="../data/banxico/banxico.csv",latlon='19.432608,-
             pass
 
     print('Cajeros agregados: ' + str(len(total_cajeros)))
-    data = pd.DataFrame(total_cajeros)
-    data.to_csv(local_path)
 
-    return True
+    data = pd.DataFrame(total_cajeros)
+
+    return data
 
 
 if __name__ == '__main__':
