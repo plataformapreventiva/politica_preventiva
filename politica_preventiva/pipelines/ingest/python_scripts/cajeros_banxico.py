@@ -1,33 +1,45 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Ingesta Cajeros Banxico
+"""
+Ingesta Cajeros Banxico
     Funciones de Descarga y limpieza de Task Banxico
     cajeros actualizados de la base http://www.banxico.org.mx/consultas-atm/cajeros.json
-    Descarga información del cajero y guarda en ../data/ingest/
 
-ToDo()
-Guardar cajeros no encontrados.
-¿Solo descargar cajeros que no estén en la base de datos?
-
+ToDO(Guardar cajeros no encontrados.)
 """
+
 import os
-import requests
-import numpy as np
-import pandas as pd
 import json
-from requests.auth import HTTPDigestAuth
+import sys
 import datetime
-from itertools import product
-from bs4 import BeautifulSoup
-from ftplib import FTP
 import requests
 import argparse
 import datetime
-import requests
+import numpy as np
+import pandas as pd
+from requests.auth import HTTPDigestAuth
+from itertools import product
+from bs4 import BeautifulSoup
+from ftplib import FTP
 
 
-def cajeros_banxico(latlon='19.432608,-99.133209', radio='100000000000000000000000'):
+def cajeros_banxico(local_path="../data/banxico/banxico.csv",latlon='19.432608,-99.133209', 
+    radio='100000000000000000000000'):
 
+    """
+    Función que descarga Retrieves rows pertaining to the given keys from the Table instance
+    represented by big_table.  Silly things may happen if
+    other_silly_variable is not None.
+
+    Args:
+        latlon: String with latitud and longitud 
+        radio: Search radius in meters
+
+    Returns:
+        Pandas DF with Bank cashier information.
+
+    """
+    print("Cajeros Banxico")
     dict_cajeros = {
         40138: 'ABC CAPITAL',
         40062: 'AFIRME',
@@ -94,16 +106,21 @@ def cajeros_banxico(latlon='19.432608,-99.133209', radio='1000000000000000000000
             cajero['direccion'] = cajero_json['d']
             cajero['actualizacion'] = str(datetime.datetime.now())
             total_cajeros.append(cajero)
-            print("Buscando cajero número " + str(i) + " de " + str(len(cajeros_json)) + " % " +str(round(i/len(cajeros_json)*100,2)))
+            print("Buscando cajero número " + str(i) + " de " + str(len(cajeros_json)) + \
+             " % " +str(round(i/len(cajeros_json)*100,2)))
 
         except:
+
             pass
 
     print('Cajeros agregados: ' + str(len(total_cajeros)))
     data = pd.DataFrame(total_cajeros)
-    data.to_csv("../data/cajeros_banxico.csv")
+    data.to_csv(local_path)
+
     return True
 
 
 if __name__ == '__main__':
-    cajeros_banxico()
+    
+    local_path = sys.argv[1]
+    cajeros_banxico(local_path=local_path)
