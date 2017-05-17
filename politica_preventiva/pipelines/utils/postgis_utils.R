@@ -51,7 +51,7 @@ GetPoligonFromPostgis <- function (conn, table, schema= "geoms", verbose = TRUE)
   sp.df <- SpatialPolygonsDataFrame(sp.temp, df.query[-1])
   
   if (verbose)
-    cat("Descargando geometría; ", table, "del schema: ",schema, sep = "")  
+    cat("Downloading geometry ", table, "Schema: ",schema, sep = "")  
   
   return (sp.df)
 }

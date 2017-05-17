@@ -74,9 +74,6 @@ class CreateSemanticDB(luigi.postgres.PostgresQuery):
 		return luigi.postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
 			password=self.password,table=self.table,update_id=self.update_id)
 
-
-
-
 class CreateCleanDB(luigi.postgres.PostgresQuery):
 
 	"""
@@ -109,6 +106,3 @@ class CreateCleanDB(luigi.postgres.PostgresQuery):
 		
 		return luigi.postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
 			password=self.password,table=self.table,update_id=self.update_id)
-
-
-

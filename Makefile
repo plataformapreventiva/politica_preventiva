@@ -20,7 +20,7 @@ VERSION_PYTHON:=$(shell cat .python-version)
 ## Bucket de amazon
 S3_BUCKET := s3://dpa-$(PROJECT_NAME)/
 
-SHELL := /bin/bash 
+SHELL := /bin/bash
 
 ########################################
 ##            Ayuda                   ##
@@ -35,6 +35,8 @@ help:   ##@ayuda Diálogo de ayuda
 ########################################
 
 init: prepare ##@dependencias Prepara la computadora para el funcionamiento del proyecto
+	$(source ./infraestructura/.env)
+	$(shell ./aws_ip_group.sh)
 
 prepare: deps 
 #	pyenv virtualenv ${PROJECT_NAME}_venv

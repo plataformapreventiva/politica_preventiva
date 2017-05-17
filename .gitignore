@@ -143,3 +143,8 @@ site/
 
 # Basura de Emacs
 **/.#*
+
+# Basura de Rstudio
+**/.Rhistory
+**/.RData
+**/.Rproj.user

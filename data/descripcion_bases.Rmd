@@ -1,4 +1,4 @@
----
+	---
 title: "analisis exploratorio BD"
 author: "rsanchezavalos"
 date: "October 21, 2016"
@@ -106,40 +106,111 @@ http://www.atlasnacionalderiesgos.gob.mx/archivo/indicadores-municipales.html
 ## CONAGUA
 ###############
 
-### Vulnerabilidad ambiental por municipio
-http://datos.gob.mx/busca/dataset/vulnerabilidad-ambiental-por-municipio
-### Grado de Vulnerabilidad Social, económica y ambiental
-http://datos.gob.mx/busca/dataset/vulnerabilidad-social-economica-y-ambiental-por-municipio
-
-### ÍNDICE DE VULNERABILIDAD GLOBAL [CONAGUA] MUNICIPAL / pdf
-
-Factores (zj) de la Vulnerabilidad, según el IPCC usados en el estudio de la CONAGUA (2011), a partir de los resultados de la AA2030:
-Grado de exposición
-- 1a: Relación brecha hídrica 2030/Oferta sustentable
-- 1b: Frecuencia de sequías: A, agrícola; H, hidrológica; S, periodo corto (menos de 6 meses); L, periodo largo (más de 6 meses)
-Sensibilidad
-- 2a: Población al 2030
-- 2b: PIB
-- 2c: Impacto económico en la agricultura
-Capacidad de adaptación
-- 3a: Sobre explotación de los acuífero
-
-http://www.pronacose.gob.mx/pronacose14/contenido/documentos/TablaVulTodoslosMpios_2457_01042016.pdf
-
-### Monitor de Sequía y disponibilidad de Agua
-
-### Monitor de Sequía [bimestral]
-Se basa en la obtención e interpretación de diversos índices o indicadores de sequía, que mediante un consenso se determinan las regiones afectadas por este fenómeno, de acuerdo a la escala de intensidades que va desde Anormalmente seco (D0), Sequía moderada (D1), Sequía severa (D2), Sequía Extrema (D3) hasta Sequía excepcional (D4).
-Este monitor forma parte del Monitor de Sequía de América del Norte (NADM) y consta de una serie de materiales que incluyen una descripción de la sequía en el país, el conteo de municipios afectados por las diferentes categorías de sequía, tablas y gráficos de porcentaje de área afectada por sequía a nivel nacional, estatal, 13 Regiones Hidrológico-Administrativas y 26 Consejos de cuenca.
-
-http://smn.cna.gob.mx/es/climatologia/monitor-de-sequia/monitor-de-sequia-en-mexico
-Sequías históricas
-http://datos.gob.mx/busca/dataset/sequias-historicas-en-mexico
+	VULNERABILIDAD SOCIAL, ECONÓMICA Y AMBIENTAL
 
 
-### SEQUÍA HIDROLÓGICA (SDI) [bimestral] MUNICIPAL IMAGEN
-http://www.pronacose.gob.mx/Contenido.aspx?n1=4&n2=21
+		### Vulnerabilidad ambiental por municipio
+			http://datos.gob.mx/busca/dataset/vulnerabilidad-ambiental-por-municipio
+
+		### Grado de Vulnerabilidad Social, económica y ambiental
+			http://datos.gob.mx/busca/dataset/vulnerabilidad-social-economica-y-ambiental-por-municipio
+
+		### ÍNDICE DE VULNERABILIDAD GLOBAL [CONAGUA] MUNICIPAL / pdf
+
+			Factores (zj) de la Vulnerabilidad, según el IPCC usados en el estudio de la CONAGUA (2011), a partir de los resultados de la AA2030:
+			Grado de exposición
+			- 1a: Relación brecha hídrica 2030/Oferta sustentable
+			- 1b: Frecuencia de sequías: A, agrícola; H, hidrológica; S, periodo corto (menos de 6 meses); L, periodo largo (más de 6 meses)
+			Sensibilidad
+			- 2a: Población al 2030
+			- 2b: PIB
+			- 2c: Impacto económico en la agricultura
+			Capacidad de adaptación
+			- 3a: Sobre explotación de los acuífero
+
+			http://www.pronacose.gob.mx/pronacose14/contenido/documentos/TablaVulTodoslosMpios_2457_01042016.pdf
+	VULNERABILIDAD A SEQUÍA
+
+		### Vulnerabilidad a Sequía (por municipio)
+			Se calcula la vulnerabilidad municipal a la sequía a partir del análisis de la vulnerabilidad social, económica y ambiental con 24 indicadores utilizando la metodología del panel intergubernamental de cambio climático (IPCC, 2007)
+
+			http://datos.gob.mx/busca/dataset/vulnerabilidad-a-las-sequias-por-municipio/resource/5ebe9d2c-3be2-4618-a715-fe0e7b827875
+
+		### Municipios por riesgo a las sequías
+			A partir del mapa de probabilidad y vulnerabilidad se saca el riesgo y se determinan los municipios con mas alto riesgo a la sequía
+
+			http://datos.gob.mx/busca/dataset/municipios-en-riesgo-por-sequias/resource/6a26869e-44e1-4c26-ab43-5f771f271c49
 
 
-### Protocolo Nacional de Alerta Ante Sequía http://www.pronacose.gob.mx/pronacose14/Contenido/Documentos/Protocolo_AlertarSequias.pdf
+	### Monitor de Sequía y disponibilidad de Agua
 
+	### Monitor de Sequía [bimestral]
+	Se basa en la obtención e interpretación de diversos índices o indicadores de sequía, que mediante un consenso se determinan las regiones afectadas por este fenómeno, de acuerdo a la escala de intensidades que va desde Anormalmente seco (D0), Sequía moderada (D1), Sequía severa (D2), Sequía Extrema (D3) hasta Sequía excepcional (D4).
+	Este monitor forma parte del Monitor de Sequía de América del Norte (NADM) y consta de una serie de materiales que incluyen una descripción de la sequía en el país, el conteo de municipios afectados por las diferentes categorías de sequía, tablas y gráficos de porcentaje de área afectada por sequía a nivel nacional, estatal, 13 Regiones Hidrológico-Administrativas y 26 Consejos de cuenca.
+
+	http://smn.cna.gob.mx/es/climatologia/monitor-de-sequia/monitor-de-sequia-en-mexico
+	Sequías históricas
+	http://datos.gob.mx/busca/dataset/sequias-historicas-en-mexico
+
+
+	### SEQUÍA HIDROLÓGICA (SDI) [bimestral] MUNICIPAL IMAGEN
+	http://www.pronacose.gob.mx/Contenido.aspx?n1=4&n2=21
+
+
+	### Protocolo Nacional de Alerta Ante Sequía http://www.pronacose.gob.mx/pronacose14/Contenido/Documentos/Protocolo_AlertarSequias.pdf
+
+
+# Secretaría de Economía
+http://www.economia-sniim.gob.mx/nuevo/Consultas/MercadosNacionales/PreciosDeMercado/Agricolas/
+
+
+
+Utilización
+	Endémicos de pobreza.
+		mala utilización 
+		Deshidratación
+		Diarrea - Desnutrición
+		Infección por protozoarios
+
+
+
+		Anemia
+		marasmo
+		kwashiorkor
+		
+		Parásitos
+
+	líder investigación
+	pedir permiso.
+	sas
+	instituto nacional de salúd pública 
+
+Instituto de ayuda slim 
+	- registro de enfermedades crónico degenerativas.
+	- 
+
+
+Variación de Precios de Alimentos
+
+	IPA -Indicator of Price Anomalies
+	This indicator is proposed as an indicator for Sustainable development Target 02.c Adopt measures to ensure the proper functioning of food commodity markets and their derivatives and facilitate timely access to market information, including on food reserves, in order to help limit extreme food price volatility.
+
+	Price Trend: Average of the log monthly price changes for the preceding 12 months. Volatility: standard deviation of the og monthly price changes for the preceding 12 months. http://www.fao.org/giews/food-prices/home/en/
+
+	http://www.foodsecurityportal.org/
+
+	Early warning system for vegetable prices
+	file:///home/baco/Downloads/sustainability-07-03823.pdf
+
+
+Costs and benefits of early warning systems
+	http://www.preventionweb.net/english/hyogo/gar/2011/en/bgdocs/Rogers_&_Tsirkunov_2011.pdf
+
+	Developing a price warning indicator as an early warning tool - a compound growth approach
+	http://www.fao.org/giews/food-prices/research/detail/es/c/235685/
+
+	Developing an indicator of price anomalies as an early warning tool: A compound growth approach
+	http://www.fao.org/fileadmin/user_upload/foodprice/docs/resources/Baquedano_2015_Developing%20a%20price%20warning%20indicator%20as%20an%20early%20warning%20tool%20a%20compound%20growth%20approach.pdf
+
+	price warnings
+	http://www.fao.org/giews/food-prices/price-warnings/en/
