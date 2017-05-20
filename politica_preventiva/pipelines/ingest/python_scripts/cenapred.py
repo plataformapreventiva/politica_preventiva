@@ -34,6 +34,9 @@ def ingest_cenapred(servicio="ANR", subservicio="MuniAPPInfo", geometria="si"):
         dataframe: Pandas Dataframe with municipality level information.
 
     """
+    if not path.exists('logs'):
+        makedirs('logs')
+    logging.basicConfig(filename='logs/cenapred.log', level=logging.DEBUG)
 
     url = "http://servicios2.cenapred.unam.mx:6080/arcgis/rest/services/{0}/{1}/MapServer/0/query?f=json".\
         format(servicio, subservicio)

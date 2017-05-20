@@ -36,6 +36,9 @@ def conagua_smn(year='2016',location="s3"):
 
 
     """
+    if not path.exists('logs'):
+        makedirs('logs')
+    logging.basicConfig(filename='logs/conagua.log', level=logging.DEBUG)
 
     ftp = FTP('200.4.8.36')     # connect to host, default port
     ftp.login(conf["SMN_USER"],conf["SMN_PASSWORD"])

@@ -4,9 +4,6 @@
 Ingesta Cajeros Banxico
     Función de Ingesta de Task Banxico
     cajeros actualizados de la base http://www.banxico.org.mx/consultas-atm/cajeros.json
-
-ToDO(Guardar cajeros no encontrados)
-ToDO(Task en dos etapas para no descargar los cajeros que ya están en la base)
 """
 
 import os
@@ -21,12 +18,14 @@ import pandas as pd
 from requests.auth import HTTPDigestAuth
 from itertools import product
 from bs4 import BeautifulSoup
+from os import path, makedirs
 from ftplib import FTP
+import logging
+from utils.postgres_utils import connect_to_database
 
 
-def cajeros_banxico(local_path="../data/cajeros_banxico/cajeros_banxico.csv",latlon='19.432608,-99.133209', 
-    radio='100000000000000000000000'):
-
+def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.133209',
+                    radio='100000000000000000000000',solo_nuevos=False):
     """
     Función que descarga de la página de www.banxico.org.mx/consultas-atm/cajeros.json
     todos los cajeros que existen en ese momento.
@@ -34,12 +33,24 @@ def cajeros_banxico(local_path="../data/cajeros_banxico/cajeros_banxico.csv",lat
     Args:
         latlon (str): String with latitud and longitud 
         radio (str): Search radius in meters
+        solo_nuevos (booleano): Only searches new ids  
 
     Returns:
-        dataframe: Saves a DataFrame with all Bank cashier information from Banxico.
+        True if task is completed
+            It also saves a DataFrame with all Bank cashier information from Banxico.
+            in local_path.
 
     """
-    print("Cajeros Banxico")
+    logging.info(
+        'Iniciando Descarga de pipeline_task {0} '.format(pipeline_task))
+
+    if not path.exists('logs'):
+        makedirs('logs')
+    logging.basicConfig(
+        filename='logs/{0}.log'.format(pipeline_task), level=logging.DEBUG)
+
+    local_output = local_path + filename + ".csv"
+
     dict_cajeros = {
         40138: 'ABC CAPITAL',
         40062: 'AFIRME',
@@ -87,7 +98,30 @@ def cajeros_banxico(local_path="../data/cajeros_banxico/cajeros_banxico.csv",lat
     total_cajeros = []
     cajeros_no_encontrados = []
 
-    print("Buscando Información por Cajero")
+    if solo_nuevos == True:
+
+        logging.info('Checando si existen cajeros nuevos para pipeline_task: {}'.
+                     format(len(cajeros_json)))
+        conn = connect_to_database()
+        cur = conn.cursor()
+        cur.execute("""SELECT  id FROM raw.cajeros_banxico""")
+        ans = cur.fetchall()
+        ids_old = []
+
+        for row in ans:
+
+            ids_old.append(row[0])
+
+        ids_new = [d['id'] for d in cajeros_json if 'id' in d]
+        ids = set(ids_new) - set(ids_old)
+        cajeros_json = [x for x in cajeros_json if x.get(
+            'id', None) in set(ids) and x.get('id', None) is not None]
+
+    else:
+        pass
+
+    logging.info('Identificando cajeros nuevos para pipeline_task: {} '.format(
+        len(cajeros_json)))
 
     for i, cajero_json in enumerate(cajeros_json):
 
@@ -97,7 +131,8 @@ def cajeros_banxico(local_path="../data/cajeros_banxico/cajeros_banxico.csv",lat
             cajero['clave_institucion'] = cajero_json['cb']
             cajero['lat'] = cajero_json['l']['lat']
             cajero['lon'] = cajero_json['l']['lng']
-            cajero['nombre_institucion'] = dict_cajeros[cajero['clave_institucion']]
+            cajero['nombre_institucion'] = dict_cajeros[
+                cajero['clave_institucion']]
             url_cajero = (CAJERO_URL + '?id=' + str(cajero['id']) + '&banco=' +
                           str(cajero['clave_institucion']))
             cajero_json = requests.get(url_cajero).json()['contenido']
@@ -106,21 +141,27 @@ def cajeros_banxico(local_path="../data/cajeros_banxico/cajeros_banxico.csv",lat
             cajero['direccion'] = cajero_json['d']
             cajero['actualizacion'] = str(datetime.datetime.now())
             total_cajeros.append(cajero)
-            print("Buscando cajero número " + str(i) + " de " + str(len(cajeros_json)) + \
-             " % " +str(round(i/len(cajeros_json)*100,2)))
+            print("Buscando cajero número " + str(i) + " de " + str(len(cajeros_json)) +
+                  " % " + str(round(i/len(cajeros_json)*100, 2)))
 
         except:
-
             pass
 
-    print('Cajeros agregados: ' + str(len(total_cajeros)))
-
+    logging.info('Cajeros agregados:{}'.format(str(len(total_cajeros))))
     data = pd.DataFrame(total_cajeros)
+    data.to_csv(local_output)
 
-    return data
+    return True
 
 
 if __name__ == '__main__':
-    
+
+    # Get Arguments from bash.
     local_path = sys.argv[1]
-    cajeros_banxico(local_path=local_path)
+    pipeline_task = sys.argv[2]
+    file_name = sys.argv[2]
+
+    # Start function.
+    cajeros_banxico(local_path=local_path, pipeline_task=pipeline_task,
+                    file_name=file_name,solo_nuevos=False)
+
