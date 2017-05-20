@@ -11,6 +11,7 @@ import luigi
 from luigi import configuration
 import luigi.s3
 from luigi.s3 import S3Target, S3Client
+from dotenv import load_dotenv,find_dotenv
 import luigi
 
 from googleplaces import GooglePlaces, types, lang
@@ -18,9 +19,7 @@ import googlemaps
 from  googlemaps import distance_matrix
 
 ## Variables de ambiente
-path = os.path.abspath('__file__' + "/../../config/")
-dotenv_path = join(path, '.env')
-load_dotenv(dotenv_path)
+load_dotenv(find_dotenv())
 
 PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 

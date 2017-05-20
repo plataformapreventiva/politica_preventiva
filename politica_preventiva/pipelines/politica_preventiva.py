@@ -15,13 +15,14 @@ from luigi.s3 import S3Target, S3Client
 from luigi import configuration
 from joblib import Parallel, delayed
 from itertools import product
+from dotenv import load_dotenv,find_dotenv
 
-from ingest.ingest_orchestra import classic_ingest, local_to_s3
-from etl.etl_orchestra import MissingClassifier, SetNeo4J, PredictiveModel, ETL
+from ingest.ingest_orchestra import UpdateOutput, LocalToS3
+from etl.etl_orchestra import ETL
 from utils.pipeline_utils import parse_cfg_list, extra_parameters
 
 
-logger = logging.getLogger("dpa-sedesol.compranet")
+logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
@@ -47,7 +48,7 @@ class RunPipelines(luigi.WrapperTask):
     def requires(self):
 
         yield Ingestpipeline(self.year_month)
-        yield EtlPipeline(self.year_month)
+        #yield EtlPipeline(self.year_month)
 
 
 class Ingestpipeline(luigi.WrapperTask):
@@ -74,15 +75,18 @@ class Ingestpipeline(luigi.WrapperTask):
         # year_date is assumed to be
 
         # Obtan the extra parameters
+
         params = {pipeline: parse_cfg_list(configuration.get_config().get(
             pipeline, "extra_parameters")) for pipeline in self.pipelines}
+        print(params)
 
         # Obtain extra parameters: each pipeline has two different parameters:
         # dates and extra
         extra = {pipeline: extra_parameters(
             pipeline, params[pipeline], self.year_month) for pipeline in self.pipelines}
+        
         # Obtain dates
-        yield Parallel(n_jobs=self.num_cores)(delayed(local_to_s3)(pipeline_task=pipeline, 
+        yield Parallel(n_jobs=self.num_cores)(delayed(LocalToS3)(pipeline_task=pipeline, 
             year_month=date, extra=extra_p) for pipeline in self.pipelines for extra_p in 
             extra[pipeline][1] for date in extra[pipeline][0])
 

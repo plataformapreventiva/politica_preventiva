@@ -20,8 +20,7 @@ from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 from luigi.contrib.postgres import PostgresTarget, PostgresQuery
 
-from utils.pg_compranet import parse_cfg_list, download_dir
-from utils.declaranet_tools import fill_with_near
+from utils.pg_sedesol import parse_cfg_string, download_dir
 
 # Variables de ambiente
 load_dotenv(find_dotenv())

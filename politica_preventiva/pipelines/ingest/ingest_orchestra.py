@@ -17,7 +17,7 @@ from luigi import configuration
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 #from luigi.contrib.postgres import PostgresTarget
-from utils.pg_compranet import parse_cfg_list, download_dir
+from utils.pg_sedesol import parse_cfg_string, download_dir
 from utils.google_utils import info_to_google_services
 
 # Variables de ambiente
@@ -26,6 +26,12 @@ load_dotenv(find_dotenv())
 # Load Postgres Schemas
 temp = open('./common/pg_raw_schemas.txt').read()
 schemas = ast.literal_eval(temp)
+
+# RDS
+database = os.environ.get("PGDATABASE")
+user = os.environ.get("POSTGRES_USER")
+password = os.environ.get("POSTGRES_PASSWORD")
+host = os.environ.get("PGHOST")
 
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -108,17 +114,18 @@ class LocalToS3(luigi.Task):
     """
 
     year_month = luigi.Parameter()
-    # name of task, both scripts and csv will be stored this way
     pipeline_task = luigi.Parameter()
+    extra = luigi.Parameter()
+
     client = luigi.s3.S3Client()
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
-    extra = luigi.Parameter()
 
     def requires(self):
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+self.pipeline_task + "--" + self.extra + ".csv"
-        return LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, local_ingest_file=local_ingest_file, extra=self.extra)
+        return LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, 
+            local_ingest_file=local_ingest_file, extra=self.extra)
 
     def run(self):
         local_ingest_file = self.local_path + self.pipeline_task + \
@@ -241,8 +248,6 @@ class sagarpa_cierre(luigi.Task):
 
 class inpc(luigi.Task):
 
-    # Las clases específicas definen el tipo de llamada por hacer
-
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
@@ -329,11 +334,13 @@ class precios_frutos(luigi.Task):
     extra = luigi.Parameter()
 
     def run(self):
+
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
         
         extra_cmd = self.extra.split('--')
         end_date = extra_cmd[0]
+
         if end_date:
             end_cmd = " ".join(['--end', end_date])
         else:
@@ -344,13 +351,23 @@ class precios_frutos(luigi.Task):
                         end_cmd, '--output', self.local_ingest_file, 
                         self.year_month] 
         cmd = " ".join(command_list)
+
         print(cmd)
+
         return subprocess.call([cmd], shell=True)
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
 
 class distance_to_services(luigi.Task):
+
+    """
+
+    Task que descarga la distancia a servicios básicos de la base de 
+    Google.
+    TODO(Definir keywords dinamicamente)
+
+    """
 
     client = luigi.s3.S3Client()
     year_month = luigi.Parameter()
@@ -365,17 +382,13 @@ class distance_to_services(luigi.Task):
 
 
     def run(self):
+
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        database = os.environ.get("PGDATABASE")
-        user = os.environ.get("POSTGRES_USER")
-        password = os.environ.get("POSTGRES_PASSWORD")
-        host = os.environ.get("PGHOST")
         conn = psycopg2.connect(dbname=database,user=user,host=host,password=password)
         cur = conn.cursor()
-        cur.execute("""SELECT
-        cve_muni, latitud, longitud FROM geoms.municipios""")
+        cur.execute("""SELECTcve_muni, latitud, longitud FROM geoms.municipios""")
         rows = pn.DataFrame(cur.fetchall(),columns=["cve_muni","lat","long"])
         rows=rows[:5]
 
@@ -389,6 +402,37 @@ class distance_to_services(luigi.Task):
             'website_{0}'.format(keyword)]] = pn.DataFrame(list(vector_dic))
 
         return rows.to_csv(self.output().path,index=False,sep="|")
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+
+class cajeros_banxico(luigi.Task):
+
+    """
+    Task que descarga los cajeros actualizados de la base de datos Banxico
+    Ver python_scripts.cajeros_banxico.py para más información
+    """
+
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    python_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+
+    def run(self):
+
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+        
+        cmd = """
+        python {0} cajeros_banxico.py
+        """.format(self.python_scripts)
+
+        print(cmd)
+
+        return subprocess.call([cmd], shell=True)
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
