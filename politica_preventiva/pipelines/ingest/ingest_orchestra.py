@@ -1,4 +1,4 @@
-|# coding: utf-8
+#| coding: utf-8
 import re
 import os
 import ast
@@ -13,7 +13,7 @@ import subprocess
 import pandas as pn
 from luigi import six, task
 from os.path import join, dirname
-from 8luigi import configuration
+from luigi import configuration
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 #from luigi.contrib.postgres import PostgresTarget
@@ -25,6 +25,7 @@ load_dotenv(find_dotenv())
 # Load Postgres Schemas
 temp = open('./common/pg_raw_schemas.txt').read()
 schemas = ast.literal_eval(temp)
+open('./common/pg_raw_schemas.txt').close()
 
 # RDS
 database = os.environ.get("PGDATABASE")
@@ -42,6 +43,106 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 #########
 # Definición de un Pipeline estandar  -> pipeline_task. 
 #######################
+
+class UpdateDB(luigi.postgres.CopyToTable):
+
+    """ 
+        Pipeline Clásico -
+        Esta Task toma la versión Output de cada pipeline_task y guarda en 
+        Postgres una tabla con su nombre para consumo del API.
+
+        ToDo(Dynamic columns -> replace the class variable with a runtime-calculated function using a @property declaration)
+        https://groups.google.com/forum/#!msg/luigi-user/FA7MdzXS9IE/RCVculxoviIJ
+    """
+
+    pipeline_task = luigi.Parameter()
+    year_month = luigi.Parameter()
+    
+    # RDS Parameters
+    database = os.environ.get("PGDATABASE_COMPRANET")
+    user = os.environ.get("POSTGRES_USER_COMPRANET")
+    password = os.environ.get("POSTGRES_PASSWORD_COMPRANET")
+    host = os.environ.get("PGHOST_COMPRANET")
+
+    @property
+    def update_id(self):
+        num = str(random.randint(0,100000))
+        return num + self.pipeline_task 
+
+    @property
+    def columns(self):
+        return schemas[self.pipeline_task]["SCHEMA"]
+
+    @property
+    def table(self):
+        return "raw." + self.pipeline_task
+
+    def requires(self):
+        
+        return UpdateOutput(pipeline_task=self.pipeline_task, year_month=self.year_month)
+
+    def rows(self):
+
+        data = pn.read_csv(self.input().path,sep="|",error_bad_lines = False,encoding="utf-8",dtype=str)       
+        #data = data.replace(r'\s+',np.nan,regex=True).replace('',np.nan)
+        data = data.replace('nan', np.nan, regex=True)
+        data = data.where((pn.notnull(data)), None)
+
+        return [tuple(x) for x in data.to_records(index=False)]
+
+    def run(self):
+
+        if not (self.table and self.columns):
+            raise Exception("table and columns need to be specified")
+
+        connection = self.output().connect()
+        tmp_dir = luigi.configuration.get_config().get('postgres', 'local-tmp-dir', None)
+        tmp_file = tempfile.TemporaryFile(dir=tmp_dir)
+        n = 0
+
+        for row in self.rows():
+            n += 1   
+            rowstr = self.column_separator.join(self.map_column(val) for val in row)
+            rowstr += "\n"
+            tmp_file.write(rowstr.encode('utf-8'))
+
+        tmp_file.seek(0)
+
+        for attempt in range(2):
+            try:
+                cursor = connection.cursor()
+                self.init_copy(connection)
+                self.copy(cursor, tmp_file)
+                self.post_copy(connection)
+            except psycopg2.ProgrammingError as e:
+                if e.pgcode == psycopg2.errorcodes.UNDEFINED_TABLE and attempt == 0:
+                    # if first attempt fails with "relation not found", try creating table
+                    
+                    connection.reset()
+                    self.create_table(connection)
+                else:
+                    raise
+            else:
+                break
+        connection.commit()
+        self.output().touch(connection)
+
+        # ToDo(Create uniq index and Foreign keys)
+        #index= schemas[self.pipeline_task]["INDEX"]
+        #cursor.execute('CREATE INDEX {0}_index ON raw.{1} ({0});'.format(index[0], self.pipeline_task))
+
+        connection.commit()
+        self.output().touch(connection)
+        # Make the changes to the database persistent
+        connection.commit()
+        connection.close()
+        tmp_file.close()
+
+    def output(self):
+
+
+        return luigi.postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
+                password=self.password,table=self.table,update_id=self.update_id)
 
 class UpdateOutput(luigi.Task):
 
