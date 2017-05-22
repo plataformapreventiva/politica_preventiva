@@ -21,11 +21,15 @@ from bs4 import BeautifulSoup
 from os import path, makedirs
 from ftplib import FTP
 import logging
-from utils.postgres_utils import connect_to_database
 
+module_parent = '../../'
+script_dir = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
+sys.path.append(os.path.normpath(os.path.join(script_dir, module_parent)))
+from utils.postgres_utils import connect_to_db  
 
 def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.133209',
                     radio='100000000000000000000000',solo_nuevos=False):
+
     """
     Función que descarga de la página de www.banxico.org.mx/consultas-atm/cajeros.json
     todos los cajeros que existen en ese momento.
@@ -46,10 +50,10 @@ def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.
 
     if not path.exists('logs'):
         makedirs('logs')
-    logging.basicConfig(
-        filename='logs/{0}.log'.format(pipeline_task), level=logging.DEBUG)
+    logging.basicConfig(filename='logs/{0}.log'.format(pipeline_task), level=logging.DEBUG)
 
-    local_output = local_path + filename + ".csv"
+    local_output = local_path + file_name 
+    print(local_output)
 
     dict_cajeros = {
         40138: 'ABC CAPITAL',
@@ -102,7 +106,7 @@ def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.
 
         logging.info('Checando si existen cajeros nuevos para pipeline_task: {}'.
                      format(len(cajeros_json)))
-        conn = connect_to_database()
+        conn = connect_to_db()
         cur = conn.cursor()
         cur.execute("""SELECT  id FROM raw.cajeros_banxico""")
         ans = cur.fetchall()
@@ -149,19 +153,20 @@ def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.
 
     logging.info('Cajeros agregados:{}'.format(str(len(total_cajeros))))
     data = pd.DataFrame(total_cajeros)
-    data.to_csv(local_output)
+    data.to_csv(local_output,sep="|",encoding="utf-8")
+
 
     return True
 
 
 if __name__ == '__main__':
 
-    # Get Arguments from bash.
+    # Get Arguments.
     local_path = sys.argv[1]
     pipeline_task = sys.argv[2]
-    file_name = sys.argv[2]
+    file_name = sys.argv[3]
 
     # Start function.
     cajeros_banxico(local_path=local_path, pipeline_task=pipeline_task,
-                    file_name=file_name,solo_nuevos=False)
+                    file_name=file_name,solo_nuevos=True)
 

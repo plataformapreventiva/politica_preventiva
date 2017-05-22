@@ -1,4 +1,4 @@
-# coding: utf-8
+|# coding: utf-8
 import re
 import os
 import ast
@@ -13,13 +13,12 @@ import subprocess
 import pandas as pn
 from luigi import six, task
 from os.path import join, dirname
-from luigi import configuration
+from 8luigi import configuration
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 #from luigi.contrib.postgres import PostgresTarget
 from utils.pg_sedesol import parse_cfg_string, download_dir
 from utils.google_utils import info_to_google_services
-
 # Variables de ambiente
 load_dotenv(find_dotenv())
 
@@ -122,6 +121,7 @@ class LocalToS3(luigi.Task):
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
 
     def requires(self):
+        
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+self.pipeline_task + "--" + self.extra + ".csv"
         return LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, 
@@ -165,6 +165,33 @@ class LocalIngest(luigi.Task):
 # Funciones usadas por el LocalIngest para los pipeline 
 # tasks del Pipeline Clásico
 #######################
+
+class pub(luigi.Task):
+
+    client = luigi.s3.S3Client()
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+    type_script = luigi.Parameter('sh')
+
+    bash_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    raw_bucket = luigi.Parameter('DEFAULT')
+
+    def run(self):
+
+            obj = luigi.s3.get_object(Bucket='dpa-compranet', Key='etl/'+ self.pipeline_task + \
+                "/output/" + self.pipeline_task + ".csv")
+            
+            output_db = pn.read_csv(obj['Body'],sep="|",error_bad_lines = False, dtype=str, encoding="utf-8")
+
+
+        return subprocess.call(cmd, shell=True)
+
+    def output(self):
+
+        return luigi.LocalTarget(self.local_ingest_file)
+
 
 class transparencia(luigi.Task):
 
@@ -386,9 +413,9 @@ class distance_to_services(luigi.Task):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        conn = psycopg2.connect(dbname=database,user=user,host=host,password=password)
+        conn = connect_to_db()
         cur = conn.cursor()
-        cur.execute("""SELECTcve_muni, latitud, longitud FROM geoms.municipios""")
+        cur.execute("""SELECT cve_muni, latitud, longitud FROM geoms.municipios""")
         rows = pn.DataFrame(cur.fetchall(),columns=["cve_muni","lat","long"])
         rows=rows[:5]
 
@@ -425,7 +452,7 @@ class cajeros_banxico(luigi.Task):
 
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        
+       
         cmd = """
         python {0} cajeros_banxico.py
         """.format(self.python_scripts)
