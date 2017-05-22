@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 Tasks for loading data from CSVs in S3 to a database
 Our pipeline generates features locally using pandas. Using these tasks, it

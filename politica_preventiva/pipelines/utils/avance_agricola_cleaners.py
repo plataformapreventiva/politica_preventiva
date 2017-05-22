@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+"""
+Cleaning Functions for avance agricola dataset
+"""
+
 import pandas as pd
 import numpy as np
 import re
 from difflib import SequenceMatcher
-"""
-Cleaning Functions for avance agricola dataset
-"""
+
 edo_dict = pd.read_pickle('utils/edos_dict.p')
 muns_dict = pd.read_pickle('utils/muns_dict.p')
 

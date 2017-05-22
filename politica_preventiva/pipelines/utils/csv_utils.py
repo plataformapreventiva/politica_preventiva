@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+""" CSV Utils
+
+This module contains utilities for Ingestion scripts for CSV files:
+
+"""
+
 import os
 import sys
 import json
@@ -20,13 +27,6 @@ from itertools import product
 from bs4 import BeautifulSoup
 from ftplib import FTP
 from boto.s3.key import Key
-
-""" CSV Utils
-
-This module contains utilities for Ingestion scripts for CSV files:
-
-"""
-
 
 def unpack_all_in_dir(archive_dir, archive_type="rar", password=None):
     """ Wrap unpack_in_place() to unpack all compressed files in a directory

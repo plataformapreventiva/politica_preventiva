@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+""" Common string functions
 """
-Common string functions
-"""
+
 import pandas as pd
 import numpy as np
 import re
