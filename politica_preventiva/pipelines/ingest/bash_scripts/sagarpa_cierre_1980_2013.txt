@@ -1,0 +1,9 @@
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_1980_1990.csv
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_1991_2000.csv
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_2001_2002.csv
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_2003_2004.csv
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_2005_2006.csv
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_2007_2008.csv
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_2009_2010.csv
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_2011_2012.csv
+http://www.sagarpa.gob.mx//quienesomos/datosabiertos/siap/estadistica//Agt_cierre_2013.csv
