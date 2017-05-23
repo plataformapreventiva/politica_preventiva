@@ -281,10 +281,10 @@ class pub(luigi.Task):
 
     def run(self):
 
-            obj = luigi.s3.get_object(Bucket='dpa-compranet', Key='etl/'+ self.pipeline_task + \
+        obj = luigi.s3.get_object(Bucket='dpa-compranet', Key='etl/'+ self.pipeline_task + \
                 "/output/" + self.pipeline_task + ".csv")
             
-            output_db = pn.read_csv(obj['Body'],sep="|",error_bad_lines = False, dtype=str, encoding="utf-8")
+        output_db = pn.read_csv(obj['Body'],sep="|",error_bad_lines = False, dtype=str, encoding="utf-8")
 
 
         return subprocess.call(cmd, shell=True)
@@ -534,31 +534,111 @@ class distance_to_services(luigi.Task):
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
 
-
-class cajeros_banxico(luigi.Task):
-
+class cenapred(luigi.Task):
     """
-    Task que descarga los cajeros actualizados de la base de datos Banxico
-    Ver python_scripts.cajeros_banxico.py para más información
+    Task que descarga los datos de cenapred
+    Ver python_scripts.cenapred.py para más información
     """
-
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
 
     python_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter()
 
     def run(self):
-
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-       
-        cmd = """
-        python {0} cajeros_banxico.py
-        """.format(self.python_scripts)
 
+        command_list = ['python', self.python_scripts + "cenapred.py",
+                        '--output', self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+
+class cajeros_banxico(luigi.Task):
+    """
+    Task que descarga los cajeros actualizados de la base de datos Banxico
+    Ver python_scripts.cajeros_banxico.py para más información
+    """
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    python_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter('DEFAULT')
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['python', self.python_scripts + "cajeros_banxico.py",
+                        '--output', self.local_ingest_file]
+        cmd = " ".join(command_list)
         print(cmd)
+
+        return subprocess.call([cmd], shell=True)
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+class indesol(luigi.Task):
+    """
+    Task que descarga las ong's con clave CLUNI de INDESOL
+    Ver bash_scripts.indesol.sh para más información
+    """
+    year_month = luigi.Paramater()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    bash_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter('DEFAULT')
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.bash_scripts + "indesol.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+class donatarias_sat(luigi.Task):
+    """
+    Task que descarga las donatarias autorizadas por SAT cada año
+    Ver bash_cripts.
+    """
+    year_month = luigi.Paramater()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    bash_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter('DEFAULT')
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.bash_scripts + "donatarias_sat.sh",
+                        self.year_month,
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+
+        cmd = " ".join(command_list)
 
         return subprocess.call([cmd], shell=True)
 
