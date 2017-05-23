@@ -361,7 +361,6 @@ class sagarpa_cierre(luigi.Task):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
         extra_cmd = self.extra.split('--')
-        start_date = extra_cmd[0]
         estado = extra_cmd[1]
 
         command_list = ['python', self.python_scripts + "sagarpa.py",
@@ -379,18 +378,19 @@ class inpc(luigi.Task):
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-    type_script = luigi.Parameter('sh')
 
-    bash_scripts = luigi.Parameter('DEFAULT')
+    python_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
-    raw_bucket = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter('DEFAULT')
 
     def run(self):
-        # Todo() this can be easily dockerized
-
-        cmd = '''
-            {}/{}.{}
-            '''.format(self.bash_scripts, self.pipeline_task, self.type_script)
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+        
+        command_list = ['python', self.python_scripts + "inpc.py",
+                        "--year", self.year_month,
+                        "--output", self.local_ingest_file] 
+        cmd = " ".join(command_list)
 
         return subprocess.call(cmd, shell=True)
 
@@ -406,17 +406,14 @@ class segob(luigi.Task):
 
     python_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+    extra = luigi.Parameter('DEFAULT')
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
         
-        extra_cmd = self.extra.split('--')
-        cultivo = extra_cmd[0]
-
-        command_list = ['python', self.python_scripts + "segob.py",
-                        self.local_ingest_file] 
+        command_list = ['python', self.python_scripts + "segob.py", 
+        '--output', self.local_ingest_file] 
         cmd = " ".join(command_list)
         print(cmd)
         return subprocess.call([cmd], shell=True)
@@ -432,7 +429,7 @@ class precios_granos(luigi.Task):
 
     python_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+    extra = luigi.Parameter('DEFAULT')
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -440,10 +437,14 @@ class precios_granos(luigi.Task):
         
         extra_cmd = self.extra.split('--')
         end_date = extra_cmd[0]
+        if end_date:
+            end_cmd = " ".join(['--end', end_date])
+        else:
+            end_cmd = ""
 
         command_list = ['python', self.python_scripts + "economia.py",
-                        '--end', end_date, '--output', self.local_ingest_file, 
-                        self.year_month] 
+                        '--start', self.year_month, end_cmd,
+                        '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
         return subprocess.call([cmd], shell=True)

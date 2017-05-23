@@ -234,7 +234,7 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
     
     if results:
         result = pd.DataFrame(results, columns=col_names)
-        result.to_csv(file_name +'.csv')
+        result.to_csv(file_name, sep='|')
     
     else:
         file = open(file_name + '.csv','w')
@@ -252,7 +252,8 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
     Returns a Pandas with Avance Nacional de Siembra for crop 'cultivo'
     from SAGARPA-SIEP. The information is divided by municipality, and
     contains info for hydrolocial mode and cicle of agricultural year.
-    This does not take months into account 
+    This does not take months into account. And note that cierre from 1980-2013 is easier to 
+    access from http://www.sagarpa.gob.mx/quienesomos/datosabiertos/siap/Paginas/estadistica.aspx
     Args:
         (start_date): format 'year-m'
         (end_date) : format 'year-m'. If None, only start_date is downloaded
@@ -435,14 +436,15 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
         file_name = '../data/sagarpa_cierre/' + dates + cultivo
     
     if results:
-        result = pd.DataFrame(temp, columns=col_names)
-        result.to_csv(file_name +'.csv')
+        result = pd.DataFrame(temp)
+        result.to_csv(file_name, sep='|')
     
     else:
-        file = open(file_name + '.txt','w')
+        file = open('missing' + '.txt','w')
+        file.write(file_name)
         file.close()
 
-    return pd.DataFrame(results, columns=col_names)
+    #return pd.DataFrame(results, columns=col_names)
 
 if __name__ == '__main__':
     import argparse
