@@ -22,8 +22,7 @@ import requests
 
 def ingest_segob_snim(output):
 
-    #estados = list(range(1, 33))
-    estados = list(range(1,4))
+    estados = list(range(1, 33))
     full_data = []
     dict_edos = {
         "1":  "11",
