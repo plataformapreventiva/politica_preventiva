@@ -152,7 +152,8 @@ def ingest_precios(start_date, end_date='', output=''):
                                 [' '.join(elem.text.lower().split()) for elem in tds])
 
                     # Check that there are indeed five columns (for five weeks a month)
-                    records = five_weeks(table, records, tipo)
+                    if records:   
+                        records = five_weeks(table, records, tipo)
 
                     # Add month, year, central de abasto
                     for row in records:
