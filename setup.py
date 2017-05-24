@@ -11,7 +11,7 @@ plataforma_preventiva-pipeline: Pipeline plataforma_preventiva
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README.org'), encoding='utf-8') as f:    
+with open(path.join(here, 'README.Rmd'), encoding='utf-8') as f:    
     long_description = f.read()
 
 setup(
