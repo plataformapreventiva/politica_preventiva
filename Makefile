@@ -1,7 +1,9 @@
 ########################################
 # Makefile for pipeline
 # Version 0.1
-# Adolfo De Unánue
+# SEDESOL
+# Roberto Sánchez 
+# Tomado de Adolfo De Unánue
 # 11 de marzo de 2017
 ########################################
 
@@ -13,13 +15,14 @@
 
 PROJECT_NAME:=$(shell cat .project-name)
 PROJECT_VERSION:=$(shell cat .project-version)
+PROJECT_USER:=$(shell cat .project-user)
+
 
 ## Versión de python
 VERSION_PYTHON:=$(shell cat .python-version)
 
 ## Bucket de amazon
-S3_BUCKET := s3://dpa-$(PROJECT_NAME)/
-
+S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 SHELL := /bin/bash
 
 ########################################
@@ -117,14 +120,14 @@ tox: clean  ##@test Ejecuta tox
 ##      Tareas de Documentación       ##
 ########################################
 
-view_docs:  ##@docs Ver la documentación en http://0.0.0.0:8000
-	@mkdocs serve
+#view_docs:  ##@docs Ver la documentación en http://0.0.0.0:8000
+#	@mkdocs serve
 
-create_docs: ##@docs Crea la documentación
-	$(MAKE) --directory=docs html
+#create_docs: ##@docs Crea la documentación
+#	$(MAKE) --directory=docs html
 
-todo:         ##@docs ¿Qué falta por hacer?
-	pylint --disable=all --enable=W0511 src
+#todo:         ##@docs ¿Qué falta por hacer?
+#	pylint --disable=all --enable=W0511 src
 
 
 ########################################
@@ -132,13 +135,14 @@ todo:         ##@docs ¿Qué falta por hacer?
 ##             de Datos               ##
 ########################################
 
+sync_to_s3: ##@data Sincroniza los datos del usuario hacia AWS S3
+	@aws s3 sync ./data/user/$(PROJECT_USER) s3://$(S3_BUCKET)/user/$(PROJECT_USER)
 
-sync_to_s3: ##@data Sincroniza los datos hacia AWS S3
-	@aws s3 sync data/ s3://$(S3_BUCKET)/data/
+S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 
+sync_from_s3: ##@data Sincroniza los datos del usuario desde AWS S3
+	@aws s3 sync s3://$(S3_BUCKET)/user/$(PROJECT_USER) ./data/user/$(PROJECT_USER) 
 
-sync_from_s3: ##@data Sincroniza los datos desde AWS S3
-	@aws s3 sync s3://$(S3_BUCKET)/data/ data/
 
 ########################################
 ##      Tareas del Proyecto           ##
@@ -152,15 +156,6 @@ setup: build install ##@proyecto Crea las imágenes del pipeline e instala el pi
 remove: uninstall  ##@proyecto Destruye la imágenes del pipeline y desinstala el pipeline del PYTHONPATH
 	$(MAKE) --directory=$(PROJECT_NAME) clean
 
-
-set_project_name: ##@proyecto Renombra el proyecto de dpa_test a PROJECT_NAME (requiere ag 'silver searcher')
-  ## Basado en http://stackoverflow.com/a/39284776/754176
-	@ag [dD]ummy -l0 | xargs -0 sed -i  "s/[dD]ummy/${PROJECT_NAME}/g"
-  ## Renombrar la carpeta del proyecto
-	@if [ -d dummy ] ; then \
-     mv dummy/pipelines/dummy.py dummy/pipelines/$(PROJECT_NAME).py ; \
-     mv dummy $(PROJECT_NAME) ; \
-  fi;
 
 build:
 	$(MAKE) --directory=$(PROJECT_NAME) build
