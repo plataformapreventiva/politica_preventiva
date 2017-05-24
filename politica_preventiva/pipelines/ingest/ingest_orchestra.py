@@ -376,7 +376,7 @@ class sagarpa_cierre(luigi.Task):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
         extra_cmd = self.extra.split('--')
-        estado = extra_cmd[1]
+        estado = extra_cmd[0]
 
         command_list = ['python', self.python_scripts + "sagarpa.py",
                         '--start', self.year_month, '--estado', estado,
