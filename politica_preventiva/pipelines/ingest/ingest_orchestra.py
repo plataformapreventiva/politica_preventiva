@@ -327,7 +327,7 @@ class transparencia(luigi.Task):
     def run(self):
 
         command_list = ['sh', self.bash_scripts + 'transparencia.sh',
-                        self.local_ingest_file]
+                        self.local_path + '/' + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
         return subprocess.call(cmd, shell=True)
