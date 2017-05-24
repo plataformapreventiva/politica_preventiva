@@ -74,7 +74,7 @@ class Ingestpipeline(luigi.WrapperTask):
         # Note: if there is a 'start_date' parameter, then the info is downloaded monthly and
         # year_date is assumed to be
 
-        # Obtan the extra parameters
+        # Obtain the extra parameters
 
         params = {pipeline: parse_cfg_list(configuration.get_config().get(
             pipeline, "extra_parameters")) for pipeline in self.pipelines}
@@ -84,10 +84,10 @@ class Ingestpipeline(luigi.WrapperTask):
         # dates and extra
         extra = {pipeline: extra_parameters(
             pipeline, params[pipeline], self.year_month) for pipeline in self.pipelines}
-        
+ 
         # Obtain dates
         yield Parallel(n_jobs=self.num_cores)(delayed(LocalToS3)(pipeline_task=pipeline, 
-            year_month=date, extra=extra_p) for pipeline in self.pipelines for extra_p in 
+            year_month=str(date), extra=extra_p) for pipeline in self.pipelines for extra_p in 
             extra[pipeline][1] for date in extra[pipeline][0])
 
 

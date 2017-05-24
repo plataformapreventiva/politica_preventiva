@@ -10,7 +10,7 @@ Funciones de Descarga y limpieza de Task Segob
 import os
 import requests
 import numpy as np
-import pandas as pn
+import pandas as pd
 import json
 from requests.auth import HTTPDigestAuth
 import datetime
@@ -104,18 +104,18 @@ def ingest_segob_snim(output):
             print("getting data from municipality : " +
                   str(estado).zfill(2) + str(municipio).zfill(3))
 
-    file = pn.DataFrame(full_data)
-    file.to_csv(output)
+    file = pd.DataFrame(full_data)
+    file.to_csv(output, sep='|')
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Download SEGOB data for municipalities')
 
-    parser.add_argument('output', type=str, default='segob',
+    parser.add_argument('--output', type=str, default='segob',
         help = 'Name of output file')
-    
+
     args = parser.parse_args()
     output = args.output
-    
-    ingest_inpc_ciudad(output)
+
+    ingest_segob_snim(output)
 

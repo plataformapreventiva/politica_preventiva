@@ -4,10 +4,10 @@
 { 
      "Nombre_Table": 
      {    "SCHEMA":
-               [("Var1", "INT"),
-               ("Var2", "TEXT")], 
+		[("Var1", "INT"),
+		("Var2", "TEXT")], 
 
           "INDEX":
-          ['CLAVE_UC']s
+          ['CLAVE_UC']
      }
 }

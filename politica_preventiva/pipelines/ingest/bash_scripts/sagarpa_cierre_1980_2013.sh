@@ -8,7 +8,7 @@ echo "Descarga CIERRE DE PRODUCCION AGRICOLA CSVs (desde 1980 hasta 2013)"
 mkdir -p ../data/sagarpa_cierre_1980_2013/
 
 
-for i in $(cat ingest/bash_scripts/sagarpa_cierre_1980_2013.txt);
+for i in $(cat sagarpa_cierre_1980_2013.txt);
 do 
 wget ${url}${i} -P ../data/sagarpa_cierre_1980_2013/
 done

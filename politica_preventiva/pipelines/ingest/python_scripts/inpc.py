@@ -170,7 +170,7 @@ def ingest_inpc_ciudad(year='2017', historic=False,
             logging.info("Error downloading data for: year={}, historic={}, city={}".format(year, historic, ciudad))
 
     if output:
-        data.to_csv(output + '.csv')
+        data.to_csv(output, sep='|')
     else:
         return data, metadata
 
@@ -178,7 +178,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Download IPC for cities')
     
-    parser.add_argument('year', type=str, default='2017',
+    parser.add_argument('--year', type=str, default='2017',
         help= 'First month to download, as string format yyyy-m')
     parser.add_argument('--historic', type=bool, default=False,
         help= 'If True, download all data until the specified year')
@@ -195,34 +195,3 @@ if __name__ == '__main__':
         ingest_inpc_ciudad(year=year, historic_until=True, output=output)
     else:
         ingest_inpc_ciudad(year=year, output=output)
-
-
-
-# cols = {
-# 'indice':'Indice general',
-# 'alim_bt':'Alimentos, bebidas y tabaco',
-# 'alim':'Alimentos',
-# 'alim_pantc':'Pan, tortillas y cereales',
-# 'alim_car':'Carnes',
-# 'alim_pescm':'Pescados y mariscos',
-# 'alim_lech':'Leche, derivados de leche y huevo',
-# 'alim_aceig':'Aceites y grasas comestibles',
-# 'alim_fruth':'Frutas y hortalizas',
-# 'alim_azucf':'Azucar, cafe y refrescos envasados',
-# 'alim_otr':'Otros alimentos',
-# 'alim_alcht':'Bebidas alcoholicas y tabaco',
-# 'ropa':'Ropa, calzado y accesorios',
-# 'viv':'Vivienda',
-# 'mueb':'Muebles, aparatos y accesorios domesticos',
-# 'salu':'Salud y cuidado personal',
-# 'transp':'Transporte',
-# 'edu':'Educacion y esparcimiento',
-# 'otro':'Otros servicios',
-# 'cmae_1':'CMAE: Sector economico primario',
-# 'cmae_2':'CMAE: Sector economico secundario',
-# 'cmae_2':'CMAE: Sector economico terciario',
-# 'scian_1':'SCIAN: Sector economico primario',
-# 'scian_2':'SCIAN: Sector economico secundario',
-# 'scian_3':'SCIAN: Sector economico terciario'
-# }
-

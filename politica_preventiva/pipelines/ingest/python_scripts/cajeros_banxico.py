@@ -25,9 +25,9 @@ import logging
 module_parent = '../../'
 script_dir = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(script_dir, module_parent)))
-from utils.postgres_utils import connect_to_db  
+from utils.postgres_utils import connect_to_db
 
-def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.133209',
+def cajeros_banxico(output, latlon='19.432608,-99.133209',
                     radio='100000000000000000000000',solo_nuevos=False):
 
     """
@@ -35,26 +35,26 @@ def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.
     todos los cajeros que existen en ese momento.
 
     Args:
-        latlon (str): String with latitud and longitud 
-        radio (str): Search radius in meters
-        solo_nuevos (booleano): Only searches new ids  
+        latlon (str): String with latitud and longitud. The default value is
+                      Mexico centroid.
+        radio (str): Search radius in meters.
+        solo_nuevos (booleano): Only stores new ids
 
     Returns:
         True if task is completed
             It also saves a DataFrame with all Bank cashier information from Banxico.
-            in local_path.
+            in output as csv with sep='|'.
 
     """
-    logging.info(
-        'Iniciando Descarga de pipeline_task {0} '.format(pipeline_task))
+    #logging.info('Iniciando Descarga de pipeline_task cajeros_banxico')
 
+    # Create logging
     if not path.exists('logs'):
         makedirs('logs')
-    logging.basicConfig(filename='logs/{0}.log'.format(pipeline_task), level=logging.DEBUG)
+    #logging.basicConfig(filename='logs/cajeros_banxico.log',
+    #                    level=logging.DEBUG)
 
-    local_output = local_path + file_name 
-    print(local_output)
-
+    # cajeros ids
     dict_cajeros = {
         40138: 'ABC CAPITAL',
         40062: 'AFIRME',
@@ -90,20 +90,17 @@ def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.
         7: 'SUPERAMA'
     }
 
+    # First API call to get all cajeros ids
     CAJEROS_URL = ('http://www.banxico.org.mx/consultas-atm/cajeros.json?l=' +
                    latlon + '&b=&r=' + radio)
-
-    CAJERO_URL = 'http://www.banxico.org.mx/consultas-atm/cajeros/info.json'
-
     print('Buscando cajeros en ' + CAJEROS_URL)
-
     cajeros_json = requests.get(CAJEROS_URL).json()['contenido']
 
+    # If only new ids want to be stored
     total_cajeros = []
     cajeros_no_encontrados = []
-
     if solo_nuevos == True:
-
+        # check database
         logging.info('Checando si existen cajeros nuevos para pipeline_task: {}'.
                      format(len(cajeros_json)))
         conn = connect_to_db()
@@ -113,7 +110,6 @@ def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.
         ids_old = []
 
         for row in ans:
-
             ids_old.append(row[0])
 
         ids_new = [d['id'] for d in cajeros_json if 'id' in d]
@@ -127,46 +123,51 @@ def cajeros_banxico(local_path, pipeline_task, file_name, latlon='19.432608,-99.
     logging.info('Identificando cajeros nuevos para pipeline_task: {} '.format(
         len(cajeros_json)))
 
+    cajeros_json
+    # Second API call to get all info for each cajero id
+    CAJERO_URL = 'http://www.banxico.org.mx/consultas-atm/cajeros/info.json'
     for i, cajero_json in enumerate(cajeros_json):
+       try:
+           cajero = {}
+           cajero['id'] = cajero_json['id']
+           cajero['clave_institucion'] = cajero_json['cb']
+           cajero['lat'] = cajero_json['l']['lat']
+           cajero['lon'] = cajero_json['l']['lng']
+           cajero['nombre_institucion'] = dict_cajeros[
+               cajero['clave_institucion']]
+           url_cajero = (CAJERO_URL + '?id=' + str(cajero['id']) + '&banco=' +
+                         str(cajero['clave_institucion']))
+           cajero_json = requests.get(url_cajero).json()['contenido']
+           cajero['cp'] = str(cajero_json['cp'])
+           cajero['horario'] = cajero_json['hs']
+           cajero['direccion'] = cajero_json['d']
+           cajero['actualizacion'] = str(datetime.datetime.now())
+           total_cajeros.append(cajero)
+           print("Buscando cajero número " + str(i) + " de " + str(len(cajeros_json)) +
+                 " % " + str(round(i/len(cajeros_json)*100, 2)))
 
-        try:
-            cajero = {}
-            cajero['id'] = cajero_json['id']
-            cajero['clave_institucion'] = cajero_json['cb']
-            cajero['lat'] = cajero_json['l']['lat']
-            cajero['lon'] = cajero_json['l']['lng']
-            cajero['nombre_institucion'] = dict_cajeros[
-                cajero['clave_institucion']]
-            url_cajero = (CAJERO_URL + '?id=' + str(cajero['id']) + '&banco=' +
-                          str(cajero['clave_institucion']))
-            cajero_json = requests.get(url_cajero).json()['contenido']
-            cajero['cp'] = str(cajero_json['cp'])
-            cajero['horario'] = cajero_json['hs']
-            cajero['direccion'] = cajero_json['d']
-            cajero['actualizacion'] = str(datetime.datetime.now())
-            total_cajeros.append(cajero)
-            print("Buscando cajero número " + str(i) + " de " + str(len(cajeros_json)) +
-                  " % " + str(round(i/len(cajeros_json)*100, 2)))
-
-        except:
-            pass
+       except:
+           pass
 
     logging.info('Cajeros agregados:{}'.format(str(len(total_cajeros))))
+    # Store info
     data = pd.DataFrame(total_cajeros)
-    data.to_csv(local_output,sep="|",encoding="utf-8")
-
+    data.replace(to_replace='|', value='-', inplace=True)
+    data.to_csv(output, sep='|', encoding="utf-8", index=False)
 
     return True
 
 
 if __name__ == '__main__':
 
-    # Get Arguments.
-    local_path = sys.argv[1]
-    pipeline_task = sys.argv[2]
-    file_name = sys.argv[3]
-
+    # Get Arguments from bash.
+    parser = argparse.ArgumentParser(description= 'Download Cajeros Banxico')
+    parser.add_argument('--output', type=str, default='',
+                        help = 'Name of outputfile')
+    # Read arguments
+    args = parser.parse_args()
+    output = args.output
     # Start function.
-    cajeros_banxico(local_path=local_path, pipeline_task=pipeline_task,
-                    file_name=file_name,solo_nuevos=True)
+    cajeros_banxico(output=output,
+                    solo_nuevos=False)
 

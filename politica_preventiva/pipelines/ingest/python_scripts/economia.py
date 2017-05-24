@@ -152,7 +152,8 @@ def ingest_precios(start_date, end_date='', output=''):
                                 [' '.join(elem.text.lower().split()) for elem in tds])
 
                     # Check that there are indeed five columns (for five weeks a month)
-                    records = five_weeks(table, records, tipo)
+                    if records:   
+                        records = five_weeks(table, records, tipo)
 
                     # Add month, year, central de abasto
                     for row in records:
@@ -175,7 +176,7 @@ def ingest_precios(start_date, end_date='', output=''):
     if results:
 
         result = pd.DataFrame(results, columns=col_names)
-        result.to_csv(file_name +'.csv', index=False)
+        result.to_csv(file_name, index=False, sep='|')
 
     else:
 
@@ -348,17 +349,17 @@ def ingest_frutos(start_date, end_date='', output=''):
     if results:
 
         result = pd.DataFrame(results, columns=col_names)
-        result.to_csv(file_name, index=False)
+        result.to_csv(file_name, index=False, sep='|')
 
     else:
 
-        file = open(file_name + '.csv','w')
+        file = open(file_name,'w')
         file.close()
         file = open('missing.txt','w')
         file.write(file_name)
         file.close()
 
-    return pd.DataFrame(results, columns=col_names)
+    
 
 
 
@@ -391,7 +392,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Download the Secretariat of Economy's \
         Prices for different centrales de abasto")
     
-    parser.add_argument('start', type=str, default='2004-1',
+    parser.add_argument('--start', type=str, default='2004-1',
         help= 'First month to download, as string format yyyy-m')
     parser.add_argument('--end', type=str, default='',
         help= 'Last month to download, as string format yyyy-m. If None, \
