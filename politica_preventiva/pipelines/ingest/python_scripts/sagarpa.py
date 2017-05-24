@@ -237,7 +237,7 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
         result.to_csv(file_name, sep='|')
     
     else:
-        file = open(file_name + '.csv','w')
+        file = open(file_name,'w')
         file.close()
         file = open('missing.txt','w')
         file.write(file_name)
@@ -432,7 +432,7 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
     if output:
         file_name=output
     else:
-        dates = end_date + '--sagarpa_cierre--' + start_date + '--'
+        dates = end_date + '--sagarpa_cierre--' + start_date + '--' 
         file_name = '../data/sagarpa_cierre/' + dates + cultivo
     
     if results:
@@ -440,7 +440,9 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
         result.to_csv(file_name, sep='|')
     
     else:
-        file = open('missing' + '.txt','w')
+        file = open(file_name,'w')
+        file.close()
+        file = open('missing.txt','w')
         file.write(file_name)
         file.close()
 
