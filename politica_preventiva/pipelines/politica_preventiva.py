@@ -74,7 +74,7 @@ class Ingestpipeline(luigi.WrapperTask):
         # Note: if there is a 'start_date' parameter, then the info is downloaded monthly and
         # year_date is assumed to be
 
-        # Obtan the extra parameters
+        # Obtain the extra parameters
 
         params = {pipeline: parse_cfg_list(configuration.get_config().get(
             pipeline, "extra_parameters")) for pipeline in self.pipelines}
