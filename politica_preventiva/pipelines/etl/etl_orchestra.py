@@ -16,6 +16,7 @@ import pandas as pn
 from luigi import six
 from os.path import join, dirname
 from luigi import configuration
+from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 from luigi.contrib.postgres import PostgresTarget, PostgresQuery
@@ -41,7 +42,7 @@ class ETL(luigi.Task):
 
     	return MergeDBs(self.year_month)
 
-class CreateSemanticDB(luigi.postgres.PostgresQuery):
+class CreateSemanticDB(postgres.PostgresQuery):
 
 	year_month = luigi.Parameter()
 	sql_scripts = luigi.Parameter('EtlPipeline')
@@ -73,7 +74,7 @@ class CreateSemanticDB(luigi.postgres.PostgresQuery):
 		return luigi.postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
 			password=self.password,table=self.table,update_id=self.update_id)
 
-class CreateCleanDB(luigi.postgres.PostgresQuery):
+class CreateCleanDB(postgres.PostgresQuery):
 
 	"""
 	

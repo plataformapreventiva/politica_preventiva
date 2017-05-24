@@ -22,7 +22,8 @@ import requests
 
 def ingest_segob_snim(output):
 
-    estados = list(range(1, 33))
+    #estados = list(range(1, 33))
+    estados = list(range(1,4))
     full_data = []
     dict_edos = {
         "1":  "11",
@@ -104,7 +105,7 @@ def ingest_segob_snim(output):
             print("getting data from municipality : " +
                   str(estado).zfill(2) + str(municipio).zfill(3))
 
-    file = pn.DataFrame(full_data)
+    file = pd.DataFrame(full_data)
     file.to_csv(output, sep='|')
 
 if __name__ == '__main__':
@@ -113,9 +114,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--output', type=str, default='segob',
         help = 'Name of output file')
-    
+
     args = parser.parse_args()
     output = args.output
-    
-    ingest_inpc_ciudad(output)
+
+    ingest_segob_snim(output)
 
