@@ -220,7 +220,6 @@ class LocalToS3(luigi.Task):
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     extra = luigi.Parameter()
-
     client = luigi.s3.S3Client()
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address

@@ -20,13 +20,12 @@ from dotenv import load_dotenv,find_dotenv
 from ingest.ingest_orchestra import UpdateOutput, LocalToS3
 from etl.etl_orchestra import ETL
 from utils.pipeline_utils import parse_cfg_list, extra_parameters
-
+import pdb
 
 logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
-
 
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
