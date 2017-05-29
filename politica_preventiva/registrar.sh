@@ -1,4 +1,4 @@
-IMAGES="download-declaranet"
+IMAGES=""
 IMAGE_VERSION="0.1"
 DOCKER_REGISTRY="localhost:5000"
 

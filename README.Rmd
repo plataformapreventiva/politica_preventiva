@@ -18,9 +18,23 @@ calling `make init` and `make deploy`.
 * PostGIS 2.1.4
 * ...and other Python packages (see `requirements.txt`)
 
-### Configuration Files
+## Data Pipeline
 
-### Wishful
+After you create the evironment set up the pipeline_tasks in luigi.cfg 
+The general process of the pipeline is:
+
+* **Ingest:**
+* LocalIngest: Ingest data from multiple sources
+* LocalToS3: Upload to S3 and save historical by date
+* UpdateOutput: Preprocess to Output
+* UpdateDB: Update Postgres tables and Create indexes (see commons/pg_raw_schemas)
+* **ETL:**
+* MergeDBs: ETL processes to clean
+* CleanDB: SQL processes to clean tables creation
+* SetNeo4J: Download clean tables and upload to neo4j
+* **Model:**
+*
+*
 
 ### Contributors
 

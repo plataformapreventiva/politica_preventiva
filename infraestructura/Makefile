@@ -41,16 +41,16 @@ create: .network_built .images_built .data_built #.network_built .images_built
 
 .data_built:
 	echo ${DATA_DIRECTORY}
-	[ -d ${DATA_DIRECTORY} ] && docker volume create --name ${PROJECT_NAME}_store --opt type=none --opt device=${DATA_DIRECTORY} --opt o=bind
+	[ -d ${DATA_DIRECTORY} ] && sudo docker volume create --name ${PROJECT_NAME}_store --opt type=none --opt device=${DATA_DIRECTORY} --opt o=bind
 	@touch .data_built
 
 .network_built:
-	@docker network create --driver overlay --subnet=10.0.9.0/24 --attachable ${PROJECT_NAME}_net
+	@sudo docker network create --driver overlay --subnet=10.0.9.0/24 --attachable ${PROJECT_NAME}_net
 	@touch .network_built
 
 
 .infrastructure_built:
-	@docker-compose --project-name ${PROJECT_NAME} build
+	@sudo docker-compose --project-name ${PROJECT_NAME} build
 	@touch .infrastructure_built
 
 
@@ -59,7 +59,7 @@ register_images:
 
 
 stop:
-	docker-compose --project-name ${PROJECT_NAME} stop
+	sudo docker-compose --project-name ${PROJECT_NAME} stop
 	@rm -rf .running || true
 
 status:
@@ -76,18 +76,18 @@ clean: stop clean_containers clean_data clean_network
 nuke: clean clean_images
 
 clean_containers:
-	@docker-compose --project-name ${PROJECT_NAME} down --volumes --remove-orphans
-	@docker-compose --project-name ${PROJECT_NAME} rm -f
+	@sudo docker-compose --project-name ${PROJECT_NAME} down --volumes --remove-orphans
+	@sudo docker-compose --project-name ${PROJECT_NAME} rm -f
 	@rm -rf .infrastructure_built || true
 
 clean_images:
-	@docker images -a | grep "dpa" | awk  '{print $1 "\:" $2}' | xargs docker rmi
+	@sudo docker images -a | grep "dpa" | awk  '{print $1 "\:" $2}' | xargs docker rmi
 	@rm -rf .images_built || true
 
 clean_data:
-	@docker volume rm ${PROJECT_NAME}_store
+	@sudo docker volume rm ${PROJECT_NAME}_store
 	@rm -rf .data_built || true
 
 clean_network: stop
-	@docker network rm ${PROJECT_NAME}_net
+	@sudo docker network rm ${PROJECT_NAME}_net
 	@rm -rf .network_built || true
