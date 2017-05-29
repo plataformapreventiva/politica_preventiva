@@ -38,7 +38,7 @@ def extra_parameters(pipeline, parameters, end_date):
         parameters: list containing extra parameters
         end_date: only necessary if using an extra parameter.
     """
-
+    end_date = end_date.strftime("%Y-%m")
     if (len(parameters) == 1 and len(parameters[0]) > 0):
 
         parsed = parse_cfg_list(configuration.get_config().get(pipeline, parameters[0]))

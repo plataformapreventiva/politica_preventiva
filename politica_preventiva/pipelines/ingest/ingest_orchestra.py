@@ -167,7 +167,9 @@ class UpdateOutput(luigi.Task):
     local_path = luigi.Parameter('DEFAULT')
 
     def requires(self):
-        return LocalToS3(pipeline_task=self.pipeline_task, year_month=self.year_month)
+        return LocalToS3(pipeline_task=self.pipeline_task, 
+			 year_month=self.year_month,
+			 extra=extra_p)
 
     def run(self):
 
@@ -209,6 +211,31 @@ class UpdateOutput(luigi.Task):
 
         return True
 
+class Preprocess(luigi.Task):
+    current_date = luigi.dateParameter()
+    pipeline_task = luigi.Parameter()
+    client = luigi.s3.S3Client()
+    
+    def requieres(self):
+        params = parse_cfg_list(configuration.get_config().get(self.pipeline_task,
+                                                               "extra_parameters")
+        extra = extra_parameters(pipeline, 
+                                 params[pipeline], 
+                                 self.current_date)
+
+        return [LocalToS3(pipeline_task=self.pipeline_task,
+                          year_month=str(date),
+                          extra=extra_p) for extra_p in extra[pipeline][1] 
+                                         for date in extra[pipeline][0]]
+
+    def run(self):
+        # TODO: checar si tiene extra generar una funcion para el extra sino solo copiar el archivo 
+        #       de raw a preprocess
+
+    def output(self):
+        return S3Target(path=self.raw_bucket + self.pipeline_task + "/preprocess/" +
+                        self.year_month + "--" +self.pipeline_task)
+
 class LocalToS3(luigi.Task):
 
     """
@@ -242,7 +269,7 @@ class LocalToS3(luigi.Task):
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+self.pipeline_task + extra_h + ".csv"
         return self.client.put(local_path=local_ingest_file,
-                               destination_s3_path=self.raw_bucket + self.pipeline_task + "/raw/" + 
+                               destination_s3_path = self.raw_bucket + self.pipeline_task + "/raw/" + 
                                self.year_month + "--" +
                                self.pipeline_task +  extra_h + ".csv")
 
