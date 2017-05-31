@@ -132,6 +132,7 @@ site/
 *.pdf
 *.ppt*
 *.sqlite
+*.swp
 
 # De la construcción de imágenes y contenedores
 **/.built*
