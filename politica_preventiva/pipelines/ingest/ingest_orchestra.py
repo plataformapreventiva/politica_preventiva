@@ -19,6 +19,7 @@ from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 #from luigi.contrib.postgres import PostgresTarget
+from utils.pipeline_utils import parse_cfg_list, extras
 from utils.pg_sedesol import parse_cfg_string, download_dir
 #from utils.google_utils import info_to_google_services
 # Variables de ambiente
@@ -159,8 +160,8 @@ class UpdateOutput(luigi.Task):
 
         ToDo(Spark Version)
     """
-
-    client = luigi.s3.S3Client()
+    client = luigi.s3.S3Client(aws_access_key_id=aws_access_key_id,
+                               aws_secret_access_key=aws_secret_access_key)
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
     raw_bucket = luigi.Parameter('DEFAULT')
@@ -212,29 +213,34 @@ class UpdateOutput(luigi.Task):
         return True
 
 class Preprocess(luigi.Task):
-    current_date = luigi.dateParameter()
+    current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
+    year_month = luigi.Parameter()
     client = luigi.s3.S3Client()
+    #raw_bucket = luigi.Parameter('DEFAULT')
+    raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
     
-    def requieres(self):
-        params = parse_cfg_list(configuration.get_config().get(self.pipeline_task,
-                                                               "extra_parameters")
-        extra = extra_parameters(pipeline, 
-                                 params[pipeline], 
-                                 self.current_date)
-
+    def requires(self):
+        extra = extras(self.pipeline_task)
         return [LocalToS3(pipeline_task=self.pipeline_task,
-                          year_month=str(date),
-                          extra=extra_p) for extra_p in extra[pipeline][1] 
-                                         for date in extra[pipeline][0]]
+                          year_month=self.year_month,
+                          extra=extra_p) for extra_p in extra]
 
     def run(self):
         # TODO: checar si tiene extra generar una funcion para el extra sino solo copiar el archivo 
         #       de raw a preprocess
+        params = parse_cfg_list(configuration.get_config().get(self.pipeline_task,
+                                                               "extra_parameters"))
+        source_path = self.raw_bucket + self.pipeline_task + "/raw/" +\
+                      self.year_month + "--" +self.pipeline_task + '.csv'
+        destination_path = self.raw_bucket + self.pipeline_task + "/preprocess/" +\
+                           self.year_month + "--" +self.pipeline_task + '.csv'
+        self.client.move(source_path, destination_path)
 
+    
     def output(self):
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/preprocess/" +
-                        self.year_month + "--" +self.pipeline_task)
+                        self.year_month + "--" +self.pipeline_task + '.csv')
 
 class LocalToS3(luigi.Task):
 

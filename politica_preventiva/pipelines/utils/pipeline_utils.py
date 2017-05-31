@@ -14,11 +14,12 @@ import unicodedata
 import pandas as pn
 import numpy as np
 import luigi
+import pdb
 import luigi.postgres
 from luigi import configuration
 from luigi import six
 from itertools import product
-
+from configparser import ConfigParser, NoOptionError, NoSectionError
 
 
 def parse_cfg_list(string):
@@ -27,6 +28,25 @@ def parse_cfg_list(string):
     """
     string = string.split(",")
     return [m.strip() for m in string]
+
+def historical_dates(pipeline, end_date):
+    end_date = end_date.strftime("%Y-%m")
+    try:
+        parse_start_date = parse_cfg_list(configuration.get_config().get(pipeline, 'start_date'))
+        dates = date_ranges(parse_start_date, end_date)
+        return dates
+    except (NoOptionError):
+        return [end_date]
+
+def extras(pipeline):
+    try:
+        param = parse_cfg_list(configuration.get_config().get(pipeline,
+                                                              "extra_parameters"))
+        extra = parse_cfg_list(configuration.get_config().get(pipeline, param))
+        return extra_dict
+
+    except (NoOptionError):
+        return ['']
 
 def extra_parameters(pipeline, parameters, end_date):
     """

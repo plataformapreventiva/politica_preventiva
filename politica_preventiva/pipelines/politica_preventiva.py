@@ -17,20 +17,20 @@ from joblib import Parallel, delayed
 from itertools import product
 from dotenv import load_dotenv,find_dotenv
 
-from ingest.ingest_orchestra import UpdateOutput, LocalToS3
+from ingest.ingest_orchestra import UpdateOutput, LocalToS3, Preprocess
 from etl.etl_orchestra import ETL
-from utils.pipeline_utils import parse_cfg_list, extra_parameters
+from utils.pipeline_utils import parse_cfg_list, extra_parameters, historical_dates
 import pdb
 
 logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
+#load_dotenv('../.env')
 
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
 
 class RunPipelines(luigi.WrapperTask):
 
@@ -40,7 +40,7 @@ class RunPipelines(luigi.WrapperTask):
 
     # Pipeline corre mensualmente
     # start_year_month= el pipe de adolfo incluye un start month -> ver rita
-    current_date = datetime.date.today()
+    current_date = luigi.DateParameter(default=datetime.date.today())
 
     def requires(self):
 
@@ -58,7 +58,7 @@ class Ingestpipeline(luigi.WrapperTask):
     # ToDo() Checar la temporalidad de la ingesta: (e.g. si es mensual y toca
     # correr)
 
-    current_date = luigi.Parameter()
+    current_date = luigi.DateParameter()
     conf = configuration.get_config()
 
     # List all pipelines to run
@@ -69,11 +69,11 @@ class Ingestpipeline(luigi.WrapperTask):
     def requires(self):
 
         # Note: if there is a 'start_date' parameter, then the info is downloaded monthly and
-        # year_date is assumed to be
-
         # loop through pipeline tasks
         yield [Preprocess(current_date=self.current_date,
-                          pipeline_task=pipeline) for pipeline in self.pipelines]
+                          pipeline_task=pipeline,
+                          year_month=str(date)) for pipeline in self.pipelines 
+                                           for date in historical_dates(pipeline,self.current_date)]
 
 
 class EtlPipeline(luigi.WrapperTask):
