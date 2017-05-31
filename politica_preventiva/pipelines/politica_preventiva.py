@@ -63,17 +63,12 @@ class Ingestpipeline(luigi.WrapperTask):
 
     # List all pipelines to run
     pipelines = parse_cfg_list(conf.get("Ingestpipeline", "pipelines"))
-    # Get number of cores in which to run pipeline
-    num_cores = multiprocessing.cpu_count()
 
     def requires(self):
 
-        # Note: if there is a 'start_date' parameter, then the info is downloaded monthly and
         # loop through pipeline tasks
-        yield [Preprocess(current_date=self.current_date,
-                          pipeline_task=pipeline,
-                          year_month=str(date)) for pipeline in self.pipelines 
-                                           for date in historical_dates(pipeline,self.current_date)]
+        yield [Concatenation(current_date=self.current_date,
+                             pipeline_task=pipeline) for pipeline in self.pipelines]
 
 
 class EtlPipeline(luigi.WrapperTask):
