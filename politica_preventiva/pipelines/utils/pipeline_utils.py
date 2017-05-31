@@ -120,6 +120,31 @@ class TableCopyToS3(luigi.Task):
 
         conn.close()
 
+def gather(df, key, value, cols):
+    """
+    Function similar to tidyr gather; takes a wide df and turns it into a long df.
+    Args;
+        (df): wide data frame to transform
+        (key): string name for the variable that contains column names
+        (value): string name for the variable that will contain the values
+        (cols): list/dict of columns with to change into one variable
+    """
+    import pandas as pd
+    id_vars = [col for col in df.columns if col not in cols]
+    id_values = cols
+    var_name = key
+    value_name = value
+    return pd.melt(df, id_vars, id_values, var_name, value_name)
+
+def complete_missing_values(col):
+    """
+    Function for filling in values that are known but missing explicitly; eg, in 
+    precios_granos if a 'producto' contains many 'origenes', the product is only 
+    specifiend in the first row. 
+    Args:
+        (col): column to complete    
+    """
+    pass
 
 def remove_accents(input_str):
     nfkd_form = unicodedata.normalize('NFKD', input_str)
@@ -160,3 +185,30 @@ def cve_loc_construct(cve_ent,cve_mun,cve_loc):
     except:
         cve_locc = ""
     return  pn.Series({'cve_ent':cve_ent,'cve_mun':cve_mun,'cve_locc':cve_locc}) 
+
+"""
+class Preprocess(luigi.Task):
+    current_date = luigi.dateParameter()
+    pipeline_task = luigi.Parameter()
+    client = luigi.s3.S3Client()
+    
+    def requires(self):
+        params = parse_cfg_list(configuration.get_config().get(self.pipeline_task,
+                                                               "extra_parameters")
+        extra = extra_parameters(pipeline, 
+                                 params[pipeline], 
+                                 self.current_date)
+
+        return [LocalToS3(pipeline_task=self.pipeline_task,
+            year_month=str(date),
+            extra=extra_p) for extra_p in extra[pipeline][1] for date in extra[pipeline][0]]
+
+    def run(self):
+        # TODO: checar si tiene extra generar una funcion para el extra sino solo copiar el archivo 
+        #       de raw a preprocess
+        pass
+
+    def output(self):
+        return S3Target(path=self.raw_bucket + self.pipeline_task + "/preprocess/" +
+                        self.year_month + "--" +self.pipeline_task)
+"""
