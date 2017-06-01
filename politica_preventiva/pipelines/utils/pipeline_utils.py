@@ -20,13 +20,12 @@ from luigi import six
 from itertools import product
 import boto3
 
-def s3_to_pandas(Bucket,Keym,sep="|"):
+def s3_to_pandas(Bucket,Key,sep="|"):
 
     s3 = boto3.client('s3')
     obj = s3.get_object(Bucket=Bucket,Key=Key)
 
     return pd.read_csv(obj['Body'],sep=sep)
-
 
 
 def parse_cfg_list(string):
