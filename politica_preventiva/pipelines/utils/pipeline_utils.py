@@ -11,7 +11,6 @@ import psycopg2
 import numpy as np
 import pandas as pd
 import unicodedata
-import pandas as pn
 import numpy as np
 import luigi
 import pdb
@@ -149,7 +148,6 @@ def gather(df, key, value, cols):
         (value): string name for the variable that will contain the values
         (cols): list/dict of columns with to change into one variable
     """
-    import pandas as pd
     id_vars = [col for col in df.columns if col not in cols]
     id_values = cols
     var_name = key
@@ -164,7 +162,30 @@ def complete_missing_values(col):
     Args:
         (col): column to complete    
     """
-    pass
+    col_comp = []
+    last = col[0]
+    for row in col:
+        if not is_empty(row):
+            last = row
+            col_comp.append(row)
+        else:
+            col_comp.append(last)
+    return col_comp
+
+
+def is_empty(x):
+    """
+    Simple checking if something is either None, an empty string or nan
+    """
+    if not x:
+        return True
+    try:
+        if np.isnan(x):
+            return True
+    except (TypeError, AttributeError):
+        pass
+    return False
+
 
 def remove_accents(input_str):
     nfkd_form = unicodedata.normalize('NFKD', input_str)
@@ -204,7 +225,7 @@ def cve_loc_construct(cve_ent,cve_mun,cve_loc):
 
     except:
         cve_locc = ""
-    return  pn.Series({'cve_ent':cve_ent,'cve_mun':cve_mun,'cve_locc':cve_locc}) 
+    return  pd.Series({'cve_ent':cve_ent,'cve_mun':cve_mun,'cve_locc':cve_locc}) 
 
 """
 class Preprocess(luigi.Task):
