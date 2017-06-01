@@ -21,7 +21,10 @@ from itertools import product
 import boto3
 
 def s3_to_pandas(Bucket,Key,sep="|"):
-
+    """
+    Downloads csv from s3 bucket into a pandas Dataframe
+    Assumes aws keys as environment variables
+    """
     s3 = boto3.client('s3')
     obj = s3.get_object(Bucket=Bucket,Key=Key)
 
