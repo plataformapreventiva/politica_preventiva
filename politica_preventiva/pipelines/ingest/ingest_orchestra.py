@@ -259,9 +259,27 @@ class Preprocess(luigi.Task):
                          extra=self.extra)
 
     def run(self):
-        # TODO: cleaning, transpose and add date columns
+        if len(self.extra) > 0:
+            extra_h = "--" + self.extra
+        else:
+            extra_h = ""
+        s3_path=self.raw_bucket + self.pipeline_task + "/raw/" +
+            self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
+        if len(self.extra) > 0:
+            extra_h = "--" + self.extra
+        else:
+            extra_h = ""
+        preprocess_task = eval(self.pipeline_task + '_preprocess')
+
+        return preprocess_tasks(year_month=self.year_month,
+                             pipeline_task=self.pipeline_task,
+                             extra=self.extra, output=path=self.raw_bucket + 
+                             self.pipeline_task + "/preprocess/" + self.year_month + 
+                             "--" +self.pipeline_task + extra_h + ".csv")
+
 
     def output(self):
+        ####### NOTA: EL OUTPUT CAMBIA SI EL 
         if len(self.extra) > 0:
             extra_h = "--" + self.extra
         else:

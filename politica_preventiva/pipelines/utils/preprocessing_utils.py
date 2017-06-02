@@ -8,8 +8,8 @@
 
 
 import numpy as np
-import pandas as pd
-
+import pandas as 
+from StringIO import StringIO
 
 
 def gather(df, key, value, cols):
@@ -57,4 +57,11 @@ def is_empty(x):
             return True
     except (TypeError, AttributeError):
         pass
+    try:
+        if pd.isnull(x):
+            return True
+    except Exception:
+        pass
+
     return False
+

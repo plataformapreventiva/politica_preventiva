@@ -20,6 +20,16 @@ from luigi import six
 from itertools import product
 from configparser import ConfigParser, NoOptionError, NoSectionError
 
+def s3_to_pandas(Bucket,Key,sep="|"):
+    """
+    Downloads csv from s3 bucket into a pandas Dataframe
+    Assumes aws keys as environment variables
+    """
+    s3 = boto3.client('s3')
+    obj = s3.get_object(Bucket=Bucket,Key=Key)
+
+    return pd.read_csv(obj['Body'],sep=sep)
+
 
 def parse_cfg_list(string):
     """
@@ -27,6 +37,12 @@ def parse_cfg_list(string):
     """
     string = string.split(",")
     return [m.strip() for m in string]
+
+def get_extra_str(string):
+    if len(string) > 0:
+        extra_h = "--" + string
+    else:
+        extra_h = ""
 
 def historical_dates(pipeline, end_date):
     end_date = end_date.strftime("%Y-%m")

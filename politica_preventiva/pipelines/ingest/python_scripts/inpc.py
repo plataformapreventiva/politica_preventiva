@@ -179,7 +179,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Download IPC for cities')
     
     parser.add_argument('--year', type=str, default='2017',
-        help= 'First month to download, as string format yyyy-m')
+        help= 'Year to download, as string format yyyy')
     parser.add_argument('--historic', type=bool, default=False,
         help= 'If True, download all data until the specified year')
     parser.add_argument('--output', type=str, default='inpc',
