@@ -17,7 +17,7 @@ from joblib import Parallel, delayed
 from itertools import product
 from dotenv import load_dotenv,find_dotenv
 
-from ingest.ingest_orchestra import UpdateOutput, LocalToS3
+from ingest.ingest_orchestra import UpdateDB, LocalToS3
 from etl.etl_orchestra import ETL
 from utils.pipeline_utils import parse_cfg_list, extra_parameters
 import pdb
@@ -66,7 +66,7 @@ class Ingestpipeline(luigi.WrapperTask):
     # List all pipelines to run
     pipelines = parse_cfg_list(conf.get("Ingestpipeline", "pipelines"))
     # Get number of cores in which to run pipeline
-    num_cores = multiprocessing.cpu_count()
+    num_cores = 1# multiprocessing.cpu_count()
 
     def requires(self):
 
@@ -85,7 +85,7 @@ class Ingestpipeline(luigi.WrapperTask):
             pipeline, params[pipeline], self.year_month) for pipeline in self.pipelines}
  
         # Obtain dates
-        yield Parallel(n_jobs=self.num_cores)(delayed(LocalToS3)(pipeline_task=pipeline, 
+        yield Parallel(n_jobs=self.num_cores)(delayed(UpdateDB)(pipeline_task=pipeline, 
             year_month=str(date), extra=extra_p) for pipeline in self.pipelines for extra_p in 
             extra[pipeline][1] for date in extra[pipeline][0])
 
