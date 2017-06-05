@@ -14,21 +14,45 @@ import unicodedata
 import numpy as np
 import luigi
 import pdb
-import luigi.postgres
+import boto3
+#import luigi.postgresql
 from luigi import configuration
 from luigi import six
 from itertools import product
+from io import StringIO
 from configparser import ConfigParser, NoOptionError, NoSectionError
+from dotenv import load_dotenv,find_dotenv
 
-def s3_to_pandas(Bucket,Key,sep="|"):
+load_dotenv(find_dotenv())
+# AWS
+aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+def s3_to_pandas(Bucket, Key, sep="|"):
     """
     Downloads csv from s3 bucket into a pandas Dataframe
     Assumes aws keys as environment variables
     """
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key)
     obj = s3.get_object(Bucket=Bucket,Key=Key)
 
     return pd.read_csv(obj['Body'],sep=sep)
+
+
+def pandas_to_s3(df, Bucket, Key, sep="|"):
+    """
+    Adds a pandas dataframe (df) to a csv file in an s3 bucket with 
+    the specified key. 
+    """
+    s3 = boto3.resource('s3', aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key)
+
+    s = StringIO()
+    df.to_csv(s, sep=sep)
+
+    s3.Object(Bucket, Key).put(Body=s.getvalue())
+
 
 
 def parse_cfg_list(string):
