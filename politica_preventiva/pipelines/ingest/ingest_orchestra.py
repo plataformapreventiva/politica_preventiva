@@ -19,8 +19,9 @@ from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 #from luigi.contrib.postgres import PostgresTarget
-from utils.pipeline_utils import parse_cfg_list, extras
+from utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates
 from utils.pg_sedesol import parse_cfg_string, download_dir
+from utils import s3_utils
 #from utils.google_utils import info_to_google_services
 # Variables de ambiente
 load_dotenv(find_dotenv())
@@ -217,33 +218,36 @@ class Concatenation(luigi.Task):
     pipeline_task = luigi.Parameter()
     client = luigi.s3.S3Client()
     #raw_bucket = luigi.Parameter('DEFAULT')
-    historic = configuration.get_config().getboolean('DEFAULT', 'historic')
+    historical = configuration.get_config().getboolean('DEFAULT', 'historical')
     raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
     
     def requires(self):
         extra = extras(self.pipeline_task)
 
-        if historic:
-            dates = historical_dates(self.pipeline,self.current_date)
-            return [Preprocess(pipeline_task=self.pipeline_task,
-                               year_month=str(date),
-                               current_date=self.current_date,
-                               extra=extra_p) for extra_p in extra
-                                              for date in dates]
+        if self.historical:
+            dates = historical_dates(self.pipeline_task, self.current_date)
         else:
-            last_date = latest_date(self.pipeline, self.current_date) 
-            return [Preprocess(pipeline_task=self.pipeline_task,
-                               year_month=last_date,
-                               current_date=self.current_date,
-                               extra=extra_p) for extra_p in extra]
-             
-    def run(self):
-        # TODO: appendear todos los archivos
+            dates = latest_dates(self.pipeline_task, self.current_date)
 
+        return [Preprocess(pipeline_task=self.pipeline_task,
+                           year_month=str(date),
+                           current_date=self.current_date,
+                           extra=extra_p) for extra_p in extra
+                                          for date in dates]
+
+    def run(self):
+        # filepath of the output
+        result_filepath =  self.pipeline_task + "/concatenation/" + \
+                      self.pipeline_task + '.csv'
+        # folder to concatenate
+        folder_to_concatenate = self.pipeline_task + "/preprocess/"
+        # function for appending all .csv files in folder_to_concatenate 
+        s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
+        
     
     def output(self):
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/concatenation/" +
-                        self.year_month + "--" +self.pipeline_task + '.csv')
+                         self.pipeline_task + '.csv')
 
 class Preprocess(luigi.Task):
     current_date = luigi.DateParameter()
@@ -251,7 +255,8 @@ class Preprocess(luigi.Task):
     year_month = luigi.Parameter()
     extra = luigi.Parameter()
     client = luigi.s3.S3Client()
-    raw_bucket = luigi.Parameter('DEFAULT')
+    raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
+    #raw_bucket = luigi.Parameter('DEFAULT')
 
     def requires(self):
         return LocalToS3(year_month=self.year_month,
@@ -260,6 +265,11 @@ class Preprocess(luigi.Task):
 
     def run(self):
         # TODO: cleaning, transpose and add date columns
+        source_path = self.raw_bucket + self.pipeline_task + '/raw/' + self.year_month + \
+                      '--' + self.pipeline_task + '.csv'
+        destination_path = self.raw_bucket + self.pipeline_task + '/preprocess/' + self.year_month + \
+                          '--' + self.pipeline_task + '.csv'
+        self.client.copy(source_path, destination_path)
 
     def output(self):
         if len(self.extra) > 0:
