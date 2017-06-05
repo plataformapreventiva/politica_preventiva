@@ -19,6 +19,7 @@ from luigi import configuration
 from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
+from itertools import product
 #from luigi.contrib.postgres import PostgresTarget
 from utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates
 from utils.pg_sedesol import parse_cfg_string, download_dir
@@ -51,7 +52,7 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 @contextmanager
 def wrapper_failure(task):
     try:
-        yield
+        return task
     except GeneratorExit as e:
         raise e  # Don't break luigi
     except BaseException as e:
@@ -238,12 +239,12 @@ class Concatenation(luigi.Task):
             dates = historical_dates(self.pipeline_task, self.current_date)
         else:
             dates = latest_dates(self.pipeline_task, self.current_date)
-        with wrapper_failure(self):
-            [Preprocess(pipeline_task=self.pipeline_task,
+        for extra_p, date in product(extra, dates):
+            task = Preprocess(pipeline_task=self.pipeline_task,
                            year_month=str(date),
                            current_date=self.current_date,
-                           extra=extra_p) for extra_p in extra
-                                          for date in dates]
+                           extra=extra_p) 
+            yield task
 
     def run(self):
         # filepath of the output
@@ -253,6 +254,8 @@ class Concatenation(luigi.Task):
         folder_to_concatenate = self.pipeline_task + "/preprocess/"
         # function for appending all .csv files in folder_to_concatenate 
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
+        # Delete files in preprocess
+        self.client.remove(folder_to_concatenate)
         
     
     def output(self):
@@ -269,10 +272,11 @@ class Preprocess(luigi.Task):
     #raw_bucket = luigi.Parameter('DEFAULT')
 
     def requires(self):
-        with wrapper_failure(self):
-            LocalToS3(year_month=self.year_month,
+        #with wrapper_failure(self):
+        task = LocalToS3(year_month=self.year_month,
                          pipeline_task=self.pipeline_task,
                          extra=self.extra)
+        return task
 
     def run(self):
         # TODO: cleaning, transpose and add date columns
@@ -316,9 +320,10 @@ class LocalToS3(luigi.Task):
             extra_h = ""
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+ self.pipeline_task + extra_h + ".csv"
-        with wrapper_failure(self):
-            LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, 
+        #with wrapper_failure(self):
+        task =  LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, 
             local_ingest_file=local_ingest_file, extra=self.extra)
+        return task
 
     def run(self):
         if len(self.extra) > 0:
@@ -359,12 +364,12 @@ class LocalIngest(luigi.Task):
 
     def requires(self):
         classic_tasks = eval(self.pipeline_task)
-        with wrapper_failure(self):
-            classic_tasks(year_month=self.year_month,
+        #with wrapper_failure(self):
+        task = classic_tasks(year_month=self.year_month,
                                  pipeline_task=self.pipeline_task,
                                  local_ingest_file=self.local_ingest_file,
                                  extra=self.extra)
-
+        return task
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
 
