@@ -14,21 +14,12 @@ import unicodedata
 import pandas as pn
 import numpy as np
 import luigi
+import pdb
 import luigi.postgres
 from luigi import configuration
 from luigi import six
 from itertools import product
-import boto3
-
-def s3_to_pandas(Bucket,Key,sep="|"):
-    """
-    Downloads csv from s3 bucket into a pandas Dataframe
-    Assumes aws keys as environment variables
-    """
-    s3 = boto3.client('s3')
-    obj = s3.get_object(Bucket=Bucket,Key=Key)
-
-    return pd.read_csv(obj['Body'],sep=sep)
+from configparser import ConfigParser, NoOptionError, NoSectionError
 
 
 def parse_cfg_list(string):
@@ -37,6 +28,34 @@ def parse_cfg_list(string):
     """
     string = string.split(",")
     return [m.strip() for m in string]
+
+def historical_dates(pipeline, end_date):
+    end_date = end_date.strftime("%Y-%m")
+    try:
+        parse_start_date = configuration.get_config().get(pipeline, 'start_date')
+        dates = date_ranges(parse_start_date, end_date)
+        return dates
+    except (NoOptionError):
+        return [end_date]
+
+def latest_dates(pipeline, end_date):
+    end_date = end_date.strftime("%Y-%m")
+    try:
+        parse_start_date = configuration.get_config().get(pipeline, 'start_date')
+        dates = date_ranges(parse_start_date, end_date)[-2:]
+        return dates
+    except(NoOptionError):
+        return [end_date]
+
+def extras(pipeline):
+    try:
+        param = parse_cfg_list(configuration.get_config().get(pipeline,
+                                                              "extra_parameters"))
+        extra = parse_cfg_list(configuration.get_config().get(pipeline, param))
+        return extra_dict
+
+    except (NoOptionError):
+        return ['']
 
 def extra_parameters(pipeline, parameters, end_date):
     """
@@ -48,7 +67,7 @@ def extra_parameters(pipeline, parameters, end_date):
         parameters: list containing extra parameters
         end_date: only necessary if using an extra parameter.
     """
-
+    end_date = end_date.strftime("%Y-%m")
     if (len(parameters) == 1 and len(parameters[0]) > 0):
 
         parsed = parse_cfg_list(configuration.get_config().get(pipeline, parameters[0]))
@@ -99,7 +118,8 @@ def date_ranges(start_date, end_date):
         years = list(range(start_year, end_year + 1))
         months = list(range(1, 13))
 
-        dates = [str(year) + '-' + str(month) for year, month in product(years, months) if (month < end_month or year < end_year) and (month >= start_month or year > start_year)]
+        dates = [str(year) + '-' + str(month).zfill(2) for year, month in product(years, months) 
+                     if (month < end_month or year < end_year) and (month >= start_month or year > start_year)]
     else:
         end_year = int(end_date.split('-')[0])
         dates = [int(year) for year in range(int(start_date), end_year + 1)]
