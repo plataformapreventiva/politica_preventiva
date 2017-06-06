@@ -78,8 +78,7 @@ class UpdateDB(postgres.CopyToTable):
         return UpdateOutput(pipeline_task=self.pipeline_task,
             year_month=self.year_month, extra=self.extra)
 
-
-    @property
+    @property #TODO()
     def update_id(self):
         num = str(random.randint(0,100000))
         return num + self.pipeline_task
@@ -119,18 +118,24 @@ class UpdateDB(postgres.CopyToTable):
             raise Exception('columns must consist of column strings or (column string, type string) tuples (was %r ...)' % (self.columns[0],))
 
         # Create temporary table temp
-        cmd = " CREATE TABLE raw.tmp ({0});".format(create_sql)
+        cmd = " CREATE TEMPORARY TABLE tmp  ({0});".format(create_sql)
+
+        # ToDo(Create uniq index and Foreign keys)
+        index= schemas[self.pipeline_task]["INDEX"]
+        cmd += 'CREATE INDEX IF NOT EXISTS {0}_index ON tmp ({0});'.format(index[0], self.pipeline_task)
         cursor.execute(cmd)
 
         #Copy to TEMP table
-        cursor.copy_from(file, "raw.tmp", null=r'\\N', sep=self.column_separator, columns=column_names)
+        cursor.copy_from(file, "tmp", null=r'\\N', sep=self.column_separator, columns=column_names)
 
-        #Check if raw table exists if not, create
-        cmd = "CREATE TABLE IF NOT EXISTS {0}  ({1});".format(self.table,create_sql)
+        #Check if raw table exists if not create with index
+        cmd = "CREATE TABLE IF NOT EXISTS {0}  ({1}) ;".format(self.table,create_sql,unique_sql)
+        cmd+='CREATE INDEX IF NOT EXISTS {0}_index ON raw.{1} ({0});'.format(index[0],self.table)
 
-        #Upsert from TEMP to raw table
-        cmd += "INSERT INTO {0} SELECT * FROM raw.tmp ON CONFLICT DO NOTHING;".format(self.table,unique_sql)
-        cmd += "DROP TABLE raw.tmp;"
+        # SET exception from TEMP to raw table
+        cmd += "INSERT INTO {0} \
+            SELECT {1} FROM tmp EXCEPT SELECT {1} FROM {0} \
+            ORDER BY {2};".format(self.table,unique_sql,index)
         cursor.execute(cmd)
         connection.commit()
         return True
@@ -174,12 +179,6 @@ class UpdateDB(postgres.CopyToTable):
                 break
 
         connection.commit()
-
-        self.output().touch(connection)
-
-        # ToDo(Create uniq index and Foreign keys)
-        index= schemas[self.pipeline_task]["INDEX"]
-        cursor.execute('CREATE INDEX IF NOT EXISTS {0}_index ON raw.{1} ({0});'.format(index[0], self.pipeline_task))
 
         # Make the changes to the database persistent
         connection.commit()
@@ -227,6 +226,7 @@ class UpdateOutput(luigi.Task):
         output_path = self.raw_bucket + self.pipeline_task + \
             "/output/" + self.pipeline_task + ".csv"
 
+        #TODO(UPDATE PATH FROM CHILD TASK)
         # Path of last ingested version 
         input_path = "s3://dpa-plataforma-preventiva/etl/indesol/preprocess/" + \
          self.year_month + "--" + self.pipeline_task + ".csv"

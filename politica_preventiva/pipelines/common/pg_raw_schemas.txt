@@ -23,7 +23,7 @@
 		("numero_exterior","TEXT"),
 		("numero_interior","TEXT"),
 		("cp","TEXT"),
-		("redes","TEXT"),
+		("redes","TEXT"),	
 		("actividad_1","TEXT"),
 		("actividad_2","TEXT"),
 		("actividad_3","TEXT"),
