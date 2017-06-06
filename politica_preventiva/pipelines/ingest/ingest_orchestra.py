@@ -73,10 +73,10 @@ class UpdateDB(postgres.CopyToTable):
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
 
-    def requires(self):
+    #def requires(self):
 
-        return UpdateOutput(pipeline_task=self.pipeline_task,
-            year_month=self.year_month, extra=self.extra)
+    #    return UpdateOutput(pipeline_task=self.pipeline_task,
+    #        year_month=self.year_month, extra=self.extra)
 
     @property #TODO()
     def update_id(self):
@@ -93,8 +93,10 @@ class UpdateDB(postgres.CopyToTable):
 
 
     def rows(self):
-        # Path of last "ouput" version
-        output_path = self.input().path
+        # Path of last "ouput" version #TODO(Return to input version)
+        #output_path = self.input().path
+        output_path = "s3://dpa-plataforma-preventiva/etl/indesol/preprocess/" + \
+         "2017-06" + "--" + self.pipeline_task + ".csv"
         data = pd.read_csv(output_path,sep="|", encoding="utf-8",dtype=str)
         #data = data.replace(r'\s+',np.nan,regex=True).replace('',np.nan)
         data = data.replace('nan', np.nan, regex=True)
@@ -117,22 +119,21 @@ class UpdateDB(postgres.CopyToTable):
         else:
             raise Exception('columns must consist of column strings or (column string, type string) tuples (was %r ...)' % (self.columns[0],))
 
+        index= schemas[self.pipeline_task]["INDEX"][0]
+
         # Create temporary table temp
         cmd = " CREATE TEMPORARY TABLE tmp  ({0});".format(create_sql)
-
-        # ToDo(Create uniq index and Foreign keys)
-        index= schemas[self.pipeline_task]["INDEX"]
-        cmd += 'CREATE INDEX IF NOT EXISTS {0}_index ON tmp ({0});'.format(index[0], self.pipeline_task)
+        cmd += 'CREATE INDEX IF NOT EXISTS {0}_index ON tmp ({0});'.format(index, self.pipeline_task)
         cursor.execute(cmd)
 
-        #Copy to TEMP table
+        # Copy to TEMP table
         cursor.copy_from(file, "tmp", null=r'\\N', sep=self.column_separator, columns=column_names)
 
-        #Check if raw table exists if not create with index
+        # Check if raw table exists if not create and build index (defined in common/pg_raw_schemas)
         cmd = "CREATE TABLE IF NOT EXISTS {0}  ({1}) ;".format(self.table,create_sql,unique_sql)
-        cmd+='CREATE INDEX IF NOT EXISTS {0}_index ON raw.{1} ({0});'.format(index[0],self.table)
+        cmd+='CREATE INDEX IF NOT EXISTS {0}_index ON {1} ({0});'.format(index,self.table)
 
-        # SET exception from TEMP to raw table
+        # SET except from TEMP to raw table ordered 
         cmd += "INSERT INTO {0} \
             SELECT {1} FROM tmp EXCEPT SELECT {1} FROM {0} \
             ORDER BY {2};".format(self.table,unique_sql,index)
@@ -180,87 +181,22 @@ class UpdateDB(postgres.CopyToTable):
 
         connection.commit()
 
-        # Make the changes to the database persistent
-        connection.commit()
+        # mark as complete using our update_id defined above
         self.output().touch(connection)
+
+        # commit and clean up
         connection.commit()
         connection.close()
         tmp_file.close()
 
-        # Remove last output file
-        self.client.remove(self.raw_bucket + self.pipeline_task +
-                   "/output/" + self.pipeline_task + ".csv")
+        # Remove last processing file
+        # self.client.remove(self.raw_bucket + self.pipeline_task +
+        #           "/processing/" + self.pipeline_task + ".csv")
 
     def output(self):
         return luigi.postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
                 password=self.password,table=self.table,update_id=self.update_id)
 
-class UpdateOutput(luigi.Task):
-
-    """
-        Pipeline Clásico -
-        Descarga Bash/Python Almacenamiento en S3
-
-        Task Actualiza la versión Output de cada PipelineTask
-        comparando con la última en raw.
-
-        ToDo(Spark Version)
-    """
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    extra = luigi.Parameter()
-    client = luigi.s3.S3Client()
-    s3 = boto3.client('s3')
-    local_path = luigi.Parameter('DEFAULT')  # path where csv is located
-    raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
-
-
-    def requires(self):
-
-        yield LocalToS3(pipeline_task=self.pipeline_task, year_month=self.year_month, extra=self.extra)
-
-    def run(self):
-
-        # Path of last "ouput" version
-        output_path = self.raw_bucket + self.pipeline_task + \
-            "/output/" + self.pipeline_task + ".csv"
-
-        #TODO(UPDATE PATH FROM CHILD TASK)
-        # Path of last ingested version 
-        input_path = "s3://dpa-plataforma-preventiva/etl/indesol/preprocess/" + \
-         self.year_month + "--" + self.pipeline_task + ".csv"
-        #self.input()[0].path
-        #self.raw_bucket + self.pipeline_task + "/raw/" + self.year_month + \
-        #"--" + self.pipeline_task + ".csv"
-
-        # Define local path
-        local_ingest_file = self.local_path  +self.pipeline_task + "/" +self.pipeline_task  + ".csv"            
-
-        if not self.client.exists(path=output_path):
-            return self.client.copy(source_path=input_path, destination_path=output_path)
-
-        else:
-            #TODO(QUITAR HARDCODE, errores en raw con sep [Andrea])
-            # last output version
-            output_db = s3_to_pandas(Bucket='dpa-plataforma-preventiva', Key='etl/indesol/preprocess/2017-6--indesol.csv')
-
-            # Get last ingested version
-            input_db = s3_to_pandas(Bucket='dpa-plataforma-preventiva', Key='etl/'+ self.pipeline_task + \
-                 "/raw/" + self.year_month + "--" + self.pipeline_task + ".csv")
-
-            # Append last ingested with last output DB
-            output_db = output_db.append(input_db, ignore_index=True)
-            output_db.drop_duplicates(keep='last', inplace=True)
-            output_db.to_csv(local_ingest_file,index=False,sep="|")
-
-            return self.client.put(local_path=local_ingest_file,destination_s3_path=output_path)
-
-
-
-    def output(self):
-        return S3Target(path=self.raw_bucket + self.pipeline_task + \
-            "/output/" + self.pipeline_task + ".csv")
 
 class LocalToS3(luigi.Task):
 
