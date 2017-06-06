@@ -37,7 +37,7 @@ def s3_to_pandas(Bucket, Key, sep="|"):
         aws_secret_access_key=aws_secret_access_key)
     obj = s3.get_object(Bucket=Bucket,Key=Key)
 
-    return pd.read_csv(obj['Body'],sep=sep)
+    return pd.read_csv(obj['Body'], sep=sep, keep_default_na=False)
 
 
 def pandas_to_s3(df, Bucket, Key, sep="|"):
@@ -52,7 +52,6 @@ def pandas_to_s3(df, Bucket, Key, sep="|"):
     df.to_csv(s, sep=sep)
 
     s3.Object(Bucket, Key).put(Body=s.getvalue())
-
 
 
 def parse_cfg_list(string):
