@@ -55,11 +55,15 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 def wrapper_failure(task):
     try:
         yield
+
     except GeneratorExit as e:
         raise e  # Don't break luigi
-    except DependencyMissing as e:
+    except Exception as e:
         task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
-        raise e
+        #@classmethod 
+        #def output(self):
+        #    return True
+        pass
 
 class UpdateDB(postgres.CopyToTable):
 
@@ -85,15 +89,16 @@ class UpdateDB(postgres.CopyToTable):
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
 
-    #def requires(self):
-
-    #    return UpdateOutput(pipeline_task=self.pipeline_task,
-    #        year_month=self.year_month, extra=self.extra)
+    def requires(self):
+        with wrapper_failure(self):
+            return Concatenation(current_date=self.current_date,
+                             pipeline_task=self.pipeline_task)
 
     @property #TODO()
     def update_id(self):
         #num = str(random.randint(0,100000)) + self.pipeline_task
-        return str(self.current_date)  + self.pipeline_task
+        num = str(self.current_date)  + self.pipeline_task
+        return num 
 
     @property
     def columns(self):
@@ -219,6 +224,7 @@ class Concatenation(luigi.Task):
     raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
     
     def requires(self):
+
         extra = extras(self.pipeline_task)
 
         if self.historical:
@@ -226,14 +232,15 @@ class Concatenation(luigi.Task):
         else:
             dates = latest_dates(self.pipeline_task, self.current_date)
         for extra_p, date in product(extra, dates):
-            task = Preprocess(pipeline_task=self.pipeline_task,
+            with wrapper_failure(self):
+                return Preprocess(pipeline_task=self.pipeline_task,
                            year_month=str(date),
                            current_date=self.current_date,
                            extra=extra_p) 
-            yield task
 
     def run(self):
         # filepath of the output
+        pdb.set_trace()
         result_filepath =  self.pipeline_task + "/concatenation/" + \
                       self.pipeline_task + '.csv'
         # folder to concatenate
@@ -241,7 +248,7 @@ class Concatenation(luigi.Task):
         # function for appending all .csv files in folder_to_concatenate 
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
         # Delete files in preprocess
-        self.client.remove(self.raw_bucket + '/' + folder_to_concatenate)
+        self.client.remove(self.raw_bucket + folder_to_concatenate)
         
     
     def output(self):
