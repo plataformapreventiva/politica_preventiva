@@ -4,6 +4,7 @@ import os
 import ast
 import luigi
 import psycopg2
+import random
 import pdb
 import boto3
 import sqlalchemy
@@ -11,17 +12,21 @@ import tempfile
 import numpy as np
 import datetime
 import subprocess
+from contextlib import contextmanager
 import pandas as pd
 from luigi import six, task
+from ingest.preprocessing_scripts.preprocessing_scripts import *
 from os.path import join, dirname
 from luigi import configuration
 #from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
+from itertools import product
 from luigi.contrib.postgres import PostgresTarget
-from ingest.preprocessing_scripts.preprocessing_scripts import *
-from utils.pipeline_utils import parse_cfg_list, extras
+from utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates, get_extra_str
 from utils.pg_sedesol import parse_cfg_string, download_dir
+from utils.pipeline_utils import s3_to_pandas
+from utils import s3_utils
 #from utils.google_utils import info_to_google_services
 
 # Variables de ambiente
@@ -48,6 +53,15 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 #########
 # Definición de un Pipeline estandar  -> pipeline_task. 
 #######################
+@contextmanager
+def wrapper_failure(task):
+    try:
+        yield
+    except GeneratorExit as e:
+        raise e  # Don't break luigi
+    except DependencyMissing as e:
+        task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
+        raise e
 
 class UpdateDB(postgres.CopyToTable):
 
@@ -60,20 +74,28 @@ class UpdateDB(postgres.CopyToTable):
         runtime-calculated function using a @property declaration)
         https://groups.google.com/forum/#!msg/luigi-user/FA7MdzXS9IE/RCVculxoviIJ
     """
-
+    current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
-    year_month = luigi.Parameter()
+    #extra = luigi.Parameter()
+    client = luigi.s3.S3Client()
+    local_path = luigi.Parameter('DEFAULT')  # path where csv is located
+    raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
 
-    # RDS Parameters
-    database = os.environ.get("PGDATABASE_COMPRANET")
-    user = os.environ.get("POSTGRES_USER_COMPRANET")
-    password = os.environ.get("POSTGRES_PASSWORD_COMPRANET")
-    host = os.environ.get("PGHOST_COMPRANET")
+    #RDS
+    database = os.environ.get("PGDATABASE")
+    user = os.environ.get("POSTGRES_USER")
+    password = os.environ.get("POSTGRES_PASSWORD")
+    host = os.environ.get("PGHOST")
 
-    @property
+    #def requires(self):
+
+    #    return UpdateOutput(pipeline_task=self.pipeline_task,
+    #        year_month=self.year_month, extra=self.extra)
+
+    @property #TODO()
     def update_id(self):
-        num = str(random.randint(0,100000))
-        return num + self.pipeline_task
+        #num = str(random.randint(0,100000)) + self.pipeline_task
+        return str(self.current_date)  + self.pipeline_task
 
     @property
     def columns(self):
@@ -83,19 +105,56 @@ class UpdateDB(postgres.CopyToTable):
     def table(self):
         return "raw." + self.pipeline_task
 
-    def requires(self):
-
-        return UpdateOutput(pipeline_task=self.pipeline_task,
-                            year_month=self.year_month)
 
     def rows(self):
-
-        data = pd.read_csv(self.input().path,sep="|",error_bad_lines = False,encoding="utf-8",dtype=str)
+        # Path of last "ouput" version #TODO(Return to input version)
+        #output_path = self.input().path
+        output_path = "s3://dpa-plataforma-preventiva/etl/indesol/preprocess/" + \
+         "2017-06" + "--" + self.pipeline_task + ".csv"
+        data = pd.read_csv(output_path,sep="|", encoding="utf-8",dtype=str)
         #data = data.replace(r'\s+',np.nan,regex=True).replace('',np.nan)
         data = data.replace('nan', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)
 
         return [tuple(x) for x in data.to_records(index=False)]
+
+    def copy(self, cursor, file):
+        connection = self.output().connect()
+        if isinstance(self.columns[0], six.string_types):
+            column_names = self.columns
+        elif len(self.columns[0]) == 2:
+            #Create columns for csv upload
+            column_names = [c[0] for c in self.columns]
+            create_sql = [join(c[0],' ',c[1]) for c in self.columns]
+            #Create string for table creation
+            create_sql = ', '.join(create_sql).replace("/","")
+            #Create string for Upsert
+            unique_sql = ', '.join(column_names)
+        else:
+            raise Exception('columns must consist of column strings or (column string, type string) tuples (was %r ...)' % (self.columns[0],))
+
+        index= schemas[self.pipeline_task]["INDEX"][0]
+
+        # Create temporary table temp
+        cmd = " CREATE TEMPORARY TABLE tmp  ({0});".format(create_sql)
+        cmd += 'CREATE INDEX IF NOT EXISTS {0}_index ON tmp ({0});'.format(index, self.pipeline_task)
+        cursor.execute(cmd)
+
+        # Copy to TEMP table
+        cursor.copy_from(file, "tmp", null=r'\\N', sep=self.column_separator, columns=column_names)
+
+        # Check if raw table exists if not create and build index (defined in common/pg_raw_schemas)
+        cmd = "CREATE TABLE IF NOT EXISTS {0}  ({1}) ;".format(self.table,create_sql,unique_sql)
+        cmd+='CREATE INDEX IF NOT EXISTS {0}_index ON {1} ({0});'.format(index,self.table)
+
+        # SET except from TEMP to raw table ordered 
+        cmd += "INSERT INTO {0} \
+            SELECT {1} FROM tmp EXCEPT SELECT {1} FROM {0} \
+            ORDER BY {2};".format(self.table,unique_sql,index)
+        cursor.execute(cmd)
+        connection.commit()
+        return True
+        
 
     def run(self):
 
@@ -116,136 +175,80 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.seek(0)
 
         for attempt in range(2):
+
             try:
                 cursor = connection.cursor()
                 self.init_copy(connection)
                 self.copy(cursor, tmp_file)
                 self.post_copy(connection)
+
             except psycopg2.ProgrammingError as e:
                 if e.pgcode == psycopg2.errorcodes.UNDEFINED_TABLE and attempt == 0:
-                    # if first attempt fails with "relation not found", try creating table
 
+                    # if first attempt fails with "relation not found", try creating table
                     connection.reset()
                     self.create_table(connection)
                 else:
                     raise
             else:
                 break
-        connection.commit()
-        self.output().touch(connection)
-
-        # ToDo(Create uniq index and Foreign keys)
-        #index= schemas[self.pipeline_task]["INDEX"]
-        #cursor.execute('CREATE INDEX {0}_index ON raw.{1} ({0});'.format(index[0], self.pipeline_task))
 
         connection.commit()
+
+        # mark as complete using our update_id defined above
         self.output().touch(connection)
-        # Make the changes to the database persistent
+
+        # commit and clean up
         connection.commit()
         connection.close()
         tmp_file.close()
 
+        # Remove last processing file
+        # self.client.remove(self.raw_bucket + self.pipeline_task +
+        #           "/processing/" + self.pipeline_task + ".csv")
+
     def output(self):
-
-
         return luigi.postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
                 password=self.password,table=self.table,update_id=self.update_id)
 
-class UpdateOutput(luigi.Task):
-
-    """
-        Pipeline Clásico -
-        Descarga Bash/Python Almacenamiento en S3
-
-        Task Actualiza la versión Output de cada PipelineTask
-        comparando con la última en raw.
-
-        ToDo(Spark Version)
-    """
-    client = luigi.s3.S3Client(aws_access_key_id=aws_access_key_id,
-                               aws_secret_access_key=aws_secret_access_key)
-    pipeline_task = luigi.Parameter()
-    year_month = luigi.Parameter()
-    raw_bucket = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-
-    def requires(self):
-        return LocalToS3(pipeline_task=self.pipeline_task, 
-			 year_month=self.year_month,
-			 extra=extra_p)
-
-    def run(self):
-
-        output_path = self.raw_bucket + self.pipeline_task + \
-            "/output/" + self.pipeline_task + ".csv"
-
-        input_path = self.raw_bucket + self.pipeline_task + "/raw/" + self.year_month + \
-        "--" + self.pipeline_task + ".csv"
-
-        local_ingest_file = self.local_path + "/" +self.pipeline_task + "/" +self.pipeline_task  + ".csv"            
-
-        if not self.client.exists(path=output_path):
-            self.client.copy(source_path=self.raw_bucket + self.pipeline_task + "/raw/" + self.year_month + 
-                "--" + self.pipeline_task + ".csv", destination_path=output_path)
-        else:
-            obj = s3.get_object(Bucket='dpa-compranet', Key='etl/'+ self.pipeline_task + \
-                "/output/" + self.pipeline_task + ".csv")
-
-            output_db = pd.read_csv(obj['Body'])
-
-            obj = s3.get_object(Bucket='dpa-compranet', Key='etl/'+ self.pipeline_task + \
-                 "/raw/" + self.year_month + "--" + self.pipeline_task + ".csv")
-
-            input_db=pd.read_csv(obj['Body'])
-
-
-            output_db = output_db.append(input_db, ignore_index=True)
-            output_db.drop_duplicates(keep='first', inplace=True)
-
-            output_db.to_csv(local_ingest_file)
-
-
-            self.client.remove(self.raw_bucket + self.pipeline_task +
-                               "/output/" + self.pipeline_task + ".csv")
-            self.client.put(local_path=local_ingest_file,
-                               destination_s3_path=self.raw_bucket + self.pipeline_task + "/raw/" + 
-                               self.year_month + "--" +
-                               self.pipeline_task + ".csv")
-
-        return True
 
 class Concatenation(luigi.Task):
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     client = luigi.s3.S3Client()
     #raw_bucket = luigi.Parameter('DEFAULT')
-    historic = configuration.get_config().getboolean('DEFAULT', 'historic')
+    historical = configuration.get_config().getboolean('DEFAULT', 'historical')
     raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
     
     def requires(self):
         extra = extras(self.pipeline_task)
 
-        if historic:
-            dates = historical_dates(self.pipeline,self.current_date)
-            return [Preprocess(pipeline_task=self.pipeline_task,
-                               year_month=str(date),
-                               current_date=self.current_date,
-                               extra=extra_p) for extra_p in extra
-                                              for date in dates]
+        if self.historical:
+            dates = historical_dates(self.pipeline_task, self.current_date)
         else:
-            last_date = latest_date(self.pipeline, self.current_date) 
-            return [Preprocess(pipeline_task=self.pipeline_task,
-                               year_month=last_date,
-                               current_date=self.current_date,
-                               extra=extra_p) for extra_p in extra]
-             
-    def run(self):
-        # TODO: appendear todos los archivos
+            dates = latest_dates(self.pipeline_task, self.current_date)
+        for extra_p, date in product(extra, dates):
+            task = Preprocess(pipeline_task=self.pipeline_task,
+                           year_month=str(date),
+                           current_date=self.current_date,
+                           extra=extra_p) 
+            yield task
 
+    def run(self):
+        # filepath of the output
+        result_filepath =  self.pipeline_task + "/concatenation/" + \
+                      self.pipeline_task + '.csv'
+        # folder to concatenate
+        folder_to_concatenate = self.pipeline_task + "/preprocess/"
+        # function for appending all .csv files in folder_to_concatenate 
+        s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
+        # Delete files in preprocess
+        self.client.remove(self.raw_bucket + '/' + folder_to_concatenate)
+        
     
     def output(self):
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/concatenation/" +
-                        self.year_month + "--" +self.pipeline_task + '.csv')
+                         self.pipeline_task + '.csv')
 
 class Preprocess(luigi.Task):
     current_date = luigi.DateParameter()
@@ -253,33 +256,32 @@ class Preprocess(luigi.Task):
     year_month = luigi.Parameter()
     extra = luigi.Parameter()
     client = luigi.s3.S3Client()
-    raw_bucket = luigi.Parameter('DEFAULT')
+    raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
+    #raw_bucket = luigi.Parameter('DEFAULT')
 
     def requires(self):
-        return LocalToS3(year_month=self.year_month,
+        #with wrapper_failure(self):
+        task = LocalToS3(year_month=self.year_month,
                          pipeline_task=self.pipeline_task,
                          extra=self.extra)
+        return task
 
     def run(self):
         extra_h = get_extra_str(self.extra)
 
-        df = s3_to_pandas(Bucket=self.raw_bucket, key=self.pipeline_task + "/raw/" +
-            self.year_month + "--" +self.pipeline_task + extra_h + ".csv", sep="|")
-        
         key = self.pipeline_task + "/raw/" + self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
         
-        preprocess_task = eval(self.pipeline_task + '_prep')
+        preprocess_tasks = eval(self.pipeline_task + '_prep')
+
         return preprocess_tasks(year_month=self.year_month, s3_file=key, extra_h = extra_h, 
             out_key = 'etl/' + self.pipeline_task +  "/preprocess/" + self.year_month + "--" + 
             self.pipeline_task + extra_h + ".csv")
 
-
     def output(self):
-        ####### NOTA: EL OUTPUT CAMBIA SI EL 
         extra_h = get_extra_str(self.extra)
 
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/preprocess/" +
-            self.year_month + "--" +self.pipeline_task + extra_h + ".csv")
+            self.year_month + "--" + self.pipeline_task + extra_h + ".csv")
 
 
 class LocalToS3(luigi.Task):
@@ -304,8 +306,10 @@ class LocalToS3(luigi.Task):
             extra_h = ""
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+ self.pipeline_task + extra_h + ".csv"
-        return LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, 
+        #with wrapper_failure(self):
+        task =  LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, 
             local_ingest_file=local_ingest_file, extra=self.extra)
+        return task
 
     def run(self):
         if len(self.extra) > 0:
@@ -314,10 +318,13 @@ class LocalToS3(luigi.Task):
             extra_h = ""
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+self.pipeline_task + extra_h + ".csv"
-        return self.client.put(local_path=local_ingest_file,
+        try:
+            self.client.put(local_path=local_ingest_file,
                                destination_s3_path = self.raw_bucket + self.pipeline_task + "/raw/" + 
                                self.year_month + "--" +
                                self.pipeline_task +  extra_h + ".csv")
+        except (FileNotFoundError):
+            print('No file found')
 
     def output(self):
         if len(self.extra) > 0:
@@ -326,6 +333,7 @@ class LocalToS3(luigi.Task):
             extra_h = ""
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" +
             self.year_month + "--" +self.pipeline_task + extra_h + ".csv")
+
 
 class LocalIngest(luigi.Task):
 
@@ -342,13 +350,15 @@ class LocalIngest(luigi.Task):
 
     def requires(self):
         classic_tasks = eval(self.pipeline_task)
-        return classic_tasks(year_month=self.year_month,
-                             pipeline_task=self.pipeline_task,
-                             local_ingest_file=self.local_ingest_file,
-                             extra=self.extra)
-
+        #with wrapper_failure(self):
+        task = classic_tasks(year_month=self.year_month,
+                                 pipeline_task=self.pipeline_task,
+                                 local_ingest_file=self.local_ingest_file,
+                                 extra=self.extra)
+        return task
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
+
 
 #######################
 # Classic Ingest Tasks
@@ -356,6 +366,19 @@ class LocalIngest(luigi.Task):
 # Funciones usadas por el LocalIngest para los pipeline 
 # tasks del Pipeline Clásico
 #######################
+class SourceIngestTask(luigi.Task):
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    bash_scripts = luigi.Parameter('DEFAULT')
+    python_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter()
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
 
 class pub(luigi.Task):
 
@@ -384,17 +407,7 @@ class pub(luigi.Task):
         return luigi.LocalTarget(self.local_ingest_file)
 
 
-class transparencia(luigi.Task):
-
-    # Las clases específicas definen el tipo de llamada por hacer
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    bash_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+class transparencia(SourceIngestTask):
 
     def run(self):
 
@@ -404,18 +417,8 @@ class transparencia(luigi.Task):
 
         return subprocess.call(cmd, shell=True)
 
-    def output(self):
 
-        return luigi.LocalTarget(self.local_ingest_file)
-
-class sagarpa(luigi.Task):
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+class sagarpa(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -431,18 +434,8 @@ class sagarpa(luigi.Task):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class sagarpa_cierre(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+class sagarpa_cierre(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -457,18 +450,7 @@ class sagarpa_cierre(luigi.Task):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
-
-class inpc(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
+class inpc(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -481,19 +463,8 @@ class inpc(luigi.Task):
 
         return subprocess.call(cmd, shell=True)
 
-    def output(self):
 
-        return luigi.LocalTarget(self.local_ingest_file)
-
-class segob(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
+class segob(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -505,18 +476,8 @@ class segob(luigi.Task):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class precios_granos(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
+class precios_granos(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -536,18 +497,8 @@ class precios_granos(luigi.Task):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class precios_frutos(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+class precios_frutos(SourceIngestTask):
 
     def run(self):
 
@@ -572,8 +523,6 @@ class precios_frutos(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
 class distance_to_services(luigi.Task):
 
@@ -622,19 +571,11 @@ class distance_to_services(luigi.Task):
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
 
-class cenapred(luigi.Task):
+class cenapred(SourceIngestTask):
     """
     Task que descarga los datos de cenapred
     Ver python_scripts.cenapred.py para más información
     """
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
-
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
@@ -645,23 +586,12 @@ class cenapred(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-
-class cajeros_banxico(luigi.Task):
+class cajeros_banxico(SourceIngestTask):
     """
     Task que descarga los cajeros actualizados de la base de datos Banxico
     Ver python_scripts.cajeros_banxico.py para más información
     """
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
-
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
@@ -673,22 +603,12 @@ class cajeros_banxico(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class indesol(luigi.Task):
+class indesol(SourceIngestTask):
     """
     Task que descarga las ong's con clave CLUNI de INDESOL
     Ver bash_scripts.indesol.sh para más información
     """
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    bash_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
-
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
@@ -701,26 +621,15 @@ class indesol(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class donatarias_sat(luigi.Task):
+class donatarias_sat(SourceIngestTask):
     """
     Task que descarga las donatarias autorizadas por SAT cada año
     Ver bash_cripts.
     """
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    bash_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
-
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-
         command_list = ['sh', self.bash_scripts + "donatarias_sat.sh",
                         self.year_month,
                         self.local_path + self.pipeline_task,
@@ -730,5 +639,14 @@ class donatarias_sat(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
+@SourceIngestTask.event_handler(luigi.Event.FAILURE)
+def mourn_failure(task, exception):
+    """Will be called directly after a failed execution
+    of `run` on any MyTask subclass
+    """
+    print(26 * '-!-')
+    print("Boo!, {c} failed.  :(".format(c=self.__class__.__name__))
+    print(".. with this exception: '{e}'".format(e=str(exception)))
+    print(26 * '-!-')
+
+

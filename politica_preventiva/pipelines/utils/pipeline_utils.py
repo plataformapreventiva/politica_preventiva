@@ -65,6 +65,16 @@ def copy_s3_files(input_bucket, input_key, output_bucket, output_key):
     }
     s3.meta.client.copy(copy_source, output_bucket, output_key)
 
+def s3_to_pandas(Bucket,Key,sep="|"):
+    """
+    Downloads csv from s3 bucket into a pandas Dataframe
+    Assumes aws keys as environment variables
+    """
+    s3 = boto3.client('s3')
+    obj = s3.get_object(Bucket=Bucket,Key=Key)
+
+    return pd.read_csv(obj['Body'],sep=sep)
+
 
 def parse_cfg_list(string):
     """
@@ -82,10 +92,19 @@ def get_extra_str(string):
 def historical_dates(pipeline, end_date):
     end_date = end_date.strftime("%Y-%m")
     try:
-        parse_start_date = parse_cfg_list(configuration.get_config().get(pipeline, 'start_date'))
+        parse_start_date = configuration.get_config().get(pipeline, 'start_date')
         dates = date_ranges(parse_start_date, end_date)
         return dates
     except (NoOptionError):
+        return [end_date]
+
+def latest_dates(pipeline, end_date):
+    end_date = end_date.strftime("%Y-%m")
+    try:
+        parse_start_date = configuration.get_config().get(pipeline, 'start_date')
+        dates = date_ranges(parse_start_date, end_date)[-2:]
+        return dates
+    except(NoOptionError):
         return [end_date]
 
 def extras(pipeline):
@@ -159,7 +178,8 @@ def date_ranges(start_date, end_date):
         years = list(range(start_year, end_year + 1))
         months = list(range(1, 13))
 
-        dates = [str(year) + '-' + str(month) for year, month in product(years, months) if (month < end_month or year < end_year) and (month >= start_month or year > start_year)]
+        dates = [str(year) + '-' + str(month).zfill(2) for year, month in product(years, months) 
+                     if (month < end_month or year < end_year) and (month >= start_month or year > start_year)]
     else:
         end_year = int(end_date.split('-')[0])
         dates = [int(year) for year in range(int(start_date), end_year + 1)]

@@ -2,12 +2,76 @@
 # como un diccionario para ser consumidas por Luigi
 
 { 
-     "Nombre_Table": 
+     "indesol": 
      {    "SCHEMA":
-		[("Var1", "INT"),
-		("Var2", "TEXT")], 
+		[("cluni","TEXT"),
+		("razon_social","TEXT"),
+		("figura_juridica","TEXT"),
+		("rfc","TEXT"),
+		("estatus","TEXT"),
+		("estatus_de_sancion","TEXT"),
+		("representantes_legales","TEXT"),
+		("estatus_de_la_representacion","TEXT"),
+		("fecha_de_constitucion","TEXT"),
+		("fecha_de_inscripcion","TEXT"),
+		("correo","TEXT"),
+		("telefono","TEXT"),
+		("entidad_federativa_domicilio","TEXT"),
+		("municipio","TEXT"),
+		("asentamiento_colonia","TEXT"),
+		("vialidad_calle","TEXT"),
+		("numero_exterior","TEXT"),
+		("numero_interior","TEXT"),
+		("cp","TEXT"),
+		("redes","TEXT"),	
+		("actividad_1","TEXT"),
+		("actividad_2","TEXT"),
+		("actividad_3","TEXT"),
+		("actividad_4","TEXT"),
+		("actividad_5","TEXT"),
+		("actividad_6","TEXT"),
+		("actividad_7","TEXT"),
+		("actividad_8","TEXT"),
+		("actividad_9","TEXT"),
+		("actividad_10","TEXT"),
+		("actividad_11","TEXT"),
+		("actividad_12","TEXT"),
+		("actividad_13","TEXT"),
+		("actividad_14","TEXT"),
+		("actividad_15","TEXT"),
+		("actividad_16","TEXT"),
+		("actividad_17","TEXT"),
+		("actividad_18","TEXT"),
+		("actividad_19","TEXT"),
+		("informe_2005_presentado","TEXT"),
+		("informe_2005_en_tiempo","TEXT"),
+		("informe_2006_presentado","TEXT"),
+		("informe_2006_en_tiempo","TEXT"),
+		("informe_2007_presentado","TEXT"),
+		("informe_2007_en_tiempo","TEXT"),
+		("informe_2008_presentado","TEXT"),
+		("informe_2008_en_tiempo","TEXT"),
+		("informe_2009_presentado","TEXT"),
+		("informe_2009_en_tiempo","TEXT"),
+		("informe_2010_presentado","TEXT"),
+		("informe_2010_en_tiempo","TEXT"),
+		("informe_2011_presentado","TEXT"),
+		("informe_2011_en_tiempo","TEXT"),
+		("informe_2012_presentado","TEXT"),
+		("informe_2012_en_tiempo","TEXT"),
+		("informe_2013_presentado","TEXT"),
+		("informe_2013_en_tiempo","TEXT"),
+		("informe_2014_presentado","TEXT"),
+		("informe_2014_en_tiempo","TEXT"),
+		("informe_2015_presentado","TEXT"),
+		("informe_2015_en_tiempo","TEXT"),
+		("informe_2016_presentado","TEXT"),
+		("informe_2016_en_tiempo","TEXT")], 
 
           "INDEX":
-          ['CLAVE_UC']
+          ['cluni']
      }
 }
+
+
+
