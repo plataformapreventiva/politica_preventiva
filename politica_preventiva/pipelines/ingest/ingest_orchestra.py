@@ -12,6 +12,7 @@ import tempfile
 import numpy as np
 import datetime
 import subprocess
+from contextlib import contextmanager
 import pandas as pd
 from luigi import six, task
 from os.path import join, dirname
@@ -19,9 +20,12 @@ from luigi import configuration
 from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
+from itertools import product
 #from luigi.contrib.postgres import PostgresTarget
+from utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates
 from utils.pg_sedesol import parse_cfg_string, download_dir
 from utils.pipeline_utils import s3_to_pandas
+from utils import s3_utils
 #from utils.google_utils import info_to_google_services
 # Variables de ambiente
 load_dotenv(find_dotenv())
@@ -47,6 +51,15 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 #########
 # Definición de un Pipeline estandar  -> pipeline_task. 
 #######################
+@contextmanager
+def wrapper_failure(task):
+    try:
+        return task
+    except GeneratorExit as e:
+        raise e  # Don't break luigi
+    except BaseException as e:
+        task.trigger_event(luigi.Event.FAILURE, task, e)
+        raise e
 
 class UpdateDB(postgres.CopyToTable):
 
@@ -59,10 +72,9 @@ class UpdateDB(postgres.CopyToTable):
         runtime-calculated function using a @property declaration)
         https://groups.google.com/forum/#!msg/luigi-user/FA7MdzXS9IE/RCVculxoviIJ
     """
-
+    current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
-    year_month = luigi.Parameter()
-    extra = luigi.Parameter()
+    #extra = luigi.Parameter()
     client = luigi.s3.S3Client()
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
@@ -80,8 +92,8 @@ class UpdateDB(postgres.CopyToTable):
 
     @property #TODO()
     def update_id(self):
-        num = str(random.randint(0,100000))
-        return num + self.pipeline_task
+        #num = str(random.randint(0,100000)) + self.pipeline_task
+        return str(self.current_date)  + self.pipeline_task
 
     @property
     def columns(self):
@@ -198,6 +210,80 @@ class UpdateDB(postgres.CopyToTable):
                 password=self.password,table=self.table,update_id=self.update_id)
 
 
+class Concatenation(luigi.Task):
+    current_date = luigi.DateParameter()
+    pipeline_task = luigi.Parameter()
+    client = luigi.s3.S3Client()
+    #raw_bucket = luigi.Parameter('DEFAULT')
+    historical = configuration.get_config().getboolean('DEFAULT', 'historical')
+    raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
+    
+    def requires(self):
+        extra = extras(self.pipeline_task)
+
+        if self.historical:
+            dates = historical_dates(self.pipeline_task, self.current_date)
+        else:
+            dates = latest_dates(self.pipeline_task, self.current_date)
+        for extra_p, date in product(extra, dates):
+            task = Preprocess(pipeline_task=self.pipeline_task,
+                           year_month=str(date),
+                           current_date=self.current_date,
+                           extra=extra_p) 
+            yield task
+
+    def run(self):
+        # filepath of the output
+        result_filepath =  self.pipeline_task + "/concatenation/" + \
+                      self.pipeline_task + '.csv'
+        # folder to concatenate
+        folder_to_concatenate = self.pipeline_task + "/preprocess/"
+        # function for appending all .csv files in folder_to_concatenate 
+        s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
+        # Delete files in preprocess
+        self.client.remove(folder_to_concatenate)
+        
+    
+    def output(self):
+        return S3Target(path=self.raw_bucket + self.pipeline_task + "/concatenation/" +
+                         self.pipeline_task + '.csv')
+
+class Preprocess(luigi.Task):
+    current_date = luigi.DateParameter()
+    pipeline_task = luigi.Parameter()
+    year_month = luigi.Parameter()
+    extra = luigi.Parameter()
+    client = luigi.s3.S3Client()
+    raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
+    #raw_bucket = luigi.Parameter('DEFAULT')
+
+    def requires(self):
+        #with wrapper_failure(self):
+        task = LocalToS3(year_month=self.year_month,
+                         pipeline_task=self.pipeline_task,
+                         extra=self.extra)
+        return task
+
+    def run(self):
+        # TODO: cleaning, transpose and add date columns
+        try:
+            source_path = self.raw_bucket + self.pipeline_task + '/raw/' + self.year_month + \
+                          '--' + self.pipeline_task + '.csv'
+            destination_path = self.raw_bucket + self.pipeline_task + '/preprocess/' + self.year_month + \
+                              '--' + self.pipeline_task + '.csv'
+            self.client.copy(source_path, destination_path)
+        except (AttributeError):
+            print('Attribute Error No file found')
+
+    def output(self):
+        if len(self.extra) > 0:
+            extra_h = "--" + self.extra
+        else:
+            extra_h = ""
+        return S3Target(path=self.raw_bucket + self.pipeline_task + "/preprocess/" +
+            self.year_month + "--" +self.pipeline_task + extra_h + ".csv")
+
+
 class LocalToS3(luigi.Task):
 
     """
@@ -220,8 +306,10 @@ class LocalToS3(luigi.Task):
             extra_h = ""
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+ self.pipeline_task + extra_h + ".csv"
-        return LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, 
+        #with wrapper_failure(self):
+        task =  LocalIngest(pipeline_task=self.pipeline_task, year_month=self.year_month, 
             local_ingest_file=local_ingest_file, extra=self.extra)
+        return task
 
     def run(self):
         if len(self.extra) > 0:
@@ -230,10 +318,13 @@ class LocalToS3(luigi.Task):
             extra_h = ""
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+self.pipeline_task + extra_h + ".csv"
-        return self.client.put(local_path=local_ingest_file,
-                               destination_s3_path=self.raw_bucket + self.pipeline_task + "/raw/" + 
+        try:
+            self.client.put(local_path=local_ingest_file,
+                               destination_s3_path = self.raw_bucket + self.pipeline_task + "/raw/" + 
                                self.year_month + "--" +
                                self.pipeline_task +  extra_h + ".csv")
+        except (FileNotFoundError):
+            print('No file found')
 
     def output(self):
         if len(self.extra) > 0:
@@ -242,6 +333,7 @@ class LocalToS3(luigi.Task):
             extra_h = ""
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" +
             self.year_month + "--" +self.pipeline_task + extra_h + ".csv")
+
 
 class LocalIngest(luigi.Task):
 
@@ -258,13 +350,15 @@ class LocalIngest(luigi.Task):
 
     def requires(self):
         classic_tasks = eval(self.pipeline_task)
-        return classic_tasks(year_month=self.year_month,
-                             pipeline_task=self.pipeline_task,
-                             local_ingest_file=self.local_ingest_file,
-                             extra=self.extra)
-
+        #with wrapper_failure(self):
+        task = classic_tasks(year_month=self.year_month,
+                                 pipeline_task=self.pipeline_task,
+                                 local_ingest_file=self.local_ingest_file,
+                                 extra=self.extra)
+        return task
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
+
 
 #######################
 # Classic Ingest Tasks
@@ -620,6 +714,7 @@ class indesol(luigi.Task):
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
 
+
 class donatarias_sat(luigi.Task):
     """
     Task que descarga las donatarias autorizadas por SAT cada año
@@ -636,7 +731,6 @@ class donatarias_sat(luigi.Task):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-
         command_list = ['sh', self.bash_scripts + "donatarias_sat.sh",
                         self.year_month,
                         self.local_path + self.pipeline_task,
@@ -648,3 +742,11 @@ class donatarias_sat(luigi.Task):
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
+
+    @luigi.Task.event_handler(luigi.Event.FAILURE)
+    def mourn_failure(self, exception):
+         print(26 * '-!-')
+         print("Boo!, {c} failed.  :(".format(c=self.__class__.__name__))
+         print(".. with this exception: '{e}'".format(e=str(exception)))
+         print(26 * '-!-')
+
