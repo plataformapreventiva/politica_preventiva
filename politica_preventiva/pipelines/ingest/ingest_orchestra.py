@@ -18,11 +18,10 @@ from luigi import six, task
 from ingest.preprocessing_scripts.preprocessing_scripts import *
 from os.path import join, dirname
 from luigi import configuration
-#from luigi.contrib import postgres
+from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 from itertools import product
-from luigi.contrib.postgres import PostgresTarget
 from utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates, get_extra_str
 from utils.pg_sedesol import parse_cfg_string, download_dir
 from utils.pipeline_utils import s3_to_pandas
@@ -208,7 +207,7 @@ class UpdateDB(postgres.CopyToTable):
         #           "/processing/" + self.pipeline_task + ".csv")
 
     def output(self):
-        return luigi.postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
+        return postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
                 password=self.password,table=self.table,update_id=self.update_id)
 
 
@@ -243,7 +242,7 @@ class Concatenation(luigi.Task):
         # function for appending all .csv files in folder_to_concatenate 
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
         # Delete files in preprocess
-        self.client.remove(self.raw_bucket + '/' + folder_to_concatenate)
+        self.client.remove(self.raw_bucket + folder_to_concatenate)
         
     
     def output(self):
@@ -279,7 +278,6 @@ class Preprocess(luigi.Task):
 
     def output(self):
         extra_h = get_extra_str(self.extra)
-
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/preprocess/" +
             self.year_month + "--" + self.pipeline_task + extra_h + ".csv")
 
@@ -300,10 +298,7 @@ class LocalToS3(luigi.Task):
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
 
     def requires(self):
-        if len(self.extra) > 0:
-            extra_h = "--" + self.extra
-        else:
-            extra_h = ""
+        extra_h = get_extra_str(self.extra)
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+ self.pipeline_task + extra_h + ".csv"
         #with wrapper_failure(self):
@@ -312,10 +307,7 @@ class LocalToS3(luigi.Task):
         return task
 
     def run(self):
-        if len(self.extra) > 0:
-            extra_h = "--" + self.extra
-        else:
-            extra_h = ""
+        extra_h = get_extra_str(self.extra)
         local_ingest_file = self.local_path + self.pipeline_task + \
             "/" + self.year_month + "--"+self.pipeline_task + extra_h + ".csv"
         try:
@@ -327,10 +319,7 @@ class LocalToS3(luigi.Task):
             print('No file found')
 
     def output(self):
-        if len(self.extra) > 0:
-            extra_h = "--" + self.extra
-        else:
-            extra_h = ""
+        extra_h = get_extra_str(self.extra)
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" +
             self.year_month + "--" +self.pipeline_task + extra_h + ".csv")
 

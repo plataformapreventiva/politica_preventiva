@@ -88,6 +88,7 @@ def get_extra_str(string):
         extra_h = "--" + string
     else:
         extra_h = ""
+    return extra_h
 
 def historical_dates(pipeline, end_date):
     end_date = end_date.strftime("%Y-%m")
