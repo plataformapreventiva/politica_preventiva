@@ -54,6 +54,18 @@ def pandas_to_s3(df, Bucket, Key, sep="|"):
     s3.Object(Bucket, Key).put(Body=s.getvalue())
 
 
+def copy_s3_files(input_bucket, input_key, output_bucket, output_key):
+    """
+    Copy from one bucket to another
+    """
+    s3 = boto3.resource('s3')
+    copy_source = {
+        'Bucket': input_bucket,
+        'Key': input_key
+    }
+    s3.meta.client.copy(copy_source, output_bucket, output_key)
+
+
 def parse_cfg_list(string):
     """
     Parse string from cfg into a list

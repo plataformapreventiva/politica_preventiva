@@ -4,8 +4,10 @@
 import utils.preprocessing_utils as pputils
 from luigi import configuration
 import boto3 
-from utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3
+from utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files
 from io import StringIO
+import pandas as pd
+import boto3
 
 def precios_granos_prep(year_month, s3_file, extra_h, out_key):
     """
@@ -64,7 +66,7 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
     # TODO: CHANCE THIS TO REGEX
     # CHANGE STRINGS TO BOOL 
     columns = [x for x in df.columns if 'INFORME' in x]
-    informe_dict = {col: col.replace('INFORME ', 'I') for col in columns}
+    informe_dict = {col: col.replace('INFORME ', '') for col in columns}
     informe_dict = {key:informe_dict[key].replace(' EN TIEMPO', 'T') for key in informe_dict.keys()}
     informe_dict = {key:informe_dict[key].replace(' PRESENTADO', 'P') for key in informe_dict.keys()}
     df = df.rename(columns=informe_dict)    
@@ -73,6 +75,23 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
     columns = list(informe_dict.values())
     df = pputils.df_columns_to_json(df, columns, 'INFORMES')
     pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+
+def cajeros_banxico_prep(year_month, s3_file, extra_h, out_key):
+    bucket = 'dpa-plataforma-preventiva'
+    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
+
+def cenapred_prep(year_month, s3_file, extra_h, out_key):
+    bucket = 'dpa-plataforma-preventiva'
+    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
+
+def segob_prep(year_month, s3_file, extra_h, out_key):
+    bucket = 'dpa-plataforma-preventiva'
+    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
+
+def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
+    # TODO: ver si es menor a 2013 (bajado como tabla completa, o mayor, y homologar columnas de ambos casos)
+    bucket = 'dpa-plataforma-preventiva'
+    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
 
 
 """

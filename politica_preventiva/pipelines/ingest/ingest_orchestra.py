@@ -15,13 +15,15 @@ import pandas as pd
 from luigi import six, task
 from os.path import join, dirname
 from luigi import configuration
-from luigi.contrib import postgres
+#from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
-#from luigi.contrib.postgres import PostgresTarget
+from luigi.contrib.postgres import PostgresTarget
+from ingest.preprocessing_scripts.preprocessing_scripts import *
 from utils.pipeline_utils import parse_cfg_list, extras
 from utils.pg_sedesol import parse_cfg_string, download_dir
 #from utils.google_utils import info_to_google_services
+
 # Variables de ambiente
 load_dotenv(find_dotenv())
 
@@ -259,31 +261,23 @@ class Preprocess(luigi.Task):
                          extra=self.extra)
 
     def run(self):
-        if len(self.extra) > 0:
-            extra_h = "--" + self.extra
-        else:
-            extra_h = ""
-        s3_path=self.raw_bucket + self.pipeline_task + "/raw/" +
-            self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
-        if len(self.extra) > 0:
-            extra_h = "--" + self.extra
-        else:
-            extra_h = ""
-        preprocess_task = eval(self.pipeline_task + '_preprocess')
+        extra_h = get_extra_str(self.extra)
 
-        return preprocess_tasks(year_month=self.year_month,
-                             pipeline_task=self.pipeline_task,
-                             extra=self.extra, output=path=self.raw_bucket + 
-                             self.pipeline_task + "/preprocess/" + self.year_month + 
-                             "--" +self.pipeline_task + extra_h + ".csv")
+        df = s3_to_pandas(Bucket=self.raw_bucket, key=self.pipeline_task + "/raw/" +
+            self.year_month + "--" +self.pipeline_task + extra_h + ".csv", sep="|")
+        
+        key = self.pipeline_task + "/raw/" + self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
+        
+        preprocess_task = eval(self.pipeline_task + '_prep')
+        return preprocess_tasks(year_month=self.year_month, s3_file=key, extra_h = extra_h, 
+            out_key = 'etl/' + self.pipeline_task +  "/preprocess/" + self.year_month + "--" + 
+            self.pipeline_task + extra_h + ".csv")
 
 
     def output(self):
         ####### NOTA: EL OUTPUT CAMBIA SI EL 
-        if len(self.extra) > 0:
-            extra_h = "--" + self.extra
-        else:
-            extra_h = ""
+        extra_h = get_extra_str(self.extra)
+
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/preprocess/" +
             self.year_month + "--" +self.pipeline_task + extra_h + ".csv")
 
