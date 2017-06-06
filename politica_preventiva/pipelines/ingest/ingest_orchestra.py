@@ -49,15 +49,6 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 #########
 # Definición de un Pipeline estandar  -> pipeline_task. 
 #######################
-@contextmanager
-def wrapper_failure(task):
-    try:
-        return task
-    except GeneratorExit as e:
-        raise e  # Don't break luigi
-    except BaseException as e:
-        task.trigger_event(luigi.Event.FAILURE, task, e)
-        raise e
 
 class UpdateDB(postgres.CopyToTable):
 
@@ -255,7 +246,7 @@ class Concatenation(luigi.Task):
         # function for appending all .csv files in folder_to_concatenate 
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
         # Delete files in preprocess
-        self.client.remove(folder_to_concatenate)
+        self.client.remove(self.raw_bucket + '/' + folder_to_concatenate)
         
     
     def output(self):
@@ -380,6 +371,19 @@ class LocalIngest(luigi.Task):
 # Funciones usadas por el LocalIngest para los pipeline 
 # tasks del Pipeline Clásico
 #######################
+class SourceIngestTask(luigi.Task):
+    year_month = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    bash_scripts = luigi.Parameter('DEFAULT')
+    python_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter()
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
 
 class pub(luigi.Task):
 
@@ -408,17 +412,7 @@ class pub(luigi.Task):
         return luigi.LocalTarget(self.local_ingest_file)
 
 
-class transparencia(luigi.Task):
-
-    # Las clases específicas definen el tipo de llamada por hacer
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    bash_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+class transparencia(SourceIngestTask):
 
     def run(self):
 
@@ -428,18 +422,8 @@ class transparencia(luigi.Task):
 
         return subprocess.call(cmd, shell=True)
 
-    def output(self):
 
-        return luigi.LocalTarget(self.local_ingest_file)
-
-class sagarpa(luigi.Task):
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+class sagarpa(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -455,18 +439,8 @@ class sagarpa(luigi.Task):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class sagarpa_cierre(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+class sagarpa_cierre(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -481,18 +455,7 @@ class sagarpa_cierre(luigi.Task):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
-
-class inpc(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
+class inpc(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -505,19 +468,8 @@ class inpc(luigi.Task):
 
         return subprocess.call(cmd, shell=True)
 
-    def output(self):
 
-        return luigi.LocalTarget(self.local_ingest_file)
-
-class segob(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
+class segob(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -529,18 +481,8 @@ class segob(luigi.Task):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class precios_granos(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
+class precios_granos(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
@@ -560,18 +502,8 @@ class precios_granos(luigi.Task):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class precios_frutos(luigi.Task):
-
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
+class precios_frutos(SourceIngestTask):
 
     def run(self):
 
@@ -596,8 +528,6 @@ class precios_frutos(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
 class distance_to_services(luigi.Task):
 
@@ -646,19 +576,11 @@ class distance_to_services(luigi.Task):
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
 
-class cenapred(luigi.Task):
+class cenapred(SourceIngestTask):
     """
     Task que descarga los datos de cenapred
     Ver python_scripts.cenapred.py para más información
     """
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter()
-
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
@@ -669,23 +591,12 @@ class cenapred(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-
-class cajeros_banxico(luigi.Task):
+class cajeros_banxico(SourceIngestTask):
     """
     Task que descarga los cajeros actualizados de la base de datos Banxico
     Ver python_scripts.cajeros_banxico.py para más información
     """
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    python_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
-
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
@@ -697,22 +608,12 @@ class cajeros_banxico(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-class indesol(luigi.Task):
+class indesol(SourceIngestTask):
     """
     Task que descarga las ong's con clave CLUNI de INDESOL
     Ver bash_scripts.indesol.sh para más información
     """
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    bash_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
-
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
@@ -725,23 +626,12 @@ class indesol(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
 
-
-class donatarias_sat(luigi.Task):
+class donatarias_sat(SourceIngestTask):
     """
     Task que descarga las donatarias autorizadas por SAT cada año
     Ver bash_cripts.
     """
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-
-    bash_scripts = luigi.Parameter('DEFAULT')
-    local_path = luigi.Parameter('DEFAULT')
-    extra = luigi.Parameter('DEFAULT')
-
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
@@ -754,13 +644,14 @@ class donatarias_sat(luigi.Task):
 
         return subprocess.call([cmd], shell=True)
 
-    def output(self):
-        return luigi.LocalTarget(self.local_ingest_file)
+@SourceIngestTask.event_handler(luigi.Event.FAILURE)
+def mourn_failure(task, exception):
+    """Will be called directly after a failed execution
+    of `run` on any MyTask subclass
+    """
+    print(26 * '-!-')
+    print("Boo!, {c} failed.  :(".format(c=self.__class__.__name__))
+    print(".. with this exception: '{e}'".format(e=str(exception)))
+    print(26 * '-!-')
 
-    @luigi.Task.event_handler(luigi.Event.FAILURE)
-    def mourn_failure(self, exception):
-         print(26 * '-!-')
-         print("Boo!, {c} failed.  :(".format(c=self.__class__.__name__))
-         print(".. with this exception: '{e}'".format(e=str(exception)))
-         print(26 * '-!-')
 
