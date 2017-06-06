@@ -17,7 +17,7 @@ from joblib import Parallel, delayed
 from itertools import product
 from dotenv import load_dotenv,find_dotenv
 
-from ingest.ingest_orchestra import UpdateOutput, LocalToS3, Concatenation
+from ingest.ingest_orchestra import UpdateDB
 from etl.etl_orchestra import ETL
 from utils.pipeline_utils import parse_cfg_list, extra_parameters, historical_dates
 import pdb
@@ -65,9 +65,8 @@ class Ingestpipeline(luigi.WrapperTask):
     pipelines = parse_cfg_list(conf.get("Ingestpipeline", "pipelines"))
 
     def requires(self):
-
         # loop through pipeline tasks
-        yield [Concatenation(current_date=self.current_date,
+        yield [UpdateDB(current_date=self.current_date,
                              pipeline_task=pipeline) for pipeline in self.pipelines]
 
 

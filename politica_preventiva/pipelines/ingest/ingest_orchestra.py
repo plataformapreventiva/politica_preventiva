@@ -54,11 +54,11 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 @contextmanager
 def wrapper_failure(task):
     try:
-        return task
+        yield
     except GeneratorExit as e:
         raise e  # Don't break luigi
-    except BaseException as e:
-        task.trigger_event(luigi.Event.FAILURE, task, e)
+    except DependencyMissing as e:
+        task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
         raise e
 
 class UpdateDB(postgres.CopyToTable):
