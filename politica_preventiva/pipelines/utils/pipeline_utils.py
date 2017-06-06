@@ -31,6 +31,7 @@ def s3_to_pandas(Bucket,Key,sep="|"):
 
     return pd.read_csv(obj['Body'],sep=sep)
 
+
 def parse_cfg_list(string):
     """
     Parse string from cfg into a list
