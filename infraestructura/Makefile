@@ -25,7 +25,7 @@ up: .running
 
 .running:
 	# Esto corre en infraestructura
-	@docker-compose --project-name ${PROJECT_NAME} up -d
+	@sudo docker-compose --project-name ${PROJECT_NAME} up -d
 	@touch .running
 
 
@@ -63,10 +63,10 @@ stop:
 	@rm -rf .running || true
 
 status:
-	@docker-compose --project-name ${PROJECT_NAME} ps
+	@sudo docker-compose --project-name ${PROJECT_NAME} ps
 
 logs:
-	@docker-compose --project-name ${PROJECT_NAME} logs
+	@sudo docker-compose --project-name ${PROJECT_NAME} logs
 
 
 restart: stop clean start status
