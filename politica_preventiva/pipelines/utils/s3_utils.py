@@ -65,7 +65,7 @@ def new_s3_client():
     # initialize an S3 client with a private session so that multithreading
     # doesn't cause issues with the client's internal state
     session = boto3.session.Session()
-    return session.client('s3')
+    return session.client('s3') 
 
 def collect_parts(s3, bucket, folder, suffix):
     return list(filter(lambda x: x[0].endswith(suffix), _list_all_objects_with_size(s3, bucket, folder)))

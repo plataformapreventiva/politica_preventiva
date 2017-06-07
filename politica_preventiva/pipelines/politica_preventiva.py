@@ -26,7 +26,6 @@ logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
-#load_dotenv('../.env')
 
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
