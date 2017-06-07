@@ -15,26 +15,26 @@ import subprocess
 from contextlib import contextmanager
 import pandas as pd
 from luigi import six, task
-from ingest.preprocessing_scripts.preprocessing_scripts import *
 from os.path import join, dirname
 from luigi import configuration
 from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 from itertools import product
-from utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates, get_extra_str
-from utils.pg_sedesol import parse_cfg_string, download_dir
-from utils.pipeline_utils import s3_to_pandas
-from utils import s3_utils
+from politica_preventiva.pipelines.ingest.preprocessing_scripts.preprocessing_scripts import *
+from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates, get_extra_str
+from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string, download_dir
+from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas
+from politica_preventiva.pipelines.utils import s3_utils
 #from utils.google_utils import info_to_google_services
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
 
 # Load Postgres Schemas
-temp = open('./common/pg_raw_schemas.txt').read()
+temp = open('./pipelines/common/pg_raw_schemas.txt').read()
 schemas = ast.literal_eval(temp)
-open('./common/pg_raw_schemas.txt').close()
+open('./pipelines/common/pg_raw_schemas.txt').close()
 
 # RDS
 database = os.environ.get("PGDATABASE")

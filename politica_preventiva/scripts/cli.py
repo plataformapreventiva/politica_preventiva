@@ -25,7 +25,7 @@ def check_server(host, port):
 @click.option('--server', help='URL donde se encuentra el luigi-master', default='localhost')
 @click.option('--port', help='Puerto donde está escuchando el luigi-master', default=8082)
 @click.option('--luigi_cfg', help='Path al archivo de configuración de Luigi', type=click.Path())
-@click.option('--workers', help='Número de workers en paralelo', type=click.INT, default=4)
+#@click.option('--workers', help='Número de workers en paralelo', type=click.INT, default=4)
 #@click.option('--level', help='', default=2, type=click.INT)
 #@click.option('--sleep', help='', default=2, type=click.INT)
 def main(server, port, luigi_cfg):
@@ -40,7 +40,7 @@ def main(server, port, luigi_cfg):
                     'RunPipelines',
                   # '--level', str(level), 
                   # '--sleep', str(sleep),
-                    '--workers', str(workers),                  
+                  #  '--workers', str(workers),                  
                  ]
 
     ## Ejecuta luigi con el local scheduler si no hay servidor

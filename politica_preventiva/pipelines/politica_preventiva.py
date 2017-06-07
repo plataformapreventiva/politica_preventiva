@@ -17,9 +17,9 @@ from joblib import Parallel, delayed
 from itertools import product
 from dotenv import load_dotenv,find_dotenv
 
-from ingest.ingest_orchestra import UpdateDB, Concatenation
-from etl.etl_orchestra import ETL
-from utils.pipeline_utils import parse_cfg_list, extra_parameters, historical_dates
+from politica_preventiva.pipelines.ingest.ingest_orchestra import UpdateDB, Concatenation
+from politica_preventiva.pipelines.etl.etl_orchestra import ETL
+from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extra_parameters, historical_dates
 import pdb
 
 logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")

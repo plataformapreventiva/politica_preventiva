@@ -6,20 +6,20 @@ from setuptools import setup, find_packages
 from os import path
 
 """
-plataforma_preventiva-pipeline: Pipeline plataforma_preventiva
+politica_preventiva-pipeline: Pipeline politica_preventiva
 """
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README.Rmd'), encoding='utf-8') as f:    
+with open(path.join(here, 'README.Rmd')) as f:    
     long_description = f.read()
 
 setup(
-    name="plataforma_preventiva",
+    name="politica_preventiva",
     version='0.0.1',
-    description='Pipeline plataforma_preventiva',
+    description='Pipeline politica_preventiva',
     long_description=long_description,
-    author_email='r.sanchezavalos@gmail.com',
+    author_email='roberto.sancheza@sedesol.gob.mx',
     license='GPL v3',
 
     packages=find_packages(),
@@ -45,7 +45,7 @@ setup(
 
     entry_points = {
         'console_scripts' : [
-            'compranet = plataforma_preventiva.scripts.cli:main',
+            'politica_preventiva = politica_preventiva.scripts.cli:main',
 
         ]
     },
