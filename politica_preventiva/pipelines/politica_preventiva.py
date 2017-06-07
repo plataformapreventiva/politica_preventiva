@@ -39,7 +39,7 @@ class RunPipelines(luigi.WrapperTask):
 
     # Pipeline corre mensualmente
     # start_year_month= el pipe de adolfo incluye un start month -> ver rita
-    current_date = luigi.DateParameter(default=datetime.date(2017, 6, 5)) # datetime.date.today()
+    current_date = luigi.DateParameter(default=datetime.date(2017, 6, 4)) # datetime.date.today()
 
     def requires(self):
 
@@ -102,12 +102,6 @@ class EtlPipeline(luigi.WrapperTask):
 #         yield SetNeo4J(year_month=self.year_month)
 #         yield PredictiveModel(year_month=self.year_month)
 
-
-class Distance(luigi.WrapperTask):
-
-    def requires(self):
-
-        return Find_distance_to_Services()
 
 
 if __name__ == "__main__":

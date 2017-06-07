@@ -24,6 +24,7 @@ from configparser import ConfigParser, NoOptionError, NoSectionError
 from dotenv import load_dotenv,find_dotenv
 
 load_dotenv(find_dotenv())
+
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')

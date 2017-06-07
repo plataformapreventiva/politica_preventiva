@@ -62,8 +62,6 @@ def wrapper_failure(task):
         #def output(self):
         #    return True
         pass
-    except GeneratorExit as e:
-        raise e  # Don't break luigi
 
 class UpdateDB(postgres.CopyToTable):
 
@@ -110,9 +108,9 @@ class UpdateDB(postgres.CopyToTable):
 
     def rows(self):
         # Path of last "ouput" version #TODO(Return to input version)
-        #output_path = self.input().path
-        output_path = "s3://dpa-plataforma-preventiva/etl/indesol/concatenation/" + \
-         "2017-06" + "--" + self.pipeline_task + ".csv"
+        output_path = self.input().path
+        #output_path = "s3://dpa-plataforma-preventiva/etl/indesol/concatenation/" + \
+        # "2017-06" + "--" + self.pipeline_task + ".csv"
         data = pd.read_csv(output_path,sep="|", encoding="utf-8",dtype=str)
         #data = data.replace(r'\s+',np.nan,regex=True).replace('',np.nan)
         data = data.replace('nan', np.nan, regex=True)
