@@ -93,45 +93,6 @@ def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
     copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
 
-
-"""
-
-class inpc_preprocessing(luigi.Task):
-    client = luigi.s3.S3Client()
-    year_month = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    extra = luigi.Parameter()
-    current_date = luigi.Parameter()
-    raw_bucket = luigi.Parameter('DEFAULT')
-
-    def run(self):
-        # Read csv from s3
-        df = s3_to_pandas(Bucket=self.raw_bucket, Key=self.pipeline_task + "/raw/" + \
-            self.year_month + "--" +self.pipeline_task + extra_h + ".csv", sep="|")
-        
-        # Convert
-        df['estado'] = pputils.complete_missing_values(df['estado'])
-        df['distrito'] = pputils.complete_missing_values(df['distrito'])
-        df['current_date'] = self.current_date
-        
-        # Convert df to string
-        s = StringIO.StringIO()
-        df.to_csv(s, sep='|')
-
-        # s3 path
-        extra_h = get_extra_str(self.extra)
-        path = self.raw_bucket + self.pipeline_task + "/preprocess/" + \
-            self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
-        
-        return self.client.put_string(content=s.getvalue(), destination_s3_path = path)
-
-    def output(self):
-
-        # s3 path 
-        extra_h = get_extra_str(self.extra)
-        path = self.raw_bucket + self.pipeline_task + "/preprocess/" + \
-            self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
-
-        return luigi.S3Target(self.raw_bucket + self.pipeline_task + "/preprocess/" + \
-            self.year_month + "--" +self.pipeline_task + extra_h + ".csv")
-"""
+def donatarias_sat_prep(year_month, s3_file, extra_h, out_key):
+    bucket = 'dpa-plataforma-preventiva'
+    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
