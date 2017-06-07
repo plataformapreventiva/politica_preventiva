@@ -43,7 +43,7 @@ def run_single_concatenation(s3, bucket, parts_list, result_filepath):
         upload_id = initiate_concatenation(s3, bucket, result_filepath)
         parts_mapping = assemble_parts_to_concatenate(s3, bucket, result_filepath, upload_id, parts_list)
         complete_concatenation(s3, bucket, result_filepath, upload_id, parts_mapping)
-    elif len(parts_list) == 0:
+    elif len(parts_list) == 1:
         # can perform a simple S3 copy since there is just a single file
         resp = s3.copy_object(Bucket=bucket, CopySource="{}/{}".format(bucket, parts_list[0][0]), Key=result_filepath)
         logging.warning("Copied single file to {} and got response {}".format(result_filepath, resp))

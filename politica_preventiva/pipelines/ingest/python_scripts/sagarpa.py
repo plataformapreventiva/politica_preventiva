@@ -457,7 +457,8 @@ if __name__ == '__main__':
     parser.add_argument('--start', type=str, default='2004-1',
         help= 'First month to download, as string format yyyy-m')
     parser.add_argument('--end', type=str, default='',
-        help= 'Last month to download, as string format yyyy-m. If')
+        help= 'Last month to download, as string format yyyy-m. \
+        If missing, only --start will be downloaded')
     parser.add_argument('--cult', type=str, default='maiz-grano',
         help = 'Crop to download from SAGARPA, in low case, words separated by hyphen')
     parser.add_argument('--cierre', type=bool, default=False,

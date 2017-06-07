@@ -11,15 +11,59 @@ import psycopg2
 import numpy as np
 import pandas as pd
 import unicodedata
-import pandas as pn
 import numpy as np
 import luigi
 import pdb
-import luigi.postgres
+import boto3
+#import luigi.postgresql
 from luigi import configuration
 from luigi import six
 from itertools import product
+from io import StringIO
 from configparser import ConfigParser, NoOptionError, NoSectionError
+from dotenv import load_dotenv,find_dotenv
+
+load_dotenv(find_dotenv())
+# AWS
+aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+def s3_to_pandas(Bucket, Key, sep="|"):
+    """
+    Downloads csv from s3 bucket into a pandas Dataframe
+    Assumes aws keys as environment variables
+    """
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key)
+    obj = s3.get_object(Bucket=Bucket,Key=Key)
+
+    return pd.read_csv(obj['Body'], sep=sep, keep_default_na=False)
+
+
+def pandas_to_s3(df, Bucket, Key, sep="|"):
+    """
+    Adds a pandas dataframe (df) to a csv file in an s3 bucket with 
+    the specified key. 
+    """
+    s3 = boto3.resource('s3', aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key)
+
+    s = StringIO()
+    df.to_csv(s, sep=sep)
+
+    s3.Object(Bucket, Key).put(Body=s.getvalue())
+
+
+def copy_s3_files(input_bucket, input_key, output_bucket, output_key):
+    """
+    Copy from one bucket to another
+    """
+    s3 = boto3.resource('s3')
+    copy_source = {
+        'Bucket': input_bucket,
+        'Key': input_key
+    }
+    s3.meta.client.copy(copy_source, output_bucket, output_key)
 
 def s3_to_pandas(Bucket,Key,sep="|"):
     """
@@ -38,6 +82,13 @@ def parse_cfg_list(string):
     """
     string = string.split(",")
     return [m.strip() for m in string]
+
+def get_extra_str(string):
+    if len(string) > 0:
+        extra_h = "--" + string
+    else:
+        extra_h = ""
+    return extra_h
 
 def historical_dates(pipeline, end_date):
     end_date = end_date.strftime("%Y-%m")
@@ -199,4 +250,31 @@ def cve_loc_construct(cve_ent,cve_mun,cve_loc):
 
     except:
         cve_locc = ""
-    return  pn.Series({'cve_ent':cve_ent,'cve_mun':cve_mun,'cve_locc':cve_locc}) 
+    return  pd.Series({'cve_ent':cve_ent,'cve_mun':cve_mun,'cve_locc':cve_locc}) 
+
+"""
+class Preprocess(luigi.Task):
+    current_date = luigi.dateParameter()
+    pipeline_task = luigi.Parameter()
+    client = luigi.s3.S3Client()
+    
+    def requires(self):
+        params = parse_cfg_list(configuration.get_config().get(self.pipeline_task,
+                                                               "extra_parameters")
+        extra = extra_parameters(pipeline, 
+                                 params[pipeline], 
+                                 self.current_date)
+
+        return [LocalToS3(pipeline_task=self.pipeline_task,
+            year_month=str(date),
+            extra=extra_p) for extra_p in extra[pipeline][1] for date in extra[pipeline][0]]
+
+    def run(self):
+        # TODO: checar si tiene extra generar una funcion para el extra sino solo copiar el archivo 
+        #       de raw a preprocess
+        pass
+
+    def output(self):
+        return S3Target(path=self.raw_bucket + self.pipeline_task + "/preprocess/" +
+                        self.year_month + "--" +self.pipeline_task)
+"""
