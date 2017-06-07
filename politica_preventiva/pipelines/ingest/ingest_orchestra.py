@@ -232,11 +232,11 @@ class Concatenation(luigi.Task):
             dates = latest_dates(self.pipeline_task, self.current_date)
         for extra_p, date in product(extra, dates):
             #pdb.set_trace()
-            with wrapper_failure(self):
-                yield Preprocess(pipeline_task=self.pipeline_task,
+            yield Preprocess(pipeline_task=self.pipeline_task,
                            year_month=str(date),
                            current_date=self.current_date,
-                           extra=extra_p) 
+                           extra=extra_p)
+
 
     def run(self):
         # filepath of the output
@@ -248,7 +248,7 @@ class Concatenation(luigi.Task):
         # function for appending all .csv files in folder_to_concatenate 
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
         # Delete files in preprocess
-        self.client.remove(self.raw_bucket + folder_to_concatenate)
+        #self.client.remove(self.raw_bucket + folder_to_concatenate)
         
     
     def output(self):
