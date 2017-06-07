@@ -8,6 +8,7 @@ from utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3, copy
 from io import StringIO
 import pandas as pd
 import boto3
+import pdb
 
 def precios_granos_prep(year_month, s3_file, extra_h, out_key):
     """
@@ -54,7 +55,6 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
     Preprocessing function for indesol: reads df from s3, turns wide-format df to long-format, 
     turns columns to json and uploads to s3. 
     """
-
     df = s3_to_pandas(Bucket='dpa-plataforma-preventiva', Key='etl/' + s3_file)
 
     # WIDE ACTIVIDAD TO LONG ACTIVDAD

@@ -56,15 +56,14 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 def wrapper_failure(task):
     try:
         yield
-
-    except GeneratorExit as e:
-        raise e  # Don't break luigi
     except Exception as e:
         task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
         #@classmethod 
         #def output(self):
         #    return True
         pass
+    except GeneratorExit as e:
+        raise e  # Don't break luigi
 
 class UpdateDB(postgres.CopyToTable):
 
@@ -91,9 +90,8 @@ class UpdateDB(postgres.CopyToTable):
     host = os.environ.get("PGHOST")
 
     def requires(self):
-        with wrapper_failure(self):
-            return Concatenation(current_date=self.current_date,
-                             pipeline_task=self.pipeline_task)
+        return Concatenation(current_date=self.current_date,
+                         pipeline_task=self.pipeline_task)
 
     @property #TODO()
     def update_id(self):
@@ -113,7 +111,7 @@ class UpdateDB(postgres.CopyToTable):
     def rows(self):
         # Path of last "ouput" version #TODO(Return to input version)
         #output_path = self.input().path
-        output_path = "s3://dpa-plataforma-preventiva/etl/indesol/preprocess/" + \
+        output_path = "s3://dpa-plataforma-preventiva/etl/indesol/concatenation/" + \
          "2017-06" + "--" + self.pipeline_task + ".csv"
         data = pd.read_csv(output_path,sep="|", encoding="utf-8",dtype=str)
         #data = data.replace(r'\s+',np.nan,regex=True).replace('',np.nan)
@@ -241,7 +239,7 @@ class Concatenation(luigi.Task):
 
     def run(self):
         # filepath of the output
-        pdb.set_trace()
+        #pdb.set_trace()
         result_filepath =  self.pipeline_task + "/concatenation/" + \
                       self.pipeline_task + '.csv'
         # folder to concatenate
