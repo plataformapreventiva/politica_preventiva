@@ -1,7 +1,7 @@
 SHELL := /bin/bash 
 PROJECT_NAME:=$(shell cat ../.project-name)
 DATA_DIRECTORY:=$(CURDIR)/../data
-IMAGES = download-declaranet
+IMAGES = 
 
 run:
 	@LUIGI_CONFIG_PATH=./pipelines/luigi.cfg	 $(PROJECT_NAME) --server 0.0.0.0 --port 8082
