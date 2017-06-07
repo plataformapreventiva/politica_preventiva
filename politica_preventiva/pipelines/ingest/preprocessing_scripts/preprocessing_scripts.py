@@ -94,5 +94,6 @@ def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
     copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
 
 def donatarias_sat_prep(year_month, s3_file, extra_h, out_key):
+    #pdb.set_trace() 
     bucket = 'dpa-plataforma-preventiva'
-    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
+    copy_s3_files(bucket, 'etl/' + s3_file, bucket, out_key)

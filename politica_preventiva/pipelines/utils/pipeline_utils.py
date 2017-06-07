@@ -50,7 +50,7 @@ def pandas_to_s3(df, Bucket, Key, sep="|"):
         aws_secret_access_key=aws_secret_access_key)
 
     s = StringIO()
-    df.to_csv(s, sep=sep)
+    df.to_csv(s, sep=sep, index=False)
 
     s3.Object(Bucket, Key).put(Body=s.getvalue())
 

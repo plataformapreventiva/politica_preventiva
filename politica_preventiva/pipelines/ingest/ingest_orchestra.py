@@ -57,6 +57,7 @@ def wrapper_failure(task):
     try:
         yield
     except Exception as e:
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         print(e)
         #task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
         #@classmethod 
@@ -205,8 +206,8 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.close()
 
         # Remove last processing file
-        # self.client.remove(self.raw_bucket + self.pipeline_task +
-        #           "/processing/" + self.pipeline_task + ".csv")
+        self.client.remove(self.raw_bucket + self.pipeline_task +
+                   "/concatenation/")
 
     def output(self):
         return postgres.PostgresTarget(host=self.host,database=self.database,user=self.user,
@@ -230,11 +231,12 @@ class Concatenation(luigi.Task):
         else:
             dates = latest_dates(self.pipeline_task, self.current_date)
         for extra_p, date in product(extra, dates):
-            with wrapper_failure(self):
-                return Preprocess(pipeline_task=self.pipeline_task,
+            #pdb.set_trace()
+            yield Preprocess(pipeline_task=self.pipeline_task,
                            year_month=str(date),
                            current_date=self.current_date,
-                           extra=extra_p) 
+                           extra=extra_p)
+
 
     def run(self):
         # filepath of the output
@@ -246,7 +248,7 @@ class Concatenation(luigi.Task):
         # function for appending all .csv files in folder_to_concatenate 
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
         # Delete files in preprocess
-        self.client.remove(self.raw_bucket + folder_to_concatenate)
+        #self.client.remove(self.raw_bucket + folder_to_concatenate)
         
     
     def output(self):
@@ -632,14 +634,14 @@ class donatarias_sat(SourceIngestTask):
 
         return subprocess.call([cmd], shell=True)
 
-@SourceIngestTask.event_handler(luigi.Event.FAILURE)
-def mourn_failure(task, exception):
-    """Will be called directly after a failed execution
-    of `run` on any MyTask subclass
-    """
-    print(26 * '-!-')
-    print("Boo!, {c} failed.  :(".format(c=self.__class__.__name__))
-    print(".. with this exception: '{e}'".format(e=str(exception)))
-    print(26 * '-!-')
+#@SourceIngestTask.event_handler(luigi.Event.FAILURE)
+#def mourn_failure(task, exception):
+#    """Will be called directly after a failed execution
+#    of `run` on any MyTask subclass
+#    """
+#    print(26 * '-!-')
+#    print("Boo!, {c} failed.  :(".format(c=self.__class__.__name__))
+#    print(".. with this exception: '{e}'".format(e=str(exception)))
+#    print(26 * '-!-')
 
 
