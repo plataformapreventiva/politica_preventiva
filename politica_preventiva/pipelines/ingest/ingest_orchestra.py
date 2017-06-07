@@ -57,7 +57,8 @@ def wrapper_failure(task):
     try:
         yield
     except Exception as e:
-        task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
+        print(e)
+        #task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
         #@classmethod 
         #def output(self):
         #    return True
@@ -111,7 +112,7 @@ class UpdateDB(postgres.CopyToTable):
         output_path = self.input().path
         #output_path = "s3://dpa-plataforma-preventiva/etl/indesol/concatenation/" + \
         # "2017-06" + "--" + self.pipeline_task + ".csv"
-        data = pd.read_csv(output_path,sep="|", encoding="utf-8",dtype=str)
+        data = pd.read_csv(output_path,sep="|", encoding="utf-8",dtype=str,error_bad_lines=False)
         #data = data.replace(r'\s+',np.nan,regex=True).replace('',np.nan)
         data = data.replace('nan', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)

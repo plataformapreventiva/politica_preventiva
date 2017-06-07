@@ -3,7 +3,9 @@
 
 { 
      "indesol": 
+
      {    "SCHEMA":
+
 		[("cluni","TEXT"),
 		("razon_social","TEXT"),
 		("figura_juridica","TEXT"),
@@ -70,6 +72,29 @@
 
           "INDEX":
           ['cluni']
+
+     },
+
+     "donatarias_sat": 
+     {    "SCHEMA":
+		[("year","TEXT"),
+		("admin_local_juridica","TEXT"),
+		("act_o_fin_autorizado","TEXT"),
+		("rfc","TEXT"),
+		("denom_o_razon_social","TEXT"),
+		("domicilio_fiscal","TEXT"),
+		("oficio_de_autorizacion","TEXT"),
+		("fecha_de_oficio","TEXT"),
+		("obj_social_autorizado","TEXT"),
+		("representante_legal","TEXT"),
+		("numeros_telefonicos","TEXT"),
+		("e_mail","TEXT"),
+		("domicilio_establecimiento","TEXT"),
+		("numero_telefonico","TEXT"),
+		("acreditamiento","TEXT")], 
+
+          "INDEX":
+          ['rfc']
      }
 }
 
