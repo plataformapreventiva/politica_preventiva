@@ -9,6 +9,8 @@
 
 import numpy as np
 import pandas as pd
+from utils.pipeline_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
+
 
 def gather(df, key, value, cols):
     """
@@ -117,3 +119,32 @@ def clean_json_strings(x):
     if x[-1] != '}':
         x = x + '}'
     return x
+
+def check_empty_dataframe(bucket, s3_file, out_key):
+    """
+    Tries to read a dataframe. If the file is empty, it copies the emtpy file
+    to the next stage, but erases the original file. Otherwise it returns the 
+    original dataframe
+    """
+    try:
+        df = s3_to_pandas(Bucket=bucket, Key=s3_file)
+    except Exception: # TODO: Change to real error, EmptyDataError
+        copy_s3_files(input_bucket=bucket, input_key=s3_file, 
+            output_bucket=bucket, output_key=out_key)    
+        delete_s3_file(Bucket=bucket, Key=s3_file)
+        #write_missing_csv()
+        df = None
+    return df
+
+def no_preprocess_method(bucket, s3_file, out_key):
+    """
+    Method for files that don't really require preprocessing.
+    Checks if a file is empty without loading it. If it is smaller than 
+    10 b, the file is assumed to be empty. 
+    """
+    file_size = get_s3_file_size(Bucket=bucket, Key=s3_file)
+    copy_s3_files(input_bucket=bucket, input_key=s3_file, 
+        output_bucket=bucket, output_key=out_key)
+    if obj.content_length < 10:
+        delete_s3_file(bucket, s3_file)
+

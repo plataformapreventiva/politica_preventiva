@@ -52,18 +52,6 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 #########
 # Definición de un Pipeline estandar  -> pipeline_task. 
 #######################
-@contextmanager
-def wrapper_failure(task):
-    try:
-        yield
-    except Exception as e:
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print(e)
-        #task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
-        #@classmethod 
-        #def output(self):
-        #    return True
-        pass
 
 class UpdateDB(postgres.CopyToTable):
 
@@ -222,7 +210,7 @@ class Concatenation(luigi.Task):
     historical = configuration.get_config().getboolean('DEFAULT', 'historical')
     raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
     
-    def requires(self):
+    def requires(self):-    
 
         extra = extras(self.pipeline_task)
 
