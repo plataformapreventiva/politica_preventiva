@@ -35,5 +35,5 @@ then
 
 else
     echo 'No information for that year'
-    exit
+    return
 fi
