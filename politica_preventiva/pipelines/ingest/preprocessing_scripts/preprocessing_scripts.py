@@ -8,21 +8,24 @@ from luigi import configuration
 import pandas as pd
 from io import StringIO
 import politica_preventiva.pipelines.utils.preprocessing_utils as pputils
-from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files
+from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files, delete_s3_file 
+
 
 def precios_granos_prep(year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for precios_granos: reads df from s3, completes missing values, 
     turns wide-format df to a long-format df, and uploads to s3
     """
-    df = s3_to_pandas(Bucket='dpa-plataforma-preventiva', Key='etl/'+ s3_file)
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
-    df['producto'] = pputils.complete_missing_values(df['producto'])
-    columns = ['sem_1', 'sem_2', 'sem_3', 'sem_4', 'sem_5', 'prom_mes']
-    df = pputils.gather(df, 'semana', 'precio', columns)
-    df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
+    if df:
+        df['producto'] = pputils.complete_missing_values(df['producto'])
+        columns = ['sem_1', 'sem_2', 'sem_3', 'sem_4', 'sem_5', 'prom_mes']
+        df = pputils.gather(df, 'semana', 'precio', columns)
+        df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
 
-    pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
 
 
 def sagarpa_prep(year_month, s3_file, extra_h, out_key):
@@ -30,70 +33,80 @@ def sagarpa_prep(year_month, s3_file, extra_h, out_key):
     Preprocessing function for sagarpa: reads df from s3, completes missing values, 
     turns wide-format df to a long-format df, and uploads to s3
     """
-    df = s3_to_pandas(Bucket='dpa-plataforma-preventiva', Key='etl/'+ s3_file)
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
-    df['estado'] = pputils.complete_missing_values(df['estado'])
-    df['distrito'] = pputils.complete_missing_values(df['distrito'])
-    df['cultivo'] = extra_h 
 
-    pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    if df:
+        df['estado'] = pputils.complete_missing_values(df['estado'])
+        df['distrito'] = pputils.complete_missing_values(df['distrito'])
+        df['cultivo'] = extra_h 
+
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
 
 def inpc_prep(year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for inpc: reads df from s3, parses dates 
     and uploads to s3. 
     """   
-    df = s3_to_pandas(Bucket='dpa-plataforma-preventiva', Key='etl/' + s3_file)
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
-    df['month'] = df['fecha'].map(lambda x: pputils.inpc_month(x))
-    df['year'] = df['fecha'].map(lambda x: pputils.inpc_year(x))
-    
-    pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+
+    if df:
+        df['month'] = df['fecha'].map(lambda x: pputils.inpc_month(x))
+        df['year'] = df['fecha'].map(lambda x: pputils.inpc_year(x))
+        
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
 
 def indesol_prep(year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for indesol: reads df from s3, turns wide-format df to long-format, 
     turns columns to json and uploads to s3. 
     """
-    df = s3_to_pandas(Bucket='dpa-plataforma-preventiva', Key='etl/' + s3_file)
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
-    # WIDE ACTIVIDAD TO LONG ACTIVDAD
-    columns = ['ACTIVIDAD_' + str(x) for x in range(1,20)]
-    df = pputils.gather(df, 'ACTIVIDAD', 'EDO_ACTIVIDAD', columns)
-    df['ACTIVIDAD'] = df['ACTIVIDAD'].map(lambda x: x.replace('ACTIVIDAD_', ''))
+    if df is not None:
+    # Change Actividad columns from wide to long format
+        columns = ['ACTIVIDAD_' + str(x) for x in range(1,20)]
+        df = pputils.gather(df, 'ACTIVIDAD', 'EDO_ACTIVIDAD', columns)
+        df['ACTIVIDAD'] = df['ACTIVIDAD'].map(lambda x: x.replace('ACTIVIDAD_', ''))
 
-    # RENAME INFORME COLUMNS 
-    # TODO: CHANCE THIS TO REGEX
-    # CHANGE STRINGS TO BOOL 
-    columns = [x for x in df.columns if 'INFORME' in x]
-    informe_dict = {col: col.replace('INFORME ', '') for col in columns}
-    informe_dict = {key:informe_dict[key].replace(' EN TIEMPO', 'T') for key in informe_dict.keys()}
-    informe_dict = {key:informe_dict[key].replace(' PRESENTADO', 'P') for key in informe_dict.keys()}
-    df = df.rename(columns=informe_dict)    
+        # Rename some long columns
+        # TODO: CHANCE THIS TO REGEX
+        columns = [x for x in df.columns if 'INFORME' in x]
+        informe_dict = {col: col.replace('INFORME ', '') for col in columns}
+        informe_dict = {key:informe_dict[key].replace(' EN TIEMPO', 'T') for key in informe_dict.keys()}
+        informe_dict = {key:informe_dict[key].replace(' PRESENTADO', 'P') for key in informe_dict.keys()}
+        df = df.rename(columns=informe_dict)    
 
-    # TURN 'INFORME' COLUMNS TO JSON STRING
-    columns = list(informe_dict.values())
-    df = pputils.df_columns_to_json(df, columns, 'INFORMES')
-    pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+        # Turn Informe columns into json column 
+        columns = list(informe_dict.values())
+        df = pputils.df_columns_to_json(df, columns, 'INFORMES')
+
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    else:
+        return True
 
 def cajeros_banxico_prep(year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
-    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
+    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
+
 
 def cenapred_prep(year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
-    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
+    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
 
 def segob_prep(year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
-    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
+    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
 
 def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
     # TODO: ver si es menor a 2013 (bajado como tabla completa, o mayor, y homologar columnas de ambos casos)
     bucket = 'dpa-plataforma-preventiva'
-    copy_s3_files(bucket, 'etl' + s3_file, bucket, out_key)
+    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
 
 def donatarias_sat_prep(year_month, s3_file, extra_h, out_key):
-    #pdb.set_trace() 
     bucket = 'dpa-plataforma-preventiva'
-    copy_s3_files(bucket, 'etl/' + s3_file, bucket, out_key)
+    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)

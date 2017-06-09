@@ -39,7 +39,8 @@ class RunPipelines(luigi.WrapperTask):
 
     # Pipeline corre mensualmente
     # start_year_month= el pipe de adolfo incluye un start month -> ver rita
-    current_date = luigi.DateParameter(default=datetime.date(2017, 5, 4)) # datetime.date.today()
+    #luigi.DateParameter(default=datetime.date(2017, 5, 4)) 
+    current_date = datetime.date.today()
 
     def requires(self):
 
