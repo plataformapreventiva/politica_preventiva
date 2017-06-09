@@ -19,13 +19,14 @@ def precios_granos_prep(year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
     df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
-    if df:
+    if df is not None:
         df['producto'] = pputils.complete_missing_values(df['producto'])
         columns = ['sem_1', 'sem_2', 'sem_3', 'sem_4', 'sem_5', 'prom_mes']
         df = pputils.gather(df, 'semana', 'precio', columns)
         df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    return True
 
 
 def sagarpa_prep(year_month, s3_file, extra_h, out_key):
@@ -37,12 +38,13 @@ def sagarpa_prep(year_month, s3_file, extra_h, out_key):
     df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
 
-    if df:
+    if df is not None:
         df['estado'] = pputils.complete_missing_values(df['estado'])
         df['distrito'] = pputils.complete_missing_values(df['distrito'])
         df['cultivo'] = extra_h 
 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    return True
 
 def inpc_prep(year_month, s3_file, extra_h, out_key):
     """
@@ -53,11 +55,12 @@ def inpc_prep(year_month, s3_file, extra_h, out_key):
     df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
 
-    if df:
+    if df is not None:
         df['month'] = df['fecha'].map(lambda x: pputils.inpc_month(x))
         df['year'] = df['fecha'].map(lambda x: pputils.inpc_year(x))
         
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    return True
 
 def indesol_prep(year_month, s3_file, extra_h, out_key):
     """
@@ -86,8 +89,7 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
         df = pputils.df_columns_to_json(df, columns, 'INFORMES')
 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
-    else:
-        return True
+    return True
 
 def cajeros_banxico_prep(year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'

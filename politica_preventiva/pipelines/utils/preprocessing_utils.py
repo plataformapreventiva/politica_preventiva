@@ -9,6 +9,8 @@
 
 import numpy as np
 import pandas as pd
+import json
+import ast
 from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
 
 
@@ -102,23 +104,10 @@ def df_columns_to_json(df, columns, new_name):
     df = df.drop(columns, axis=1)
 
     # Add column with extra value 
-    df_json = df_json.split('},{')
-    df_json = [clean_json_strings(x) for x in df_json]
+    df_json = [json.dumps(x) for x in ast.literal_eval(df_json)]
     df[new_name] = df_json
 
     return df
-    
-def clean_json_strings(x):
-    """
-    Simple function to clean strings used in df_columns_to_json
-    """
-    if x[0] == '[':
-        x = x.replace('[', '')
-    if x[0] != '{':
-        x = '{' + x
-    if x[-1] != '}':
-        x = x + '}'
-    return x
 
 def check_empty_dataframe(bucket, s3_file, out_key):
     """

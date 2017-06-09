@@ -135,7 +135,9 @@ def assemble_parts_to_concatenate(s3, bucket, result_filename, upload_id, parts_
 
     if (len(small_parts) > 0) and (small_parts != [b'']):
         last_part_num = part_num + 1
-        last_part = ''.join(small_parts)
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print(len(small_parts))
+        last_part = b''.join(small_parts)
         resp = s3.upload_part(Bucket=bucket, Key=result_filename, PartNumber=last_part_num, UploadId=upload_id, Body=last_part)
         logging.warning("Setup local part #{} from {} small files, and got response: {}".format(last_part_num, len(small_parts), resp))
         parts_mapping.append({'ETag': resp['ETag'][1:-1], 'PartNumber': last_part_num})
