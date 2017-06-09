@@ -9,7 +9,7 @@
 
 import numpy as np
 import pandas as pd
-from utils.pipeline_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
+from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
 
 
 def gather(df, key, value, cols):
@@ -145,6 +145,6 @@ def no_preprocess_method(bucket, s3_file, out_key):
     file_size = get_s3_file_size(Bucket=bucket, Key=s3_file)
     copy_s3_files(input_bucket=bucket, input_key=s3_file, 
         output_bucket=bucket, output_key=out_key)
-    if obj.content_length < 10:
+    if file_size < 10:
         delete_s3_file(bucket, s3_file)
 
