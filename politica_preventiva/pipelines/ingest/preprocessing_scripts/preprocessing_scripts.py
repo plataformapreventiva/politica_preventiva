@@ -1,4 +1,4 @@
-    """
+"""
 	Preprocessing Functions
 """
 import boto3 
@@ -16,7 +16,9 @@ def precios_granos_prep(year_month, s3_file, extra_h, out_key):
     Preprocessing function for precios_granos: reads df from s3, completes missing values, 
     turns wide-format df to a long-format df, and uploads to s3
     """
-    df = pputils.check_empty_dataframe('etl/' + s3_file, out_key)
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+
     if df:
         df['producto'] = pputils.complete_missing_values(df['producto'])
         columns = ['sem_1', 'sem_2', 'sem_3', 'sem_4', 'sem_5', 'prom_mes']
@@ -31,7 +33,10 @@ def sagarpa_prep(year_month, s3_file, extra_h, out_key):
     Preprocessing function for sagarpa: reads df from s3, completes missing values, 
     turns wide-format df to a long-format df, and uploads to s3
     """
-    df = pputils.check_empty_dataframe('etl/' + s3_file, out_key)
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+
+
     if df:
         df['estado'] = pputils.complete_missing_values(df['estado'])
         df['distrito'] = pputils.complete_missing_values(df['distrito'])
@@ -44,7 +49,9 @@ def inpc_prep(year_month, s3_file, extra_h, out_key):
     Preprocessing function for inpc: reads df from s3, parses dates 
     and uploads to s3. 
     """   
-    df = pputils.check_empty_dataframe('etl/' + s3_file, out_key)
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+
 
     if df:
         df['month'] = df['fecha'].map(lambda x: pputils.inpc_month(x))
@@ -57,10 +64,10 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
     Preprocessing function for indesol: reads df from s3, turns wide-format df to long-format, 
     turns columns to json and uploads to s3. 
     """
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
-    df = pputils.check_empty_dataframe('etl/' + s3_file, out_key)
-
-    if df:
+    if df is not None:
     # Change Actividad columns from wide to long format
         columns = ['ACTIVIDAD_' + str(x) for x in range(1,20)]
         df = pputils.gather(df, 'ACTIVIDAD', 'EDO_ACTIVIDAD', columns)
@@ -79,6 +86,8 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
         df = pputils.df_columns_to_json(df, columns, 'INFORMES')
 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    else:
+        return True
 
 def cajeros_banxico_prep(year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
