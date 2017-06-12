@@ -52,18 +52,6 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 #########
 # Definición de un Pipeline estandar  -> pipeline_task. 
 #######################
-@contextmanager
-def wrapper_failure(task):
-    try:
-        yield
-    except Exception as e:
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print(e)
-        #task.trigger_event(luigi.Event.DEPENDENCY_MISSING, task, e)
-        #@classmethod 
-        #def output(self):
-        #    return True
-        pass
 
 class UpdateDB(postgres.CopyToTable):
 
@@ -93,11 +81,11 @@ class UpdateDB(postgres.CopyToTable):
         return Concatenation(current_date=self.current_date,
                          pipeline_task=self.pipeline_task)
 
-    @property #TODO()
-    def update_id(self):
+    #@property #TODO()
+    #def update_id(self):
         #num = str(random.randint(0,100000)) + self.pipeline_task
-        num = str(self.current_date)  + self.pipeline_task
-        return num 
+        #num = str(self.current_date)  + self.pipeline_task
+        #return num 
 
     @property
     def columns(self):
@@ -222,7 +210,7 @@ class Concatenation(luigi.Task):
     historical = configuration.get_config().getboolean('DEFAULT', 'historical')
     raw_bucket = configuration.get_config().get('DEFAULT', 'raw_bucket')
     
-    def requires(self):
+    def requires(self):    
 
         extra = extras(self.pipeline_task)
 
@@ -248,7 +236,7 @@ class Concatenation(luigi.Task):
         # function for appending all .csv files in folder_to_concatenate 
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate, result_filepath, '.csv')
         # Delete files in preprocess
-        #self.client.remove(self.raw_bucket + folder_to_concatenate)
+        self.client.remove(self.raw_bucket + folder_to_concatenate)
         
     
     def output(self):
@@ -266,21 +254,20 @@ class Preprocess(luigi.Task):
 
     def requires(self):
         #with wrapper_failure(self):
-        task = LocalToS3(year_month=self.year_month,
+        yield LocalToS3(year_month=self.year_month,
                          pipeline_task=self.pipeline_task,
                          extra=self.extra)
-        return task
 
     def run(self):
+
         extra_h = get_extra_str(self.extra)
-
-        key = self.pipeline_task + "/raw/" + self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
         
+        key = self.pipeline_task + "/raw/" + self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
+        out_key = "etl/" + self.pipeline_task + "/preprocess/" + self.year_month + "--" + \
+            self.pipeline_task + extra_h + ".csv"
         preprocess_tasks = eval(self.pipeline_task + '_prep')
-
-        return preprocess_tasks(year_month=self.year_month, s3_file=key, extra_h = extra_h, 
-            out_key = 'etl/' + self.pipeline_task +  "/preprocess/" + self.year_month + "--" + 
-            self.pipeline_task + extra_h + ".csv")
+        yield preprocess_tasks(year_month=self.year_month, s3_file=key, extra_h = extra_h, 
+            out_key = out_key)
 
     def output(self):
         extra_h = get_extra_str(self.extra)

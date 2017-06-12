@@ -10,8 +10,8 @@ then
     wget -O "$2/sat_donatarias_$1.xls" $URL
     in2csv --no-inference "$2/sat_donatarias_$1.xls" | tail -n +31 | awk -F, '{$1= "2017";}1' OFS=, | sed '1s/$1/year/g' > "$2/tmp_$1.csv"
     csvformat -D "|" $2/tmp_$1.csv > $3
-    #rm "$2/sat_donatarias_$1.xls"
-    #rm "$2/tmp_$1.csv"
+    rm "$2/sat_donatarias_$1.xls"
+    rm "$2/tmp_$1.csv"
 
 elif [ "$1" = "2015" ]
 then
@@ -20,8 +20,8 @@ then
     wget -O "$2/sat_donatarias_$1.xls" $URL
     in2csv --no-inference "$2/sat_donatarias_$1.xls" | tail -n +31 | awk -F, '{$1= "2015";}1' OFS=, | sed '1s/$1/year/g' > "$2/tmp_$1.csv"
     csvformat -D "|" $2/tmp_$1.csv > $3
-    #rm "$2/sat_donatarias_$1.xls"
-    #rm "$2/tmp_$1.csv"
+    rm "$2/sat_donatarias_$1.xls"
+    rm "$2/tmp_$1.csv"
   
 elif [ "$1" = "2014" ]
 then
@@ -30,10 +30,11 @@ then
     wget -O "$2/sat_donatarias_$1.xls" $URL
     in2csv --no-inference "$2/sat_donatarias_$1.xls" | tail -n +31 | awk -F, '{$1= "2014";}1' OFS=, | sed '1s/$1/year/g' > "$2/tmp_$1.csv"
     csvformat -D "|" $2/tmp_$1.csv > $3
-    #rm "$2/sat_donatarias_$1.xls"
-    #rm "$2/tmp_$1.csv"
+    rm "$2/sat_donatarias_$1.xls"
+    rm "$2/tmp_$1.csv"
 
 else
     echo 'No information for that year'
-    exit
+    touch $3
+    return
 fi

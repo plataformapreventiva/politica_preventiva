@@ -9,6 +9,10 @@
 
 import numpy as np
 import pandas as pd
+import json
+import ast
+from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
+
 
 def gather(df, key, value, cols):
     """
@@ -100,20 +104,36 @@ def df_columns_to_json(df, columns, new_name):
     df = df.drop(columns, axis=1)
 
     # Add column with extra value 
-    df_json = df_json.split('},{')
-    df_json = [clean_json_strings(x) for x in df_json]
+    df_json = [json.dumps(x) for x in ast.literal_eval(df_json)]
     df[new_name] = df_json
 
     return df
-    
-def clean_json_strings(x):
+
+def check_empty_dataframe(bucket, s3_file, out_key):
     """
-    Simple function to clean strings used in df_columns_to_json
+    Tries to read a dataframe. If the file is empty, it copies the emtpy file
+    to the next stage, but erases the original file. Otherwise it returns the 
+    original dataframe
     """
-    if x[0] == '[':
-        x = x.replace('[', '')
-    if x[0] != '{':
-        x = '{' + x
-    if x[-1] != '}':
-        x = x + '}'
-    return x
+    try:
+        df = s3_to_pandas(Bucket=bucket, Key=s3_file)
+    except Exception: # TODO: Change to real error, EmptyDataError
+        copy_s3_files(input_bucket=bucket, input_key=s3_file, 
+            output_bucket=bucket, output_key=out_key)    
+        delete_s3_file(Bucket=bucket, Key=s3_file)
+        #write_missing_csv()
+        df = None
+    return df
+
+def no_preprocess_method(bucket, s3_file, out_key):
+    """
+    Method for files that don't really require preprocessing.
+    Checks if a file is empty without loading it. If it is smaller than 
+    10 b, the file is assumed to be empty. 
+    """
+    file_size = get_s3_file_size(Bucket=bucket, Key=s3_file)
+    copy_s3_files(input_bucket=bucket, input_key=s3_file, 
+        output_bucket=bucket, output_key=out_key)
+    if file_size < 10:
+        delete_s3_file(bucket, s3_file)
+

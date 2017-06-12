@@ -170,7 +170,7 @@ def ingest_inpc_ciudad(year='2017', historic=False,
             logging.info("Error downloading data for: year={}, historic={}, city={}".format(year, historic, ciudad))
 
     if output:
-        data.to_csv(output, sep='|')
+        data.to_csv(output, sep='|', index=False)
     else:
         return data, metadata
 

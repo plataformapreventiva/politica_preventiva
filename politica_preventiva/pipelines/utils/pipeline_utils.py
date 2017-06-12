@@ -66,15 +66,23 @@ def copy_s3_files(input_bucket, input_key, output_bucket, output_key):
     }
     s3.meta.client.copy(copy_source, output_bucket, output_key)
 
-def s3_to_pandas(Bucket,Key,sep="|"):
-    """
-    Downloads csv from s3 bucket into a pandas Dataframe
-    Assumes aws keys as environment variables
-    """
-    s3 = boto3.client('s3')
-    obj = s3.get_object(Bucket=Bucket,Key=Key)
 
-    return pd.read_csv(obj['Body'],sep=sep)
+def delete_s3_file(Bucket, Key):
+    """
+    Delete s3 file
+    """
+    client = boto3.client('s3')
+    response = client.delete_object(Bucket=Bucket, Key=Key)
+    return response
+
+
+def get_s3_file_size(Bucket, Key):
+    """
+    Get file size from s3 
+    """
+    s3 = boto3.resource('s3')
+    obj = s3.Object(Bucket, Key)
+    return obj.content_length
 
 
 def parse_cfg_list(string):
@@ -84,12 +92,14 @@ def parse_cfg_list(string):
     string = string.split(",")
     return [m.strip() for m in string]
 
+
 def get_extra_str(string):
     if len(string) > 0:
         extra_h = "--" + string
     else:
         extra_h = ""
     return extra_h
+
 
 def historical_dates(pipeline, end_date):
     end_date = end_date.strftime("%Y-%m")
@@ -100,6 +110,7 @@ def historical_dates(pipeline, end_date):
     except (NoOptionError):
         return [end_date]
 
+
 def latest_dates(pipeline, end_date):
     end_date = end_date.strftime("%Y-%m")
     try:
@@ -108,6 +119,7 @@ def latest_dates(pipeline, end_date):
         return dates
     except(NoOptionError):
         return [end_date]
+
 
 def extras(pipeline):
     try:
@@ -118,6 +130,7 @@ def extras(pipeline):
 
     except (NoOptionError):
         return ['']
+
 
 def extra_parameters(pipeline, parameters, end_date):
     """
@@ -162,6 +175,7 @@ def extra_parameters(pipeline, parameters, end_date):
         extra = ['']
         dates = [end_date if end_date else '']
     return [dates, extra]
+
 
 def date_ranges(start_date, end_date):
     """

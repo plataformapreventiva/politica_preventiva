@@ -21,6 +21,15 @@ MIN_S3_SIZE = 6000000
 # Setup logger to display timestamp
 logging.basicConfig(format='%(asctime)s => %(message)s')
 
+
+def s3_download(bucket, s3_file, local_file):
+    bucket_split_path = [x for x in bucket.split('/') if x and x != 's3:']
+    if len(bucket_split_path) > 1:
+        s3_file = "/".join(bucket_split_path[1:]) + "/" + folder_to_concatenate
+    bucket = bucket_split_path[0]
+    s3 = new_s3_client()
+    s3.download_file(Bucket=bucket, Key=s3_file, Filename=local_file)
+
 def run_concatenation(bucket, folder_to_concatenate, result_filepath, file_suffix, max_filesize=999999999):
     bucket_split_path = [x for x in bucket.split('/') if x and x != 's3:']
     if len(bucket_split_path) > 1:
@@ -126,7 +135,9 @@ def assemble_parts_to_concatenate(s3, bucket, result_filename, upload_id, parts_
 
     if (len(small_parts) > 0) and (small_parts != [b'']):
         last_part_num = part_num + 1
-        last_part = ''.join(small_parts)
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print(len(small_parts))
+        last_part = b''.join(small_parts)
         resp = s3.upload_part(Bucket=bucket, Key=result_filename, PartNumber=last_part_num, UploadId=upload_id, Body=last_part)
         logging.warning("Setup local part #{} from {} small files, and got response: {}".format(last_part_num, len(small_parts), resp))
         parts_mapping.append({'ETag': resp['ETag'][1:-1], 'PartNumber': last_part_num})
