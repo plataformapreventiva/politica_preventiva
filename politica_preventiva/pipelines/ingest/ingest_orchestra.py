@@ -219,7 +219,6 @@ class Concatenation(luigi.Task):
         else:
             dates = latest_dates(self.pipeline_task, self.current_date)
         for extra_p, date in product(extra, dates):
-            #pdb.set_trace()
             yield Preprocess(pipeline_task=self.pipeline_task,
                            year_month=str(date),
                            current_date=self.current_date,
@@ -228,7 +227,6 @@ class Concatenation(luigi.Task):
 
     def run(self):
         # filepath of the output
-        #pdb.set_trace()
         result_filepath =  self.pipeline_task + "/concatenation/" + \
                       self.pipeline_task + '.csv'
         # folder to concatenate
@@ -265,6 +263,7 @@ class Preprocess(luigi.Task):
         key = self.pipeline_task + "/raw/" + self.year_month + "--" +self.pipeline_task + extra_h + ".csv"
         out_key = "etl/" + self.pipeline_task + "/preprocess/" + self.year_month + "--" + \
             self.pipeline_task + extra_h + ".csv"
+
         preprocess_tasks = eval(self.pipeline_task + '_prep')
         return preprocess_tasks(year_month=self.year_month, s3_file=key, extra_h = extra_h, 
             out_key = out_key)
