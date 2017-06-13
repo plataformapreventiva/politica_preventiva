@@ -116,3 +116,8 @@ def donatarias_sat_prep(year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
     pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
     return True
+
+def transparencia_prep(year_month, s3_file, extra_h, out_key):
+   bucket = 'dpa-plataforma-preventiva'
+   pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
+   return True
