@@ -10,7 +10,6 @@ boto3==1.4.4
 psycopg2==2.6.2
 s3fs==0.1.0
 setuptools
-beautifulsoup4
 csvkit
 requests
-sqlite3
+#sqlite3
