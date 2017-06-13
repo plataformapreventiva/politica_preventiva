@@ -266,7 +266,7 @@ class Preprocess(luigi.Task):
         out_key = "etl/" + self.pipeline_task + "/preprocess/" + self.year_month + "--" + \
             self.pipeline_task + extra_h + ".csv"
         preprocess_tasks = eval(self.pipeline_task + '_prep')
-        yield preprocess_tasks(year_month=self.year_month, s3_file=key, extra_h = extra_h, 
+        return preprocess_tasks(year_month=self.year_month, s3_file=key, extra_h = extra_h, 
             out_key = out_key)
 
     def output(self):

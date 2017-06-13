@@ -56,6 +56,7 @@
           "INDEX":
           ['rfc']
      },
+
      "inpc":
      {    "SCHEMA":
                [("fecha","TEXT"),
@@ -90,7 +91,54 @@
 
           "INDEX":
           ['fecha']
+     },
+	
+     "transparencia":
+     {    "SCHEMA":
+		[("ciclo":"int"),
+		("id_ramo":"int"),
+		("desc_ramo":"text"),
+		("id_ur":"text"),
+		("desc_ur":"text"),
+		("gpo_funcional":"text"),
+		("desc_gpo_funcional":"text"),
+		("id_funcion":"int"),
+		("desc_funcion":"text"),
+		("id_subfuncion":"text"),
+		("desc_subfuncion":"text"),
+		("id_ai":"int"),
+		("desc_ai":"text"),
+		("id_modalidad":"text"),
+		("desc_modalidad":"text"),
+		("id_pp":"int"),
+		("desc_pp":"text"),
+		("id_concepto":"int"),
+		("desc_concepto":"text"),
+		("id_tipogasto":"int"),
+		("desc_tipogasto":"text"),
+		("id_ff":"int"),
+		("desc_ff":"text"),
+		("monto_aprobado":"float"),
+		("monto_ejercido":"float"),
+		("id_entidad_federativa":"text"),
+		("entidad_federativa":"text"),
+		("id_clave_cartera":"text"),
+		("monto_ejercicio":"float"),
+		("monto_modificado":"float"),
+		("monto_devengado":"float"),
+		("monto_pagado":"float"),
+		("monto_adefas":"float"),
+		("id_capitulo":"int"),
+		("desc_capitulo":"text"),
+		("desc_partida_especifica":"text"),
+		("desc_partida_generica":"text"),
+		("id_partida_especifica":"int"),
+		("id_partida_generica":"int")],
+
+	  "INDEX":
+	  ['id_ramo']
      }
+
 }
 
 
