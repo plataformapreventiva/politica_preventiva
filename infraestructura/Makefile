@@ -4,7 +4,7 @@
 ##            Variables               ##
 ########################################
 SHELL := /bin/bash 
-PROJECT_NAME:=compranet
+PROJECT_NAME:=politica_preventiva
 DATA_DIRECTORY:=$(CURDIR)/../data
 DOCKER_REGISTRY:= "localhost:5000"
 IMAGES = python luigi-server luigi-worker python-selenium

@@ -17,7 +17,7 @@ from joblib import Parallel, delayed
 from itertools import product
 from dotenv import load_dotenv,find_dotenv
 
-from politica_preventiva.pipelines.ingest.ingest_orchestra import UpdateDB, Concatenation
+from politica_preventiva.pipelines.ingest.ingest_orchestra import Concatenation, UpdateDB
 from politica_preventiva.pipelines.etl.etl_orchestra import ETL
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extra_parameters, historical_dates
 import pdb

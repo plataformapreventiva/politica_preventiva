@@ -42,19 +42,19 @@ init: prepare ##@dependencias Prepara la computadora para el funcionamiento del 
 	$(shell ./aws_ip_group.sh)
 
 prepare: deps 
-#	pyenv virtualenv ${PROJECT_NAME}_venv
-#	pyenv local ${PROJECT_NAME}_venv
+	#pyenv virtualenv ${PROJECT_NAME}_venv
+	#pyenv local ${PROJECT_NAME}_venv
 
-#pyenv: .python-version
-#	@pyenv install $(VERSION_PYTHON)
+pyenv: .python-version
+	@pyenv install $(VERSION_PYTHON)
 
 deps: pip pip-dev
 
 pip: requirements.txt
-	@sudo pip install -r $<
+	@pip install -r $<
 
 pip-dev: requirements-dev.txt
-	@sudo pip install -r $<
+	@pip install -r $<
 
 info:
 	@echo Proyecto: $(PROJECT_NAME) ver. $(PROJECT_VERSION)
