@@ -212,6 +212,76 @@
 
           "INDEX":
           ['clave_institucion']
+     },
+
+     "sagarpa":
+     {"SCHEMA":
+        [("estado", "TEXT"),
+        ("distrito", "TEXT"),
+        ("municipio", "TEXT"),
+        ("sup_sembrada", "INTEGER"),
+        ("sup_cosech", "INTEGER"),
+        ("sup_siniest", "INTEGER"),
+        ("produccion", "INTEGER"),
+        ("rendim", "DOUBLE PRECISION"),
+        ("mes", "INTEGER"),
+        ("anio", "INTEGER"),
+        ("moda_hidr", "TEXT"),
+        ("ciclo", "TEXT"),
+        ("cultivo", "TEXT")],
+
+          "INDEX":
+          ["cultivo"]
+     },
+
+     "precios_granos":
+     {"SCHEMA":
+        [("producto", "TEXT"),
+        ("origen", "TEXT"),
+        ("semana", "TEXT"),
+        ("precio", "DOUBLE PRECISION")
+        ("mes", "TEXT"),
+        ("anio", "TEXT"),
+        ("central", "TEXT")],
+
+          "INDEX":
+          ["producto"]
+
+     },
+
+     "sagarpa":
+     {"SCHEMA":
+        [("estado", "TEXT"),
+        ("distrito", "TEXT"),
+        ("municipio", "TEXT"),
+        ("sup_sembrada", "INTEGER"),
+        ("sup_cosech", "INTEGER"),
+        ("sup_siniest", "INTEGER"),
+        ("produccion", "INTEGER"),
+        ("rendim", "DOUBLE PRECISION"),
+        ("mes", "INTEGER"),
+        ("anio", "INTEGER"),
+        ("moda_hidr", "TEXT"),
+        ("ciclo", "TEXT"),
+        ("cultivo", "TEXT")],
+
+          "INDEX":
+          ["cultivo"]
+     },
+     
+     "precios_granos":
+     {"SCHEMA":
+        [("producto", "TEXT"),
+        ("origen", "TEXT"),
+        ("semana", "TEXT"),
+        ("precio", "DOUBLE PRECISION")
+        ("mes", "TEXT"),
+        ("anio", "TEXT"),
+        ("central", "TEXT")],
+
+          "INDEX":
+          ["producto"]
+
      }
 
 }
