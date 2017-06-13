@@ -137,6 +137,81 @@
 
 	  "INDEX":
 	  ['id_ramo']
+     },
+
+     "cenapred":
+     {    "SCHEMA":
+               [("a_reglam", "VARCHAR"),
+                ("aeropuerto", "DECIMAL"),
+                ("bancos", "DECIMAL"),
+                ("cc_hidro", "DECIMAL"),
+                ("cve_muni", "DECIMAL"),
+                ("declarator", "DECIMAL"),
+                ("d_geo", "DECIMAL"),
+                ("d_hidro", "DECIMAL"),
+                ("d_qui", "BOOLEAN"),
+                ("e_geo", "DECIMAL"),
+                ("e_hidro", "DECIMAL"),
+                ("e_qui", "DECIMAL"),
+                ("e_sani", "BOOLEAN"),
+                ("gp_bajas_temperaturas", "VARCHAR"),
+                ("gp_ciclones", "VARCHAR"),
+                ("gp_granizo", "VARCHAR"),
+                ("gp_inundaciones", "VARCHAR"),
+                ("gp_nevadas", "VARCHAR"),
+                ("gp_sequia2", "VARCHAR"),
+                ("gp_sismico", "VARCHAR"),
+                ("gp_sustancias_inflamables", "VARCHAR"),
+                ("gp_Sustancias_toxicas", "VARCHAR"),
+                ("gp_tormentas_electricas", "VARCHAR"),
+                ("gp_tsunami", "VARCHAR"),
+                ("gp_ondasca", "VARCHAR"),
+                ("gvs_ise10", "VARCHAR"),
+                ("g_marginacion", "VARCHAR"),
+                ("g_resiliencia", "VARCHAR"),
+                ("g_rezago_social", "VARCHAR"),
+                ("g_susce_lad", "VARCHAR"),
+                ("gasolinera", "DECIMAL"),
+                ("hospitales", "DECIMAL"),
+                ("nom_ent", "VARCHAR"),
+                ("nom_mun", "VARCHAR"),
+                ("num_us_cfe", "DECIMAL"),
+                ("objectid", "DECIMAL"),
+                ("pobfem", "DECIMAL"),
+                ("pobmas", "DECIMAL"),
+                ("pobtot", "DECIMAL"),
+                ("pob2030", "DECIMAL"),
+                ("sep", "DECIMAL"),
+                ("shape_area", "DECIMAL"),
+                ("supermerca", "DECIMAL"),
+                ("titulo_ref", "VARCHAR"),
+                ("tvivhab", "DECIMAL"),
+                ("v_cc", "VARCHAR"),
+                ("atlas_mun", "VARCHAR"),
+                ("cve_ent", "DECIMAL"),
+                ("hoteles", "DECIMAL"),
+                ("num_col", "DECIMAL"),
+                ("url", "VARCHAR")],
+
+          "INDEX":
+          ['a_reglam']
+
+     },
+
+     "cajeros_banxico":
+     {    "SCHEMA":
+               [("actualizacion", "TIMESTAMP"),
+               ("clave_institucion", "DECIMAL"),
+               ("cp", "DECIMAL"),
+               ("direccion", "VARCHAR"),
+               ("horario", "VARCHAR"),
+               ("id", "VARCHAR"),
+               ("lat", "DECIMAL"),
+               ("lon", "DECIMAL"),
+               ("nombre_institucion", "VARCHAR")],
+
+          "INDEX":
+          ['clave_institucion']
      }
 
 }
