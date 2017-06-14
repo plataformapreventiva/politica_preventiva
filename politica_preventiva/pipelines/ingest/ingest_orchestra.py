@@ -125,8 +125,10 @@ class UpdateDB(postgres.CopyToTable):
 
         index= schemas[self.pipeline_task]["INDEX"][0]
 
-        # Create temporary table temp
-        cmd = " CREATE TEMPORARY TABLE tmp  ({0});".format(create_sql)
+ 	# Change the temp setting of the buffer
+        #cmd = "SET temp_buffers = 1000MB;"
+	# Create temporary table tempi
+        cmd = "CREATE TEMPORARY TABLE tmp  ({0});ANALYZE tmp;".format(create_sql)
         cmd += 'CREATE INDEX IF NOT EXISTS {0}_index ON tmp ({0});'.format(index, self.pipeline_task)
         cursor.execute(cmd)
 
@@ -139,8 +141,7 @@ class UpdateDB(postgres.CopyToTable):
 
         # SET except from TEMP to raw table ordered 
         cmd += "INSERT INTO {0} \
-            SELECT {1} FROM tmp EXCEPT SELECT {1} FROM {0} \
-            ORDER BY {2};".format(self.table,unique_sql,index)
+            SELECT {1} FROM tmp EXCEPT SELECT {1} FROM {0} ;".format(self.table,unique_sql,index)
         cursor.execute(cmd)
         connection.commit()
         return True
@@ -431,7 +432,7 @@ class sagarpa_cierre(SourceIngestTask):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
-class inpc(SourceIngestTask):
+class ipc_ciudades(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
