@@ -144,23 +144,30 @@ def assemble_parts_to_concatenate(s3, bucket, result_filename, upload_id, parts_
 
     return parts_mapping
 
+def line_count(file):
+    """
+    Bash wc -l for csv files
+    TODO(Use Parallel)
+    """
+    return int(subprocess.check_output('wc -l {}'.format(file), shell=True).split()[0])
+
 def local_appending(s3, bucket, local_parts, result_filename):
+
     temp_all_filename = "/tmp/{}".format(result_filename.replace("/","_"))
     f_all = open(temp_all_filename,"a")
-    for i, source_part in enumerate(local_parts):
+    i = 0
+    for source_part in enumerate(local_parts):
+        
         temp_filename = "/tmp/{}".format(source_part[0].replace("/","_"))
         s3.download_file(Bucket=bucket, Key=source_part[0], Filename=temp_filename)
-        if i == 1:
-            for line in open(temp_filename, "r+"):
-                if (len(line) > 0) and (line != [b'']):
-                    f_all.write(line)
-        else:
-            f = open(temp_filename, "r+")
-            #f.next() # skip the header
-            for i, line in enumerate(f):
-               if (len(line) > 0) and (line != [b'']) and (i==1):
-                   f_all.write(line)
-            f.close() # not really needed
+        if i>0:
+            next(f)
+        f = open(temp_filename, "r+")
+        for i, line in enumerate(f):
+            if (len(line) > 0) and (line != [b'']) and (i==1):
+                f_all.write(line)
+        f.close() # not really needed
+        i += 1 
         os.remove(temp_filename)
 
     f_all.close()

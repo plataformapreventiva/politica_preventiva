@@ -137,3 +137,19 @@ def no_preprocess_method(bucket, s3_file, out_key):
     if file_size < 10:
         delete_s3_file(bucket, s3_file)
 
+def replace_missing_with_none(df):
+    """
+    Method to replace all types of null to None
+    """
+    str_replace = r'N/E'
+    df.replace({str_replace:None}, regex=True, inplace=True)
+
+    # replace NAN values
+    df = df.where((pd.notnull(df)), None)
+    return df
+
+
+
+
+
+
