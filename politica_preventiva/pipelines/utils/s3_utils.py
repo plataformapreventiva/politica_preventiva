@@ -21,15 +21,6 @@ MIN_S3_SIZE = 6000000
 # Setup logger to display timestamp
 logging.basicConfig(format='%(asctime)s => %(message)s')
 
-
-def s3_download(bucket, s3_file, local_file):
-    bucket_split_path = [x for x in bucket.split('/') if x and x != 's3:']
-    if len(bucket_split_path) > 1:
-        s3_file = "/".join(bucket_split_path[1:]) + "/" + folder_to_concatenate
-    bucket = bucket_split_path[0]
-    s3 = new_s3_client()
-    s3.download_file(Bucket=bucket, Key=s3_file, Filename=local_file)
-
 def run_concatenation(bucket, folder_to_concatenate, result_filepath, file_suffix, max_filesize=999999999):
     bucket_split_path = [x for x in bucket.split('/') if x and x != 's3:']
     if len(bucket_split_path) > 1:
@@ -52,7 +43,7 @@ def run_single_concatenation(s3, bucket, parts_list, result_filepath):
         upload_id = initiate_concatenation(s3, bucket, result_filepath)
         parts_mapping = assemble_parts_to_concatenate(s3, bucket, result_filepath, upload_id, parts_list)
         complete_concatenation(s3, bucket, result_filepath, upload_id, parts_mapping)
-    elif len(parts_list) == 1:
+    elif len(parts_list) == 0:
         # can perform a simple S3 copy since there is just a single file
         resp = s3.copy_object(Bucket=bucket, CopySource="{}/{}".format(bucket, parts_list[0][0]), Key=result_filepath)
         logging.warning("Copied single file to {} and got response {}".format(result_filepath, resp))
@@ -74,7 +65,7 @@ def new_s3_client():
     # initialize an S3 client with a private session so that multithreading
     # doesn't cause issues with the client's internal state
     session = boto3.session.Session()
-    return session.client('s3') 
+    return session.client('s3')
 
 def collect_parts(s3, bucket, folder, suffix):
     return list(filter(lambda x: x[0].endswith(suffix), _list_all_objects_with_size(s3, bucket, folder)))
@@ -135,39 +126,30 @@ def assemble_parts_to_concatenate(s3, bucket, result_filename, upload_id, parts_
 
     if (len(small_parts) > 0) and (small_parts != [b'']):
         last_part_num = part_num + 1
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        print(len(small_parts))
-        last_part = b''.join(small_parts)
+        last_part = ''.join(small_parts)
         resp = s3.upload_part(Bucket=bucket, Key=result_filename, PartNumber=last_part_num, UploadId=upload_id, Body=last_part)
         logging.warning("Setup local part #{} from {} small files, and got response: {}".format(last_part_num, len(small_parts), resp))
         parts_mapping.append({'ETag': resp['ETag'][1:-1], 'PartNumber': last_part_num})
 
     return parts_mapping
 
-def line_count(file):
-    """
-    Bash wc -l for csv files
-    TODO(Use Parallel)
-    """
-    return int(subprocess.check_output('wc -l {}'.format(file), shell=True).split()[0])
-
 def local_appending(s3, bucket, local_parts, result_filename):
-
     temp_all_filename = "/tmp/{}".format(result_filename.replace("/","_"))
     f_all = open(temp_all_filename,"a")
-    i = 0
-    for source_part in enumerate(local_parts):
-        
+    for i, source_part in enumerate(local_parts):
         temp_filename = "/tmp/{}".format(source_part[0].replace("/","_"))
         s3.download_file(Bucket=bucket, Key=source_part[0], Filename=temp_filename)
-        if i>0:
-            next(f)
-        f = open(temp_filename, "r+")
-        for i, line in enumerate(f):
-            if (len(line) > 0) and (line != [b'']) and (i==1):
-                f_all.write(line)
-        f.close() # not really needed
-        i += 1 
+        if i == 1:
+            for line in open(temp_filename, "r+"):
+                if (len(line) > 0) and (line != [b'']):
+                    f_all.write(line)
+        else:
+            f = open(temp_filename, "r+")
+            f.next() # skip the header
+            for i, line in enumerate(f):
+               if (len(line) > 0) and (line != [b'']) and (i==1):
+                   f_all.write(line)
+            f.close() # not really needed
         os.remove(temp_filename)
 
     f_all.close()
@@ -196,4 +178,3 @@ if __name__ == "__main__":
     logging.warning("Combining files in {}/{} to {}/{}, with a max size of {} bytes".format(BUCKET, args.folder, BUCKET, args.output, args.filesize))
     BUCKET = args.bucket
     run_concatenation(args.folder, args.output, args.suffix, args.filesize)
-
