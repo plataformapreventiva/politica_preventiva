@@ -3,6 +3,7 @@
 # RunPipelines --workers 3
 
 import os
+import ast
 import datetime
 import logging
 import boto3
@@ -17,8 +18,9 @@ from joblib import Parallel, delayed
 from itertools import product
 from dotenv import load_dotenv,find_dotenv
 
-from politica_preventiva.pipelines.ingest.ingest_orchestra import Concatenation, UpdateDB
-from politica_preventiva.pipelines.etl.etl_orchestra import ETL
+from politica_preventiva.pipelines.ingest.ingest_orchestra import IngestPipeline
+#from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
+#from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extra_parameters, historical_dates
 import pdb
 
@@ -27,83 +29,38 @@ logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
 # Variables de ambiente
 load_dotenv(find_dotenv())
 
+# Load Postgres Schemas
+temp = open('./pipelines/common/pg_raw_schemas.txt').read()
+schemas = ast.literal_eval(temp)
+open('./pipelines/common/pg_raw_schemas.txt').close()
+
+# RDS
+database = os.environ.get("PGDATABASE")
+user = os.environ.get("POSTGRES_USER")
+password = os.environ.get("POSTGRES_PASSWORD")
+host = os.environ.get("PGHOST")
+
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
+
 
 class RunPipelines(luigi.WrapperTask):
 
     """
     Task principal para el pipeline 
     """
-
-    # Pipeline corre mensualmente
     # start_year_month= el pipe de adolfo incluye un start month -> ver rita
     #luigi.DateParameter(default=datetime.date(2017, 5, 4)) 
+
     current_date = datetime.date.today()
 
     def requires(self):
 
-        yield Ingestpipeline(self.current_date)
-        #yield EtlPipeline(self.year_month)
-
-
-class Ingestpipeline(luigi.WrapperTask):
-
-    """
-    This wrapper task executes ingest pipeline
-    It expects a list specifying which ingest pipelines to run
-    """
-
-    # ToDo() Checar la temporalidad de la ingesta: (e.g. si es mensual y toca
-    # correr)
-
-    current_date = luigi.DateParameter()
-    conf = configuration.get_config()
-
-    # List all pipelines to run
-    pipelines = parse_cfg_list(conf.get("Ingestpipeline", "pipelines"))
-
-    def requires(self):
-        # loop through pipeline tasks
-        yield [UpdateDB(current_date=self.current_date,
-                             pipeline_task=pipeline) for pipeline in self.pipelines]
-
-
-class EtlPipeline(luigi.WrapperTask):
-
-    """
-        Este wrapper ejecuta el ETL de cada pipeline-task.
-
-    """
-
-    year_month = luigi.Parameter()
-
-    def requires(self):
-
-        return IngestPipeline(self.year_month)
-
-    def run(self):
-
-        yield ETL(year_month=self.year_month)
-
-
-# class ModelPipeline(luigi.WrapperTask):
-
-#     """
-#         Este wrapper ejecuta los modelos
-#     """
-
-#     year_month = luigi.Parameter()
-#     conf = configuration.get_config()
-
-#     def requires(self):
-
-#         yield MissingClassifier(year_month=self.year_month)
-#         yield SetNeo4J(year_month=self.year_month)
-#         yield PredictiveModel(year_month=self.year_month)
-
-
+        yield IngestPipeline(current_date=self.current_date)
+        #yield ETLPipeline(self.current_date)
+        #yield ModelPipeline(self.current_date)
 
 if __name__ == "__main__":
     luigi.run()

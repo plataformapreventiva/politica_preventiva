@@ -46,7 +46,7 @@ def sagarpa_prep(year_month, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
-def inpc_prep(year_month, s3_file, extra_h, out_key):
+def ipc_ciudades_prep(year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for inpc: reads df from s3, parses dates 
     and uploads to s3. 
@@ -58,7 +58,7 @@ def inpc_prep(year_month, s3_file, extra_h, out_key):
     if df is not None:
         df['month'] = df['fecha'].map(lambda x: pputils.inpc_month(x))
         df['year'] = df['fecha'].map(lambda x: pputils.inpc_year(x))
-        
+        df = pputils.replace_missing_with_none(df) 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 

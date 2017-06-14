@@ -31,12 +31,9 @@ setup(
         'pyyaml',
         'pandas',
         'scikit-learn',
-        'sqlalchemy',
         'datetime',
         'scipy',
-        'luigi',
-        'Click',
-        'python-dotenv'
+        'Click'
     ],
 
     extra_require={

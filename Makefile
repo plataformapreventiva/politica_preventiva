@@ -111,7 +111,7 @@ nuke: ##@infraestructura Destruye la infraestructura (incluyendo las imágenes)
 ########################################
 
 lint:  ##@test Verifica que el código este bien escrito (según PEP8)
-	@flake8 --exclude=lib/,bin/,docs/conf.py .
+	@flake8 --exclude=lib/,bin/,docs/conf.py,.tox/,shameful/,politica_preventiva.egg-info/ .
 
 tox: clean  ##@test Ejecuta tox
 	tox

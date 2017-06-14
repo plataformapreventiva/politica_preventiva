@@ -7,7 +7,7 @@ SHELL := /bin/bash
 PROJECT_NAME:=politica_preventiva
 DATA_DIRECTORY:=$(CURDIR)/../data
 DOCKER_REGISTRY:= "localhost:5000"
-IMAGES = python luigi-server luigi-worker python-selenium
+IMAGES = luigi-server 
 #base python r java luigi-server luigi-worker spark-client hadoop-client
 IMAGE_VERSION:=0.1
 
@@ -29,12 +29,13 @@ up: .running
 	@touch .running
 
 
-create: .network_built .images_built .data_built #.network_built .images_built
+create: .images_built #.network_built .images_built .data_built #.network_built .images_built
 
 .images_built:
 	@for image in $(IMAGES) ; do \
-	    sudo docker build --tag $$DOCKER_REGISTRY/dpa/$$image:${IMAGE_VERSION} --tag dpa/$$image:latest --tag dpa/$$image:$(IMAGE_VERSION) $$image ; \
-	    sudo docker push $$DOCKER_REGISTRY/dpa/$$image:$(IMAGE_VERSION); \
+	    # sudo docker build --tag $$DOCKER_REGISTRY/dpa/$$image:${IMAGE_VERSION} --tag dpa/$$image:latest --tag dpa/$$image:$(IMAGE_VERSION) $$image ; 
+	    sudo docker build  --tag dpa/$$image:$(IMAGE_VERSION) $$image ;\
+            # sudo docker push $$DOCKER_REGISTRY/dpa/$$image:$(IMAGE_VERSION); 
 	 done
 	@touch .images_built
 
