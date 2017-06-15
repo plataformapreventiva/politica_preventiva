@@ -3,7 +3,6 @@
 
 """Utilidades Sagarpa
 
-Funciones de Descarga y limpieza de Task Sagarpa
 """
 
 import numpy as np
@@ -61,69 +60,69 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
     dict_ciclo = {1: 'OI', 2: 'PV', 3: 'PE'}
 
     dict_cultivo = {'ajo': '700',
-                    'ajonjoli': '800',
-                    'algodon-hueso': '1800',
-                    'amaranto': '2800',
-                    'arroz-palay': '3300',
-                    'avena-forrajera-en-verde': '3900',
-                    'avena-grano': '4000',
-                    'berenjena': '4600',
-                    'brocoli': '5100',
-                    'calabacita': '5800',
-                    'cartamo': '6900',
-                    'cebada-grano': '7300',
-                    'cebolla': '7400',
-                    'chile-verde': '11400',
-                    'coliflor': '9000', 
-                    'crisantemo': '10130',
-                    'elote': '12700',
-                    'fresa': '14000',
-                    'frijol': '14200',
-                    'garbanzo': '14700',
-                    'gladiola': '15400',
-                    'lechuga': '18500',
-                    'maiz-forrajero-en-verde': '19800',
-                    'maiz-grano': '19700',
-                    'melon': '21200',
-                    'papa': '24400',
-                    'pepino': '24900',
-                    'sandia': '28700',
-                    'sorgo-forrajero-en-verde': '29300',
-                    'sorgo-grano': '29500',
-                    'soya': '29700',
-                    'tabaco': '30000',
-                    'tomate-rojo': '30800',
-                    'tomate-verde': '31000',
-                    'trigo-grano': '31500',
-                    'zanahoria': '32900',
-                    'agave':'500',
-                    'aguacate':'600',
-                    'alfalfa-verde':'1500',
-                    'cacao':'5400',
-                    'cafe-cereza':'5500',
-                    'cana-de-azucar':'6500',
-                    'copra':'9700',
-                    'durazno':'12400',
-                    'esparrago':'13100',
-                    'frambuesa':'13900', 
-                    'gerbera':'14900', 
-                    'guayaba':'16000', 
-                    'limon':'19000', 
-                    'maguey-pulquero':'19600', 
-                    'mango':'20400', 
-                    'manzana':'20600', 
-                    'naranja':'22400', 
-                    'nopalitos':'23000', 
-                    'nuez':'23200', 
-                    'papaya':'24700', 
-                    'pera':'25100',
-                    'pina':'25800',
-                    'platano':'26700', 
-                    'rosa':'28200', 
-                    'toronja':'31200', 
-                    'tuna':'31900', 
-                    'uva':'32000', 
-                    'zarzamora':'33300'}
+                'ajonjoli': '800',
+                'algodon-hueso': '1800',
+                'amaranto': '2800',
+                'arroz-palay': '3300',
+                'avena-forrajera-en-verde': '3900',
+                'avena-grano': '4000',
+                'berenjena': '4600',
+                'brocoli': '5100',
+                'calabacita': '5800',
+                'cartamo': '6900',
+                'cebada-grano': '7300',
+                'cebolla': '7400',
+                'chile-verde': '11400',
+                'coliflor': '9000', 
+                'crisantemo': '10130',
+                'elote': '12700',
+                'fresa': '14000',
+                'frijol': '14200',
+                'garbanzo': '14700',
+                'gladiola': '15400',
+                'lechuga': '18500',
+                'maiz-forrajero-en-verde': '19800',
+                'maiz-grano': '19700',
+                'melon': '21200',
+                'papa': '24400',
+                'pepino': '24900',
+                'sandia': '28700',
+                'sorgo-forrajero-en-verde': '29300',
+                'sorgo-grano': '29500',
+                'soya': '29700',
+                'tabaco': '30000',
+                'tomate-rojo': '30800',
+                'tomate-verde': '31000',
+                'trigo-grano': '31500',
+                'zanahoria': '32900',
+                'agave':'500',
+                'aguacate':'600',
+                'alfalfa-verde':'1500',
+                'cacao':'5400',
+                'cafe-cereza':'5500',
+                'cana-de-azucar':'6500',
+                'copra':'9700',
+                'durazno':'12400',
+                'esparrago':'13100',
+                'frambuesa':'13900', 
+                'gerbera':'14900', 
+                'guayaba':'16000', 
+                'limon':'19000', 
+                'maguey-pulquero':'19600', 
+                'mango':'20400', 
+                'manzana':'20600', 
+                'naranja':'22400', 
+                'nopalitos':'23000', 
+                'nuez':'23200', 
+                'papaya':'24700', 
+                'pera':'25100',
+                'pina':'25800',
+                'platano':'26700', 
+                'rosa':'28200', 
+                'toronja':'31200', 
+                'tuna':'31900', 
+                'uva':'32000', 
+                'zarzamora':'33300'}
 
 
     url = "http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do"
@@ -192,7 +191,6 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
                 if table:
                     print(':D       Table found')
                     records = []
-                    keep = True
 
                     # Iterate over rows
                     for row in table.findAll('tr'):
@@ -202,15 +200,8 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
                         # since they are not <td>, we can simply test for their
                         # absence
                         if tds:
-                            test = "".join(tds[0].text.split())
-                            if keep and test:
-                                keep_state = tds[0]
-                                keep = False
-                            tds[0] = keep_state
-                            records.append(
-                                [' '.join(elem.text.lower().split()) for elem in tds])
-                        else:
-                            keep = True
+                            records.append([' '.join(elem.text.lower().split()) for elem in tds])
+            
 
                     # Add payload information to the table
                     for row in records:
@@ -222,6 +213,7 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
                 else:
                     print(':/       No table found')
 
+    # TODO: check column names and test if colnames have changed
     col_names = ['estado', 'distrito', 'municipio', 'sup_sembrada', 'sup_cosech',
                  'sup_siniest', 'produccion', 'rendim', 'mes', 'anio', 'moda_hidr', 'ciclo', 'cultivo']
     
@@ -234,7 +226,7 @@ def ingest_sagarpa_avance_agricola(start_date, end_date=None,
     
     if results:
         result = pd.DataFrame(results, columns=col_names)
-        result.to_csv(file_name, sep='|')
+        result.to_csv(file_name, sep='|', index=False)
     
     else:
         file = open(file_name,'w')
@@ -289,6 +281,7 @@ def ingesta_sagarpa_cierre_produccion(start_date, end_date=None, estado='1',
 
     dict_ciclo = {1: 'OI', 2: 'PV', 3:'PE'}
 
+    # dict_edos contains the number of municipalities in each state
     dict_edos = {
         "1":  "11",
         "2":  "5",
