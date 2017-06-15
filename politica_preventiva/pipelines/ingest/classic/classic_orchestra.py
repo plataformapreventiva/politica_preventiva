@@ -399,6 +399,7 @@ class RawHeaderTest(luigi.Task):
 
         cmd = '''
             head -n 1 {0} >> ./pipelines/common/raw_schemas_temp.txt;
+            sort -u ./pipelines/common/raw_schemas_temp.txt;
             sed -i '' 1d {0};
             '''.format(self.input().path)
 
