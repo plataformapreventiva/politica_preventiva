@@ -7,7 +7,7 @@ In order to improve the targeting of social programs, the System of Integral Soc
 ## Installation
 
 The analysis pipeline can be run after cloning this repository and
-calling `make init` and `make deploy`. 
+calling `make init`, `make setup` and `make deploy`. 
 
 ### Dependencies
 
@@ -20,21 +20,16 @@ calling `make init` and `make deploy`.
 
 ## Data Pipeline
 
-After you create the evironment set up the pipeline_tasks in luigi.cfg 
+After you create the environment set up the pipeline_tasks in luigi.cfg 
 The general process of the pipeline is:
 
-* **Ingest:**
-* LocalIngest: Ingest data from multiple sources
+* **Run:**
+* RunPipelines [politica_preventiva/pipelines/politica_preventiva.py]
+* **Ingest:** [politica_preventiva/pipelines/ingest/inges_orchestra.py]
+* LocalIngest: Ingest data from multiple sources 
 * LocalToS3: Upload to S3 and save historical by date
-* UpdateOutput: Preprocess to Output
 * UpdateDB: Update Postgres tables and Create indexes (see commons/pg_raw_schemas)
-* **ETL:**
-* MergeDBs: ETL processes to clean
-* CleanDB: SQL processes to clean tables creation
-* SetNeo4J: Download clean tables and upload to neo4j
-* **Model:**
-*
-*
+* **ETL:** [politica_preventiva/pipelines/etl/etl_orchestra.py]
 
 ### Contributors
 
