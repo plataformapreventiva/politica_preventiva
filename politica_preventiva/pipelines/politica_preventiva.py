@@ -1,5 +1,5 @@
 # coding: utf-8
-# Run as: luigid & PYTHONPATH='.' python politica_preventiva.py
+# If you Run as: luigid & PYTHONPATH='.' python politica_preventiva.py
 # RunPipelines --workers 3
 
 import os
@@ -21,6 +21,7 @@ from dotenv import load_dotenv,find_dotenv
 from politica_preventiva.pipelines.ingest.ingest_orchestra import IngestPipeline
 #from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
 #from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
+
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extra_parameters, historical_dates
 import pdb
 
@@ -28,11 +29,6 @@ logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
-
-# Load Postgres Schemas
-temp = open('./pipelines/common/pg_raw_schemas.txt').read()
-schemas = ast.literal_eval(temp)
-open('./pipelines/common/pg_raw_schemas.txt').close()
 
 # RDS
 database = os.environ.get("PGDATABASE")
@@ -49,11 +45,10 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 class RunPipelines(luigi.WrapperTask):
 
     """
-    Task principal para el pipeline 
+    Main Wrapper Task of pipelines 
     """
-    # start_year_month= el pipe de adolfo incluye un start month -> ver rita
-    #luigi.DateParameter(default=datetime.date(2017, 5, 4)) 
 
+    # start_year_month= el pipe de adolfo incluye un start month -> ver rita
     current_date = datetime.date.today()
 
     def requires(self):

@@ -31,6 +31,12 @@ from politica_preventiva.pipelines.utils import s3_utils
 
 conf = configuration.get_config()
 
+# AWS
+aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
+
+
 #######################
 # Abstract Tasks
 #########
@@ -39,8 +45,7 @@ class SourceIngestTask(luigi.Task):
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-
-    classic_task_scripts = luigi.Parameter('ClassicIngest')
+    classic_task_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
 

@@ -1,8 +1,8 @@
 # Este Archivo almacena el Schema de las tablas de Postgres
 # como un diccionario para ser consumidas por Luigi
 
-{ 
-     "indesol": 
+{
+     "indesol":
 
      {    "SCHEMA":
 
@@ -26,16 +26,16 @@
 		("numero_interior","TEXT"),
 		("cp","TEXT"),
 		("redes","TEXT"),
-                ("actividad","INT"),
-                ("edo_actividad","TEXT"),
-                ("informes","JSONB")], 
+        ("actividad","INT"),
+        ("edo_actividad","TEXT"),
+        ("informes","JSONB")],
 
           "INDEX":
           ['cluni']
 
      },
 
-     "donatarias_sat": 
+     "donatarias_sat":
      {    "SCHEMA":
 		[("year","TEXT"),
 		("admin_local_juridica","TEXT"),
@@ -51,7 +51,7 @@
 		("e_mail","TEXT"),
 		("domicilio_establecimiento","TEXT"),
 		("numero_telefonico","TEXT"),
-		("acreditamiento","TEXT")], 
+		("acreditamiento","TEXT")],
 
           "INDEX":
           ['rfc']
@@ -59,35 +59,35 @@
 
      "ipc_ciudades":
      {    "SCHEMA":
-               [("fecha","TEXT"),
+       [("fecha","TEXT"),
 		("indice","TEXT"),
-		("alim_bt","FLOAT"),
-		("alim","FLOAT"),
-		("alim_pantc","FLOAT"),
-		("alim_car","FLOAT"),
-		("alim_pescm","FLOAT"),
-		("alim_lech","FLOAT"),
-		("alim_aceig","FLOAT"),
-		("alim_fruth","FLOAT"),
-		("alim_azucf","FLOAT"),
-		("alim_otr","FLOAT"),
-		("alim_alcht","FLOAT"),
-		("ropa","FLOAT"),
-		("viv","FLOAT"),
-		("mueb","FLOAT"),
-		("salu","FLOAT"),
-		("transp","FLOAT"),
-		("edu","FLOAT"),
-		("otro","FLOAT"),
-		("cmae_1","FLOAT"),
-		("cmae_2","FLOAT"),
-		("cmae_2_1","FLOAT"),
-		("scian_1","FLOAT"),
-		("scian_2","FLOAT"),
-		("scian_3","FLOAT"),
+		("alim_bt","TEXT"),
+		("alim","TEXT"),
+		("alim_pantc","TEXT"),
+		("alim_car","TEXT"),
+		("alim_pescm","TEXT"),
+		("alim_lech","TEXT"),
+		("alim_aceig","TEXT"),
+		("alim_fruth","TEXT"),
+		("alim_azucf","TEXT"),
+		("alim_otr","TEXT"),
+		("alim_alcht","TEXT"),
+		("ropa","TEXT"),
+		("viv","TEXT"),
+		("mueb","TEXT"),
+		("salu","TEXT"),
+		("transp","TEXT"),
+		("edu","TEXT"),
+		("otro","TEXT"),
+		("cmae_1","TEXT"),
+		("cmae_2","TEXT"),
+		("cmae_2_1","TEXT"),
+		("scian_1","TEXT"),
+		("scian_2","TEXT"),
+		("scian_3","TEXT"),
 		("ciudad","TEXT"),
 		("month","TEXT"),
-		("year","INT")], 
+		("year","TEXT")],
 
           "INDEX":
           ['fecha']
@@ -268,7 +268,7 @@
           "INDEX":
           ["cultivo"]
      },
-     
+    
      "precios_granos":
      {"SCHEMA":
         [("producto", "TEXT"),
