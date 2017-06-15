@@ -6,8 +6,8 @@ In order to improve the targeting of social programs, the System of Integral Soc
 
 ## Installation
 
-The analysis pipeline can be run after cloning this repository and
-calling `make init`, `make setup` and `make deploy`. 
+The Ingest pipeline can be run after cloning this repository and
+calling `make init`, `make setup` and `make run`. 
 
 ### Dependencies
 
@@ -23,7 +23,7 @@ calling `make init`, `make setup` and `make deploy`.
 After you create the environment set up the pipeline_tasks in luigi.cfg 
 The general process of the pipeline is:
 
-* **Run:**
+* **StartPipeline:**
 * RunPipelines [politica_preventiva/pipelines/politica_preventiva.py]
 * **Ingest:** [politica_preventiva/pipelines/ingest/inges_orchestra.py]
 * LocalIngest: Ingest data from multiple sources 
