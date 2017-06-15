@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # import pdb
+import subprocess
 import os
 import ast
 import luigi
@@ -344,7 +345,7 @@ class LocalToS3(luigi.Task):
             "/" + self.year_month + "--" + self.pipeline_task +\
              extra_h + ".csv"
         # with wrapper_failure(self):
-        task = LocalIngest(pipeline_task=self.pipeline_task,
+        task = RawHeaderTest(pipeline_task=self.pipeline_task,
             year_month=self.year_month, local_ingest_file=local_ingest_file,
             extra=self.extra)
         return task
@@ -367,6 +368,46 @@ class LocalToS3(luigi.Task):
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" +
                         self.year_month + "--" + self.pipeline_task +
                         extra_h + ".csv")
+
+
+class RawHeaderTest(luigi.Task):
+
+    """ RawHeaderTest Task.
+        Checks if the structure of the raw source data has changed
+
+        Note
+        ---------
+        Assumes that the source header schema is defined in:
+        common/source_schema.txt
+
+    """
+
+    pipeline_task = luigi.Parameter()
+    year_month = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+    extra = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+
+    def requires(self):
+
+        return LocalIngest(pipeline_task=self.pipeline_task,
+            year_month=self.year_month, local_ingest_file=self.local_ingest_file,
+            extra=self.extra)
+
+    def run(self):
+
+
+        cmd = '''
+            head -n 1 {0} >> ./pipelines/common/raw_schemas_temp.txt;
+            sed -i '' 1d {0};
+            '''.format(self.input().path)
+
+        return subprocess.call(cmd, shell=True)
+
+        return
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
 
 
 class LocalIngest(luigi.Task):
