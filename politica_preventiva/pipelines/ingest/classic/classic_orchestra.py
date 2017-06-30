@@ -403,14 +403,16 @@ class RawHeaderTest(luigi.Task):
 
 
         cmd = '''
-            head -n 1 {0} >> ./pipelines/common/raw_schemas_temp.txt;
-            sort -u ./pipelines/common/raw_schemas_temp.txt;
-            sed -i '' 1d {0};
+            sudo -c head -n 1 {0} >> ./pipelines/common/raw_schemas_temp.txt;
+            sort -u ./pipelines/common/raw_schemas_temp.txt > \
+                    ./pipelines/common/raw_schemas_temp.temp && \
+                    mv  ./pipelines/common/raw_schemas_temp.temp \
+                    ./pipelines/common/raw_schemas_temp.txt;
+            sudo -c tail -n +2 {0} > {0}.temp && mv {0}.temp {0};
             '''.format(self.input().path)
 
         return subprocess.call(cmd, shell=True)
 
-        return
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
