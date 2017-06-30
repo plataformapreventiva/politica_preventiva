@@ -112,7 +112,7 @@ class UpdateDB(postgres.CopyToTable):
         # concatenation/" + \
         # "2017-06" + "--" + self.pipeline_task + ".csv"
         data = pd.read_csv(output_path, sep="|", encoding="utf-8", dtype=str,
-                           error_bad_lines=False)
+                           error_bad_lines=False, header=None)
         # data = data.replace(r'\s+', np.nan, regex=True).replace('', np.nan)
         data = data.replace('nan', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)
@@ -337,16 +337,21 @@ class LocalToS3(luigi.Task):
     extra = luigi.Parameter()
     client = luigi.s3.S3Client()
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
+    docker_path = luigi.Parameter('DEFAULT')
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
 
     def requires(self):
         extra_h = get_extra_str(self.extra)
+        docker_ingest_file =  self.docker_path + self.pipeline_task +\
+            "/" + self.year_month + "--" + self.pipeline_task +\
+             extra_h + ".csv" 
         local_ingest_file = self.local_path + self.pipeline_task +\
             "/" + self.year_month + "--" + self.pipeline_task +\
              extra_h + ".csv"
         # with wrapper_failure(self):
         task = RawHeaderTest(pipeline_task=self.pipeline_task,
-            year_month=self.year_month, local_ingest_file=local_ingest_file,
+            year_month=self.year_month, docker_ingest_file=docker_ingest_file,
+            local_ingest_file=local_ingest_file,
             extra=self.extra)
         return task
 
@@ -381,7 +386,7 @@ class RawHeaderTest(luigi.Task):
         common/source_schema.txt
 
     """
-
+    docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
@@ -392,7 +397,7 @@ class RawHeaderTest(luigi.Task):
 
         return LocalIngest(pipeline_task=self.pipeline_task,
             year_month=self.year_month, local_ingest_file=self.local_ingest_file,
-            extra=self.extra)
+            docker_ingest_file=self.docker_ingest_file, extra=self.extra)
 
     def run(self):
 
@@ -426,6 +431,7 @@ class LocalIngest(luigi.Task):
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
+    docker_ingest_file = luigi.Parameter()
     extra = luigi.Parameter()
 
     def requires(self):
@@ -434,6 +440,7 @@ class LocalIngest(luigi.Task):
         task = classic_tasks(year_month=self.year_month,
                              pipeline_task=self.pipeline_task,
                              local_ingest_file=self.local_ingest_file,
+                             docker_ingest_file=self.docker_ingest_file,
                              extra=self.extra)
         return task
 

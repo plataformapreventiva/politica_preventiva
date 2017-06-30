@@ -45,6 +45,7 @@ class SourceIngestTask(luigi.Task):
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
+    docker_ingest_file = luigi.Parameter()
     classic_task_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
@@ -132,12 +133,17 @@ class ipc_ciudades(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-
-        command_list = ['python', self.classic_task_scripts + "inpc.py",
-                        "--year", self.year_month,
-                        "--output", self.local_ingest_file]
-        cmd = " ".join(command_list)
-
+        
+        cmd = '''
+        sudo docker run --rm  -v $PWD:/politica_preventiva \
+                -v politica_preventiva_store:/politica_preventiva/data \
+            politica_preventiva/python-task python {0}inpc.py --year {1} --output {2}  
+        '''.format(self.classic_task_scripts, self.year_month, 
+                self.docker_ingest_file)
+        
+        print("***********************************")
+        print(os.getcwd())
+        print(cmd)
         return subprocess.call(cmd, shell=True)
 
 
