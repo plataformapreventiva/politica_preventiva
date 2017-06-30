@@ -18,12 +18,12 @@ from joblib import Parallel, delayed
 from itertools import product
 from dotenv import load_dotenv,find_dotenv
 
-from politica_preventiva.pipelines.ingest.ingest_orchestra import 
+from politica_preventiva.pipelines.ingest.ingest_orchestra import\
     IngestPipeline
 #from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
 #from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
 
-from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, 
+from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
     extra_parameters, historical_dates
 import pdb
 
@@ -51,7 +51,7 @@ class RunPipelines(luigi.WrapperTask):
     """
 
     # start_year_month= el pipe de adolfo incluye un start month -> ver rita
-    current_date = luigi.DateParameter(default=datetime.date(2017, 5, 23))
+    current_date = luigi.DateParameter(default=datetime.date(2015, 5, 15))
     # current_date = datetime.date.today()
 
     def requires(self):

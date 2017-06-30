@@ -33,7 +33,8 @@ setup(
         'scikit-learn',
         'datetime',
         'scipy',
-        'Click'
+        'Click',
+        'boto3'
     ],
 
     extra_require={
