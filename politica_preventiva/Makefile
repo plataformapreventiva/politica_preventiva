@@ -1,11 +1,10 @@
 SHELL := /bin/bash 
 PROJECT_NAME:=$(shell cat ../.project-name)
 DATA_DIRECTORY:=$(CURDIR)/../data
-IMAGES = 
+IMAGES = python-task r-task 
 
 run:
 	@LUIGI_CONFIG_PATH=./pipelines/luigi.cfg	 $(PROJECT_NAME) --server 0.0.0.0 --port 8082
-
 
 build: .built .built-local-storage
 
@@ -21,7 +20,6 @@ build: .built .built-local-storage
    fi;
 	@touch .built-local-storage
 
-
 clean: clean_images clean_storage
 
 clean_images:
@@ -33,4 +31,3 @@ clean_images:
 clean_storage:
 	@sudo docker volume rm $(PROJECT_NAME)_store
 	@[ -f .built-local-storage ] && rm .built-local-storage
-
