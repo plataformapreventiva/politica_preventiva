@@ -7,7 +7,7 @@ SHELL := /bin/bash
 PROJECT_NAME:=politica_preventiva
 DATA_DIRECTORY:=$(CURDIR)/../data
 DOCKER_REGISTRY:= "localhost:5000"
-IMAGES = luigi-server 
+IMAGES = python luigi-server base r 
 #base python r java luigi-server luigi-worker spark-client hadoop-client
 IMAGE_VERSION:=0.1
 
@@ -15,11 +15,9 @@ IMAGE_VERSION:=0.1
 ##             Control                ##
 ########################################
 
-
 start: setup
 
 setup: create up
-
 
 up: .running
 
@@ -28,17 +26,13 @@ up: .running
 	@sudo docker-compose --project-name ${PROJECT_NAME} up -d
 	@touch .running
 
-
-create: .images_built #.network_built .images_built .data_built #.network_built .images_built
+create: .images_built #.network_built .data_built #.network_built .images_built
 
 .images_built:
-	@for image in $(IMAGES) ; do \
-	    # sudo docker build --tag $$DOCKER_REGISTRY/dpa/$$image:${IMAGE_VERSION} --tag dpa/$$image:latest --tag dpa/$$image:$(IMAGE_VERSION) $$image ; 
-	    sudo docker build  --tag dpa/$$image:$(IMAGE_VERSION) $$image ;\
-            # sudo docker push $$DOCKER_REGISTRY/dpa/$$image:$(IMAGE_VERSION); 
-	 done
-	@touch .images_built
-
+		@for image in $(IMAGES); do \
+			sudo docker build --tag ${DOCKER_REGISTRY}/dpa/$$image:${IMAGE_VERSION} --tag dpa/$$image:latest --tag dpa/$$image:$(IMAGE_VERSION) $$image;done;
+			# sudo docker push ${DOCKER_REGISTRY}/dpa/$$image:$(IMAGE_VERSION); 
+		@touch .images_built
 
 .data_built:
 	echo ${DATA_DIRECTORY}
@@ -49,15 +43,12 @@ create: .images_built #.network_built .images_built .data_built #.network_built 
 	@sudo docker network create --driver overlay --subnet=10.0.9.0/24 --attachable ${PROJECT_NAME}_net
 	@touch .network_built
 
-
 .infrastructure_built:
 	@sudo docker-compose --project-name ${PROJECT_NAME} build
 	@touch .infrastructure_built
 
-
 register_images:
 	@echo TODO 
-
 
 stop:
 	sudo docker-compose --project-name ${PROJECT_NAME} stop
