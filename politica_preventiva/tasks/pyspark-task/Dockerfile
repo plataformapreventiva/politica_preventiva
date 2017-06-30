@@ -1,6 +1,6 @@
 FROM dpa/spark-client:0.1
 
-ENV PROJECT_NAME compranet
+ENV PROJECT_NAME politica_preventiva
 
 ## Copiamos los scripts
 ADD . /${PROJECT_NAME}/
@@ -9,6 +9,6 @@ WORKDIR /${PROJECT_NAME}
 ## Instalamos el requirements.txt (si existe)
 RUN [ -f /${PROJECT_NAME}/requirements.txt ] && pip install -r /${PROJECT_NAME}/requirements.txt
 
-ENTRYPOINT [ "spark-submit", "/compranet/spark-script.py" ]
+ENTRYPOINT [ "spark-submit", "/politica_preventiva/spark-script.py" ]
 
 

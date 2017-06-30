@@ -1,6 +1,6 @@
 FROM dpa/r:0.1
 
-ENV PROJECT_NAME compranet
+ENV PROJECT_NAME politica_preventiva
 
 
 ## Copiamos los scripts
@@ -9,4 +9,4 @@ WORKDIR /${PROJECT_NAME}
 
 RUN mkdir /${PROJECT_NAME}/data
 
-CMD [ "Rscript", "/compranet/script.R" ]
+CMD [ "Rscript", "/politica_preventiva/script.R" ]
