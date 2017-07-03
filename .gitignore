@@ -2,7 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Other User Temporal files
 *_temp
+*.temp
 
 # C extensions
 *.so
@@ -149,3 +152,4 @@ site/
 **/.Rhistory
 **/.RData
 **/.Rproj.user
+.Rproj.user
