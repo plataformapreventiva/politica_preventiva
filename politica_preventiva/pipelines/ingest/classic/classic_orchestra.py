@@ -34,7 +34,6 @@ aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 
-print(os.environ.get('AWS_ACCESS_KEY_ID'))
 
 #######################
 # Classic Ingest Tasks
@@ -281,10 +280,8 @@ class Concatenation(luigi.Task):
 class Preprocess(luigi.Task):
 
     """ Concatenation Task.
-
         Note
         ---------
-
         Returns
         ---------
     """
@@ -325,13 +322,11 @@ class Preprocess(luigi.Task):
 class LocalToS3(luigi.Task):
 
     """ LocalToS3 Task.
-
         Note
         ---------
 
         Returns
         ---------
-
     """
 
     year_month = luigi.Parameter()
@@ -363,13 +358,9 @@ class LocalToS3(luigi.Task):
         local_ingest_file = self.local_path + self.pipeline_task +\
             "/" + self.year_month + "--" + self.pipeline_task +\
              extra_h + ".csv"
-        print("**************************************")
-        print(os.getcwd())
-        print(local_ingest_file) 
-        print(self.output().path)
-        print(self.client) 
-        return self.client.put(local_ingest_file, self.output().path)
-
+        
+        self.client.put(local_ingest_file, self.output().path)
+    
     def output(self):
         extra_h = get_extra_str(self.extra)
        
