@@ -40,7 +40,8 @@ def main(server, port, luigi_cfg,workers):
                     'RunPipelines',
                   # '--level', str(level), 
                   # '--sleep', str(sleep),
-                    '--workers', str(workers),                  
+                    '--workers', str(workers),
+                    '--no-lock'
                  ]
 
     ## Ejecuta luigi con el local scheduler si no hay servidor

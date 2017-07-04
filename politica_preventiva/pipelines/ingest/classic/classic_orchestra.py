@@ -12,15 +12,16 @@ from luigi import six
 from os.path import join
 from luigi import configuration
 from luigi.contrib import postgres
-from luigi.s3 import S3Target
+from luigi.contrib.s3 import S3Target, S3Client
 from dotenv import find_dotenv
 from itertools import product
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
     preprocessing_scripts.preprocessing_scripts import *
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, \
-    extras, historical_dates, latest_dates, get_extra_str
+    extras, historical_dates, latest_dates, get_extra_str, s3_to_pandas
 from politica_preventiva.pipelines.utils import s3_utils
+
 
 # Load Postgres Schemas
 temp = open('./pipelines/common/pg_raw_schemas.txt').read()
@@ -33,6 +34,7 @@ aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 
+print(os.environ.get('AWS_ACCESS_KEY_ID'))
 
 #######################
 # Classic Ingest Tasks
@@ -77,7 +79,7 @@ class UpdateDB(postgres.CopyToTable):
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     # extra = luigi.Parameter()
-    client = luigi.s3.S3Client()
+    client = S3Client()
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
 
@@ -108,21 +110,21 @@ class UpdateDB(postgres.CopyToTable):
     def rows(self):
         # Path of last "ouput" version #TODO(Return to input version)
         output_path = self.input().path
-        # output_path = "s3://dpa-plataforma-preventiva/etl/indesol/
-        # concatenation/" + \
-        # "2017-06" + "--" + self.pipeline_task + ".csv"
         data = pd.read_csv(output_path, sep="|", encoding="utf-8", dtype=str,
                            error_bad_lines=False, header=None)
         # data = data.replace(r'\s+', np.nan, regex=True).replace('', np.nan)
-        data = data.replace('nan', np.nan, regex=True)
+        data = data.replace('nan|N/E', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)
 
         return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
+        
         connection = self.output().connect()
+        
         if isinstance(self.columns[0], six.string_types):
             column_names = self.columns
+        
         elif len(self.columns[0]) == 2:
             # Create columns for csv upload
             column_names = [c[0] for c in self.columns]
@@ -131,6 +133,7 @@ class UpdateDB(postgres.CopyToTable):
             create_sql = ', '.join(create_sql).replace("/", "")
             # Create string for Upsert
             unique_sql = ', '.join(column_names)
+        
         else:
             raise Exception('columns must consist of column strings\
             or (column string, type string)\
@@ -241,12 +244,11 @@ class Concatenation(luigi.Task):
 
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
-    client = luigi.s3.S3Client()
+    client = S3Client()
     raw_bucket = luigi.Parameter('DEFAULT')
     historical = luigi.Parameter('historical')
 
     def requires(self):
-
         extra = extras(self.pipeline_task)
 
         if self.historical:
@@ -290,12 +292,12 @@ class Preprocess(luigi.Task):
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
     extra = luigi.Parameter()
-    client = luigi.s3.S3Client()
+    client = S3Client()
     raw_bucket = luigi.Parameter('DEFAULT')
 
     def requires(self):
-        # with wrapper_failure(self):
-        yield LocalToS3(year_month=self.year_month,
+        
+        return LocalToS3(year_month=self.year_month,
                         pipeline_task=self.pipeline_task,
                         extra=self.extra)
 
@@ -335,7 +337,7 @@ class LocalToS3(luigi.Task):
     year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     extra = luigi.Parameter()
-    client = luigi.s3.S3Client()
+    client = S3Client(aws_access_key_id, aws_secret_access_key)
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     docker_path = luigi.Parameter('DEFAULT')
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
@@ -348,28 +350,29 @@ class LocalToS3(luigi.Task):
         local_ingest_file = self.local_path + self.pipeline_task +\
             "/" + self.year_month + "--" + self.pipeline_task +\
              extra_h + ".csv"
-        # with wrapper_failure(self):
+        
         task = RawHeaderTest(pipeline_task=self.pipeline_task,
             year_month=self.year_month, docker_ingest_file=docker_ingest_file,
             local_ingest_file=local_ingest_file,
             extra=self.extra)
+        
         return task
 
     def run(self):
         extra_h = get_extra_str(self.extra)
         local_ingest_file = self.local_path + self.pipeline_task +\
-            "/" + self.year_month + "--"+self.pipeline_task + extra_h + ".csv"
-        try:
-            self.client.put(local_path=local_ingest_file,
-                            destination_s3_path=self.raw_bucket +
-                            self.pipeline_task + "/raw/" +
-                            self.year_month + "--" +
-                            self.pipeline_task + extra_h + ".csv")
-        except (FileNotFoundError):
-            print('No file found')
+            "/" + self.year_month + "--" + self.pipeline_task +\
+             extra_h + ".csv"
+        print("**************************************")
+        print(os.getcwd())
+        print(local_ingest_file) 
+        print(self.output().path)
+        print(self.client) 
+        return self.client.put(local_ingest_file, self.output().path)
 
     def output(self):
         extra_h = get_extra_str(self.extra)
+       
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" +
                         self.year_month + "--" + self.pipeline_task +
                         extra_h + ".csv")
@@ -389,10 +392,10 @@ class RawHeaderTest(luigi.Task):
     docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
+    classic_task_scripts = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-
+    new = luigi.Parameter('DEFAULT')
     def requires(self):
 
         return LocalIngest(pipeline_task=self.pipeline_task,
@@ -401,20 +404,16 @@ class RawHeaderTest(luigi.Task):
 
     def run(self):
 
-
         cmd = '''
-            sudo -c head -n 1 {0} >> ./pipelines/common/raw_schemas_temp.txt;
-            sort -u ./pipelines/common/raw_schemas_temp.txt > \
-                    ./pipelines/common/raw_schemas_temp.temp && \
-                    mv  ./pipelines/common/raw_schemas_temp.temp \
-                    ./pipelines/common/raw_schemas_temp.txt;
-            sudo -c tail -n +2 {0} > {0}.temp && mv {0}.temp {0};
-            '''.format(self.input().path)
+        sudo sh {0}header_test.sh -p {1} -t {2} -n {3}
+            '''.format(self.classic_task_scripts,
+                    self.input().path, self.pipeline_task,
+                    self.new)
 
         return subprocess.call(cmd, shell=True)
 
-
     def output(self):
+        done = self.local_ingest_file + ".done"
         return luigi.LocalTarget(self.local_ingest_file)
 
 
@@ -437,8 +436,8 @@ class LocalIngest(luigi.Task):
     extra = luigi.Parameter()
 
     def requires(self):
+        
         classic_tasks = eval(self.pipeline_task)
-        # with wrapper_failure(self):
         task = classic_tasks(year_month=self.year_month,
                              pipeline_task=self.pipeline_task,
                              local_ingest_file=self.local_ingest_file,

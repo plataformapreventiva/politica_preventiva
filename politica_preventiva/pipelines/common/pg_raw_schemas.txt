@@ -86,9 +86,7 @@
         ("scian_1","FLOAT"),
         ("scian_2","FLOAT"),
         ("scian_3","FLOAT"),
-        ("ciudad","TEXT"),
-        ("month","TEXT"),
-        ("year","INT")], 
+        ("ciudad","TEXT")], 
 
           "INDEX":
           ['fecha']
@@ -96,45 +94,38 @@
 	
      "transparencia":
      {    "SCHEMA":
-		[("ciclo","INT"),
-		("id_ramo","INT"),
-		("desc_ramo","TEXT"),
-		("id_ur","TEXT"),
-		("desc_ur","TEXT"),
-		("gpo_funcional","TEXT"),
-		("desc_gpo_funcional","TEXT"),
-		("id_funcion","INT"),
-		("desc_funcion","TEXT"),
-		("id_subfuncion","TEXT"),
-		("desc_subfuncion","TEXT"),
-		("id_ai","INT"),
-		("desc_ai","TEXT"),
-		("id_modalidad","TEXT"),
-		("desc_modalidad","TEXT"),
-		("id_pp","INT"),
-		("desc_pp","TEXT"),
-		("id_concepto","INT"),
-		("desc_concepto","TEXT"),
-		("id_tipogasto","INT"),
-		("desc_tipogasto","TEXT"),
-		("id_ff","INT"),
-		("desc_ff","TEXT"),
-		("monto_aprobado","FLOAT"),
-		("monto_ejercido","FLOAT"),
-		("id_entidad_federativa","TEXT"),
-		("entidad_federativa","TEXT"),
-		("id_clave_cartera","TEXT"),
-		("monto_ejercicio","FLOAT"),
-		("monto_modificado","FLOAT"),
-		("monto_devengado","FLOAT"),
-		("monto_pagado","FLOAT"),
-		("monto_adefas","FLOAT"),
-		("id_capitulo","INT"),
-		("desc_capitulo","TEXT"),
-		("desc_partida_especifica","TEXT"),
-		("desc_partida_generica","TEXT"),
-		("id_partida_especifica","INT"),
-		("id_partida_generica","INT")],
+                [("ciclo", "numeric"),
+                ("id_ramo", "TEXT"),
+                ("desc_ramo", "TEXT"),
+                ("id_ur", "TEXT"),
+                ("desc_ur", "TEXT"),
+                ("gpo_funcional", "numeric"),
+                ("desc_gpo_funcional", "character varying"),
+                ("id_funcion", "TEXT"),
+                ("desc_funcion", "character varying"),
+                ("id_subfuncion", "TEXT"),
+                ("desc_subfuncion", "character varying"),
+                ("id_ai", "TEXT"),
+                ("desc_ai", "character varying"),
+                ("id_modalidad", "character varying"),
+                ("desc_modalidad", "character varying"),
+                ("id_pp", "TEXT"),
+                ("desc_pp", "character varying"),
+                ("id_objeto_del_gasto", "TEXT"),
+                ("desc_objeto_del_gasto", "character varying"), 
+                ("id_tipogasto", "TEXT"),
+                ("desc_tipogasto", "character varying"),
+                ("id_ff", "numeric"),
+                ("desc_ff", "character varying"),
+                ("id_entidad_federativa", "TEXT"),
+                ("entidad_federativa", "TEXT"),
+                ("id_clave_cartera", "TEXT"),
+                ("monto_aprobado", "FLOAT"),
+                ("monto_modificado", "FLOAT"),
+                ("monto_devengado", "FLOAT"),
+                ("monto_pagado", "FLOAT"),
+                ("monto_adefas", "FLOAT"),
+                ("monto_ejercicio", "FLOAT")],
 
 	  "INDEX":
 	  ['id_ramo']
@@ -248,43 +239,7 @@
           "INDEX":
           ["producto"]
 
-     },
-
-     "sagarpa":
-     {"SCHEMA":
-        [("estado", "TEXT"),
-        ("distrito", "TEXT"),
-        ("municipio", "TEXT"),
-        ("sup_sembrada", "INTEGER"),
-        ("sup_cosech", "INTEGER"),
-        ("sup_siniest", "INTEGER"),
-        ("produccion", "INTEGER"),
-        ("rendim", "DOUBLE PRECISION"),
-        ("mes", "INTEGER"),
-        ("anio", "INTEGER"),
-        ("moda_hidr", "TEXT"),
-        ("ciclo", "TEXT"),
-        ("cultivo", "TEXT")],
-
-          "INDEX":
-          ["cultivo"]
-     },
-    
-     "precios_granos":
-     {"SCHEMA":
-        [("producto", "TEXT"),
-        ("origen", "TEXT"),
-        ("semana", "TEXT"),
-        ("precio", "DOUBLE PRECISION"),
-        ("mes", "TEXT"),
-        ("anio", "TEXT"),
-        ("central", "TEXT")],
-
-          "INDEX":
-          ["producto"]
-
      }
-
 }
 
 

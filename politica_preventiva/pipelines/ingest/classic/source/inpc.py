@@ -19,7 +19,7 @@ from ftplib import FTP
 import requests
 import logging
 from os import path, makedirs
-
+import time
 
 
 def ingest_inpc_ciudad(year='2017', historic=False,
@@ -41,6 +41,7 @@ def ingest_inpc_ciudad(year='2017', historic=False,
         - data, metadata = get_inpc_ciudad_data()
 
     """
+    #time.sleep(1000)
     if not path.exists('logs'):
         makedirs('logs')
     logging.basicConfig(filename='logs/inpc.log', level=logging.DEBUG)

@@ -1,4 +1,4 @@
-luigi==2.6.1
+luigi==2.6.2
 click==6.7
 python-dotenv==0.6.4
 joblib==0.11
