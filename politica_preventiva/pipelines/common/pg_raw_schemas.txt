@@ -86,7 +86,9 @@
         ("scian_1","FLOAT"),
         ("scian_2","FLOAT"),
         ("scian_3","FLOAT"),
-        ("ciudad","TEXT")], 
+        ("ciudad","TEXT"),
+        ("month" ,"INT"),
+        ("year", "INT")], 
 
           "INDEX":
           ['fecha']
