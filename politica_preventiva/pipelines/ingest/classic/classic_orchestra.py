@@ -1,32 +1,35 @@
 # -*- coding: utf-8 -*-
-# import pdb
-import subprocess
-import os
 import ast
 import luigi
+import os
+import pdb
 import psycopg2
+import subprocess
 import tempfile
-import numpy as np
-import pandas as pd
+import yaml
+
+from dotenv import find_dotenv
+from itertools import product
 from luigi import six
-from os.path import join
 from luigi import configuration
 from luigi.contrib import postgres
 from luigi.contrib.s3 import S3Target, S3Client
-from dotenv import find_dotenv
-from itertools import product
+import numpy as np
+from os.path import join
+import pandas as pd
+
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
     preprocessing_scripts.preprocessing_scripts import *
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, \
     extras, historical_dates, latest_dates, get_extra_str, s3_to_pandas
 from politica_preventiva.pipelines.utils import s3_utils
-
+from politica_preventiva.pipelines.ingest.tests import classic_tests
 
 # Load Postgres Schemas
-temp = open('./pipelines/common/pg_raw_schemas.yaml').read()
-schemas = ast.literal_eval(temp)
-open('./pipelines/common/pg_raw_schemas.yaml').close()
+with open('./pipelines/common/raw_schemas.yaml', 'r') as file:
+    header_d = yaml.load(file)
+open('./pipelines/common/raw_schemas.yaml').close()
 conf = configuration.get_config()
 
 # AWS
@@ -100,7 +103,7 @@ class UpdateDB(postgres.CopyToTable):
 
     @property
     def columns(self):
-        return schemas[self.pipeline_task]["SCHEMA"]
+        return schemas[self.pipeline_task]["LUIGI"]["SCHEMA"]
 
     @property
     def table(self):
@@ -138,7 +141,7 @@ class UpdateDB(postgres.CopyToTable):
             or (column string, type string)\
             tuples (was %r ...)' % (self.columns[0],))
 
-        index = schemas[self.pipeline_task]["INDEX"][0]
+        index = schemas[self.pipeline_task]['LUIGI']["INDEX"][0]
 
         # Change the temp setting of the buffer
         # cmd = "SET temp_buffers = 1000MB;"
@@ -396,13 +399,15 @@ class RawHeaderTest(luigi.Task):
 
     def run(self):
 
-        cmd = '''
-        sudo python  {0}test_header.py --path {1} --task {2} --new {3}
-        #sudo sh {0}header_test.sh -p {1} -t {2} -n {3}
-        '''.format(self.classic_task_scripts,
-                    self.input().path, self.pipeline_task,
-                    self.new)
-        return subprocess.call(cmd, shell=True)
+        classic_tests.header_test(self.input().path, self.pipeline_task,self.new)
+
+        # cmd = '''
+        # sudo python  {0}test_header.py --path {1} --task {2} --new {3}
+        # sudo sh {0}header_test.sh -p {1} -t {2} -n {3}
+        # '''.format(self.classic_task_scripts,
+        #            self.input().path, self.pipeline_task,
+        #            self.new)
+        # return subprocess.call(cmd, shell=True)
 
     def output(self):
         done = self.local_ingest_file + ".done"
