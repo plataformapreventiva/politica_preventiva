@@ -38,9 +38,6 @@ def s3_to_pandas(Bucket, Key, sep="|", header=False,bototype=True):
     Assumes aws keys as environment variables
     """
     import boto3
-    #import code; code.interact(local=vars())
-    print("boto3 imported")
-    print(boto3.__version__)
     aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
     s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key)
@@ -50,8 +47,9 @@ def s3_to_pandas(Bucket, Key, sep="|", header=False,bototype=True):
         #obj = s3.Object(Bucket, Key)
         #data = pd.read_csv(obj.get()['Body'].read().decode('utf-8'),sep="|")
         print("intentando guardar el db")
-        data = pd.read_csv(BytesIO(obj['Body'].read()), sep=sep)
-        return data
+        return pd.read_csv(BytesIO(obj['Body'].read()), sep=sep)
+        #data = pd.read_csv(obj['Body'],sep="|",keep_default_na=False,
+        #return data
 
     else:
 

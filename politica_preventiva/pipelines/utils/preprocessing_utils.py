@@ -124,7 +124,7 @@ def check_empty_dataframe(bucket, s3_file, out_key):
     except Exception: # TODO: Change to real error, EmptyDataError
         copy_s3_files(input_bucket=bucket, input_key=s3_file, 
             output_bucket=bucket, output_key=out_key)    
-        #delete_s3_file(Bucket=bucket, Key=s3_file)
+        delete_s3_file(Bucket=bucket, Key=s3_file)
         #write_missing_csv()
         df = None
     return df
