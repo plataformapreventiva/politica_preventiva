@@ -51,8 +51,8 @@ class RunPipelines(luigi.WrapperTask):
     """
 
     # start_year_month= el pipe de adolfo incluye un start month -> ver rita
-    # current_date = luigi.DateParameter(default=datetime.date(2015, 2, 7))
-    current_date = datetime.date.today()
+    current_date = luigi.DateParameter(default=datetime.date(2015, 2, 13))
+    # current_date = datetime.date.today()
 
     def requires(self):
 

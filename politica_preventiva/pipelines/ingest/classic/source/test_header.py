@@ -43,6 +43,8 @@ def check_header(path, task, new):
     
     # os.rename(path+".temp", path)
 
+    with open('./pipelines/common/raw_headers.yaml', 'w') as file:
+        yaml.dump(doc, file, default_flow_style=False)
 
 if __name__=='__main__':
 

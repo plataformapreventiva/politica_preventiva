@@ -40,6 +40,7 @@ def run_concatenation(bucket, folder_to_concatenate, result_filepath, file_suffi
     parts_list = collect_parts(s3, bucket,folder_to_concatenate, file_suffix)
     logging.warning("Found {} parts to concatenate in {}/{}".format(len(parts_list), bucket, folder_to_concatenate))
     check = check_size(parts_list, max_filesize)
+
     if check:
         run_single_concatenation(s3, bucket, parts_list, "{}".format(result_filepath))
     else:
@@ -156,7 +157,7 @@ def local_appending(s3, bucket, local_parts, result_filename):
                     f_all.write(line)
         else:
             f = open(temp_filename, "r+")
-            #f.next() # skip the header
+            f.next() # skip the header
             for i, line in enumerate(f):
                if (len(line) > 0) and (line != [b'']) and (i==1):
                    f_all.write(line)

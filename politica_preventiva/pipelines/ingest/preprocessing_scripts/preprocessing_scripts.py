@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
 	Preprocessing Functions
 """
 import boto3 
+import boto3
 import pdb
 from luigi import configuration
 import pandas as pd
@@ -13,7 +11,7 @@ import politica_preventiva.pipelines.utils.preprocessing_utils as pputils
 from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files, delete_s3_file 
 
 
-def precios_granos_prep(year_month, s3_file, extra_h, out_key):
+def precios_granos_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for precios_granos: reads df from s3, completes missing values, 
     turns wide-format df to a long-format df, and uploads to s3
@@ -28,11 +26,10 @@ def precios_granos_prep(year_month, s3_file, extra_h, out_key):
         df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
-
     return True
 
 
-def sagarpa_prep(year_month, s3_file, extra_h, out_key):
+def sagarpa_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for sagarpa: reads df from s3, completes missing values, 
     turns wide-format df to a long-format df, and uploads to s3
@@ -49,7 +46,7 @@ def sagarpa_prep(year_month, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
-def ipc_ciudades_prep(year_month, s3_file, extra_h, out_key):
+def ipc_ciudades_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for inpc: reads df from s3, parses dates 
     and uploads to s3. 
@@ -65,15 +62,14 @@ def ipc_ciudades_prep(year_month, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
-def indesol_prep(year_month, s3_file, extra_h, out_key):
+def indesol_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for indesol: reads df from s3, turns wide-format df to long-format, 
     turns columns to json and uploads to s3. 
     """
     bucket = 'dpa-plataforma-preventiva'
     df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
-    print(df.head())
-    
+
     if df is not None:
     # Change Actividad columns from wide to long format
         columns = ['ACTIVIDAD_' + str(x) for x in range(1,20)]
@@ -95,33 +91,34 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
-def cajeros_banxico_prep(year_month, s3_file, extra_h, out_key):
+def cajeros_banxico_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
     pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
     return True
 
-def cenapred_prep(year_month, s3_file, extra_h, out_key):
+def cenapred_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
     pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
     return True
 
-def segob_prep(year_month, s3_file, extra_h, out_key):
+def segob_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
     pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
     return True
 
-def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
+def sagarpa_cierre_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     # TODO: ver si es menor a 2013 (bajado como tabla completa, o mayor, y homologar columnas de ambos casos)
     bucket = 'dpa-plataforma-preventiva'
     pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
     return True
 
-def donatarias_sat_prep(year_month, s3_file, extra_h, out_key):
+def donatarias_sat_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
     bucket = 'dpa-plataforma-preventiva'
     pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
     return True
 
-def transparencia_prep(year_month, s3_file, extra_h, out_key):
+def transparencia_prep(pipeline_task, year_month, s3_file, extra_h, out_key):
    bucket = 'dpa-plataforma-preventiva'
    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
    return True
+

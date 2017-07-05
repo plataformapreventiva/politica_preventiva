@@ -11,7 +11,9 @@ import numpy as np
 import pandas as pd
 import json
 import ast
+import os
 from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
+from dotenv import load_dotenv, find_dotenv
 
 
 def gather(df, key, value, cols):
@@ -116,11 +118,12 @@ def check_empty_dataframe(bucket, s3_file, out_key):
     original dataframe
     """
     try:
-        df = s3_to_pandas(Bucket=bucket, Key=s3_file)
+        df = s3_to_pandas(Bucket=bucket, Key=s3_file, boto3=True)
+
     except Exception: # TODO: Change to real error, EmptyDataError
         copy_s3_files(input_bucket=bucket, input_key=s3_file, 
             output_bucket=bucket, output_key=out_key)    
-        delete_s3_file(Bucket=bucket, Key=s3_file)
+        #delete_s3_file(Bucket=bucket, Key=s3_file)
         #write_missing_csv()
         df = None
     return df
