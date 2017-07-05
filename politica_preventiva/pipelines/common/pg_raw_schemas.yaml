@@ -1,0 +1,213 @@
+# Este Archivo almacena la definición de los Schemas
+# de las tablas de Postgres para ser consumidas por Luigi
+
+indesol:
+  SCHEMA:
+   - cluni : TEXT
+   - razon_social : TEXT
+   - figura_juridica : TEXT
+   - rfc : TEXT
+   - estatus : TEXT
+   - estatus_de_sancion : TEXT
+   - representantes_legales : TEXT
+   - estatus_de_la_representacion : TEXT
+   - fecha_de_constitucion : TEXT
+   - fecha_de_inscripcion : TEXT
+   - correo : TEXT
+   - telefono : TEXT
+   - entidad_federativa_domicilio : TEXT
+   - municipio : TEXT
+   - asentamiento_colonia : TEXT
+   - vialidad_calle : TEXT
+   - numero_exterior : TEXT
+   - numero_interior : TEXT
+   - cp : TEXT
+   - redes : TEXT
+   - actividad : INT
+   - edo_actividad : TEXT
+   - informes : JSONB
+  INDEX : cluni
+   
+donatarias_sat:
+  SCHEMA:
+   - year : TEXT
+   - admin_local_juridica : TEXT
+   - act_o_fin_autorizado : TEXT
+   - rfc : TEXT
+   - denom_o_razon_social : TEXT
+   - domicilio_fiscal : TEXT
+   - oficio_de_autorizacion : TEXT
+   - fecha_de_oficio : TEXT
+   - obj_social_autorizado : TEXT
+   - representante_legal : TEXT
+   - numeros_telefonicos : TEXT
+   - e_mail : TEXT
+   - domicilio_establecimiento : TEXT
+   - numero_telefonico : TEXT
+   - acreditamiento : TEXT
+  INDEX : rfc
+
+ipc_ciudades :
+ SCHEMA :
+  - fecha : TEXT
+  - indice : TEXT
+  - alim_bt : FLOAT
+  - alim : FLOAT
+  - alim_pantc : FLOAT
+  - alim_car : FLOAT
+  - alim_pescm : FLOAT
+  - alim_lech : FLOAT
+  - alim_aceig : FLOAT
+  - alim_fruth : FLOAT
+  - alim_azucf : FLOAT
+  - alim_otr : FLOAT
+  - alim_alcht : FLOAT
+  - ropa : FLOAT
+  - viv : FLOAT
+  - mueb : FLOAT
+  - salu : FLOAT
+  - transp : FLOAT
+  - edu : FLOAT
+  - otro : FLOAT
+  - cmae_1: FLOAT
+  - cmae_2 : FLOAT
+  - cmae_2_1 : FLOAT
+  - scian_1 : FLOAT
+  - scian_2 : FLOAT
+  - scian_3 : FLOAT
+  - ciudad : TEXT
+  - month : INT 
+  - year : INT
+ INDEX : fecha
+
+transparencia : 
+ SCHEMA :
+  - ciclo : numeric
+  - id_ramo : TEXT
+  - desc_ramo : TEXT
+  - id_ur : TEXT
+  - desc_ur : TEXT
+  - gpo_funcional : numeric
+  - desc_gpo_funcional : character varying
+  - id_funcion : TEXT
+  - desc_funcion : character varying
+  - id_subfuncion : TEXT
+  - desc_subfuncion : character varying
+  - id_ai : TEXT
+  - desc_ai : character varying
+  - id_modalidad : character varying
+  - desc_modalidad : character varying
+  - id_pp : TEXT
+  - desc_pp : character varying
+  - id_objeto_del_gasto : TEXT
+  - desc_objeto_del_gasto : character varying
+  - id_tipogasto : TEXT
+  - desc_tipogasto : character varying
+  - id_ff : numeric
+  - desc_ff : character varying
+  - id_entidad_federativa : TEXT
+  - entidad_federativa : TEXT
+  - id_clave_cartera : TEXT
+  - monto_aprobado : FLOAT
+  - monto_modificado : FLOAT
+  - monto_devengado : FLOAT
+  - monto_pagado : FLOAT
+  - monto_adefas : FLOAT
+  - monto_ejercicio : FLOAT
+ INDEX : id_ramo
+
+cenapred :
+ SCHEMA :
+  - a_reglam : VARCHAR
+  - aeropuerto : DECIMAL
+  - bancos : DECIMAL
+  - cc_hidro : DECIMAL
+  - cve_muni : DECIMAL
+  - declarator : DECIMAL
+  - d_geo : DECIMAL
+  - d_hidro : DECIMAL
+  - d_qui : BOOLEAN
+  - e_geo : DECIMAL
+  - e_hidro : DECIMAL
+  - e_qui : DECIMAL
+  - e_sani : BOOLEAN
+  - gp_bajas_temperaturas : VARCHAR
+  - gp_ciclones : VARCHAR
+  - gp_granizo : VARCHAR
+  - gp_inundaciones : VARCHAR
+  - gp_nevadas : VARCHAR
+  - gp_sequia2: VARCHAR
+  - gp_sismico : VARCHAR
+  - gp_sustancias_inflamables : VARCHAR
+  - gp_Sustancias_toxicas : VARCHAR
+  - gp_tormentas_electricas : VARCHAR
+  - gp_tsunami : VARCHAR
+  - gp_ondasca : VARCHAR
+  - gvs_ise10: VARCHAR
+  - g_marginacion : VARCHAR
+  - g_resiliencia : VARCHAR
+  - g_rezago_social : VARCHAR
+  - g_susce_lad : VARCHAR
+  - gasolinera : DECIMAL
+  - hospitales : DECIMAL
+  - nom_ent : VARCHAR
+  - nom_mun : VARCHAR
+  - num_us_cfe : DECIMAL
+  - objectid : DECIMAL
+  - pobfem : DECIMAL
+  - pobmas : DECIMAL
+  - pobtot : DECIMAL
+  - pob2030: DECIMAL
+  - sep : DECIMAL
+  - shape_area : DECIMAL
+  - supermerca : DECIMAL
+  - titulo_ref : VARCHAR
+  - tvivhab : DECIMAL
+  - v_cc : VARCHAR
+  - atlas_mun : VARCHAR
+  - cve_ent : DECIMAL
+  - hoteles : DECIMAL
+  - num_col : DECIMAL
+  - url : VARCHAR
+ INDEX : a_reglam
+
+cajeros_banxico :
+ SCHEMA :
+  - actualizacion : TIMESTAMP
+  - clave_institucion : DECIMAL
+  - cp : DECIMAL
+  - direccion : VARCHAR
+  - horario : VARCHAR
+  - id : VARCHAR
+  - lat : DECIMAL
+  - lon : DECIMAL
+  - nombre_institucion : VARCHAR
+ INDEX : clave_institucion
+
+sagarpa :
+ SCHEMA :
+  - estado : TEXT
+  - distrito : TEXT
+  - municipio : TEXT
+  - sup_sembrada : INTEGER
+  - sup_cosech : INTEGER
+  - sup_siniest : INTEGER
+  - produccion : INTEGER
+  - rendim", "DOUBLE : PRECISION
+  - mes : INTEGER
+  - anio : INTEGER
+  - moda_hidr : TEXT
+  - ciclo : TEXT
+  - cultivo : TEXT
+ INDEX : cultivo
+
+precios_granos :
+ SCHEMA :
+  - producto : TEXT
+  - origen : TEXT
+  - semana : TEXT
+  - precio : DOUBLE PRECISION
+  - mes : TEXT
+  - anio : TEXT
+  - central : TEXT
+ INDEX : producto

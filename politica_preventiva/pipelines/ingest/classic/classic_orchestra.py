@@ -24,9 +24,9 @@ from politica_preventiva.pipelines.utils import s3_utils
 
 
 # Load Postgres Schemas
-temp = open('./pipelines/common/pg_raw_schemas.txt').read()
+temp = open('./pipelines/common/pg_raw_schemas.yaml').read()
 schemas = ast.literal_eval(temp)
-open('./pipelines/common/pg_raw_schemas.txt').close()
+open('./pipelines/common/pg_raw_schemas.yaml').close()
 conf = configuration.get_config()
 
 # AWS
