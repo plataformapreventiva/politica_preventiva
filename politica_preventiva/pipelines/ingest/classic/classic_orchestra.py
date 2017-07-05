@@ -111,10 +111,10 @@ class UpdateDB(postgres.CopyToTable):
         output_path = self.input().path
         data = pd.read_csv(output_path, sep="|", encoding="utf-8", dtype=str,
                            error_bad_lines=False, header=None)
-        # data = data.replace(r'\s+', np.nan, regex=True).replace('', np.nan)
+        data.drop_duplicates(keep='first',inplace=True)
         data = data.replace('nan|N/E', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)
-
+        data = data.iloc[1:]
         return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
@@ -276,7 +276,6 @@ class Concatenation(luigi.Task):
         return S3Target(path=self.raw_bucket + self.pipeline_task +
                         "/concatenation/" + self.pipeline_task + '.csv')
 
-
 class Preprocess(luigi.Task):
 
     """ Concatenation Task.
@@ -285,6 +284,7 @@ class Preprocess(luigi.Task):
         Returns
         ---------
     """
+
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
@@ -309,8 +309,9 @@ class Preprocess(luigi.Task):
             self.pipeline_task + extra_h + ".csv"
 
         preprocess_tasks = eval(self.pipeline_task + '_prep')
-        return preprocess_tasks(year_month=self.year_month,
-                                s3_file=key, extra_h=extra_h, out_key=out_key)
+        
+        return preprocess_tasks(year_month=self.year_month, s3_file=key,
+                extra_h=extra_h, out_key=out_key)
 
     def output(self):
         extra_h = get_extra_str(self.extra)
@@ -396,11 +397,11 @@ class RawHeaderTest(luigi.Task):
     def run(self):
 
         cmd = '''
-        sudo sh {0}header_test.sh -p {1} -t {2} -n {3}
-            '''.format(self.classic_task_scripts,
+        sudo python  {0}test_header.py --path {1} --task {2} --new {3}
+        #sudo sh {0}header_test.sh -p {1} -t {2} -n {3}
+        '''.format(self.classic_task_scripts,
                     self.input().path, self.pipeline_task,
                     self.new)
-
         return subprocess.call(cmd, shell=True)
 
     def output(self):

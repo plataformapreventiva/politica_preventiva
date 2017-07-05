@@ -1,64 +1,64 @@
-# coding: utf-8
-# If you Run as: luigid & PYTHONPATH='.' python politica_preventiva.py
-# RunPipelines --workers 3
-
+import yaml
 import os
-import ast
-import datetime
-import logging
-import boto3
-import luigi
-import luigi.s3
-import multiprocessing
-from dotenv import load_dotenv
-from os.path import join, dirname
-from luigi.s3 import S3Target, S3Client
-from luigi import configuration
-from joblib import Parallel, delayed
-from itertools import product
-from dotenv import load_dotenv,find_dotenv
-
-from politica_preventiva.pipelines.ingest.ingest_orchestra import\
-    IngestPipeline
-#from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
-#from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
-
-from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
-    extra_parameters, historical_dates
+import argparse
+import pandas as pd
 import pdb
 
-logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
-
-# Variables de ambiente
-load_dotenv(find_dotenv())
-
-# RDS
-database = os.environ.get("PGDATABASE")
-user = os.environ.get("POSTGRES_USER")
-password = os.environ.get("POSTGRES_PASSWORD")
-host = os.environ.get("PGHOST")
-
-# AWS
-aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
-aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-class RunPipelines(luigi.WrapperTask):
+def check_header(path, task, new):
+    with open('./pipelines/common/raw_headers.yaml', 'r') as f:
+            doc = yaml.load(f)
+    f = open(path)
+    data = f.read()
+    first_line = data.split('\n', 1)[0]
 
-    """
-    Main Wrapper Task of pipelines 
-    """
+    if new:
+        doc[task] = first_line
+        with open('./pipelines/common/raw_headers.yaml', 'w') as file:
+            yaml.dump(doc, file, default_flow_style=False)
 
-    # start_year_month= el pipe de adolfo incluye un start month -> ver rita
-    current_date = luigi.DateParameter(default=datetime.date(2015, 2, 1))
-    # current_date = datetime.date.today()
+    else:
+        try:
+            old_header = doc[task]
+            if old_header != first_line:
+                raise("Error! Header schema has change")
+            else:
+                pass
+        except:
+            doc[task] = first_line
 
-    def requires(self):
+    #with open(path,'r') as f:
+    #    with open(path+".temp",'w') as f1:
+    #        f.next() 
+    #        for line in f:
+    #            f1.write(line)
+    
+    # os.rename(path+".temp", path)
 
-        yield IngestPipeline(current_date=self.current_date)
-        #yield ETLPipeline(self.current_date)
-        #yield ModelPipeline(self.current_date)
 
-if __name__ == "__main__":
-    luigi.run()
+if __name__=='__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', type=str,
+                    help = 'Path of File')
+
+    parser.add_argument('--task', type=str,
+                    help = 'Name of Task')
+
+    parser.add_argument('--new', type=str2bool, 
+                    nargs='?', const=True, 
+                    help = 'New Pipelines?')
+
+    args = parser.parse_args()
+    path = args.path; task = args.task; new = args.new
+    
+    check_header(path, task, new)
+

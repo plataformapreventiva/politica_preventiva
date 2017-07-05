@@ -4,6 +4,7 @@
 """
 Utilities used throughout SEDESOL pipeline
 """
+
 import os
 import string
 import datetime
@@ -22,25 +23,35 @@ from itertools import product
 from io import StringIO
 from configparser import ConfigParser, NoOptionError, NoSectionError
 from dotenv import load_dotenv,find_dotenv
-
+from io import BytesIO
 load_dotenv(find_dotenv())
 
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
-def s3_to_pandas(Bucket, Key, sep="|", header=False):
+
+def s3_to_pandas(Bucket, Key, sep="|", header=False,boto3=True):
     """
     Downloads csv from s3 bucket into a pandas Dataframe
     Assumes aws keys as environment variables
     """
-    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key)
-    obj = s3.get_object(Bucket=Bucket,Key=Key)
+    if boto3:
+        print("***********************!!!!!!")
+        print(Bucket + Key)
+        
+        s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            region_name="us-west-2")
+        obj = s3.get_object(Bucket=Bucket,Key=Key)
+        data = pd.read_csv(BytesIO(obj['Body'].read()), sep=sep,
+                keep_default_na=False, header=header)    
+        
+        return data
 
-    return pd.read_csv(obj['Body'], sep=sep, keep_default_na=False, 
-            header=header)
+    else:
 
+        return pd.read_csv("s3://"+Bucket+"/"+Key,sep=sep, header=header)
 
 def pandas_to_s3(df, Bucket, Key, sep="|"):
     """
