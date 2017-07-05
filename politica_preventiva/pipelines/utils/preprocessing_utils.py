@@ -12,6 +12,7 @@ import pandas as pd
 import json
 import ast
 import os
+import boto3
 from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
 from dotenv import load_dotenv, find_dotenv
 
@@ -118,7 +119,7 @@ def check_empty_dataframe(bucket, s3_file, out_key):
     original dataframe
     """
     try:
-        df = s3_to_pandas(Bucket=bucket, Key=s3_file, boto3=True)
+        df = s3_to_pandas(Bucket=bucket, Key=s3_file, bototype=True)
 
     except Exception: # TODO: Change to real error, EmptyDataError
         copy_s3_files(input_bucket=bucket, input_key=s3_file, 

@@ -11,12 +11,10 @@ import datetime
 import psycopg2
 import numpy as np
 import pandas as pd
-import unicodedata
-import numpy as np
-import luigi
 import pdb
+import unicodedata
+import luigi
 import boto3
-#import luigi.postgresql
 from luigi import configuration
 from luigi import six
 from itertools import product
@@ -30,23 +28,29 @@ load_dotenv(find_dotenv())
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
+s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+     region_name="us-west-2")
 
-def s3_to_pandas(Bucket, Key, sep="|", header=False,boto3=True):
+def s3_to_pandas(Bucket, Key, sep="|", header=False,bototype=True):
     """
     Downloads csv from s3 bucket into a pandas Dataframe
     Assumes aws keys as environment variables
     """
-    if boto3:
-        print("***********************!!!!!!")
-        print(Bucket + Key)
-        
-        s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-            region_name="us-west-2")
-        obj = s3.get_object(Bucket=Bucket,Key=Key)
-        data = pd.read_csv(BytesIO(obj['Body'].read()), sep=sep,
-                keep_default_na=False, header=header)    
-        
+    import boto3
+    #import code; code.interact(local=vars())
+    print("boto3 imported")
+    print(boto3.__version__)
+    aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key)
+    #s3 = boto3.resource('s3')
+    if bototype:
+        obj = s3.get_object(Bucket=Bucket, Key=Key)
+        #obj = s3.Object(Bucket, Key)
+        #data = pd.read_csv(obj.get()['Body'].read().decode('utf-8'),sep="|")
+        print("intentando guardar el db")
+        data = pd.read_csv(BytesIO(obj['Body'].read()), sep=sep)
         return data
 
     else:

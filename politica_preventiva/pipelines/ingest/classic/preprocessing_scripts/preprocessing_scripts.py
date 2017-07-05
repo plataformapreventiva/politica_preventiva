@@ -72,7 +72,6 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
     """
     bucket = 'dpa-plataforma-preventiva'
     df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
-    print(df.head())
     
     if df is not None:
     # Change Actividad columns from wide to long format
