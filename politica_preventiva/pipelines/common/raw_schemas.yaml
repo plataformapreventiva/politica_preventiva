@@ -86,33 +86,32 @@ donatarias_sat:
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
 indesol:
- LUIGI:
-  INDEX : cluni
-  SCHEMA:
-   - cluni : TEXT
-   - razon_social : TEXT
-   - figura_juridica : TEXT
-   - rfc : TEXT
-   - estatus : TEXT
-   - estatus_de_sancion : TEXT
-   - representantes_legales : TEXT
-   - estatus_de_la_representacion : TEXT
-   - fecha_de_constitucion : TEXT
-   - fecha_de_inscripcion : TEXT
-   - correo : TEXT
-   - telefono : TEXT
-   - entidad_federativa_domicilio : TEXT
-   - municipio : TEXT
-   - asentamiento_colonia : TEXT
-   - vialidad_calle : TEXT
-   - numero_exterior : TEXT
-   - numero_interior : TEXT
-   - cp : TEXT
-   - redes : TEXT
-   - actividad : INT
-   - edo_actividad : TEXT
-   - informes : JSONB
-
+  LUIGI:
+    INDEX: cluni
+    SCHEMA:
+    - cluni: TEXT
+    - razon_social: TEXT
+    - figura_juridica: TEXT
+    - rfc: TEXT
+    - estatus: TEXT
+    - estatus_de_sancion: TEXT
+    - representantes_legales: TEXT
+    - estatus_de_la_representacion: TEXT
+    - fecha_de_constitucion: TEXT
+    - fecha_de_inscripcion: TEXT
+    - correo: TEXT
+    - telefono: TEXT
+    - entidad_federativa_domicilio: TEXT
+    - municipio: TEXT
+    - asentamiento_colonia: TEXT
+    - vialidad_calle: TEXT
+    - numero_exterior: TEXT
+    - numero_interior: TEXT
+    - cp: TEXT
+    - redes: TEXT
+    - actividad: INT
+    - edo_actividad: TEXT
+    - informes: JSONB
 ipc_ciudades:
   LUIGI:
     INDEX: fecha
@@ -146,6 +145,34 @@ ipc_ciudades:
     - ciudad: TEXT
     - month: INT
     - year: INT
+  RAW:
+  - fecha
+  - indice
+  - alim_bt
+  - alim
+  - alim_pantc
+  - alim_car
+  - alim_pescm
+  - alim_lech
+  - alim_aceig
+  - alim_fruth
+  - alim_azucf
+  - alim_otr
+  - alim_alcht
+  - ropa
+  - viv
+  - mueb
+  - salu
+  - transp
+  - edu
+  - otro
+  - cmae_1
+  - cmae_2
+  - cmae_2.1
+  - scian_1
+  - scian_2
+  - scian_3
+  - ciudad
 precios_granos:
   LUIGI:
     INDEX: producto
