@@ -41,13 +41,12 @@ def header_test(path, task, new=True):
 	else:
 		try:
 			old_header = header_d[task]["RAW"]
-			if old_header != first_line:
+			if old_header != first_line[0].split("|"):
 				raise("Error! Header schema has change")
 			else:
 				pass
 		except:
-			header_d[task]["RAW"] = first_line
+                    header_d[task]["RAW"] = first_line[0].split("|")
 
 	with open('./pipelines/common/raw_schemas.yaml', 'w') as file:
 		yaml.dump(header_d, file, default_flow_style=False)
-
