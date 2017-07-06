@@ -42,11 +42,36 @@ def header_test(path, task, new=True):
 		try:
 			old_header = header_d[task]["RAW"]
 			if old_header != first_line[0].split("|"):
-				raise("Error! Header schema has change")
+			   raise("Error! Header schema has change")
 			else:
-				pass
+    			    pass
 		except:
                     header_d[task]["RAW"] = first_line[0].split("|")
 
 	with open('./pipelines/common/raw_schemas.yaml', 'w') as file:
 		yaml.dump(header_d, file, default_flow_style=False)
+
+def dictionary_test(pipeline_task, path, header_d, columns, current_date):
+
+        try:
+            dictionary = pd.read_csv(path, sep="|")
+            assert dictionary["nombre"].isnull().\
+                    value_counts().index[0]!=True, "error"
+
+        except:
+            task_schema = header_d[pipeline_task]["LUIGI"]["SCHEMA"]
+            dictionary = pd.DataFrame([task_schema[i].keys() for i 
+                in range(len(task_schema))],columns=["id"])
+
+            dic_header=['nombre','fuente','tipo','subtipo','actualizacion',
+                    'metadata']
+            dictionary = dictionary.reindex(columns=[*dictionary.\
+                    columns.tolist(), *dic_header], fill_value=None)
+            dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
+            raise Exception("Data Dictionary not defined")
+            #log("Please define the data dictionary of the \
+
+        # Update actualizacion
+        dictionary['actualizacion'] = current_date
+        dictionary.to_csv(path)
+        return dictionary

@@ -66,6 +66,16 @@ cenapred:
     - hoteles: DECIMAL
     - num_col: DECIMAL
     - url: VARCHAR
+dictionary:
+  LUIGI:
+    SCHEMA:
+    - id: TEXT
+    - nombre: TEXT
+    - fuente: TEXT
+    - tipo: TEXT
+    - subtipo: TEXT
+    - actualizacion: TEXT
+    - metadata: TEXT
 donatarias_sat:
   LUIGI:
     INDEX: rfc
@@ -238,3 +248,17 @@ transparencia:
     - monto_pagado: FLOAT
     - monto_adefas: FLOAT
     - monto_ejercicio: FLOAT
+  RAW:
+  - '2016'
+  - '20'
+  - Desarrollo Social
+  - '134'
+  - "Delegaci\xF3n SEDESOL en Jalisco"
+  - '2'
+  - Desarrollo Social
+  - '6'
+  - "Protecci\xF3n Social"
+  - '8'
+  - Otros Grupos Vulnerables
+  - '8'
+  - Apoyo al ingreso

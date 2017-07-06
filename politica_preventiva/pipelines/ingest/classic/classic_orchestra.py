@@ -56,8 +56,69 @@ class ClassicIngest(luigi.WrapperTask):
 
     def requires(self):
         # loop through pipeline tasks
-        yield [UpdateDB(current_date=self.current_date,
+        yield [UpdateDictionary(current_date=self.current_date,
                         pipeline_task=pipeline) for pipeline in self.pipelines]
+
+
+class UpdateDictionary(postgres.CopyToTable):
+ 
+    """ Updates Postgres DataBase DIC with new Datadate ingested data.
+        
+        TODO(Update Neo4j table with the new node)
+        Note
+        ---------
+        Assumes that the dictionary of the pipeline_task is defined
+
+        Returns
+        ---------
+        Returns a PostgresTarget representing the inserted dataset
+    """
+    current_date = luigi.DateParameter()
+    pipeline_task = luigi.Parameter()
+    client = S3Client()
+    local_path = luigi.Parameter('DEFAULT')  # path where csv is located
+    raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
+
+    # RDS
+    database = os.environ.get("PGDATABASE")
+    user = os.environ.get("POSTGRES_USER")
+    password = os.environ.get("POSTGRES_PASSWORD")
+    host = os.environ.get("PGHOST")
+
+    @property
+    def table(self):
+        return "raw." + self.pipeline_task + "_dic"
+
+
+    @property
+    def columns(self):
+        try:
+            temp = header_d["dictionary"]['LUIGI']['SCHEMA']
+            temp = str(temp).replace("{","(").replace("}",")").replace(":",",")
+            return ast.literal_eval(temp)
+        except:
+            raise("Dictionary header undefined")
+
+
+    def rows(self):
+        # Path of last "ouput" version #TODO(Return to input version)
+        header =  [[a for (a,b) in 
+            header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for 
+            i in range(len(self.columns))]
+        path = "./pipelines/ingest/classic/dictionaries/"+self.pipeline_task+"_dic.csv"
+        data = classic_tests.dictionary_test(self.pipeline_task, path,
+                header_d, header, self.current_date)
+        return [tuple(x) for x in data.to_records(index=False)]
+
+    def requires(self):    
+        return UpdateDB(current_date=self.current_date,
+                        pipeline_task=self.pipeline_task)
+
+    def output(self):
+        return postgres.PostgresTarget(host=self.host, database=self.database, 
+            user=self.user, password=self.password, table=self.table, 
+            update_id=self.update_id)
+
 
 
 class UpdateDB(postgres.CopyToTable):
@@ -104,7 +165,9 @@ class UpdateDB(postgres.CopyToTable):
     @property
     def columns(self):
         try:
-            return header_d[self.pipeline_task]['LUIGI']['SCHEMA']
+            temp = header_d[self.pipeline_task]['LUIGI']['SCHEMA']
+            temp = str(temp).replace("{","(").replace("}",")").replace(":",",")
+            return ast.literal_eval(temp)
         except:
             print("Go and define the schema for this table")
             # logging.**(level=logging.DEBUG)
@@ -126,7 +189,6 @@ class UpdateDB(postgres.CopyToTable):
         return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
-        
         connection = self.output().connect()
         
         if isinstance(self.columns[0], six.string_types):
@@ -140,13 +202,12 @@ class UpdateDB(postgres.CopyToTable):
             create_sql = ', '.join(create_sql).replace("/", "")
             # Create string for Upsert
             unique_sql = ', '.join(column_names)
-        
         else:
             raise Exception('columns must consist of column strings\
             or (column string, type string)\
             tuples (was %r ...)' % (self.columns[0],))
 
-        index = header_d[self.pipeline_task]['LUIGI']["INDEX"][0]
+        index = header_d[self.pipeline_task]['LUIGI']["INDEX"]
 
         # Change the temp setting of the buffer
         # cmd = "SET temp_buffers = 1000MB;"
