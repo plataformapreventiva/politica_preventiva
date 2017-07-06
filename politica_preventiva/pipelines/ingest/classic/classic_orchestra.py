@@ -103,7 +103,12 @@ class UpdateDB(postgres.CopyToTable):
 
     @property
     def columns(self):
-        return schemas[self.pipeline_task]["LUIGI"]["SCHEMA"]
+        try:
+            return header_d[self.pipeline_task]['LUIGI']['SCHEMA']
+        except:
+            print("Go and define the schema for this table")
+            # logging.**(level=logging.DEBUG)
+
 
     @property
     def table(self):
@@ -141,7 +146,7 @@ class UpdateDB(postgres.CopyToTable):
             or (column string, type string)\
             tuples (was %r ...)' % (self.columns[0],))
 
-        index = schemas[self.pipeline_task]['LUIGI']["INDEX"][0]
+        index = header_d[self.pipeline_task]['LUIGI']["INDEX"][0]
 
         # Change the temp setting of the buffer
         # cmd = "SET temp_buffers = 1000MB;"
