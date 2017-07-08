@@ -384,10 +384,13 @@ class Preprocess(luigi.Task):
             self.year_month + "--" + \
             self.pipeline_task + extra_h + ".csv"
 
-        preprocess_tasks = eval(self.pipeline_task + '_prep')
-        
-        return preprocess_tasks(year_month=self.year_month, s3_file=key,
+        try:        
+            preprocess_tasks = eval(self.pipeline_task + '_prep')
+            preprocess_tasks(year_month=self.year_month, s3_file=key,
                 extra_h=extra_h, out_key=out_key)
+        except:
+            no_preprocess_method(year_month=self.year_month,
+                    s3_file=key, extra_h=extra_h, out_key=out_key)
 
     def output(self):
         extra_h = get_extra_str(self.extra)
