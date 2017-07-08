@@ -11,6 +11,7 @@ cajeros_banxico:
     - lat: DECIMAL
     - lon: DECIMAL
     - nombre_institucion: VARCHAR
+    - actualizacion_sedesol: TIMESTAMP
 cenapred:
   LUIGI:
     INDEX: a_reglam
@@ -66,15 +67,18 @@ cenapred:
     - hoteles: DECIMAL
     - num_col: DECIMAL
     - url: VARCHAR
+    - actualizacion_sedesol: TIMESTAMP
 dictionary:
   LUIGI:
     SCHEMA:
     - id: TEXT
     - nombre: TEXT
     - fuente: TEXT
+    - url: TEXT
     - tipo: TEXT
     - subtipo: TEXT
-    - actualizacion: TEXT
+    - periodo: TEXT
+    - actualizacion_sedesol: TIMESTAMP
     - metadata: TEXT
 donatarias_sat:
   LUIGI:
@@ -95,6 +99,7 @@ donatarias_sat:
     - domicilio_establecimiento: TEXT
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
+    - actualizacion_sedesol: TIMESTAMP
 indesol:
   LUIGI:
     INDEX: cluni
@@ -122,6 +127,7 @@ indesol:
     - actividad: INT
     - edo_actividad: TEXT
     - informes: JSONB
+    - actualizacion_sedesol: TIMESTAMP
 ipc_ciudades:
   LUIGI:
     INDEX: fecha
@@ -155,6 +161,7 @@ ipc_ciudades:
     - ciudad: TEXT
     - month: INT
     - year: INT
+    - actualizacion_sedesol: TIMESTAMP
   RAW:
   - fecha
   - indice
@@ -194,6 +201,7 @@ precios_granos:
     - mes: TEXT
     - anio: TEXT
     - central: TEXT
+    - actualizacion_sedesol: TIMESTAMP
   RAW: null
 sagarpa:
   LUIGI:
@@ -212,7 +220,8 @@ sagarpa:
     - moda_hidr: TEXT
     - ciclo: TEXT
     - cultivo: TEXT
-transparencia:
+    - actualizacion_sedesol: TIMESTAMP
+cuenta_publica_anual:
   LUIGI:
     INDEX: id_ramo
     SCHEMA:
@@ -248,17 +257,37 @@ transparencia:
     - monto_pagado: FLOAT
     - monto_adefas: FLOAT
     - monto_ejercicio: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
   RAW:
-  - '2016'
-  - '20'
-  - Desarrollo Social
-  - '134'
-  - "Delegaci\xF3n SEDESOL en Jalisco"
-  - '2'
-  - Desarrollo Social
-  - '6'
-  - "Protecci\xF3n Social"
-  - '8'
-  - Otros Grupos Vulnerables
-  - '8'
-  - Apoyo al ingreso
+  - CICLO
+  - ID_RAMO
+  - DESC_RAMO
+  - ID_UR
+  - DESC_UR
+  - GPO_FUNCIONAL
+  - DESC_GPO_FUNCIONAL
+  - ID_FUNCION
+  - DESC_FUNCION
+  - ID_SUBFUNCION
+  - DESC_SUBFUNCION
+  - ID_AI
+  - DESC_AI
+  - ID_MODALIDAD
+  - DESC_MODALIDAD
+  - ID_PP
+  - DESC_PP
+  - ID_OBJETO_DEL_GASTO
+  - DESC_OBJETO_DEL_GASTO
+  - ID_TIPOGASTO
+  - DESC_TIPOGASTO
+  - ID_FF
+  - DESC_FF
+  - ID_ENTIDAD_FEDERATIVA
+  - ENTIDAD_FEDERATIVA
+  - ID_CLAVE_CARTERA
+  - MONTO_APROBADO
+  - MONTO_MODIFICADO
+  - MONTO_DEVENGADO
+  - MONTO_PAGADO
+  - MONTO_ADEFAS
+  - MONTO_EJERCICIO
