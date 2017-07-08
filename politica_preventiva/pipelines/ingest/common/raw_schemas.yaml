@@ -68,6 +68,76 @@ cenapred:
     - num_col: DECIMAL
     - url: VARCHAR
     - actualizacion_sedesol: TIMESTAMP
+cuenta_publica_anual:
+  LUIGI:
+    INDEX: id_ramo
+    SCHEMA:
+    - ciclo: numeric
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - id_ur: TEXT
+    - desc_ur: TEXT
+    - gpo_funcional: numeric
+    - desc_gpo_funcional: character varying
+    - id_funcion: TEXT
+    - desc_funcion: character varying
+    - id_subfuncion: TEXT
+    - desc_subfuncion: character varying
+    - id_ai: TEXT
+    - desc_ai: character varying
+    - id_modalidad: character varying
+    - desc_modalidad: character varying
+    - id_pp: TEXT
+    - desc_pp: character varying
+    - id_objeto_del_gasto: TEXT
+    - desc_objeto_del_gasto: character varying
+    - id_tipogasto: TEXT
+    - desc_tipogasto: character varying
+    - id_ff: numeric
+    - desc_ff: character varying
+    - id_entidad_federativa: TEXT
+    - entidad_federativa: TEXT
+    - id_clave_cartera: TEXT
+    - monto_aprobado: FLOAT
+    - monto_modificado: FLOAT
+    - monto_devengado: FLOAT
+    - monto_pagado: FLOAT
+    - monto_adefas: FLOAT
+    - monto_ejercicio: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - CICLO
+  - ID_RAMO
+  - DESC_RAMO
+  - ID_UR
+  - DESC_UR
+  - GPO_FUNCIONAL
+  - DESC_GPO_FUNCIONAL
+  - ID_FUNCION
+  - DESC_FUNCION
+  - ID_SUBFUNCION
+  - DESC_SUBFUNCION
+  - ID_AI
+  - DESC_AI
+  - ID_MODALIDAD
+  - DESC_MODALIDAD
+  - ID_PP
+  - DESC_PP
+  - ID_OBJETO_DEL_GASTO
+  - DESC_OBJETO_DEL_GASTO
+  - ID_TIPOGASTO
+  - DESC_TIPOGASTO
+  - ID_FF
+  - DESC_FF
+  - ID_ENTIDAD_FEDERATIVA
+  - ENTIDAD_FEDERATIVA
+  - ID_CLAVE_CARTERA
+  - MONTO_APROBADO
+  - MONTO_MODIFICADO
+  - MONTO_DEVENGADO
+  - MONTO_PAGADO
+  - MONTO_ADEFAS
+  - MONTO_EJERCICIO
 dictionary:
   LUIGI:
     SCHEMA:
@@ -221,73 +291,3 @@ sagarpa:
     - ciclo: TEXT
     - cultivo: TEXT
     - actualizacion_sedesol: TIMESTAMP
-cuenta_publica_anual:
-  LUIGI:
-    INDEX: id_ramo
-    SCHEMA:
-    - ciclo: numeric
-    - id_ramo: TEXT
-    - desc_ramo: TEXT
-    - id_ur: TEXT
-    - desc_ur: TEXT
-    - gpo_funcional: numeric
-    - desc_gpo_funcional: character varying
-    - id_funcion: TEXT
-    - desc_funcion: character varying
-    - id_subfuncion: TEXT
-    - desc_subfuncion: character varying
-    - id_ai: TEXT
-    - desc_ai: character varying
-    - id_modalidad: character varying
-    - desc_modalidad: character varying
-    - id_pp: TEXT
-    - desc_pp: character varying
-    - id_objeto_del_gasto: TEXT
-    - desc_objeto_del_gasto: character varying
-    - id_tipogasto: TEXT
-    - desc_tipogasto: character varying
-    - id_ff: numeric
-    - desc_ff: character varying
-    - id_entidad_federativa: TEXT
-    - entidad_federativa: TEXT
-    - id_clave_cartera: TEXT
-    - monto_aprobado: FLOAT
-    - monto_modificado: FLOAT
-    - monto_devengado: FLOAT
-    - monto_pagado: FLOAT
-    - monto_adefas: FLOAT
-    - monto_ejercicio: FLOAT
-    - actualizacion_sedesol: TIMESTAMP
-  RAW:
-  - CICLO
-  - ID_RAMO
-  - DESC_RAMO
-  - ID_UR
-  - DESC_UR
-  - GPO_FUNCIONAL
-  - DESC_GPO_FUNCIONAL
-  - ID_FUNCION
-  - DESC_FUNCION
-  - ID_SUBFUNCION
-  - DESC_SUBFUNCION
-  - ID_AI
-  - DESC_AI
-  - ID_MODALIDAD
-  - DESC_MODALIDAD
-  - ID_PP
-  - DESC_PP
-  - ID_OBJETO_DEL_GASTO
-  - DESC_OBJETO_DEL_GASTO
-  - ID_TIPOGASTO
-  - DESC_TIPOGASTO
-  - ID_FF
-  - DESC_FF
-  - ID_ENTIDAD_FEDERATIVA
-  - ENTIDAD_FEDERATIVA
-  - ID_CLAVE_CARTERA
-  - MONTO_APROBADO
-  - MONTO_MODIFICADO
-  - MONTO_DEVENGADO
-  - MONTO_PAGADO
-  - MONTO_ADEFAS
-  - MONTO_EJERCICIO
