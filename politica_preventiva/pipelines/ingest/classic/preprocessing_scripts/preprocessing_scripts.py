@@ -15,8 +15,8 @@ from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, get
 
 def precios_granos_prep(year_month, s3_file, extra_h, out_key):
     """
-    Preprocessing function for precios_granos: reads df from s3, completes missing values, 
-    turns wide-format df to a long-format df, and uploads to s3
+    Preprocessing function for precios_granos: reads df from s3, completes
+    missing values, turns wide-format df to a long-format df, and uploads to s3
     """
     bucket = 'dpa-plataforma-preventiva'
     df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
@@ -83,8 +83,10 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
         # TODO: CHANCE THIS TO REGEX
         columns = [x for x in df.columns if 'INFORME' in x]
         informe_dict = {col: col.replace('INFORME ', '') for col in columns}
-        informe_dict = {key:informe_dict[key].replace(' EN TIEMPO', 'T') for key in informe_dict.keys()}
-        informe_dict = {key:informe_dict[key].replace(' PRESENTADO', 'P') for key in informe_dict.keys()}
+        informe_dict = {key:informe_dict[key].replace(' EN TIEMPO', 'T') for\
+                key in informe_dict.keys()}
+        informe_dict = {key:informe_dict[key].replace(' PRESENTADO', 'P') for\
+                key in informe_dict.keys()}
         df = df.rename(columns=informe_dict)    
 
         # Turn Informe columns into json column 
@@ -94,33 +96,14 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
-def cajeros_banxico_prep(year_month, s3_file, extra_h, out_key):
-    bucket = 'dpa-plataforma-preventiva'
-    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
-    return True
-
-def cenapred_prep(year_month, s3_file, extra_h, out_key):
-    bucket = 'dpa-plataforma-preventiva'
-    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
-    return True
-
-def segob_prep(year_month, s3_file, extra_h, out_key):
-    bucket = 'dpa-plataforma-preventiva'
-    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
-    return True
-
 def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
-    # TODO: ver si es menor a 2013 (bajado como tabla completa, o mayor, y homologar columnas de ambos casos)
+    # TODO: ver si es menor a 2013 (bajado como tabla completa, o mayor, 
+    # y homologar columnas de ambos casos)
     bucket = 'dpa-plataforma-preventiva'
     pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
     return True
 
-def donatarias_sat_prep(year_month, s3_file, extra_h, out_key):
-    bucket = 'dpa-plataforma-preventiva'
-    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
-    return True
-
-def transparencia_prep(year_month, s3_file, extra_h, out_key):
+def no_preprocess_method(year_month, s3_file, extra_h, out_key):
    bucket = 'dpa-plataforma-preventiva'
    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
    return True
