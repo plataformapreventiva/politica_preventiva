@@ -7,6 +7,7 @@ import psycopg2
 import subprocess
 import tempfile
 import yaml
+import datetime
 
 from dotenv import find_dotenv
 from itertools import product
@@ -27,9 +28,9 @@ from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.ingest.tests import classic_tests
 
 # Load Postgres Schemas
-with open('./pipelines/common/raw_schemas.yaml', 'r') as file:
+with open('./pipelines/ingest/common/raw_schemas.yaml', 'r') as file:
     header_d = yaml.load(file)
-open('./pipelines/common/raw_schemas.yaml').close()
+open('./pipelines/ingest/common/raw_schemas.yaml').close()
 conf = configuration.get_config()
 
 # AWS
@@ -64,7 +65,7 @@ class UpdateDictionary(postgres.CopyToTable):
  
     """ Updates Postgres DataBase DIC with new Datadate ingested data.
         
-        TODO(Update Neo4j table with the new node)
+        TODO(Update Neo4j table with the legacy nodes)
         Note
         ---------
         Assumes that the dictionary of the pipeline_task is defined
@@ -76,6 +77,9 @@ class UpdateDictionary(postgres.CopyToTable):
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     client = S3Client()
+    actualizacion = datetime.datetime.now()
+    
+    common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
 
@@ -105,14 +109,16 @@ class UpdateDictionary(postgres.CopyToTable):
         header =  [[a for (a,b) in 
             header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for 
             i in range(len(self.columns))]
-        path = "./pipelines/ingest/classic/dictionaries/"+self.pipeline_task+"_dic.csv"
+        path = self.common_path+"dictionaries/"+self.pipeline_task+"_dic.csv"
+        
         data = classic_tests.dictionary_test(self.pipeline_task, path,
-                header_d, header, self.current_date)
+                header_d, header, self.actualizacion)
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):    
         return UpdateDB(current_date=self.current_date,
-                        pipeline_task=self.pipeline_task)
+                        pipeline_task=self.pipeline_task,
+                        actualizacion=self.actualizacion)
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database, 
@@ -140,8 +146,10 @@ class UpdateDB(postgres.CopyToTable):
     """
 
     current_date = luigi.DateParameter()
+    actualizacion = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     # extra = luigi.Parameter()
+
     client = S3Client()
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
@@ -155,12 +163,6 @@ class UpdateDB(postgres.CopyToTable):
     def requires(self):
         return Concatenation(current_date=self.current_date,
                              pipeline_task=self.pipeline_task)
-
-    # @property # TODO()
-    # def update_id(self):
-    #   num = str(random.randint(0,100000)) + self.pipeline_task
-    #   num = str(self.current_date)  + self.pipeline_task
-    #   return num
 
     @property
     def columns(self):
@@ -186,6 +188,9 @@ class UpdateDB(postgres.CopyToTable):
         data = data.replace('nan|N/E', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)
         data = data.iloc[1:]
+
+        # add timestamp to postgres table
+        data["actualizacion_sedesol"] = self.actualizacion
         return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
@@ -313,6 +318,7 @@ class Concatenation(luigi.Task):
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     client = S3Client()
+
     raw_bucket = luigi.Parameter('DEFAULT')
     historical = luigi.Parameter('historical')
 
@@ -359,6 +365,7 @@ class Preprocess(luigi.Task):
     year_month = luigi.Parameter()
     extra = luigi.Parameter()
     client = S3Client()
+    
     raw_bucket = luigi.Parameter('DEFAULT')
 
     def requires(self):
@@ -403,6 +410,7 @@ class LocalToS3(luigi.Task):
     pipeline_task = luigi.Parameter()
     extra = luigi.Parameter()
     client = S3Client(aws_access_key_id, aws_secret_access_key)
+    
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     docker_path = luigi.Parameter('DEFAULT')
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
@@ -447,16 +455,19 @@ class RawHeaderTest(luigi.Task):
         Note
         ---------
         Assumes that the source header schema is defined in:
-        common/source_schema.txt
+        common/raw_schemas.yaml
 
     """
     docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     year_month = luigi.Parameter()
-    classic_task_scripts = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
+    
+    classic_task_scripts = luigi.Parameter('DEFAULT')
+    common_path = luigi.Parameter('DEFAULT') 
     new = luigi.Parameter('DEFAULT')
+
     def requires(self):
 
         return LocalIngest(pipeline_task=self.pipeline_task,
@@ -465,15 +476,8 @@ class RawHeaderTest(luigi.Task):
 
     def run(self):
 
-        classic_tests.header_test(self.input().path, self.pipeline_task,self.new)
-
-        # cmd = '''
-        # sudo python  {0}test_header.py --path {1} --task {2} --new {3}
-        # sudo sh {0}header_test.sh -p {1} -t {2} -n {3}
-        # '''.format(self.classic_task_scripts,
-        #            self.input().path, self.pipeline_task,
-        #            self.new)
-        # return subprocess.call(cmd, shell=True)
+        classic_tests.header_test(self.input().path, self.pipeline_task,
+                self.common_path, self.new)
 
     def output(self):
         done = self.local_ingest_file + ".done"

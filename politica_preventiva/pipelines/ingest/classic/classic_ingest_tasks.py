@@ -1,27 +1,29 @@
 # coding: utf-8
 
-import re
-import os
 import ast
+import boto3
+import datetime
 import luigi
+import os
+import pdb
 import psycopg2
 import random
-import pdb
-import boto3
+import re
 import sqlalchemy
 import tempfile
-import numpy as np
-import datetime
 import subprocess
+
 from contextlib import contextmanager
-import pandas as pd
-from luigi import six, task
-from os.path import join, dirname
-from luigi import configuration
-from luigi.contrib import postgres
-from luigi.s3 import S3Target, S3Client
 from dotenv import load_dotenv,find_dotenv
 from itertools import product
+from luigi import configuration
+from luigi import six, task
+from luigi.contrib import postgres
+from luigi.s3 import S3Target, S3Client
+import numpy as np
+from os.path import join, dirname
+import pandas as pd
+
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.preprocessing_scripts.preprocessing_scripts import *
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates, get_extra_str
@@ -72,10 +74,12 @@ class pub(luigi.Task):
 
     def run(self):
 
-        obj = luigi.s3.get_object(Bucket='dpa-compranet', Key='etl/'+ self.pipeline_task + \
+        obj = luigi.s3.get_object(Bucket='dpa-compranet',
+                Key='etl/'+ self.pipeline_task + \
                 "/output/" + self.pipeline_task + ".csv")
 
-        output_db = pd.read_csv(obj['Body'],sep="|",error_bad_lines = False, dtype=str, encoding="utf-8")
+        output_db = pd.read_csv(obj['Body'],sep="|",
+                error_bad_lines = False, dtype=str, encoding="utf-8")
 
 
         return subprocess.call(cmd, shell=True)
@@ -85,12 +89,13 @@ class pub(luigi.Task):
         return luigi.LocalTarget(self.local_ingest_file)
 
 
-class transparencia(SourceIngestTask):
+class cuenta_publica_anual(SourceIngestTask):
 
     def run(self):
 
-        command_list = ['sh', self.classic_task_scripts + 'transparencia.sh',
-                        self.local_path + '/' + self.pipeline_task, self.local_ingest_file]
+        command_list = ['sudo sh', self.classic_task_scripts +\
+                'cuenta_publica_anual.sh', self.local_path + \
+                '/' + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
         return subprocess.call(cmd, shell=True)
@@ -135,9 +140,10 @@ class ipc_ciudades(SourceIngestTask):
             os.makedirs(self.local_path + self.pipeline_task)
         
         cmd = '''
-        sudo docker run --rm  -v $PWD:/politica_preventiva \
-                -v politica_preventiva_store:/politica_preventiva/data \
-            politica_preventiva/python-task python {0}inpc.py --year {1} --output {2}  
+        sudo docker run --rm  -v $PWD:/politica_preventiva\
+                -v politica_preventiva_store:/politica_preventiva/data\
+            politica_preventiva/python-task python {0}inpc.py\
+            --year {1} --output {2}  
         '''.format(self.classic_task_scripts, self.year_month, 
                 self.docker_ingest_file)
         
@@ -197,8 +203,8 @@ class precios_frutos(SourceIngestTask):
             end_cmd = ""
 
 
-        command_list = ['python', self.classic_task_scripts + "economia.py", '--frutos True',
-                        end_cmd, '--output', self.local_ingest_file,
+        command_list = ['python', self.classic_task_scripts + "economia.py",
+                '--frutos True', end_cmd, '--output', self.local_ingest_file,
                         self.year_month]
         cmd = " ".join(command_list)
 
@@ -236,17 +242,24 @@ class distance_to_services(luigi.Task):
 
         conn = connect_to_db()
         cur = conn.cursor()
-        cur.execute("""SELECT cve_muni, latitud, longitud FROM geoms.municipios""")
+        cur.execute("""SELECT cve_muni, latitud, \
+                longitud FROM geoms.municipios""")
         rows = pd.DataFrame(cur.fetchall(),columns=["cve_muni","lat","long"])
         rows=rows[:5]
 
-        # ["Hospital","doctor","bus_station","airport","bank","gas_station","university","subway_station","police"]
+        # ["Hospital","doctor","bus_station","airport","bank", \
+        # "gas_station","university","subway_station","police"]
         for keyword in ["Hospital","bank","university","police"]:
             print("looking for nearest {0}".format(keyword))
-            vector_dic = rows.apply(lambda x: info_to_google_services(x["lat"],x["long"],keyword),axis=1)           
-            rows[['driving_dist_{0}'.format(keyword), 'driving_time_{0}'.format(keyword),
-            'formatted_address_{0}'.format(keyword),'local_phone_number_{0}'.format(keyword), 
-            'name_{0}'.format(keyword), 'walking_dist_{0}'.format(keyword), 'walking_time_{0}'.format(keyword),
+            vector_dic = rows.apply(lambda x: info_to_google_services(x["lat"],
+                x["long"],keyword),axis=1)           
+            rows[['driving_dist_{0}'.format(keyword),
+            'driving_time_{0}'.format(keyword),
+            'formatted_address_{0}'.format(keyword),
+            'local_phone_number_{0}'.format(keyword), 
+            'name_{0}'.format(keyword),
+            'walking_dist_{0}'.format(keyword),
+            'walking_time_{0}'.format(keyword),
             'website_{0}'.format(keyword)]] = pd.DataFrame(list(vector_dic))
 
         return rows.to_csv(self.output().path,index=False,sep="|")
@@ -279,8 +292,9 @@ class cajeros_banxico(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['python', self.classic_task_scripts + "cajeros_banxico.py",
-                        '--output', self.local_ingest_file]
+        command_list = ['python', self.classic_task_scripts +\
+                "cajeros_banxico.py",
+                '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
 
@@ -296,7 +310,7 @@ class indesol(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sh', self.classic_task_scripts + "indesol.sh",
+        command_list = ['sudo sh', self.classic_task_scripts + "indesol.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
 
@@ -313,7 +327,7 @@ class donatarias_sat(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        command_list = ['sh', self.classic_task_scripts + "donatarias_sat.sh",
+        command_list = ['sudo sh', self.classic_task_scripts + "donatarias_sat.sh",
                         self.year_month,
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
