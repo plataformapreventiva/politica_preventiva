@@ -195,7 +195,7 @@ class EMRLoader(object):
  
         while (not is_cluster_ready) and (time.time() - start_time < EMRLoader.CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS):
             # Get the state
-            state = self.boto_client("emr").describe_job_flow(job_flow_id).state
+            state = self.boto_client("emr").describe_job_flows(job_flow_id).state
 
             if state == u'WAITING':
                 logger.info('Cluster intialized and is WAITING for work')
@@ -231,7 +231,7 @@ class EMRLoader(object):
  
         while (not is_cluster_shutdown) and (time.time() - start_time < EMRLoader.CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS):
             # Get the state
-            state = self.boto_client("emr").describe_job_flow(job_flow_id).state
+            state = self.boto_client("emr").describe_job_flows(job_flow_id).state
 
             if (state == u'TERMINATED') or (state == u'COMPLETED'):
                 logger.info('Cluster successfully shutdown with status: %s' % state)
