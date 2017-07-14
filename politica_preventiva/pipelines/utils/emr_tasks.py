@@ -52,12 +52,11 @@ class EMRLoader(object):
     def launch_cluster(self):
 
         job_flow_id = self.boto_client("emr").run_job_flow(
+            Name=self.cluster_name,
+            LogUri=self.log_uri,
+            ReleaseLabel=self.software_version,
             
-        Name=self.cluster_name,
-        LogUri=self.log_uri,
-        ReleaseLabel=self.software_version,
-        
-        Instances={
+            Instances={
                     'InstanceGroups' : [
                      {
               	    'Name': 'MasterInstanceType',
@@ -140,7 +139,7 @@ class EMRLoader(object):
             VisibleToAllUsers=True,
             JobFlowRole='EMR_EC2_DefaultRole',
             ServiceRole='EMR_DefaultRole' 
-                )
+            )
         
         return  self._poll_until_cluster_ready(job_flow_id)
 
@@ -181,6 +180,7 @@ class EMRLoader(object):
         return self._poll_until_cluster_shutdown(job_flow_id)
  
     def get_job_flow_id(self):
+
         """
         Get the id of the clusters WAITING for work
         """
