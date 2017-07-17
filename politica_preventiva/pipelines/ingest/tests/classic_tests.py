@@ -29,7 +29,7 @@ def header_test(path, task, common_path, new=True):
         header_d = yaml.load(file)
 
     with open(path, newline='') as f:
-            reader = csv.reader(f)
+            reader = csv.reader(f, delimiter='|')
             first_line = next(reader)
     #first_line = data.split('\n', 1)[0]
 
@@ -73,11 +73,11 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date):
         dictionary = dictionary.reindex(columns=[*dictionary.\
                 columns.tolist(), *dic_header], fill_value=None)
         dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
-        dictionary['actualizacion'] = current_date
+        dictionary['actualizacion_sedesol'] = current_date
         raise Exception("Dictionary of task {0} is not defined,\
          see {1} ".format(pipeline_task, path))
 
     # Update actualizacion
-    dictionary['actualizacion'] = current_date
+    dictionary['actualizacion_sedesol'] = current_date
     dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
     return dictionary
