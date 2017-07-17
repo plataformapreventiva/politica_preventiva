@@ -1,0 +1,53 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata
+a_reglam|Reglamento de construcción|CENAPRED|servicios2.cenapred.unam.mx|capacidades|institutcional|anual ||SISI
+aeropuerto|Aeropuertos|CENAPRED|servicios2.cenapred.unam.mx|capacidades|infraestructura|anual ||SISI
+bancos|Bancos|CENAPRED|servicios2.cenapred.unam.mx|capacidades|infraestructura|anual ||SISI
+cc_hidro|Contingencias climatológicas hidrometeorológicas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+cve_muni|Clave de Municipio|CENAPRED|servicios2.cenapred.unam.mx|NO|NO|anual ||SISI
+declarator|Total de declaratorias|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+d_geo|Desastres geológicos|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+d_hidro|Desastres hidrometeorológicos|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+d_qui|Desastres químicos|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+e_geo|Emergencias geológicas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+e_hidro|Emergencias  hidrometeorológicos|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+e_qui|Emergencias químicas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+e_sani|Emergencias sanitarias|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_bajas_temperaturas|Bajas Temperaturas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_ciclones|Ciclones Tropicales|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_granizo|Granizo|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_inundaciones|Inundaciones|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_nevadas|Nevadas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_sequia2|Sequías|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_sismico|Sísmico|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_sustancias_inflamables|Por Sustancias Inflamables|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_Sustancias_toxicas|Por Sustancias Tóxicas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_tormentas_electricas|Tormentas Eléctricas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_tsunami|Por Tsunami|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gp_ondasca|Ondas Cálidas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gvs_ise10|Índice de Vulnerabilidad Social|CENAPRED|servicios2.cenapred.unam.mx|vulnerabilidades|pobreza|anual ||SISI
+g_marginacion|Grado de Marginación|CENAPRED|servicios2.cenapred.unam.mx|vulnerabilidades|pobreza|anual ||SISI
+g_resiliencia|Grado de Resiliencia|CENAPRED|servicios2.cenapred.unam.mx|vulnerabilidades|pobreza|anual ||SISI
+g_rezago_social|Grado de Rezago Social|CENAPRED|servicios2.cenapred.unam.mx|vulnerabilidades|pobreza|anual ||SISI
+g_susce_lad|Susceptibilidad de laderas|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+gasolinera|Gasolineras|CENAPRED|servicios2.cenapred.unam.mx|capacidades|infraestructura|anual ||SISI
+hospitales|Hospitales|CENAPRED|servicios2.cenapred.unam.mx|capacidades|infraestructura|anual ||SISI
+nom_ent|Nombre Entidad|CENAPRED|servicios2.cenapred.unam.mx|NO||anual ||SISI
+nom_mun|Nombre Municipio|CENAPRED|servicios2.cenapred.unam.mx|NO||anual ||SISI
+num_us_cfe|Número de Usuarios de Energía Eléctrica|CENAPRED|servicios2.cenapred.unam.mx|capacidades|infraestructura|anual ||SISI
+objectid|objid|CENAPRED|servicios2.cenapred.unam.mx|NO||anual ||SISI
+pobfem|Población Femenina|CENAPRED|servicios2.cenapred.unam.mx|general|poblacion|anual ||SISI
+pobmas|Población Masculina|CENAPRED|servicios2.cenapred.unam.mx|general|poblacion|anual ||SISI
+pobtot|Población|CENAPRED|servicios2.cenapred.unam.mx|general|poblacion|anual ||SISI
+pob2030|Proyección de Población 2030 (CONAPO)|CENAPRED|servicios2.cenapred.unam.mx|general|poblacion|anual ||SISI
+sep|Escuelas|CENAPRED|servicios2.cenapred.unam.mx|capacidades|infraestructura|anual ||SISI
+shape_area|Área km*1000000|CENAPRED|servicios2.cenapred.unam.mx|general|geografia|anual ||SISI
+supermerca|Supermercados|CENAPRED|servicios2.cenapred.unam.mx|capacidades|infraestructura|anual ||SISI
+titulo_ref|Titulo reglamento de construcción|CENAPRED|servicios2.cenapred.unam.mx|capacidades|institutcional|anual ||SISI
+tvivhab|Viviendas|CENAPRED|servicios2.cenapred.unam.mx|general|poblacion|anual ||SISI
+v_cc|Vulnerabilidad ante Cambio Climático|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+atlas_mun|Atlas Municipal de Riesgos|CENAPRED|servicios2.cenapred.unam.mx|amenazas|naturales|anual ||SISI
+cve_ent|Clave Entidad|CENAPRED|servicios2.cenapred.unam.mx|NO||anual ||SISI
+hoteles|Hoteles|CENAPRED|servicios2.cenapred.unam.mx|capacidades|infraestructura|anual ||SISI
+num_col|Número de Colonias por Municipio|CENAPRED|servicios2.cenapred.unam.mx|general|geografia|anual ||SISI
+url|url|CENAPRED|servicios2.cenapred.unam.mx|general||anual ||SISI
+actualizacion_sedesol|Fecha de Actualización |SEDESOL||NO||anual ||SISI
