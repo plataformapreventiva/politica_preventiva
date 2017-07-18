@@ -45,6 +45,7 @@ def header_test(path, task, common_path, new=True):
             else:
                 pass
         except:
+            header_d[task] = {"RAW":None}
             header_d[task]["RAW"] = first_line[0].split("|")
 
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
