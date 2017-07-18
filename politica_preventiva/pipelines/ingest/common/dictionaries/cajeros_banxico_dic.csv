@@ -1,0 +1,11 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata
+actualizacion|fecha de la ultima actualización|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|La información es proporcionada por dichos bancos operadores
+clave_institucion|clave de la institución bancaria|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|clave de la institución generada por banxico
+cp|código postal|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|La información es proporcionada por dichos bancos operadores
+direccion|dirección|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|La información es proporcionada por dichos bancos operadores
+horario|rango de horario|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|La información es proporcionada por dichos bancos operadores
+id|id única|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|id único
+lat|latitud en grados decimales|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|La información es proporcionada por dichos bancos operadores
+lon|longitud en grados decimales|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|La información es proporcionada por dichos bancos operadores
+nombre_institucion|nombre de la institución|Banco de México|www.banxico.org.mx/consultas-atm/cajeros.json||||2017-07-17 22:57:39.092163|
+actualizacion_sedesol|fecha de la actualización hecha por SEDESOL|SEDESOL|||||2017-07-17 22:57:39.092163|SISI

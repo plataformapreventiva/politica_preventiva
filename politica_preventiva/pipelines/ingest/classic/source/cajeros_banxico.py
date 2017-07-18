@@ -22,10 +22,10 @@ from os import path, makedirs
 from ftplib import FTP
 import logging
 
-module_parent = '../../'
-script_dir = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
-sys.path.append(os.path.normpath(os.path.join(script_dir, module_parent)))
-from utils.postgres_utils import connect_to_db
+#module_parent = '../../'
+#script_dir = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
+#sys.path.append(os.path.normpath(os.path.join(script_dir, module_parent)))
+from politica_preventiva.pipelines.utils.postgres_utils import connect_to_db
 
 def cajeros_banxico(output, latlon='19.432608,-99.133209',
                     radio='100000000000000000000000',solo_nuevos=False):

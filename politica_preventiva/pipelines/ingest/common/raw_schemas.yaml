@@ -12,6 +12,16 @@ cajeros_banxico:
     - lon: DECIMAL
     - nombre_institucion: VARCHAR
     - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - actualizacion
+  - clave_institucion
+  - cp
+  - direccion
+  - horario
+  - id
+  - lat
+  - lon
+  - nombre_institucion
 cenapred:
   LUIGI:
     INDEX: a_reglam
