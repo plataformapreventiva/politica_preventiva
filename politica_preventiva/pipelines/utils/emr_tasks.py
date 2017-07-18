@@ -123,7 +123,6 @@ class EMRLoader(object):
             	"Classification": "spark-defaults",
             	"Properties": {
             	    "spark.dynamicAllocation.enabled": "true",
-            	    "spark.executor.instances": "0"
             	    }
             	} 
             ],
@@ -141,7 +140,9 @@ class EMRLoader(object):
             ServiceRole='EMR_DefaultRole' 
             )
         
-        return  self._poll_until_cluster_ready(job_flow_id)
+        self.job_flow_id = job_flow_id['JobFlowId']
+        
+        return  True #self._poll_until_cluster_ready(job_flow_id)
 
     def add_step(self, job_flow_id, master_dns):
 
@@ -172,8 +173,73 @@ class EMRLoader(object):
         )
         return response
 
+    def add_pipeline_step(self, job_flow_id, step_name, script_bucket_name,
+            script_name):
 
-    def shutdown_emr_cluster(self, job_flow_id):
+        response = self.boto_client("emr").add_job_flow_steps(
+            JobFlowId=job_flow_id,
+            Steps=[
+                {
+                    'Name': 'setup - copy files for task: '+ step_name,
+                    'ActionOnFailure': 'CANCEL_AND_WAIT',
+                    'HadoopJarStep': {
+                     'Jar': 'command-runner.jar',
+                     'Args': ['aws', 's3', 'cp',
+                     's3://{0}/{1}'.format(
+                               script_bucket_name,
+                               script_name),
+                                 '/home/hadoop/']
+                    }
+                },
+                {
+                    'Name': step_name,
+                    'ActionOnFailure': 'CANCEL_AND_WAIT',
+                    'HadoopJarStep': {
+                        'Jar': 'command-runner.jar',
+                        'Args': ['spark-submit', 
+			'/home/hadoop/' + script_name]
+                    }
+                }
+            ]
+        )
+
+    def add_pipeline_step(self, job_flow_id, step_name, script_bucket_name,
+	    script_name):
+
+	response = self.boto_client("emr").add_job_flow_steps(
+	    JobFlowId=job_flow_id,
+	    Steps=[
+		{
+		    'Name': 'setup - copy files',
+		    'ActionOnFailure': 'CANCEL_AND_WAIT',
+		    'HadoopJarStep': {
+		     'Jar': 'command-runner.jar',
+		     'Args': ['aws', 's3', 'cp',
+		     's3://{0}/{1}'.format(
+			       script_bucket_name,
+			       script_name),
+				 '/home/hadoop/']
+		    }
+		},
+		{
+		    'Name': step_name,
+		    'ActionOnFailure': 'CANCEL_AND_WAIT',
+		    'HadoopJarStep': {
+			'Jar': 'command-runner.jar',
+			'Args': ['spark-submit','--conf',
+				 'spark.memory.fraction=0.95',
+				 '--conf','spark.memory.storageFraction=0.1',
+				 '--conf','spark.executor.instances=4',
+				 '--conf',
+				 'spark.yarn.executor.memoryOverhead=1000',
+				 '--conf','spark.executor.memory=9g',
+				 '--conf','spark.executor.cores=7',
+			'/home/hadoop/' + script_name]
+		    }
+		}
+	    ]
+
+	def shutdown_emr_cluster(self, job_flow_id):
  
         self.self.boto_client("emr").terminate_job_flow(job_flow_id)
 
@@ -195,7 +261,8 @@ class EMRLoader(object):
  
         while (not is_cluster_ready) and (time.time() - start_time < EMRLoader.CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS):
             # Get the state
-            state = self.boto_client("emr").describe_job_flows(JobFlowIds=job_flow_id["JobFlowId"]).state
+            state = self.boto_client("emr").describe_job_flows(
+                    JobFlowIds=[self.job_flow_id]).state
 
             if state == u'WAITING':
                 logger.info('Cluster intialized and is WAITING for work')
@@ -231,7 +298,7 @@ class EMRLoader(object):
  
         while (not is_cluster_shutdown) and (time.time() - start_time < EMRLoader.CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS):
             # Get the state
-            state = self.boto_client("emr").describe_job_flows(JobFlowIds=job_flow_id["JobFlowId"]).state
+            state = self.boto_client("emr").describe_job_flows(JobFlowIds=[job_flow_id["JobFlowId"]]).state
 
             if (state == u'TERMINATED') or (state == u'COMPLETED'):
                 logger.info('Cluster successfully shutdown with status: %s' % state)
