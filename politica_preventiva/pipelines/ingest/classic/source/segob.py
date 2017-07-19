@@ -105,7 +105,7 @@ def ingest_segob_snim(output):
                   str(estado).zfill(2) + str(municipio).zfill(3))
     
     file = pd.DataFrame(full_data)
-    file.to_csv(output, sep='|', encoding="utf-8", nrows=False)
+    file.to_csv(output, sep='|', encoding="utf-8", index=False)
 
 if __name__ == '__main__':
     import argparse
