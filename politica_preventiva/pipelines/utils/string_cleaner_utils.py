@@ -8,6 +8,9 @@ import pandas as pd
 import numpy as np
 import re
 
+def remove_extra_chars(x):
+    x = remove_accent(x.lower().replace(" ",""))
+    return re.sub('[%:*?<>\()]','',x)
 
 def remove_accent(x):
 
