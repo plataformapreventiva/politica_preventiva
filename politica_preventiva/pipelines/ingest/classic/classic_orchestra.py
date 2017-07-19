@@ -483,7 +483,7 @@ class RawHeaderTest(luigi.Task):
 
     def output(self):
         done = self.local_ingest_file + ".done"
-        return luigi.LocalTarget(self.local_ingest_file)
+        return luigi.LocalTarget(done)
 
 
 class LocalIngest(luigi.Task):

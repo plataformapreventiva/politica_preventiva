@@ -3,10 +3,12 @@ from datetime import datetime
 import csv
 import os
 import pdb
+import re
 import yaml
 
 import pandas as pd
 
+from politica_preventiva.pipelines.utils.string_cleaner_utils import remove_extra_chars
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -31,8 +33,9 @@ def header_test(path, task, common_path, new=True):
     with open(path, newline='') as f:
             reader = csv.reader(f, delimiter='|')
             first_line = next(reader)
+    first_line = [remove_extra_chars(x)  for x in first_line]
+    # pdb.set_trace()
     #first_line = data.split('\n', 1)[0]
-
     if str2bool(new):
         header_d[task]["RAW"] = first_line
         with open(common_path + 'raw_schemas.yaml', 'w') as file:
@@ -40,15 +43,17 @@ def header_test(path, task, common_path, new=True):
     else:
         try:
             old_header = header_d[task]["RAW"]
-            if old_header != first_line[0].split("|"):
+            if old_header != first_line:
                raise("Error! Header schema has change")
             else:
                 pass
         except:
-            header_d[task]["RAW"] = first_line[0].split("|")
-
+            header_d[task] = {"RAW":first_line,"LUIGI":{"INDEX":None,"SCHEMA":first_line}}
+    #pdb.set_trace() 
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False)
+    file = open(path+".done", "w")
+    file.close()
 
 def dictionary_test(pipeline_task, path, header_d, dic_header, current_date):
     """

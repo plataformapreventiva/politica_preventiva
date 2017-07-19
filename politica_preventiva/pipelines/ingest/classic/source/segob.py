@@ -18,7 +18,7 @@ from itertools import product
 from bs4 import BeautifulSoup
 from ftplib import FTP
 import requests
-
+import pdb
 
 def ingest_segob_snim(output):
 
@@ -98,14 +98,14 @@ def ingest_segob_snim(output):
             json_data["cve_muni"] = str(estado).zfill(
                 2) + str(municipio).zfill(3)
             for header, value in zip(headers, values):
-                json_data[header] = value
+                json_data[header.decode('utf-8')] = value.decode('utf-8')
             full_data.append(json_data)
 
             print("getting data from municipality : " +
                   str(estado).zfill(2) + str(municipio).zfill(3))
-
+    
     file = pd.DataFrame(full_data)
-    file.to_csv(output, sep='|')
+    file.to_csv(output, sep='|', encoding="utf-8", index=False)
 
 if __name__ == '__main__':
     import argparse
