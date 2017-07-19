@@ -328,14 +328,24 @@ precios_granos:
     SCHEMA:
     - producto: TEXT
     - origen: TEXT
-    - semana: TEXT
-    - precio: DOUBLE PRECISION
     - mes: INT
     - anio: INT
-    - central: TEXT
+    - central: INT
+    - semana: INT
+    - precio: DOUBLE PRECISION
     - actualizacion_sedesol: TIMESTAMP
   RAW:
   - producto
+  - origen
+  - sem_1
+  - sem_2
+  - sem_3
+  - sem_4
+  - sem_5
+  - prom_mes
+  - mes
+  - anio
+  - central
 sagarpa:
   LUIGI:
     INDEX: cultivo
@@ -354,20 +364,3 @@ sagarpa:
     - ciclo: TEXT
     - cultivo: TEXT
     - actualizacion_sedesol: TIMESTAMP
-segob:
-  LUIGI:
-    INDEX: null
-    SCHEMA: 
-    - desuperficiequerepresentaconrespectoalestado
-    - altitud
-    - cabeceramunicipal
-    - clasificaciondelmunicipioseguntamanodelocalidades
-    - coordenadasgeograficasdelacabeceramunicipal
-    - hombres
-    - latitud
-    - longitud
-    - mujeres
-    - numerodelocalidadesdelmunicipio
-    - poblaciondelacabeceramunicipal
-    - superficiedelmunicipioenkm2
-    - cve_muni
