@@ -25,6 +25,8 @@ def header_test(path, task, common_path, new=True):
         to see if there has been a change in the structure from
         the source.
     """
+    noalias_dumper = yaml.dumper.SafeDumper
+    noalias_dumper.ignore_aliases = lambda self, data: True
 
     # Load Header dic
     with open(common_path + 'raw_schemas.yaml', 'r') as file:
@@ -32,10 +34,9 @@ def header_test(path, task, common_path, new=True):
 
     with open(path, newline='') as f:
             reader = csv.reader(f, delimiter='|')
-            first_line = next(reader)
-    first_line = [remove_extra_chars(x)  for x in first_line]
-    # pdb.set_trace()
-    #first_line = data.split('\n', 1)[0]
+            first_lines = next(reader)
+    first_line = [remove_extra_chars(x)  for x in first_lines]
+    initial_schema = first_line[:] 
     if str2bool(new):
         header_d[task]["RAW"] = first_line
         with open(common_path + 'raw_schemas.yaml', 'w') as file:
@@ -48,10 +49,15 @@ def header_test(path, task, common_path, new=True):
             else:
                 pass
         except:
-            header_d[task] = {"RAW":first_line,"LUIGI":{"INDEX":None,"SCHEMA":first_line}}
-    #pdb.set_trace() 
+            initial_schema.append("actualizacion_sedesol") 
+            header_d[task] = {"RAW":first_line,
+                    "LUIGI":{'INDEX':None,
+                        "SCHEMA":initial_schema}}
+            
+
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
-        yaml.dump(header_d, file, default_flow_style=False)
+        yaml.dump(header_d, file, default_flow_style=False, 
+                Dumper=noalias_dumper)
     file = open(path+".done", "w")
     file.close()
 

@@ -356,7 +356,7 @@ sagarpa:
 segob:
   LUIGI:
     INDEX: null
-    SCHEMA: &id001
+    SCHEMA:
     - desuperficiequerepresentaconrespectoalestado
     - altitud
     - cabeceramunicipal
@@ -370,4 +370,18 @@ segob:
     - poblaciondelacabeceramunicipal
     - superficiedelmunicipioenkm2
     - cve_muni
-  RAW: *id001
+    - actualizacion_sedesol
+  RAW:
+  - desuperficiequerepresentaconrespectoalestado
+  - altitud
+  - cabeceramunicipal
+  - clasificaciondelmunicipioseguntamanodelocalidades
+  - coordenadasgeograficasdelacabeceramunicipal
+  - hombres
+  - latitud
+  - longitud
+  - mujeres
+  - numerodelocalidadesdelmunicipio
+  - poblaciondelacabeceramunicipal
+  - superficiedelmunicipioenkm2
+  - cve_muni
