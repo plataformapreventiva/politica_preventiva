@@ -278,11 +278,12 @@ precios_granos:
     - origen: TEXT
     - semana: TEXT
     - precio: DOUBLE PRECISION
-    - mes: TEXT
-    - anio: TEXT
+    - mes: INT
+    - anio: INT
     - central: TEXT
     - actualizacion_sedesol: TIMESTAMP
-  RAW: null
+  RAW:
+  - producto
 sagarpa:
   LUIGI:
     INDEX: cultivo

@@ -26,7 +26,7 @@ def precios_granos_prep(year_month, s3_file, extra_h, out_key):
         columns = ['sem_1', 'sem_2', 'sem_3', 'sem_4', 'sem_5', 'prom_mes']
         df = pputils.gather(df, 'semana', 'precio', columns)
         df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
-
+        df = df[df['semana'] != 'prom_mes'] 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
 
     return True
