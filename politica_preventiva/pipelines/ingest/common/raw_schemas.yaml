@@ -364,3 +364,35 @@ sagarpa:
     - ciclo: TEXT
     - cultivo: TEXT
     - actualizacion_sedesol: TIMESTAMP
+segob:
+  LUIGI:
+    INDEX: null
+    SCHEMA:
+    - desuperficiequerepresentaconrespectoalestado
+    - altitud
+    - cabeceramunicipal
+    - clasificaciondelmunicipioseguntamanodelocalidades
+    - coordenadasgeograficasdelacabeceramunicipal
+    - hombres
+    - latitud
+    - longitud
+    - mujeres
+    - numerodelocalidadesdelmunicipio
+    - poblaciondelacabeceramunicipal
+    - superficiedelmunicipioenkm2
+    - cve_muni
+    - actualizacion_sedesol
+  RAW:
+  - desuperficiequerepresentaconrespectoalestado
+  - altitud
+  - cabeceramunicipal
+  - clasificaciondelmunicipioseguntamanodelocalidades
+  - coordenadasgeograficasdelacabeceramunicipal
+  - hombres
+  - latitud
+  - longitud
+  - mujeres
+  - numerodelocalidadesdelmunicipio
+  - poblaciondelacabeceramunicipal
+  - superficiedelmunicipioenkm2
+  - cve_muni
