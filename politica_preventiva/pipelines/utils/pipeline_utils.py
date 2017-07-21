@@ -137,10 +137,9 @@ def latest_dates(pipeline, end_date):
 
 def extras(pipeline):
     try:
-        param = parse_cfg_list(configuration.get_config().get(pipeline,
-                                                              "extra_parameters"))
+        param = configuration.get_config().get(pipeline, "extra_parameters")
         extra = parse_cfg_list(configuration.get_config().get(pipeline, param))
-        return extra_dict
+        return extra
 
     except (NoOptionError):
         return ['']
