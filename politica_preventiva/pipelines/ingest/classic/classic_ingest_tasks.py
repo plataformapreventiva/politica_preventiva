@@ -59,7 +59,7 @@ class SourceIngestTask(luigi.Task):
 
 #######################
 # Classic Ingest Tasks
-####### 
+#######
 
 class denue(SourceIngestTask):
 
@@ -168,15 +168,15 @@ class ipc_ciudades(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        
+
         cmd = '''
         sudo docker run --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/politica_preventiva/data\
             politica_preventiva/python-task python {0}inpc.py\
-            --year {1} --output {2}  
-        '''.format(self.classic_task_scripts, self.year_month, 
+            --year {1} --output {2}
+        '''.format(self.classic_task_scripts, self.year_month,
                 self.docker_ingest_file)
-        
+
         print("***********************************")
         print(os.getcwd())
         print(cmd)
@@ -282,11 +282,11 @@ class distance_to_services(luigi.Task):
         for keyword in ["Hospital","bank","university","police"]:
             print("looking for nearest {0}".format(keyword))
             vector_dic = rows.apply(lambda x: info_to_google_services(x["lat"],
-                x["long"],keyword),axis=1)           
+                x["long"],keyword),axis=1)
             rows[['driving_dist_{0}'.format(keyword),
             'driving_time_{0}'.format(keyword),
             'formatted_address_{0}'.format(keyword),
-            'local_phone_number_{0}'.format(keyword), 
+            'local_phone_number_{0}'.format(keyword),
             'name_{0}'.format(keyword),
             'walking_dist_{0}'.format(keyword),
             'walking_time_{0}'.format(keyword),
@@ -365,3 +365,17 @@ class donatarias_sat(SourceIngestTask):
         cmd = " ".join(command_list)
 
         return subprocess.call([cmd], shell=True)
+
+class cuaps_sedesol(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['python', self.classic_task_scripts + "cuaps_sedesol.py",
+                        '--start', self.year_month,
+                        '--output', self.local_ingest_file]
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)
+
