@@ -61,6 +61,23 @@ class SourceIngestTask(luigi.Task):
 # Classic Ingest Tasks
 ####### 
 
+class denue(SourceIngestTask):
+
+    def run(self):
+
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sudo ', self.classic_task_scripts +\
+                'denue.sh', self.local_path + \
+                '/' + self.pipeline_task, self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call(cmd, shell=True)
+
+
+
+
 class pub(luigi.Task):
 
     client = luigi.s3.S3Client()
@@ -87,6 +104,19 @@ class pub(luigi.Task):
     def output(self):
 
         return luigi.LocalTarget(self.local_ingest_file)
+
+class cuenta_publica_trimestral(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+ 
+        command_list = ['sudo sh', self.classic_task_scripts +\
+                'cuenta_publica_trimestral.sh', self.local_path + \
+                '/' + self.pipeline_task, self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call(cmd, shell=True)
 
 
 class cuenta_publica_anual(SourceIngestTask):
