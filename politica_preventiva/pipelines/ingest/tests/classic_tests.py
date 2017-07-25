@@ -37,10 +37,11 @@ def header_test(path, task, common_path, new=True):
             first_lines = next(reader)
     first_line = [remove_extra_chars(x)  for x in first_lines]
     initial_schema = first_line[:] 
+    initial_schema.append("actualizacion_sedesol") 
     if str2bool(new):
-        header_d[task]["RAW"] = first_line
-        with open(common_path + 'raw_schemas.yaml', 'w') as file:
-                yaml.dump(header_d, file, default_flow_style=False)
+        header_d[task] = {"RAW": first_line,
+                    "LUIGI":{'INDEX':None,
+                        "SCHEMA": initial_schema}}
     else:
         try:
             old_header = header_d[task]["RAW"]
@@ -49,12 +50,10 @@ def header_test(path, task, common_path, new=True):
             else:
                 pass
         except:
-            initial_schema.append("actualizacion_sedesol") 
-            header_d[task] = {"RAW":first_line,
+            header_d[task] = {"RAW": first_line,
                     "LUIGI":{'INDEX':None,
-                        "SCHEMA":initial_schema}}
+                        "SCHEMA": initial_schema}}
             
-
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False, 
                 Dumper=noalias_dumper)
