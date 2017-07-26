@@ -106,7 +106,6 @@ class sagarpa(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-
         extra_cmd = self.extra.split('--')
         cultivo = extra_cmd[0]
 
@@ -195,7 +194,7 @@ class precios_frutos(SourceIngestTask):
             os.makedirs(self.local_path + self.pipeline_task)
 
         extra_cmd = self.extra.split('--')
-        end_date = extra_cmd[0]
+        mercado = extra_cmd[0]
 
         if end_date:
             end_cmd = " ".join(['--end', end_date])
@@ -203,9 +202,9 @@ class precios_frutos(SourceIngestTask):
             end_cmd = ""
 
 
-        command_list = ['python', self.classic_task_scripts + "economia.py",
-                '--frutos True', end_cmd, '--output', self.local_ingest_file,
-                        self.year_month]
+        command_list = ['python', self.classic_task_scripts +\
+                "economia_frutos.py", '--mercado', mercado, end_cmd, '--output', 
+                self.local_ingest_file, self.year_month]
         cmd = " ".join(command_list)
 
         print(cmd)
