@@ -114,7 +114,7 @@ def ingest_frutos(start_date, end_date='', output='', mercado=''):
 
             # Get response
             try:
-                response = requests.request(method='GET', url=url, timeout=1200)
+                response = requests.request(method='GET', url=url)
             except Exception:
                 logging.info('Connection error: year={}, month={}, tipo={}, central={}'.format(year, month, tipo,
                                                                                                centrales_dict[central]))
@@ -175,7 +175,7 @@ def ingest_frutos(start_date, end_date='', output='', mercado=''):
     if output:
         file_name = output
     else:
-        file_name = '../data/' + start_date + '_frutos'
+        file_name = '../data/' + start_date + '_frutos_' + mercado
 
     if results:
 
