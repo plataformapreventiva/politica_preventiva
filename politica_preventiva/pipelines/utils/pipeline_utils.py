@@ -32,28 +32,23 @@ s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
     aws_secret_access_key=aws_secret_access_key,
      region_name="us-west-2")
 
-def s3_to_pandas(Bucket, Key, sep="|", header=False,bototype=True):
+def s3_to_pandas(Bucket, Key, sep="|", header=False,python_3=True):
     """
     Downloads csv from s3 bucket into a pandas Dataframe
     Assumes aws keys as environment variables
     """
-    import boto3
+    
     aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
     s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key)
     #s3 = boto3.resource('s3')
-    if bototype:
-        obj = s3.get_object(Bucket=Bucket, Key=Key)
-        #obj = s3.Object(Bucket, Key)
-        #data = pd.read_csv(obj.get()['Body'].read().decode('utf-8'),sep="|")
-        print("intentando guardar el db")
-        return pd.read_csv(BytesIO(obj['Body'].read()), sep=sep)
-        #data = pd.read_csv(obj['Body'],sep="|",keep_default_na=False,
-        #return data
+    
+    if python_3:
+        return pd.read_csv("s3://"+Bucket+"/"+Key,sep=sep, header=header)
 
     else:
-
-        return pd.read_csv("s3://"+Bucket+"/"+Key,sep=sep, header=header)
+        obj = s3.get_object(Bucket=Bucket, Key=Key)
+        return pd.read_csv(BytesIO(obj['Body'].read()), sep=sep)
 
 def pandas_to_s3(df, Bucket, Key, sep="|"):
     """
@@ -136,11 +131,12 @@ def latest_dates(pipeline, end_date):
 
 
 def extras(pipeline):
+    #pdb.set_trace()
     try:
         param = parse_cfg_list(configuration.get_config().get(pipeline,
                                                               "extra_parameters"))
-        extra = parse_cfg_list(configuration.get_config().get(pipeline, param))
-        return extra_dict
+        extra = parse_cfg_list(configuration.get_config().get(pipeline, str(param)))
+        return extra
 
     except (NoOptionError):
         return ['']
