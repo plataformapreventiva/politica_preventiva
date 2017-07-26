@@ -136,11 +136,12 @@ class sagarpa(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        extra_cmd = self.extra.split('--')
-        cultivo = extra_cmd[0]
+
+        #extra_cmd = self.extra.split('--')
+        #cultivo = extra_cmd[0]
 
         command_list = ['python', self.classic_task_scripts + "sagarpa.py",
-                        '--start', self.year_month, '--cult', cultivo,
+                        '--start', self.year_month, '--cult', self.extra,
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
@@ -152,11 +153,11 @@ class sagarpa_cierre(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        extra_cmd = self.extra.split('--')
-        estado = extra_cmd[0]
+        #extra_cmd = self.extra.split('--')
+        #estado = self.extra_cmd[0]
 
         command_list = ['python', self.classic_task_scripts + "sagarpa.py",
-                        '--start', self.year_month, '--estado', estado,
+                        '--start', self.year_month, '--estado', self.extra,
                         '--cierre', 'True', '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
