@@ -294,8 +294,8 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.close()
 
         # Remove last processing file
-        self.client.remove(self.raw_bucket + self.pipeline_task +
-                           "/concatenation/")
+        #self.client.remove(self.raw_bucket + self.pipeline_task +
+        #                   "/concatenation/")
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database, 

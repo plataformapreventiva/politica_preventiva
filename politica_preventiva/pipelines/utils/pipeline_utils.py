@@ -133,9 +133,8 @@ def latest_dates(pipeline, end_date):
 def extras(pipeline):
     #pdb.set_trace()
     try:
-        param = parse_cfg_list(configuration.get_config().get(pipeline,
-                                                              "extra_parameters"))
-        extra = parse_cfg_list(configuration.get_config().get(pipeline, str(param)))
+        param = configuration.get_config().get(pipeline, "extra_parameters")
+        extra = parse_cfg_list(configuration.get_config().get(pipeline, param))
         return extra
 
     except (NoOptionError):

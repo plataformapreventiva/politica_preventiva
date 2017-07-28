@@ -24,13 +24,13 @@ cajeros_banxico:
   - nombre_institucion
 cenapred:
   LUIGI:
-    INDEX: a_reglam
+    INDEX: cve_muni
     SCHEMA:
     - a_reglam: VARCHAR
     - aeropuerto: DECIMAL
     - bancos: DECIMAL
     - cc_hidro: DECIMAL
-    - cve_muni: DECIMAL
+    - cve_muni: VARCHAR 
     - declarator: DECIMAL
     - d_geo: DECIMAL
     - d_hidro: DECIMAL
@@ -587,31 +587,56 @@ precios_granos:
     SCHEMA:
     - producto: TEXT
     - origen: TEXT
-    - semana: TEXT
+    - mes: INT
+    - anio: INT
+    - central: INT
+    - semana: INT
     - precio: DOUBLE PRECISION
-    - mes: TEXT
-    - anio: TEXT
-    - central: TEXT
     - actualizacion_sedesol: TIMESTAMP
-  RAW: null
+  RAW:
+  - producto
+  - origen
+  - sem_1
+  - sem_2
+  - sem_3
+  - sem_4
+  - sem_5
+  - prom_mes
+  - mes
+  - anio
+  - central
 sagarpa:
   LUIGI:
-    INDEX: cultivo
+    INDEX: null
     SCHEMA:
-    - estado: TEXT
-    - distrito: TEXT
-    - municipio: TEXT
-    - sup_sembrada: INTEGER
-    - sup_cosech: INTEGER
-    - sup_siniest: INTEGER
-    - produccion: INTEGER
-    - rendim: FLOAT
-    - mes: INTEGER
-    - anio: INTEGER
-    - moda_hidr: TEXT
-    - ciclo: TEXT
-    - cultivo: TEXT
+    - estado: VARCHAR
+    - distrito: VARCHAR
+    - municipio: VARCHAR
+    - sup_sembrada: INT
+    - sup_cosech: INT
+    - sup_siniest: INT
+    - produccion: INT
+    - rendim: DOUBLE PRECISION
+    - mes: INT
+    - anio: INT
+    - moda_hidr: VARCHAR
+    - ciclo: VARCHAR
+    - cultivo: VARCHAR
     - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - estado
+  - distrito
+  - municipio
+  - sup_sembrada
+  - sup_cosech
+  - sup_siniest
+  - produccion
+  - rendim
+  - mes
+  - anio
+  - moda_hidr
+  - ciclo
+  - cultivo
 segob:
   LUIGI:
     INDEX: null
