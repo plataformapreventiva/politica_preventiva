@@ -324,7 +324,7 @@ class Concatenation(luigi.Task):
     def requires(self):
         extra = extras(self.pipeline_task)
 
-        if self.historical:
+        if self.historical in ['True', 'T', '1', 'TRUE']:
             dates = historical_dates(self.pipeline_task, self.current_date)
         else:
             dates = latest_dates(self.pipeline_task, self.current_date)
