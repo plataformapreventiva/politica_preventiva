@@ -30,7 +30,7 @@ cenapred:
     - aeropuerto: DECIMAL
     - bancos: DECIMAL
     - cc_hidro: DECIMAL
-    - cve_muni: VARCHAR 
+    - cve_muni: VARCHAR
     - declarator: DECIMAL
     - d_geo: DECIMAL
     - d_hidro: DECIMAL
@@ -607,21 +607,21 @@ precios_granos:
   - central
 sagarpa:
   LUIGI:
-    INDEX: null
+    INDEX: municipio
     SCHEMA:
-    - estado: VARCHAR
-    - distrito: VARCHAR
-    - municipio: VARCHAR
-    - sup_sembrada: INT
-    - sup_cosech: INT
-    - sup_siniest: INT
-    - produccion: INT
-    - rendim: DOUBLE PRECISION
+    - estado: TEXT
+    - distrito: TEXT
+    - municipio: TEXT
+    - sup_sembrada: TEXT 
+    - sup_cosech: TEXT
+    - sup_siniest: TEXT
+    - produccion: TEXT 
+    - rendim: TEXT
     - mes: INT
     - anio: INT
-    - moda_hidr: VARCHAR
-    - ciclo: VARCHAR
-    - cultivo: VARCHAR
+    - moda_hidr: CHAR(1)
+    - ciclo: CHAR(2)
+    - cultivo: TEXT
     - actualizacion_sedesol: TIMESTAMP
   RAW:
   - estado
