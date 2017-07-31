@@ -440,7 +440,8 @@ class LocalToS3(luigi.Task):
              extra_h + ".csv"
         
         self.client.put(local_ingest_file, self.output().path)
-    
+        os.remove(local_ingest_file + ".done")
+
     def output(self):
         extra_h = get_extra_str(self.extra)
        
