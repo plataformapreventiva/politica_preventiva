@@ -119,7 +119,7 @@ def check_empty_dataframe(bucket, s3_file, out_key):
     original dataframe
     """
     try:
-        df = s3_to_pandas(Bucket=bucket, Key=s3_file, bototype=True)
+        df = s3_to_pandas(Bucket=bucket, Key=s3_file)
 
     except Exception: # TODO: Change to real error, EmptyDataError
         copy_s3_files(input_bucket=bucket, input_key=s3_file, 
