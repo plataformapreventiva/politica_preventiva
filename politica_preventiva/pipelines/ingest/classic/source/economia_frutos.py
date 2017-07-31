@@ -222,9 +222,6 @@ if __name__ == '__main__':
 
     parser.add_argument('--start', type=str, default='2016-1',
                         help='First month to download, as string format yyyy-m')
-    parser.add_argument('--end', type=str, default='',
-                        help='Last month to download, as string format yyyy-m. If None, \
-        only download the month specified in start')
     parser.add_argument('--mercado', type=str, default='130',
                         help='Mercado from which the prices to download')
     parser.add_argument('--output', type=str, default='',
@@ -233,8 +230,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     start_date = args.start
-    end_date = args.end
     mercado = args.mercado
     output = args.output
 
-    ingest_frutos(start_date=start_date, end_date=end_date, output=output, mercado=mercado)
+    ingest_frutos(start_date=start_date, output=output, mercado=mercado)
