@@ -56,6 +56,7 @@ class ClassicIngest(luigi.WrapperTask):
     pipelines = parse_cfg_list(conf.get("ClassicIngest", "pipelines"))
 
     def requires(self):
+
         # loop through pipeline tasks
         yield [UpdateDictionary(current_date=self.current_date,
                         pipeline_task=pipeline) for pipeline in self.pipelines]
@@ -88,6 +89,26 @@ class UpdateDictionary(postgres.CopyToTable):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+
+    @property
+    def periodicity(self):
+        periodicity = conf.get(self.pipeline_task, "periodicity")
+        if periodicity == "annual":
+            self.file_name = self.current_date.year
+        elif periodicity == "biannual":
+            if self.current_date.month <= 6:
+                self.file_name = self.current_date.strftime('%Y-%m-1')
+            else:
+                self.file_name = self.current_date.strftime('%Y-%m-s-2') 
+        elif periodicity == "monthly":
+            self.file_name = self.current_date.strftime('%Y-%m')
+        elif periodicity == "weekly":
+            week = self.current_date.isocalendar()[1]             
+            self.file_name = self.current_date.strftime('%Y-%m-w-{0}'.format(week))
+        else:
+            pass
+        return periodicity
+
 
     @property
     def table(self):
@@ -330,7 +351,7 @@ class Concatenation(luigi.Task):
             dates = latest_dates(self.pipeline_task, self.current_date)
         for extra_p, date in product(extra, dates):
             yield Preprocess(pipeline_task=self.pipeline_task,
-                             year_month=str(date),
+                             data_date=str(date),
                              current_date=self.current_date,
                              extra=extra_p)
 
@@ -361,7 +382,7 @@ class Preprocess(luigi.Task):
 
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     extra = luigi.Parameter()
     client = S3Client()
     
@@ -369,7 +390,7 @@ class Preprocess(luigi.Task):
 
     def requires(self):
         
-        return LocalToS3(year_month=self.year_month,
+        return LocalToS3(data_date=self.data_date,
                         pipeline_task=self.pipeline_task,
                         extra=self.extra)
 
@@ -377,18 +398,18 @@ class Preprocess(luigi.Task):
 
         extra_h = get_extra_str(self.extra)
 
-        key = self.pipeline_task + "/raw/" + self.year_month + "--" + \
+        key = self.pipeline_task + "/raw/" + self.data_date + "--" + \
             self.pipeline_task + extra_h + ".csv"
         out_key = "etl/" + self.pipeline_task + "/preprocess/" + \
-            self.year_month + "--" + \
+            self.data_date + "--" + \
             self.pipeline_task + extra_h + ".csv"
 
         try:        
             preprocess_tasks = eval(self.pipeline_task + '_prep')
-            preprocess_tasks(year_month=self.year_month, s3_file=key,
+            preprocess_tasks(data_date=self.data_date, s3_file=key,
                 extra_h=extra_h, out_key=out_key)
         except:
-            no_preprocess_method(year_month=self.year_month,
+            no_preprocess_method(data_date=self.data_date,
                     s3_file=key, extra_h=extra_h, out_key=out_key)
 
         os.remove(local_ingest_file + ".done")
@@ -396,7 +417,7 @@ class Preprocess(luigi.Task):
     def output(self):
         extra_h = get_extra_str(self.extra)
         return S3Target(path=self.raw_bucket + self.pipeline_task +
-            "/preprocess/" + self.year_month + "--" +
+            "/preprocess/" + self.data_date + "--" +
             self.pipeline_task + extra_h + ".csv")
 
 
@@ -410,7 +431,7 @@ class LocalToS3(luigi.Task):
         ---------
     """
 
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     extra = luigi.Parameter()
     client = S3Client(aws_access_key_id, aws_secret_access_key)
@@ -422,14 +443,14 @@ class LocalToS3(luigi.Task):
     def requires(self):
         extra_h = get_extra_str(self.extra)
         docker_ingest_file =  self.docker_path + self.pipeline_task +\
-            "/" + self.year_month + "--" + self.pipeline_task +\
+            "/" + self.data_date + "--" + self.pipeline_task +\
              extra_h + ".csv" 
         local_ingest_file = self.local_path + self.pipeline_task +\
-            "/" + self.year_month + "--" + self.pipeline_task +\
+            "/" + self.data_date + "--" + self.pipeline_task +\
              extra_h + ".csv"
         
         task = RawHeaderTest(pipeline_task=self.pipeline_task,
-            year_month=self.year_month, docker_ingest_file=docker_ingest_file,
+            data_date=self.data_date, docker_ingest_file=docker_ingest_file,
             local_ingest_file=local_ingest_file,
             extra=self.extra)
         
@@ -438,7 +459,7 @@ class LocalToS3(luigi.Task):
     def run(self):
         extra_h = get_extra_str(self.extra)
         local_ingest_file = self.local_path + self.pipeline_task +\
-            "/" + self.year_month + "--" + self.pipeline_task +\
+            "/" + self.data_date + "--" + self.pipeline_task +\
              extra_h + ".csv"
         
         self.client.put(local_ingest_file, self.output().path)
@@ -447,7 +468,7 @@ class LocalToS3(luigi.Task):
         extra_h = get_extra_str(self.extra)
        
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" +
-                        self.year_month + "--" + self.pipeline_task +
+                        self.data_date + "--" + self.pipeline_task +
                         extra_h + ".csv")
 
 
@@ -464,7 +485,7 @@ class RawHeaderTest(luigi.Task):
     """
     docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     extra = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
     
@@ -475,7 +496,7 @@ class RawHeaderTest(luigi.Task):
     def requires(self):
 
         return LocalIngest(pipeline_task=self.pipeline_task,
-            year_month=self.year_month, local_ingest_file=self.local_ingest_file,
+            data_date=self.data_date, local_ingest_file=self.local_ingest_file,
             docker_ingest_file=self.docker_ingest_file, extra=self.extra)
 
     def run(self):
@@ -501,7 +522,7 @@ class LocalIngest(luigi.Task):
     """
 
     pipeline_task = luigi.Parameter()
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
     docker_ingest_file = luigi.Parameter()
     extra = luigi.Parameter()
@@ -509,7 +530,7 @@ class LocalIngest(luigi.Task):
     def requires(self):
         
         classic_tasks = eval(self.pipeline_task)
-        task = classic_tasks(year_month=self.year_month,
+        task = classic_tasks(data_date=self.data_date,
                              pipeline_task=self.pipeline_task,
                              local_ingest_file=self.local_ingest_file,
                              docker_ingest_file=self.docker_ingest_file,

@@ -105,6 +105,7 @@ class pub(luigi.Task):
 
         return luigi.LocalTarget(self.local_ingest_file)
 
+
 class cuenta_publica_trimestral(SourceIngestTask):
 
     def run(self):
@@ -112,7 +113,8 @@ class cuenta_publica_trimestral(SourceIngestTask):
             os.makedirs(self.local_path + self.pipeline_task)
  
         command_list = ['sudo sh', self.classic_task_scripts +\
-                'cuenta_publica_trimestral.sh', self.local_path + \
+                'cuenta_publica_trimestral.sh', self.year_month,
+                self.local_path + \
                 '/' + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
@@ -122,9 +124,9 @@ class cuenta_publica_trimestral(SourceIngestTask):
 class cuenta_publica_anual(SourceIngestTask):
 
     def run(self):
-
+        year = self.year_month.split("-")[0]
         command_list = ['sudo sh', self.classic_task_scripts +\
-                'cuenta_publica_anual.sh', self.local_path + \
+                'cuenta_publica_anual.sh', self.year_month, self.local_path + \
                 '/' + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
@@ -223,23 +225,17 @@ class precios_frutos(SourceIngestTask):
 
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-
+        
         extra_cmd = self.extra.split('--')
         mercado = extra_cmd[0]
-
-        if end_date:
-            end_cmd = " ".join(['--end', end_date])
-        else:
-            end_cmd = ""
-
-
+        
         command_list = ['python', self.classic_task_scripts +\
-                "economia_frutos.py", '--mercado', mercado, end_cmd, '--output', 
-                self.local_ingest_file, self.year_month]
+                "economia_frutos.py", '--start', self.year_month,
+                '--mercado', mercado, '--output', 
+                self.local_ingest_file]
         cmd = " ".join(command_list)
-
         print(cmd)
-
+        #pdb.set_trace()
         return subprocess.call([cmd], shell=True)
 
 
