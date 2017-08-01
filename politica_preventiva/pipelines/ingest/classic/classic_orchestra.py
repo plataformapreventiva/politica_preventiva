@@ -56,16 +56,15 @@ class ClassicIngest(luigi.WrapperTask):
     pipelines = parse_cfg_list(conf.get("ClassicIngest", "pipelines"))
 
     def requires(self):
-
         # loop through pipeline tasks
         yield [UpdateDictionary(current_date=self.current_date,
                         pipeline_task=pipeline) for pipeline in self.pipelines]
 
 
 class UpdateDictionary(postgres.CopyToTable):
- 
+
     """ Updates Postgres DataBase DIC with new Datadate ingested data.
-        
+
         TODO(Update Neo4j table with the legacy nodes)
         Note
         ---------
@@ -79,7 +78,7 @@ class UpdateDictionary(postgres.CopyToTable):
     pipeline_task = luigi.Parameter()
     client = S3Client()
     actualizacion = datetime.datetime.now()
-    
+
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
@@ -89,26 +88,6 @@ class UpdateDictionary(postgres.CopyToTable):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
-
-    @property
-    def periodicity(self):
-        periodicity = conf.get(self.pipeline_task, "periodicity")
-        if periodicity == "annual":
-            self.file_name = self.current_date.year
-        elif periodicity == "biannual":
-            if self.current_date.month <= 6:
-                self.file_name = self.current_date.strftime('%Y-%m-1')
-            else:
-                self.file_name = self.current_date.strftime('%Y-%m-s-2') 
-        elif periodicity == "monthly":
-            self.file_name = self.current_date.strftime('%Y-%m')
-        elif periodicity == "weekly":
-            week = self.current_date.isocalendar()[1]             
-            self.file_name = self.current_date.strftime('%Y-%m-w-{0}'.format(week))
-        else:
-            pass
-        return periodicity
-
 
     @property
     def table(self):
@@ -127,8 +106,8 @@ class UpdateDictionary(postgres.CopyToTable):
 
     def rows(self):
         # Path of last "ouput" version #TODO(Return to input version)
-        header =  [[a for (a,b) in 
-            header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for 
+        header =  [[a for (a,b) in
+            header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
             i in range(len(self.columns))]
         path = self.common_path+"dictionaries/"+self.pipeline_task+"_dic.csv"
         data = classic_tests.dictionary_test(self.pipeline_task, path,
@@ -141,8 +120,8 @@ class UpdateDictionary(postgres.CopyToTable):
                         actualizacion=self.actualizacion)
 
     def output(self):
-        return postgres.PostgresTarget(host=self.host, database=self.database, 
-            user=self.user, password=self.password, table=self.table, 
+        return postgres.PostgresTarget(host=self.host, database=self.database,
+            user=self.user, password=self.password, table=self.table,
             update_id=self.update_id)
 
 
@@ -205,7 +184,7 @@ class UpdateDB(postgres.CopyToTable):
         data = pd.read_csv(output_path, sep="|", encoding="utf-8", dtype=str,
                            error_bad_lines=False, header=None)
         data.drop_duplicates(keep='first',inplace=True)
-        data = data.replace('nan|N/E', np.nan, regex=True)
+        data = data.replace('nan|N/E|^-$|\n', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)
         data = data.iloc[1:]
 
@@ -215,10 +194,10 @@ class UpdateDB(postgres.CopyToTable):
 
     def copy(self, cursor, file):
         connection = self.output().connect()
-        
+
         if isinstance(self.columns[0], six.string_types):
             column_names = self.columns
-        
+
         elif len(self.columns[0]) == 2:
             # Create columns for csv upload
             column_names = [c[0] for c in self.columns]
@@ -315,12 +294,12 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.close()
 
         # Remove last processing file
-        #self.client.remove(self.raw_bucket + self.pipeline_task +
-        #                   "/concatenation/")
+        self.client.remove(self.raw_bucket + self.pipeline_task +
+                           "/concatenation/")
 
     def output(self):
-        return postgres.PostgresTarget(host=self.host, database=self.database, 
-            user=self.user, password=self.password, table=self.table, 
+        return postgres.PostgresTarget(host=self.host, database=self.database,
+            user=self.user, password=self.password, table=self.table,
             update_id=self.update_id)
 
 
@@ -351,7 +330,7 @@ class Concatenation(luigi.Task):
             dates = latest_dates(self.pipeline_task, self.current_date)
         for extra_p, date in product(extra, dates):
             yield Preprocess(pipeline_task=self.pipeline_task,
-                             data_date=str(date),
+                             year_month=str(date),
                              current_date=self.current_date,
                              extra=extra_p)
 
@@ -382,15 +361,15 @@ class Preprocess(luigi.Task):
 
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
-    data_date = luigi.Parameter()
+    year_month = luigi.Parameter()
     extra = luigi.Parameter()
     client = S3Client()
-    
+
     raw_bucket = luigi.Parameter('DEFAULT')
 
     def requires(self):
-        
-        return LocalToS3(data_date=self.data_date,
+
+        return LocalToS3(year_month=self.year_month,
                         pipeline_task=self.pipeline_task,
                         extra=self.extra)
 
@@ -398,26 +377,24 @@ class Preprocess(luigi.Task):
 
         extra_h = get_extra_str(self.extra)
 
-        key = self.pipeline_task + "/raw/" + self.data_date + "--" + \
+        key = self.pipeline_task + "/raw/" + self.year_month + "--" + \
             self.pipeline_task + extra_h + ".csv"
         out_key = "etl/" + self.pipeline_task + "/preprocess/" + \
-            self.data_date + "--" + \
+            self.year_month + "--" + \
             self.pipeline_task + extra_h + ".csv"
 
-        try:        
+        try:
             preprocess_tasks = eval(self.pipeline_task + '_prep')
-            preprocess_tasks(data_date=self.data_date, s3_file=key,
+            preprocess_tasks(year_month=self.year_month, s3_file=key,
                 extra_h=extra_h, out_key=out_key)
         except:
-            no_preprocess_method(data_date=self.data_date,
+            no_preprocess_method(year_month=self.year_month,
                     s3_file=key, extra_h=extra_h, out_key=out_key)
-
-        os.remove(local_ingest_file + ".done")
 
     def output(self):
         extra_h = get_extra_str(self.extra)
         return S3Target(path=self.raw_bucket + self.pipeline_task +
-            "/preprocess/" + self.data_date + "--" +
+            "/preprocess/" + self.year_month + "--" +
             self.pipeline_task + extra_h + ".csv")
 
 
@@ -431,11 +408,11 @@ class LocalToS3(luigi.Task):
         ---------
     """
 
-    data_date = luigi.Parameter()
+    year_month = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     extra = luigi.Parameter()
     client = S3Client(aws_access_key_id, aws_secret_access_key)
-    
+
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     docker_path = luigi.Parameter('DEFAULT')
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
@@ -443,32 +420,32 @@ class LocalToS3(luigi.Task):
     def requires(self):
         extra_h = get_extra_str(self.extra)
         docker_ingest_file =  self.docker_path + self.pipeline_task +\
-            "/" + self.data_date + "--" + self.pipeline_task +\
-             extra_h + ".csv" 
-        local_ingest_file = self.local_path + self.pipeline_task +\
-            "/" + self.data_date + "--" + self.pipeline_task +\
+            "/" + self.year_month + "--" + self.pipeline_task +\
              extra_h + ".csv"
-        
+        local_ingest_file = self.local_path + self.pipeline_task +\
+            "/" + self.year_month + "--" + self.pipeline_task +\
+             extra_h + ".csv"
+
         task = RawHeaderTest(pipeline_task=self.pipeline_task,
-            data_date=self.data_date, docker_ingest_file=docker_ingest_file,
+            year_month=self.year_month, docker_ingest_file=docker_ingest_file,
             local_ingest_file=local_ingest_file,
             extra=self.extra)
-        
+
         return task
 
     def run(self):
         extra_h = get_extra_str(self.extra)
         local_ingest_file = self.local_path + self.pipeline_task +\
-            "/" + self.data_date + "--" + self.pipeline_task +\
+            "/" + self.year_month + "--" + self.pipeline_task +\
              extra_h + ".csv"
-        
+
         self.client.put(local_ingest_file, self.output().path)
 
     def output(self):
         extra_h = get_extra_str(self.extra)
-       
+
         return S3Target(path=self.raw_bucket + self.pipeline_task + "/raw/" +
-                        self.data_date + "--" + self.pipeline_task +
+                        self.year_month + "--" + self.pipeline_task +
                         extra_h + ".csv")
 
 
@@ -485,18 +462,18 @@ class RawHeaderTest(luigi.Task):
     """
     docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
-    data_date = luigi.Parameter()
+    year_month = luigi.Parameter()
     extra = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-    
+
     classic_task_scripts = luigi.Parameter('DEFAULT')
-    common_path = luigi.Parameter('DEFAULT') 
+    common_path = luigi.Parameter('DEFAULT')
     new = luigi.Parameter('DEFAULT')
 
     def requires(self):
 
         return LocalIngest(pipeline_task=self.pipeline_task,
-            data_date=self.data_date, local_ingest_file=self.local_ingest_file,
+            year_month=self.year_month, local_ingest_file=self.local_ingest_file,
             docker_ingest_file=self.docker_ingest_file, extra=self.extra)
 
     def run(self):
@@ -522,15 +499,15 @@ class LocalIngest(luigi.Task):
     """
 
     pipeline_task = luigi.Parameter()
-    data_date = luigi.Parameter()
+    year_month = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
     docker_ingest_file = luigi.Parameter()
     extra = luigi.Parameter()
 
     def requires(self):
-        
+
         classic_tasks = eval(self.pipeline_task)
-        task = classic_tasks(data_date=self.data_date,
+        task = classic_tasks(year_month=self.year_month,
                              pipeline_task=self.pipeline_task,
                              local_ingest_file=self.local_ingest_file,
                              docker_ingest_file=self.docker_ingest_file,
