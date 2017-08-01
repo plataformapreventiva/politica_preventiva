@@ -13,6 +13,23 @@ import politica_preventiva.pipelines.utils.preprocessing_utils as pputils
 from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files, delete_s3_file 
 
 
+def precios_frutos_prep(year_month, s3_file, extra_h, out_key):
+    """
+    Preprocessing function for precios_granos: reads df from s3, completes
+    missing values, turns wide-format df to a long-format df, and uploads to s3
+    """
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+    if df is not None:
+        df['producto'] = pputils.complete_missing_values(df['producto'])
+        columns = ['sem_1', 'sem_2', 'sem_3', 'sem_4', 'sem_5']
+        df = pputils.gather(df, 'semana', 'precio', columns)
+        df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
+        df = df[df['semana'] != 'prom_mes'] 
+        df.loc[df.precio == '--', 'precio'] = None
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    return True
+
 def precios_granos_prep(year_month, s3_file, extra_h, out_key):
     """
     Preprocessing function for precios_granos: reads df from s3, completes
@@ -26,7 +43,8 @@ def precios_granos_prep(year_month, s3_file, extra_h, out_key):
         columns = ['sem_1', 'sem_2', 'sem_3', 'sem_4', 'sem_5', 'prom_mes']
         df = pputils.gather(df, 'semana', 'precio', columns)
         df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
-
+        df = df[df['semana'] != 'prom_mes'] 
+        df.loc[df.precio == '--', 'precio'] = None
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
 
     return True

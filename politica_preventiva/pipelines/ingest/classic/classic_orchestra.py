@@ -294,8 +294,8 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.close()
 
         # Remove last processing file
-        self.client.remove(self.raw_bucket + self.pipeline_task +
-                           "/concatenation/")
+        #self.client.remove(self.raw_bucket + self.pipeline_task +
+        #                   "/concatenation/")
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database, 
@@ -391,6 +391,8 @@ class Preprocess(luigi.Task):
             no_preprocess_method(year_month=self.year_month,
                     s3_file=key, extra_h=extra_h, out_key=out_key)
 
+        os.remove(local_ingest_file + ".done")
+
     def output(self):
         extra_h = get_extra_str(self.extra)
         return S3Target(path=self.raw_bucket + self.pipeline_task +
@@ -440,7 +442,7 @@ class LocalToS3(luigi.Task):
              extra_h + ".csv"
         
         self.client.put(local_ingest_file, self.output().path)
-    
+
     def output(self):
         extra_h = get_extra_str(self.extra)
        

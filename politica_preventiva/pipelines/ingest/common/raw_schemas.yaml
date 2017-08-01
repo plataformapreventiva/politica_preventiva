@@ -24,13 +24,13 @@ cajeros_banxico:
   - nombre_institucion
 cenapred:
   LUIGI:
-    INDEX: a_reglam
+    INDEX: cve_muni
     SCHEMA:
     - a_reglam: VARCHAR
     - aeropuerto: DECIMAL
     - bancos: DECIMAL
     - cc_hidro: DECIMAL
-    - cve_muni: DECIMAL
+    - cve_muni: VARCHAR 
     - declarator: DECIMAL
     - d_geo: DECIMAL
     - d_hidro: DECIMAL
@@ -234,6 +234,172 @@ cuenta_publica_anual:
   - MONTO_PAGADO
   - MONTO_ADEFAS
   - MONTO_EJERCICIO
+cuenta_publica_trimestral:
+  LUIGI:
+    INDEX: id_ramo
+    SCHEMA:
+    - ciclo: numeric
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - id_ur: TEXT
+    - desc_ur: TEXT
+    - gpo_funcional: numeric
+    - desc_gpo_funcional: character varying
+    - id_funcion: TEXT
+    - desc_funcion: TEXT
+    - id_subfuncion: TEXT
+    - desc_subfuncion: TEXT
+    - id_ai: TEXT
+    - desc_ai: TEXT
+    - id_modalidad: TEXT
+    - desc_modalidad: TEXT
+    - id_pp: TEXT
+    - desc_pp: TEXT
+    - id_capitulo: TEXT
+    - desc_capitulo: TEXT
+    - id_concepto: TEXT
+    - desc_concepto: TEXT
+    - id_partida_generica: TEXT
+    - desc_partida_generica: TEXT
+    - id_partida_especifica: TEXT
+    - desc_partida_especifica: TEXT
+    - id_tipogasto: TEXT
+    - desc_tipogasto: TEXT
+    - id_ff: TEXT
+    - desc_ff: TEXT
+    - id_entidad_federativa: TEXT
+    - entidad_federativa: TEXT
+    - id_clave_cartera: TEXT
+    - monto_aprobado: FLOAT
+    - monto_modificado: FLOAT
+    - monto_pagado: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - ciclo
+  - id_ramo
+  - desc_ramo
+  - id_ur
+  - desc_ur
+  - gpo_funcional
+  - desc_gpo_funcional
+  - id_funcion
+  - desc_funcion
+  - id_subfuncion
+  - desc_subfuncion
+  - id_ai
+  - desc_ai
+  - id_modalidad
+  - desc_modalidad
+  - id_pp
+  - desc_pp
+  - id_capitulo
+  - desc_capitulo
+  - id_concepto
+  - desc_concepto
+  - id_partida_generica
+  - desc_partida_generica
+  - id_partida_especifica
+  - desc_partida_especifica
+  - id_tipogasto
+  - desc_tipogasto
+  - id_ff
+  - desc_ff
+  - id_entidad_federativa
+  - entidad_federativa
+  - id_clave_cartera
+  - monto_aprobado
+  - monto_modificado
+  - monto_pagado
+denue:
+  LUIGI:
+    INDEX: null
+    SCHEMA:
+    - base: text
+    - d_llave: int
+    - nom_est: text
+    - raz_soc: text
+    - cve_scian: text
+    - desc_scian: text
+    - estr_poc: text
+    - tipovial: text
+    - nomvial: text
+    - tiporef1: text
+    - nomref1: text
+    - tiporef2: text
+    - nomref2: text
+    - tiporef3: text
+    - nomref3: text
+    - numextnum: int
+    - numextalf: text
+    - edif_nom: text
+    - edif_piso: text
+    - numintnum: int
+    - numintalf: text
+    - tipoasen: text
+    - nomasen: text
+    - tipo_cori: text
+    - cor_indust: text
+    - local: text
+    - cp: text
+    - cve_ent: text
+    - nom_ent: text
+    - cve_mun: text
+    - nom_mun: text
+    - cve_loc: text
+    - nom_loc: text
+    - cve_ageb: text
+    - manzana: text
+    - tel_1: text
+    - dir_elec_1: text
+    - sitio_web: text
+    - tipo_est: text
+    - coord_y: int
+    - coord_x: int
+    - fecha_alta: text
+    - actualizacion_sedesol: timestamp
+  RAW:
+  - base
+  - id
+  - nombredelaunidadeconomica
+  - razonsocial
+  - codigodelaclasedeactividadscian
+  - nombredeclasedelaactividad
+  - descripcionestratopersonalocupado
+  - tipodevialidad
+  - nombredelavialidad
+  - tipodeentrevialidad1
+  - nombredeentrevialidad1
+  - tipodeentrevialidad2
+  - nombredeentrevialidad2
+  - tipodeentrevialidad3
+  - nombredeentrevialidad3
+  - numeroexteriorokilometro
+  - letraexterior
+  - edificio
+  - edificiopiso
+  - numerointerior
+  - letrainterior
+  - tipodeasentamientohumano
+  - nombredeasentamientohumano
+  - tipocentrocomercial
+  - corredorindustrial,centrocomercialomercadopublico
+  - numerodelocal
+  - codigopostal
+  - claveentidad
+  - entidadfederativa
+  - clavemunicipio
+  - municipio
+  - clavelocalidad
+  - localidad
+  - areageoestadisticabasica
+  - manzana
+  - numerodetelefono
+  - correoelectronico
+  - sitioeninternet
+  - tipodeestablecimiento
+  - latitud
+  - longitud
+  - fechadeincorporacionaldenue
 dictionary:
   LUIGI:
     SCHEMA:
@@ -421,31 +587,56 @@ precios_granos:
     SCHEMA:
     - producto: TEXT
     - origen: TEXT
-    - semana: TEXT
+    - mes: INT
+    - anio: INT
+    - central: INT
+    - semana: INT
     - precio: DOUBLE PRECISION
-    - mes: TEXT
-    - anio: TEXT
-    - central: TEXT
     - actualizacion_sedesol: TIMESTAMP
-  RAW: null
+  RAW:
+  - producto
+  - origen
+  - sem_1
+  - sem_2
+  - sem_3
+  - sem_4
+  - sem_5
+  - prom_mes
+  - mes
+  - anio
+  - central
 sagarpa:
   LUIGI:
-    INDEX: cultivo
+    INDEX: null
     SCHEMA:
-    - estado: TEXT
-    - distrito: TEXT
-    - municipio: TEXT
-    - sup_sembrada: INTEGER
-    - sup_cosech: INTEGER
-    - sup_siniest: INTEGER
-    - produccion: INTEGER
-    - rendim: FLOAT
-    - mes: INTEGER
-    - anio: INTEGER
-    - moda_hidr: TEXT
-    - ciclo: TEXT
-    - cultivo: TEXT
+    - estado: VARCHAR
+    - distrito: VARCHAR
+    - municipio: VARCHAR
+    - sup_sembrada: INT
+    - sup_cosech: INT
+    - sup_siniest: INT
+    - produccion: INT
+    - rendim: DOUBLE PRECISION
+    - mes: INT
+    - anio: INT
+    - moda_hidr: VARCHAR
+    - ciclo: VARCHAR
+    - cultivo: VARCHAR
     - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - estado
+  - distrito
+  - municipio
+  - sup_sembrada
+  - sup_cosech
+  - sup_siniest
+  - produccion
+  - rendim
+  - mes
+  - anio
+  - moda_hidr
+  - ciclo
+  - cultivo
 segob:
   LUIGI:
     INDEX: null
