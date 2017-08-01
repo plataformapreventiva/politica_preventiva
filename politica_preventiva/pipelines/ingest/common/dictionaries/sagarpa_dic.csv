@@ -1,0 +1,15 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata
+estado|Estado|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|General||mensual|2017-07-31 23:44:31.075681|SISI
+distrito|Distrito|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|General||mensual|2017-07-31 23:44:31.075681|SISI
+municipio|Municipio|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|General||mensual|2017-07-31 23:44:31.075681|SISI
+sup_sembrada|Superficie Sembrada|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|Capacidades|Economía|mensual|2017-07-31 23:44:31.075681|SISI
+sup_cosech|Superficie Cosechada|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|Capacidades|Economía|mensual|2017-07-31 23:44:31.075681|SISI
+sup_siniest|Superficie Sieniestrada|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|Amenazas|Humanas|mensual|2017-07-31 23:44:31.075681|SISI
+produccion|Producción (toneladas)|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|Capacidades|Economía|mensual|2017-07-31 23:44:31.075681|SISI
+rendim|Rendimiento|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|Capacidades|Economía|mensual|2017-07-31 23:44:31.075681|SISI
+mes|Mes|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|General||mensual|2017-07-31 23:44:31.075681|SISI
+anio|Año|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|General||mensual|2017-07-31 23:44:31.075681|SISI
+moda_hidr|Modalidad Hídrica|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|Capacidades|Economía|mensual|2017-07-31 23:44:31.075681|SISI
+ciclo|Ciclo Agrícola|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|Capacidades|Economía|mensual|2017-07-31 23:44:31.075681|SISI
+cultivo|Cultivo|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|Capacidades|Economía|mensual|2017-07-31 23:44:31.075681|SISI
+actualizacion_sedesol|Actualización SEDESOL|SAGARPA|http://infosiap.siap.gob.mx:8080/agricola_siap_gobmx/ResumenProducto.do|General||mensual|2017-07-31 23:44:31.075681|SISI
