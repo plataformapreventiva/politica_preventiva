@@ -77,7 +77,6 @@ class denue(SourceIngestTask):
 
 
 
-
 class pub(luigi.Task):
 
     client = luigi.s3.S3Client()
@@ -372,4 +371,18 @@ class cuaps_sedesol(SourceIngestTask):
         cmd = " ".join(command_list)
         print(cmd)
         return subprocess.call([cmd], shell=True)
+
+class msd(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sudo sh', self.classic_task_scripts + "msd.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
 

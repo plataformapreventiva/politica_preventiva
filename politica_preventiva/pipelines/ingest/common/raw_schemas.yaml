@@ -1,3 +1,4 @@
+
 cajeros_banxico:
   LUIGI:
     INDEX: clave_institucion
@@ -581,6 +582,52 @@ mir:
   - semaforizacionct
   - semaforizacioncd
   - semaforizacionci
+msd:
+  LUIGI:
+    INDEX: modalidad_pp
+    SCHEMA:
+    - ciclo: TEXT
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - clasf_ramo_desc: TEXT
+    - modalidad_pp: TEXT
+    - desc_pp: TEXT
+    - pef_cuant: TEXT
+    - pef_cual: TEXT
+    - mir_cuant: TEXT
+    - mir_cual: TEXT
+    - eval_cuant: TEXT
+    - eval_cual: TEXT
+    - asm_cuant: TEXT
+    - asm_cual: TEXT
+    - beneficiarios_cuant: TEXT
+    - beneficiarios_cual: TEXT
+    - msd_cuant: TEXT
+    - msd_cual: TEXT
+    - tipo_evaluacion: TEXT
+    - estimacion: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - ciclo
+  - id_ramo
+  - desc_ramo
+  - clasf_ramo_desc
+  - modalidad_pp
+  - desc_pp
+  - pef_cuant
+  - pef_cual
+  - mir_cuant
+  - mir_cual
+  - eval_cuant
+  - eval_cual
+  - asm_cuant
+  - asm_cual
+  - beneficiarios_cuant
+  - beneficiarios_cual
+  - msd_cuant
+  - msd_cual
+  - tipo_evaluacion
+  - estimacion
 precios_granos:
   LUIGI:
     INDEX: producto
@@ -607,22 +654,22 @@ precios_granos:
   - central
 sagarpa:
   LUIGI:
-    INDEX: municipio
+    INDEX: null
     SCHEMA:
-    - estado: TEXT
-    - distrito: TEXT
-    - municipio: TEXT
-    - sup_sembrada: TEXT 
-    - sup_cosech: TEXT
-    - sup_siniest: TEXT
-    - produccion: TEXT 
-    - rendim: TEXT
-    - mes: INT
-    - anio: INT
-    - moda_hidr: CHAR(1)
-    - ciclo: CHAR(2)
-    - cultivo: TEXT
-    - actualizacion_sedesol: TIMESTAMP
+    - estado
+    - distrito
+    - municipio
+    - sup_sembrada
+    - sup_cosech
+    - sup_siniest
+    - produccion
+    - rendim
+    - mes
+    - anio
+    - moda_hidr
+    - ciclo
+    - cultivo
+    - actualizacion_sedesol
   RAW:
   - estado
   - distrito
