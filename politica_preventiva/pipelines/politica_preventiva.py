@@ -50,7 +50,7 @@ class RunPipelines(luigi.WrapperTask):
     Main Wrapper Task of pipelines 
     """
 
-    # current_date = luigi.DateParameter(default=datetime.date(2014, 7, 30))
+    #current_date = luigi.DateParameter(default=datetime.date(2014, 7, 30))
     current_date = datetime.date.today()
 
     def requires(self):

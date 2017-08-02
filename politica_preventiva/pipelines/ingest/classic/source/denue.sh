@@ -32,13 +32,13 @@ do
     find  $WORK_DIR/denue_${array[$i]}"/" -name "*.csv" -print0 | 
         while IFS= read -r -d $'\0' file; do 
             filename=${array[$i]}_$(basename ${file%.*}).csv; 
-            csvformat -D "|" $file > $WORK_DIR/$filename ; done
-
+            mv $file  $WORK_DIR/$filename ; done
     rm -r $WORK_DIR"/denue_"${array[$i]}
+
 done
 
 # Crear array para juntar archivos
 array=$( find  $WORK_DIR/ -regex '.*csv' ) 
 
 # Juntar archivos, añanidendo columna "base" que diga el nombre del archivo origen
-csvstack -d "|" -n base -e utf-8 --filenames $array > $2
+csvstack -n base -e utf-8 --filenames $array | csvformat -d "," -D "|" | sed 's/"//g' > $2
