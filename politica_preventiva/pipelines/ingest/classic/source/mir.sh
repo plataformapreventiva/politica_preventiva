@@ -2,7 +2,7 @@
 
 echo 'Downloading MIR'
 
-DATA_DIR=`mktemp -d`
+DATA_DIR=$1
 
 declare -a array
 
@@ -31,6 +31,5 @@ do
     -O $DATA_DIR/tmp.zip  http://www.coneval.org.mx/coordinacion/Documents/${array[$i]}
     unzip $DATA_DIR/tmp.zip -d  $DATA_DIR/ && rm $DATA_DIR/tmp.zip;
     in2csv --no-inference  $DATA_DIR/Reporte_CalifMIR__2016.xlsx |\
-    csvformat -D "|" > $1;
-    rm -rf $WORK_DIR
+    csvformat -D "|" > $2;
 done

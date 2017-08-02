@@ -42,9 +42,8 @@ def s3_to_pandas(Bucket, Key, sep="|", header=False,python_3=True):
     s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key)
     #s3 = boto3.resource('s3')
-    
     if python_3:
-        return pd.read_csv("s3://"+Bucket+"/"+Key,sep=sep, header=header)
+        return pd.read_csv("s3://"+Bucket+"/"+Key,sep=sep)
 
     else:
         obj = s3.get_object(Bucket=Bucket, Key=Key)
