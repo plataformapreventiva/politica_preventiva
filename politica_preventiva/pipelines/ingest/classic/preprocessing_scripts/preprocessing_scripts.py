@@ -116,7 +116,6 @@ def indesol_prep(year_month, s3_file, extra_h, out_key):
 
 def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
     """
-    NOT READY!!!!!!!!!!!!!!!!!!
     Preprocessing function for sagarpa: reads df from s3, completes missing values,
     turns wide-format df to a long-format df, and uploads to s3
     """
@@ -126,14 +125,12 @@ def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
 
     if df is not None:
         if len(df.columns) < 19:
-            ###### TODO: reindex will change order and add columns
-            new_cols = ['CveDDR', 'DDR', 'CveCader', 'Cader', 'CveVariedad',
-                    'CveUnidad', 'UnidadMedida']
-            df = df.reindex(df.columns.tolist() + new_cols)
+            # Add missing columns and reorder
+            cols = ['AñoAgricola', 'CveEstado', 'Estado','CveDDR','DDR','CveCader','Cader','CveMpio','Municipio','CveCultivo','Cultivo','CveVariedad','Variedad','CveUnidad','UnidadMedida','CveCiclo','Ciclo','CveModa','Modalidad','Sembrada','Cosechada','Siniestrada','Produccion','Rendimiento','Pmr','Valor']
+            df = df.reindex(columns = cols)
 
         df['estado'] = pputils.complete_missing_values(df['estado'])
         df['distrito'] = pputils.complete_missing_values(df['distrito'])
-        df['cultivo'] = extra_h
 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
