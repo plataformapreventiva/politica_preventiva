@@ -47,5 +47,5 @@ The general process of the pipeline is:
 [ph-rsanchez]: https://avatars.githubusercontent.com/u/10931011?v=3&s=460
 [gh-rsanchez]: https://github.com/rsanchezavalos
 
-[ph-sedesol]: https://avatars0.githubusercontent.com/u/20521447
-[gh-sedesol]: https://github.com/20521447
+[ph-sedesol]: https://avatars2.githubusercontent.com/u/7883897?v=4&s=400
+[gh-sedesol]: https://github.com/andreuboada

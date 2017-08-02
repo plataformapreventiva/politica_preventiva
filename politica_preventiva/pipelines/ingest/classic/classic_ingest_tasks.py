@@ -360,7 +360,10 @@ class donatarias_sat(SourceIngestTask):
         return subprocess.call([cmd], shell=True)
 
 class cuaps_sedesol(SourceIngestTask):
-
+    """
+    Task que descarga el diccionario de programas CUAPS 
+    desarrollado por SEDESOL
+    """
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
@@ -372,16 +375,32 @@ class cuaps_sedesol(SourceIngestTask):
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
+class mir(SourceIngestTask):
+    """
+    Task que descarga la matriz de indicadores para resultados
+    """
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sudo ', self.classic_task_scripts + "mir.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
 class msd(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo sh', self.classic_task_scripts + "msd.sh",
+        command_list = ['sudo ', self.classic_task_scripts + "mir.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
-        cmd = " ".join(command_list)
 
         return subprocess.call([cmd], shell=True)
 

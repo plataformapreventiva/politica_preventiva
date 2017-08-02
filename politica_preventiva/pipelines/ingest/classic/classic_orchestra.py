@@ -184,7 +184,7 @@ class UpdateDB(postgres.CopyToTable):
         data = pd.read_csv(output_path, sep="|", encoding="utf-8", dtype=str,
                            error_bad_lines=False, header=None)
         data.drop_duplicates(keep='first',inplace=True)
-        data = data.replace('nan|N/E', np.nan, regex=True)
+        data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)
         data = data.iloc[1:]
 
@@ -294,8 +294,8 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.close()
 
         # Remove last processing file
-        #self.client.remove(self.raw_bucket + self.pipeline_task +
-        #                   "/concatenation/")
+        self.client.remove(self.raw_bucket + self.pipeline_task +
+                           "/concatenation/")
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database, 
@@ -391,7 +391,6 @@ class Preprocess(luigi.Task):
             no_preprocess_method(year_month=self.year_month,
                     s3_file=key, extra_h=extra_h, out_key=out_key)
 
-        os.remove(local_ingest_file + ".done")
 
     def output(self):
         extra_h = get_extra_str(self.extra)
@@ -442,6 +441,8 @@ class LocalToS3(luigi.Task):
              extra_h + ".csv"
         
         self.client.put(local_ingest_file, self.output().path)
+
+        os.remove(local_ingest_file + ".done")
 
     def output(self):
         extra_h = get_extra_str(self.extra)
