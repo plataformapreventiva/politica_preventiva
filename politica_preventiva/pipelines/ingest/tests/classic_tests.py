@@ -50,9 +50,7 @@ def header_test(path, task, common_path, new=True):
             else:
                 pass
         except:
-            header_d[task] = {"RAW": first_line,
-                    "LUIGI":{'INDEX':None,
-                        "SCHEMA": initial_schema}}
+            raise("Dictionary not defined")
             
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False, 

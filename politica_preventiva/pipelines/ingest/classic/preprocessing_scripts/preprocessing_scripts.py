@@ -19,14 +19,17 @@ def precios_frutos_prep(year_month, s3_file, extra_h, out_key):
     missing values, turns wide-format df to a long-format df, and uploads to s3
     """
     bucket = 'dpa-plataforma-preventiva'
-    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+    file_name = 'etl/' + s3_file
+    df = pputils.check_empty_dataframe(bucket=bucket, s3_file=file_name,
+            out_key=out_key)
+    
     if df is not None:
         df['producto'] = pputils.complete_missing_values(df['producto'])
         columns = ['sem_1', 'sem_2', 'sem_3', 'sem_4', 'sem_5']
         df = pputils.gather(df, 'semana', 'precio', columns)
         df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
         df = df[df['semana'] != 'prom_mes'] 
-        df.loc[df.precio == '--', 'precio'] = None
+        df["precio"].replace("--", None, inplace=True)
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
