@@ -34,8 +34,8 @@ The general process of the pipeline is:
 ### Contributors
 
 | [![javurena7][ph-javurena7]][gh-javurena7] | [![rsanchezavalos][ph-rsanchez]][gh-rsanchez] | [![andreanr][ph-andreanr]][gh-andreanr]| [![andreuboada ][ph-andreuboada]][gh-andreuboada] |
-|                 :--:                 |                     :--:                      |                     :--:             |                     :--:             |              
-|        [javurena7][gh-javurena7]         |         [rsanchezavalos][gh-rsanchez]           |          [andreanr][gh-andreanr] |          [andreuboada][gh-andreuboada]      |      
+|                 :--:                       |                     :--:                      |                     :--:               |                     :--:                          |              
+|        [javurena7][gh-javurena7]           |         [rsanchezavalos][gh-rsanchez]         |          [andreanr][gh-andreanr]       |          [andreuboada][gh-andreuboada]            |      
 
 
 [ph-javurena7]: https://avatars2.githubusercontent.com/u/14095871?v=3&s=460
