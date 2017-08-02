@@ -38,14 +38,14 @@ The general process of the pipeline is:
 |        [javurena7][gh-javurena7]           |         [rsanchezavalos][gh-rsanchez]         |          [andreanr][gh-andreanr]       |          [andreuboada][gh-andreuboada]            |      
 
 
-[ph-javurena7]: https://avatars2.githubusercontent.com/u/14095871?v=3&s=460
+[ph-javurena7]: https://avatars2.githubusercontent.com/u/14095871?v=3&s=200
 [gh-javurena7]: https://github.com/javurena7
 
-[ph-andreanr]: https://avatars2.githubusercontent.com/u/5949086?v=3&s=460
+[ph-andreanr]: https://avatars2.githubusercontent.com/u/5949086?v=3&s=200
 [gh-andreanr]: https://github.com/andreanr
 
-[ph-rsanchez]: https://avatars2.githubusercontent.com/u/10931011?v=3&s=460
+[ph-rsanchez]: https://avatars2.githubusercontent.com/u/10931011?v=3&s=200
 [gh-rsanchez]: https://github.com/rsanchezavalos
 
-[ph-andreuboada]: https://avatars2.githubusercontent.com/u/7883897?v=3&s=20
+[ph-andreuboada]: https://avatars2.githubusercontent.com/u/7883897?v=3&s=200
 [gh-andreuboada]: https://github.com/andreuboada
