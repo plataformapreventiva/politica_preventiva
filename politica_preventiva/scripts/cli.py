@@ -24,7 +24,7 @@ def check_server(host, port):
 @click.option('--server', help='URL donde se encuentra el luigi-master', default='localhost')
 @click.option('--port', help='Puerto donde está escuchando el luigi-master', default=8082)
 @click.option('--luigi_cfg', help='Path al archivo de configuración de Luigi', type=click.Path())
-@click.option('--workers', help='Número de workers en paralelo', type=click.INT, default=1)
+@click.option('--workers', help='Número de workers en paralelo', type=click.INT, default=10)
 #@click.option('--level', help='', default=2, type=click.INT)
 #@click.option('--sleep', help='', default=2, type=click.INT)
 
