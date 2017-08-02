@@ -34,18 +34,18 @@ The general process of the pipeline is:
 ### Contributors
 
 | [![javurena7][ph-javurena7]][gh-javurena7] | [![rsanchezavalos][ph-rsanchez]][gh-rsanchez] | [![andreanr][ph-andreanr]][gh-andreanr]| [![andreuboada ][ph-andreuboada]][gh-andreuboada] |
-|                 :--:                 |                     :--:                      |                     :--:             |                     :--:             |              
-|        [javurena7][gh-javurena7]         |         [rsanchezavalos][gh-rsanchez]           |          [andreanr][gh-andreanr] |          [andreuboada][gh-andreuboada]      |      
+|                 :--:                       |                     :--:                      |                     :--:               |                     :--:                          |              
+|        [javurena7][gh-javurena7]           |         [rsanchezavalos][gh-rsanchez]         |          [andreanr][gh-andreanr]       |          [andreuboada][gh-andreuboada]            |      
 
 
-[ph-javurena7]: https://avatars0.githubusercontent.com/u/14095871?v=3&s=460
+[ph-javurena7]: https://avatars2.githubusercontent.com/u/14095871?v=3&s=180
 [gh-javurena7]: https://github.com/javurena7
 
-[ph-andreanr]: https://avatars1.githubusercontent.com/u/5949086?v=3&s=460
+[ph-andreanr]: https://avatars2.githubusercontent.com/u/5949086?v=3&s=180
 [gh-andreanr]: https://github.com/andreanr
 
-[ph-rsanchez]: https://avatars.githubusercontent.com/u/10931011?v=3&s=460
+[ph-rsanchez]: https://avatars2.githubusercontent.com/u/10931011?v=3&s=180
 [gh-rsanchez]: https://github.com/rsanchezavalos
 
-[ph-andreuboada]: https://avatars2.githubusercontent.com/u/7883897?v=4&s=460
+[ph-andreuboada]: https://avatars2.githubusercontent.com/u/7883897?v=3&s=180
 [gh-andreuboada]: https://github.com/andreuboada
