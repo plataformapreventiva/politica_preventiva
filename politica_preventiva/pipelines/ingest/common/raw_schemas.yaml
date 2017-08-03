@@ -432,6 +432,34 @@ donatarias_sat:
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
     - actualizacion_sedesol: TIMESTAMP
+evals:
+  LUIGI:
+    INDEX: modalidad_pp
+    SCHEMA:
+    - ciclo_pae: TEXT
+    - id_evaluacion: TEXT
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - modalidad_pp: TEXT
+    - desc_pp: TEXT
+    - tipo_evaluacion: TEXT
+    - evaluador: TEXT
+    - costos: TEXT
+    - ciclo_conclusion: TEXT
+    - url_evaluacion: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - ciclo_pae
+  - id_evaluacion
+  - id_ramo
+  - desc_ramo
+  - modalidad_pp
+  - desc_pp
+  - tipo_evaluacion
+  - evaluador
+  - costos
+  - ciclo_conclusion
+  - url_evaluacion
 indesol:
   LUIGI:
     INDEX: cluni
@@ -714,4 +742,52 @@ segob:
   - poblaciondelacabeceramunicipal
   - superficiedelmunicipioenkm2
   - cve_muni
-
+asm:
+  LUIGI:
+    INDEX: modalidad_pp
+    SCHEMA:
+    - ciclo: TEXT
+    - trimestre: TEXT
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - acron_dep_ent: TEXT
+    - desc_dep_ent: TEXT
+    - modalidad_pp: TEXT
+    - desc_pp: TEXT
+    - inst_coord: TEXT
+    - anio_recomendacion: TEXT
+    - origen_recomendacion: TEXT
+    - id_asm: TEXT
+    - desc_asm: TEXT
+    - gasto_federalizado: TEXT
+    - tipo_asm: TEXT
+    - tema_asm: TEXT
+    - tipo_mejora: TEXT
+    - prioridad: TEXT
+    - avance_asm: TEXT
+    - fecha_reporte: TEXT
+    - evidencia: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - ciclo
+  - trimestre
+  - id_ramo
+  - desc_ramo
+  - acron_dep_ent
+  - desc_dep_ent
+  - modalidad_pp
+  - desc_pp
+  - inst_coord
+  - anio_recomendacion
+  - origen_recomendacion
+  - id_asm
+  - desc_asm
+  - gasto_federalizado
+  - tipo_asm
+  - tema_asm
+  - tipo_mejora
+  - prioridad
+  - avance_asm
+  - fecha_reporte
+  - evidencia
+  
