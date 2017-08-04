@@ -6,22 +6,18 @@
 """
 import pandas as pd
 import argparse
-
+import pdb
 def ingest_cuaps(update_date, output):
 
     data = pd.read_excel("s3://sedesol-lab/CUAPS-PROGRAMAS/CUAPS-Padrones-{0}.xlsx".\
             format(update_date), encoding="latin-1")
     data = data.fillna('')
-    data = data[['dependencia', 'cve_programa', 'cve_padron',
-    'nombre_programa', 'nombre_subprograma', 'OBJ_GRAL_PROG_1',
-    'OBJ_ESP_PROG_1', 'OBJ_ESP_PROG_2', 'OBJ_ESP_PROG_3', 'OBJ_ESP_PROG_4',
-    'OBJ_ESP_PROG_5', 'POB_OBJ_PROG', 'CUAPS 2017', 'Observaciones']]
 
     data["cve_padron"] = data.apply(lambda x: str(x["cve_padron"]).zfill(4),
             axis=1)
 
     data.to_csv(output, encoding="utf-8", sep="|", index=False)
-
+    
     return True
 
 
