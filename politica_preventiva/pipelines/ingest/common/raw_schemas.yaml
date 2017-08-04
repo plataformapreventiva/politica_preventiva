@@ -132,22 +132,25 @@ cenapred:
   - url
 cuaps_sedesol:
   LUIGI:
-    INDEX: cve_padron
+    INDEX: dependencia
     SCHEMA:
-    - dependencia: VARCHAR
-    - cve_programa: VARCHAR
-    - cve_padron: VARCHAR
-    - nombre_programa: VARCHAR
-    - nombre_subprograma: VARCHAR
-    - obj_gral_prog_1: VARCHAR
-    - obj_esp_prog_1: VARCHAR
-    - obj_esp_prog_2: VARCHAR
-    - obj_esp_prog_3: VARCHAR
-    - obj_esp_prog_4: VARCHAR
-    - obj_esp_prog_5: VARCHAR
-    - pob_obj_prog: VARCHAR
-    - cuaps2017: VARCHAR
-    - observaciones: VARCHAR
+    - dependencia: TEXT
+    - cve_programa: TEXT
+    - cve_padron: TEXT
+    - nombre_programa: TEXT
+    - nombre_subprograma: TEXT
+    - unidad_responsable: TEXT
+    - poblacion_objetivo: TEXT
+    - tipo_de_apoyo: TEXT
+    - obj_gral_prog_1: TEXT
+    - obj_esp_prog_1: TEXT
+    - obj_esp_prog_2: TEXT
+    - obj_esp_prog_3: TEXT
+    - obj_esp_prog_4: TEXT
+    - obj_esp_prog_5: TEXT
+    - pob_obj_prog: TEXT
+    - cuaps2017: TEXT
+    - observaciones: TEXT
     - actualizacion_sedesol: TIMESTAMP
   RAW:
   - dependencia
@@ -155,6 +158,9 @@ cuaps_sedesol:
   - cve_padron
   - nombre_programa
   - nombre_subprograma
+  - unidad_responsable
+  - poblacion_objetivo
+  - tipo_de_apoyo
   - obj_gral_prog_1
   - obj_esp_prog_1
   - obj_esp_prog_2
@@ -556,8 +562,8 @@ mir:
     SCHEMA:
     - dependencia: TEXT
     - modalidad: TEXT
-    - clave: TEXT
-    - programa: TEXT
+    - cve_programa: TEXT
+    - nombre_programa: TEXT
     - r1_1: boolean
     - r2_1: boolean
     - r2_2: boolean
