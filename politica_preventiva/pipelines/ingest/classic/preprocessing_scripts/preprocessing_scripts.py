@@ -117,13 +117,6 @@ def indesol_prep(data_date, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
-def sagarpa_cierre_prep(data_date, s3_file, extra_h, out_key):
-    # TODO: ver si es menor a 2013 (bajado como tabla completa, o mayor,
-    # y homologar columnas de ambos casos)
-    bucket = 'dpa-plataforma-preventiva'
-    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
-    return True
-
 def no_preprocess_method(data_date, s3_file, extra_h, out_key):
    bucket = 'dpa-plataforma-preventiva'
    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)

@@ -166,7 +166,9 @@ class UpdateDictionary(postgres.CopyToTable):
         path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
         data = classic_tests.dictionary_test(self.pipeline_task, path,
                                              header_d, header,
-                                             self.actualizacion, self.suffix)
+                                             self.actualizacion,
+                                             self.data_date,
+                                             self.suffix)
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
@@ -243,8 +245,7 @@ class UpdateDB(postgres.CopyToTable):
 
     def rows(self):
         # Path of last "ouput" version #TODO(Return to input version)
-        output_path = self.input().path
-        data = pd.read_csv(output_path, sep="|", encoding="utf-8", dtype=str,
+        data = pd.read_csv(self.input().path, sep="|", encoding="utf-8", dtype=str,
                            error_bad_lines=False, header=None)
         data.drop_duplicates(keep='first',inplace=True)
         data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
@@ -253,7 +254,8 @@ class UpdateDB(postgres.CopyToTable):
 
         # add timestamp to postgres table
         data["actualizacion_sedesol"] = self.actualizacion
-        data["data_date"] = str(self.data_date) + "-" + self.data_date(self.suffix)
+        data["data_date"] = str(self.data_date) + "-" + \
+                            self.suffix
         return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
@@ -261,7 +263,7 @@ class UpdateDB(postgres.CopyToTable):
 
         if isinstance(self.columns[0], six.string_types):
             column_names = self.columns
-
+ 
         elif len(self.columns[0]) == 2:
             # Create columns for csv upload
             column_names = [c[0] for c in self.columns]
@@ -358,8 +360,8 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.close()
 
         # Remove last processing file
-        self.client.remove(self.raw_bucket + self.pipeline_task +
-                           "/concatenation/")
+        #self.client.remove(self.raw_bucket + self.pipeline_task +
+        #                   "/concatenation/")
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database,
@@ -397,16 +399,18 @@ class Concatenation(luigi.Task):
 
     def run(self):
 
+        result_filepath =  self.pipeline_task + "/concatenation/" + \
+                           self.data_date + "/" + self.pipeline_task + '.csv'
         # folder to concatenate
         folder_to_concatenate = self.pipeline_task + "/preprocess/" +\
                                 self.data_date + "/"
 
         # function for appending all .csv files in folder_to_concatenate
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate,
-                                   self.output().path, '.csv')
+                                   result_filepath, '.csv')
 
         # Delete files in preprocess
-        self.client.remove(self.raw_bucket + folder_to_concatenate)
+        #self.client.remove(self.raw_bucket + folder_to_concatenate)
 
     def output(self):
         return S3Target(path=self.raw_bucket + self.pipeline_task +
@@ -443,17 +447,21 @@ class Preprocess(luigi.Task):
 
         extra_h = get_extra_str(self.extra)
 
-        key = self.pipeline_task + "/raw/" + self.data_date + "--" + \
+        key = self.pipeline_task + "/raw/" + self.data_date +\
+            "-" + self.suffix + "-" + \
             self.pipeline_task + extra_h + ".csv"
-
+        
+        out_key = "etl/" + self.pipeline_task + "/preprocess/" + \
+                  self.data_date + "/" +   self.data_date + "--" + \
+                                        self.pipeline_task + extra_h + ".csv"
         try:
             preprocess_tasks = eval(self.pipeline_task + '_prep')
             preprocess_tasks(data_date=self.data_date, s3_file=key,
-                             extra_h=extra_h, out_key=self.output().path)
+                             extra_h=extra_h, out_key=out_key)
         except:
             no_preprocess_method(data_date=self.data_date,
                                  s3_file=key, extra_h=extra_h,
-                                 out_key=self.output().path)
+                                 out_key=out_key)
 
     def output(self):
         extra_h = get_extra_str(self.extra)
@@ -485,7 +493,7 @@ class LocalToS3(luigi.Task):
     def requires(self):
         extra_h = get_extra_str(self.extra)
         docker_ingest_file =  self.docker_path + self.pipeline_task +\
-            "/" + self.data_date + "-" + suffix + "-" + self.pipeline_task +\
+            "/" + self.data_date + "-" + self.suffix + "-" + self.pipeline_task +\
             extra_h + ".csv"
         local_ingest_file = self.local_path + self.pipeline_task +\
             "/" + self.data_date + "-" + self.suffix + "-" + self.pipeline_task +\
