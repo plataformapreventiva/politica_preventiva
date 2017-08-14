@@ -142,7 +142,8 @@ class UpdateDictionary(postgres.CopyToTable):
 
     @property
     def update_id(self):
-        return str(self.pipeline_task) + str(self.data_date) + str(self.suffix)
+        return str(self.pipeline_task) + str(self.data_date) +\
+                str(self.suffix) + 'dic'
 
     @property
     def table(self):
@@ -241,7 +242,8 @@ class UpdateDB(postgres.CopyToTable):
 
     @property
     def update_id(self):
-        return str(self.pipeline_task) + str(self.data_date) + str(self.suffix)
+        return str(self.pipeline_task) + str(self.data_date) +\
+                str(self.suffix) + 'db'
 
     def rows(self):
         # Path of last "ouput" version #TODO(Return to input version)
@@ -360,8 +362,8 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.close()
 
         # Remove last processing file
-        #self.client.remove(self.raw_bucket + self.pipeline_task +
-        #                   "/concatenation/")
+        self.client.remove(self.raw_bucket + self.pipeline_task +
+                           "/concatenation/" + self.data_date + "/")
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database,
@@ -410,7 +412,7 @@ class Concatenation(luigi.Task):
                                    result_filepath, '.csv')
 
         # Delete files in preprocess
-        #self.client.remove(self.raw_bucket + folder_to_concatenate)
+        self.client.remove(self.raw_bucket + folder_to_concatenate)
 
     def output(self):
         return S3Target(path=self.raw_bucket + self.pipeline_task +

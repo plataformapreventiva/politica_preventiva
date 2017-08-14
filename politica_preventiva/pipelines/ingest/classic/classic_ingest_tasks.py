@@ -385,7 +385,7 @@ class mir(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo ', self.classic_task_scripts + "mir.sh",
+        command_list = ['sudo sh', self.classic_task_scripts + "mir.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
 
@@ -400,10 +400,40 @@ class msd(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo ', self.classic_task_scripts + "mir.sh",
+        command_list = ['sudo sh', self.classic_task_scripts + "msd.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
+        cmd = " ".join(command_list)
 
         return subprocess.call([cmd], shell=True)
+
+class evals(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sudo sh', self.classic_task_scripts + "evals.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+class asm(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sudo sh', self.classic_task_scripts + "asm.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+
 
 
