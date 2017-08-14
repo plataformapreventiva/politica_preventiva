@@ -26,7 +26,7 @@ import pandas as pd
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.preprocessing_scripts.preprocessing_scripts import *
-from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates, get_extra_str
+from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extras, get_extra_str
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string, download_dir
 from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas
 from politica_preventiva.pipelines.utils import s3_utils
@@ -44,7 +44,7 @@ PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 #########
 
 class SourceIngestTask(luigi.Task):
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
     docker_ingest_file = luigi.Parameter()
@@ -80,7 +80,7 @@ class denue(SourceIngestTask):
 class pub(luigi.Task):
 
     client = luigi.s3.S3Client()
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
     type_script = luigi.Parameter('sh')
@@ -104,14 +104,16 @@ class pub(luigi.Task):
 
         return luigi.LocalTarget(self.local_ingest_file)
 
+
 class cuenta_publica_trimestral(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
- 
+
         command_list = ['sudo sh', self.classic_task_scripts +\
-                'cuenta_publica_trimestral.sh', self.local_path + \
+                'cuenta_publica_trimestral.sh', self.data_date,
+                self.local_path + \
                 '/' + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
@@ -121,9 +123,9 @@ class cuenta_publica_trimestral(SourceIngestTask):
 class cuenta_publica_anual(SourceIngestTask):
 
     def run(self):
-
+        year = self.data_date.split("-")[0]
         command_list = ['sudo sh', self.classic_task_scripts +\
-                'cuenta_publica_anual.sh', self.local_path + \
+                'cuenta_publica_anual.sh', self.data_date, self.local_path + \
                 '/' + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
@@ -140,7 +142,7 @@ class sagarpa(SourceIngestTask):
         #cultivo = extra_cmd[0]
 
         command_list = ['python', self.classic_task_scripts + "sagarpa.py",
-                        '--start', self.year_month, '--cult', self.extra,
+                        '--start', self.data_date, '--cult', self.extra,
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
@@ -156,7 +158,7 @@ class sagarpa_cierre(SourceIngestTask):
         #estado = self.extra_cmd[0]
 
         command_list = ['python', self.classic_task_scripts + "sagarpa.py",
-                        '--start', self.year_month, '--estado', self.extra,
+                        '--start', self.data_date, '--estado', self.extra,
                         '--cierre', 'True', '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
@@ -171,9 +173,9 @@ class ipc_ciudades(SourceIngestTask):
         cmd = '''
         sudo docker run --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/politica_preventiva/data\
-            politica_preventiva/python-task python {0}inpc.py\
+            politica_preventiva/python-task python {0}ipc.py\
             --year {1} --output {2}
-        '''.format(self.classic_task_scripts, self.year_month,
+        '''.format(self.classic_task_scripts, self.data_date,
                 self.docker_ingest_file)
 
         print("***********************************")
@@ -209,7 +211,7 @@ class precios_granos(SourceIngestTask):
             end_cmd = ""
 
         command_list = ['python', self.classic_task_scripts + "economia.py",
-                        '--start', self.year_month, end_cmd,
+                        '--start', self.data_date, end_cmd,
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
@@ -222,13 +224,13 @@ class precios_frutos(SourceIngestTask):
 
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        
+
         extra_cmd = self.extra.split('--')
         mercado = extra_cmd[0]
-        
+
         command_list = ['python', self.classic_task_scripts +\
-                "economia_frutos.py", '--start', self.year_month,
-                '--mercado', mercado, '--output', 
+                "economia_frutos.py", '--start', self.data_date,
+                '--mercado', mercado, '--output',
                 self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
@@ -247,7 +249,7 @@ class distance_to_services(luigi.Task):
     """
 
     client = luigi.s3.S3Client()
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
 
@@ -351,7 +353,7 @@ class donatarias_sat(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
         command_list = ['sudo sh', self.classic_task_scripts + "donatarias_sat.sh",
-                        self.year_month,
+                        self.data_date,
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
 
@@ -369,7 +371,7 @@ class cuaps_sedesol(SourceIngestTask):
             os.makedirs(self.local_path + self.pipeline_task)
 
         command_list = ['python', self.classic_task_scripts + "cuaps_sedesol.py",
-                        '--start', self.year_month,
+                        '--start', self.data_date,
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
