@@ -360,8 +360,8 @@ class UpdateDB(postgres.CopyToTable):
         tmp_file.close()
 
         # Remove last processing file
-        #self.client.remove(self.raw_bucket + self.pipeline_task +
-        #                   "/concatenation/")
+        self.client.remove(self.raw_bucket + self.pipeline_task +
+                           "/concatenation/")
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database,
@@ -410,7 +410,7 @@ class Concatenation(luigi.Task):
                                    result_filepath, '.csv')
 
         # Delete files in preprocess
-        #self.client.remove(self.raw_bucket + folder_to_concatenate)
+        self.client.remove(self.raw_bucket + folder_to_concatenate)
 
     def output(self):
         return S3Target(path=self.raw_bucket + self.pipeline_task +
