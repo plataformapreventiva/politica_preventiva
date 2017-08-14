@@ -19,7 +19,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-def header_test(path, task, common_path, new=True):
+def header_test(path, task, common_path, suffix, new=True):
     """"
         This Task tests the header of the new ingested files
         to see if there has been a change in the structure from
@@ -38,6 +38,7 @@ def header_test(path, task, common_path, new=True):
     first_line = [remove_extra_chars(x)  for x in first_lines]
     initial_schema = first_line[:] 
     initial_schema.append("actualizacion_sedesol") 
+    initial_schema.append("data_date") 
     if str2bool(new):
         header_d[task] = {"RAW": first_line,
                     "LUIGI":{'INDEX':None,
@@ -58,7 +59,8 @@ def header_test(path, task, common_path, new=True):
     file = open(path+".done", "w")
     file.close()
 
-def dictionary_test(pipeline_task, path, header_d, dic_header, current_date):
+def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
+        data_date, suffix):
     """
     This task updates the dictionary of the pipeline_task in raw
     and creates the legacy neo4j nodes 
@@ -66,7 +68,6 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date):
     # TODO() Check if the data has other date date
     # TODO() Add Neo4j legacy task
     """
-
 
     try:
         dictionary = pd.read_csv(path, sep="|")
@@ -82,10 +83,13 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date):
                 columns.tolist(), *dic_header], fill_value=None)
         dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
         dictionary['actualizacion_sedesol'] = current_date
+        dictionary['data_date'] = data_date + '-' + suffix
         raise Exception("Dictionary of task {0} is not defined,\
          see {1} ".format(pipeline_task, path))
 
     # Update actualizacion
     dictionary['actualizacion_sedesol'] = current_date
+    dictionary['data_date'] = data_date + '-' + suffix
+    
     dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
     return dictionary
