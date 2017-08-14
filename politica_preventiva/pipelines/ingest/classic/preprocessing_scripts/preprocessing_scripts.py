@@ -52,6 +52,25 @@ def asm_prep(year_month, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
+def msd_prep(year_month, s3_file, extra_h, out_key):
+    """
+    Preprocessing function for precios_granos: reads df from s3, completes
+    missing values, turns wide-format df to a long-format df, and uploads to s3
+    """
+    bucket = 'dpa-plataforma-preventiva'
+    file_name = 'etl/' + s3_file
+    df = pputils.check_empty_dataframe(bucket=bucket, s3_file=file_name,
+            out_key=out_key)
+    
+    if df is not None:
+        columnas = df.columns
+        aux = list(columnas)
+        aux2 = [x.strip() for x in aux]
+        aux3 = [x.lower() for x in aux2]
+        df.columns = aux3
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    return True
+
 def precios_granos_prep(data_date, s3_file, extra_h, out_key):
     """
     Preprocessing function for precios_granos: reads df from s3, completes

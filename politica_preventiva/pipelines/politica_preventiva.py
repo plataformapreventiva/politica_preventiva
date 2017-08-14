@@ -23,8 +23,7 @@ from politica_preventiva.pipelines.ingest.ingest_orchestra import\
 #from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
 #from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
 
-from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
-    extra_parameters, historical_dates
+from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list
 import pdb
 
 logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
