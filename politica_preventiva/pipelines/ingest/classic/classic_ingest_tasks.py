@@ -89,6 +89,9 @@ class pub(luigi.Task):
     raw_bucket = luigi.Parameter('DEFAULT')
 
     def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
 
         obj = luigi.s3.get_object(Bucket='dpa-compranet',
                 Key='etl/'+ self.pipeline_task + \
@@ -123,6 +126,9 @@ class cuenta_publica_trimestral(SourceIngestTask):
 class cuenta_publica_anual(SourceIngestTask):
 
     def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
         year = self.data_date.split("-")[0]
         command_list = ['sudo sh', self.classic_task_scripts +\
                 'cuenta_publica_anual.sh', self.data_date, self.local_path + \
