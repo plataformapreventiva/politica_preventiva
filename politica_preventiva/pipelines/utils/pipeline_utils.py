@@ -127,14 +127,15 @@ def look_for_end_date(pipeline, current_date):
         return current_date
 
 
-def completed_quarter(dt):
+def current_quarter(dt):
     """
-    Returns list with year, last completed quarter
+    This function returns a string with the year quarter
+        January, February and March (Q1); 
+        April, May and June (Q2); 
+        July, August and September (Q3); 
+        October, November and December (Q4). 
     """
-    prev_quarter_map = ((4, -1), (1, 0), (2, 0), (3, 0))
-    quarter, yd = prev_quarter_map[(dt.month - 1) // 3]
-
-    return (dt.year + yd, quarter)
+    return int((dt.month  - 1) / 3 + 1)
 
 
 def year_fraction(periods, start_date, end_year, suffix):
@@ -170,7 +171,6 @@ def dates_list(pipeline, end_date, periodicity):
     of pipeline_task dates to run.
     """
     end_year = end_date.year
-
     try:
         if periodicity in ["annual", 'a']:
             suffix = 'a'
@@ -194,7 +194,7 @@ def dates_list(pipeline, end_date, periodicity):
                 dates = year_fraction(p, start_date, end_year, suffix)
 
         elif periodicity in ["quarterly", 'q']:
-            suffix = 'q-' + str(completed_quarter(end_date))
+            suffix = 'q-' + str(current_quarter(end_date))
             end_date = end_date.strftime('%Y')
             start_date = look_for_end_date(pipeline, end_date)
             p = (1, 2, 3, 4)

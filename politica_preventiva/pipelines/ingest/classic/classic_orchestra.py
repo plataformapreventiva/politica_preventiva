@@ -91,15 +91,21 @@ class ClassicIngestDates(luigi.WrapperTask):
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
-            return dates
-
         else:
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
-
             dates = dates[-2:]
+        
+        try:
+            # if the pipeline_Task 
+            configuration.get_config().get(self.pipeline_task,
+                    'start_date')
             return dates
+        except:
+
+            return dates[-1]
+
 
     def requires(self):
         # loop through pipeline tasks
