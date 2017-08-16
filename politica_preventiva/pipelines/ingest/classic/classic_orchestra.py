@@ -104,7 +104,7 @@ class ClassicIngestDates(luigi.WrapperTask):
             return dates
         except:
 
-            return dates[-1]
+            return [dates[-1]]
 
 
     def requires(self):

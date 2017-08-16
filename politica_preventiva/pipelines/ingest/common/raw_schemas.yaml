@@ -60,6 +60,7 @@ cajeros_banxico:
     - lon: DECIMAL
     - nombre_institucion: VARCHAR
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
   RAW:
   - actualizacion
   - clave_institucion
