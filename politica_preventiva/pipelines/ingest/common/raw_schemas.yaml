@@ -223,12 +223,12 @@ cuenta_publica_anual:
   LUIGI:
     INDEX: id_ramo
     SCHEMA:
-    - ciclo: NUMERIC
+    - ciclo: INT
     - id_ramo: TEXT
     - desc_ramo: TEXT
     - id_ur: TEXT
     - desc_ur: TEXT
-    - gpo_funcional: numeric
+    - gpo_funcional: INT
     - desc_gpo_funcional: character varying
     - id_funcion: TEXT
     - desc_funcion: character varying
@@ -244,7 +244,7 @@ cuenta_publica_anual:
     - desc_objeto_del_gasto: character varying
     - id_tipogasto: TEXT
     - desc_tipogasto: character varying
-    - id_ff: numeric
+    - id_ff: INT
     - desc_ff: character varying
     - id_entidad_federativa: TEXT
     - entidad_federativa: TEXT
