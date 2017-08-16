@@ -1,3 +1,51 @@
+asm:
+  LUIGI:
+    INDEX: modalidad_pp
+    SCHEMA:
+    - ciclo: TEXT
+    - trimestre: TEXT
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - acron_dep_ent: TEXT
+    - desc_dep_ent: TEXT
+    - modalidad_pp: TEXT
+    - desc_pp: TEXT
+    - inst_coord: TEXT
+    - anio_recomendacion: TEXT
+    - origen_recomendacion: TEXT
+    - id_asm: TEXT
+    - desc_asm: TEXT
+    - gasto_federalizado: TEXT
+    - tipo_asm: TEXT
+    - tema_asm: TEXT
+    - tipo_mejora: TEXT
+    - prioridad: TEXT
+    - avance_asm: TEXT
+    - fecha_reporte: TEXT
+    - evidencia: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - ciclo
+  - trimestre
+  - id_ramo
+  - desc_ramo
+  - acron_dep_ent
+  - desc_dep_ent
+  - modalidad_pp
+  - desc_pp
+  - inst_coord
+  - anio_recomendacion
+  - origen_recomendacion
+  - id_asm
+  - desc_asm
+  - gasto_federalizado
+  - tipo_asm
+  - tema_asm
+  - tipo_mejora
+  - prioridad
+  - avance_asm
+  - fecha_reporte
+  - evidencia
 cajeros_banxico:
   LUIGI:
     INDEX: clave_institucion
@@ -12,6 +60,7 @@ cajeros_banxico:
     - lon: DECIMAL
     - nombre_institucion: VARCHAR
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
   RAW:
   - actualizacion
   - clave_institucion
@@ -24,107 +73,108 @@ cajeros_banxico:
   - nombre_institucion
 cenapred:
   LUIGI:
-    INDEX: cve_muni
+    INDEX: a_reglam
     SCHEMA:
     - a_reglam: VARCHAR
-    - aeropuerto: DECIMAL
-    - bancos: DECIMAL
-    - cc_hidro: DECIMAL
-    - cve_muni: VARCHAR
-    - declarator: DECIMAL
-    - d_geo: DECIMAL
-    - d_hidro: DECIMAL
-    - d_qui: BOOLEAN
-    - e_geo: DECIMAL
-    - e_hidro: DECIMAL
-    - e_qui: DECIMAL
-    - e_sani: BOOLEAN
-    - gp_bajas_temperaturas: VARCHAR
-    - gp_ciclones: VARCHAR
+    - aeropuerto: NUMERIC
+    - bancos: NUMERIC
+    - cc_hidro: NUMERIC
+    - cve_muni: NUMERIC
+    - declarator: NUMERIC
+    - d_geo: NUMERIC
+    - d_hidro: NUMERIC
+    - d_qui: BOOL
+    - e_geo: NUMERIC
+    - e_hidro: NUMERIC
+    - e_qui: NUMERIC
+    - e_sani: BOOL
+    - gp_bajaste: VARCHAR
+    - gp_ciclnes: VARCHAR
     - gp_granizo: VARCHAR
-    - gp_inundaciones: VARCHAR
+    - gp_inundac: VARCHAR
     - gp_nevadas: VARCHAR
     - gp_sequia2: VARCHAR
     - gp_sismico: VARCHAR
-    - gp_sustancias_inflamables: VARCHAR
-    - gp_Sustancias_toxicas: VARCHAR
-    - gp_tormentas_electricas: VARCHAR
+    - gp_susinfl: VARCHAR
+    - gp_sustox: VARCHAR
+    - gp_tormele: VARCHAR
     - gp_tsunami: VARCHAR
     - gp_ondasca: VARCHAR
     - gvs_ise10: VARCHAR
-    - g_marginacion: VARCHAR
-    - g_resiliencia: VARCHAR
-    - g_rezago_social: VARCHAR
-    - g_susce_lad: VARCHAR
-    - gasolinera: DECIMAL
-    - hospitales: DECIMAL
-    - nom_ent: VARCHAR
+    - g_marginac: VARCHAR
+    - g_resilien: VARCHAR
+    - g_rezagoso: VARCHAR
+    - g_suscelad: VARCHAR
+    - gasolinera: NUMERIC
+    - hospitales: NUMERIC
+    - nom_ent_: VARCHAR
     - nom_mun: VARCHAR
-    - num_us_cfe: DECIMAL
-    - objectid: DECIMAL
-    - pobfem: DECIMAL
-    - pobmas: DECIMAL
-    - pobtot: DECIMAL
-    - pob2030: DECIMAL
-    - sep: DECIMAL
-    - shape_area: DECIMAL
-    - supermerca: DECIMAL
-    - titulo_ref: VARCHAR
-    - tvivhab: DECIMAL
+    - num_us_cfe: NUMERIC
+    - objectid: NUMERIC
+    - pobfem_: NUMERIC
+    - pobmas_: NUMERIC
+    - pobtot_: NUMERIC
+    - pop2030: NUMERIC
+    - sep: NUMERIC
+    - shape_area: NUMERIC
+    - supermerca: NUMERIC
+    - titulo_reg: VARCHAR
+    - tvivhab_: NUMERIC
     - v_cc: VARCHAR
     - atlas_mun: VARCHAR
-    - cve_ent: DECIMAL
-    - hoteles: DECIMAL
-    - num_col: DECIMAL
+    - cve_ent: NUMERIC
+    - hoteles: NUMERIC
+    - num_col: NUMERIC
     - url: VARCHAR
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
-  - A_REGLAM
-  - Aeropuerto
-  - Bancos
-  - CC_HIDRO
+  - a_reglam
+  - aeropuerto
+  - bancos
+  - cc_hidro
   - cve_muni
-  - DECLARATOR
-  - D_GEO
-  - D_HIDRO
-  - D_QUI
-  - E_GEO
-  - E_HIDRO
-  - E_QUI
-  - E_SANI
-  - GP_BajasTe
-  - GP_Ciclnes
-  - GP_Granizo
-  - GP_Inundac
-  - GP_Nevadas
-  - GP_Sequia2
-  - GP_Sismico
-  - GP_SusInfl
-  - GP_SusTox
-  - GP_TormEle
-  - GP_Tsunami
-  - GP_ondasca
-  - GVS_ISE10
-  - G_Marginac
-  - G_Resilien
-  - G_RezagoSo
-  - G_SusceLad
-  - Gasolinera
-  - HOSPITALES
-  - NOM_ENT_
-  - NOM_MUN
-  - Num_Us_CFE
-  - OBJECTID
-  - POBFEM_
-  - POBMAS_
-  - POBTOT_
-  - Pop2030
-  - SEP
-  - Shape_Area
-  - Supermerca
-  - TITULO_REG
-  - TVIVHAB_
-  - V_CC
+  - declarator
+  - d_geo
+  - d_hidro
+  - d_qui
+  - e_geo
+  - e_hidro
+  - e_qui
+  - e_sani
+  - gp_bajaste
+  - gp_ciclnes
+  - gp_granizo
+  - gp_inundac
+  - gp_nevadas
+  - gp_sequia2
+  - gp_sismico
+  - gp_susinfl
+  - gp_sustox
+  - gp_tormele
+  - gp_tsunami
+  - gp_ondasca
+  - gvs_ise10
+  - g_marginac
+  - g_resilien
+  - g_rezagoso
+  - g_suscelad
+  - gasolinera
+  - hospitales
+  - nom_ent_
+  - nom_mun
+  - num_us_cfe
+  - objectid
+  - pobfem_
+  - pobmas_
+  - pobtot_
+  - pop2030
+  - sep
+  - shape_area
+  - supermerca
+  - titulo_reg
+  - tvivhab_
+  - v_cc
   - atlas_mun
   - cve_ent
   - hoteles
@@ -152,6 +202,7 @@ cuaps_sedesol:
     - cuaps2017: TEXT
     - observaciones: TEXT
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
   RAW:
   - dependencia
   - cve_programa
@@ -174,7 +225,7 @@ cuenta_publica_anual:
   LUIGI:
     INDEX: id_ramo
     SCHEMA:
-    - ciclo: numeric
+    - ciclo: NUMERIC
     - id_ramo: TEXT
     - desc_ramo: TEXT
     - id_ur: TEXT
@@ -207,39 +258,40 @@ cuenta_publica_anual:
     - monto_adefas: FLOAT
     - monto_ejercicio: FLOAT
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
-  - CICLO
-  - ID_RAMO
-  - DESC_RAMO
-  - ID_UR
-  - DESC_UR
-  - GPO_FUNCIONAL
-  - DESC_GPO_FUNCIONAL
-  - ID_FUNCION
-  - DESC_FUNCION
-  - ID_SUBFUNCION
-  - DESC_SUBFUNCION
-  - ID_AI
-  - DESC_AI
-  - ID_MODALIDAD
-  - DESC_MODALIDAD
-  - ID_PP
-  - DESC_PP
-  - ID_OBJETO_DEL_GASTO
-  - DESC_OBJETO_DEL_GASTO
-  - ID_TIPOGASTO
-  - DESC_TIPOGASTO
-  - ID_FF
-  - DESC_FF
-  - ID_ENTIDAD_FEDERATIVA
-  - ENTIDAD_FEDERATIVA
-  - ID_CLAVE_CARTERA
-  - MONTO_APROBADO
-  - MONTO_MODIFICADO
-  - MONTO_DEVENGADO
-  - MONTO_PAGADO
-  - MONTO_ADEFAS
-  - MONTO_EJERCICIO
+  - ciclo
+  - id_ramo
+  - desc_ramo
+  - id_ur
+  - desc_ur
+  - gpo_funcional
+  - desc_gpo_funcional
+  - id_funcion
+  - desc_funcion
+  - id_subfuncion
+  - desc_subfuncion
+  - id_ai
+  - desc_ai
+  - id_modalidad
+  - desc_modalidad
+  - id_pp
+  - desc_pp
+  - id_objeto_del_gasto
+  - desc_objeto_del_gasto
+  - id_tipogasto
+  - desc_tipogasto
+  - id_ff
+  - desc_ff
+  - id_entidad_federativa
+  - entidad_federativa
+  - id_clave_cartera
+  - monto_aprobado
+  - monto_modificado
+  - monto_devengado
+  - monto_pagado
+  - monto_adefas
+  - monto_ejercicio
 cuenta_publica_trimestral:
   LUIGI:
     INDEX: id_ramo
@@ -418,6 +470,7 @@ dictionary:
     - periodo: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - metadata: TEXT
+    - data_date: TEXT
 donatarias_sat:
   LUIGI:
     INDEX: rfc
@@ -438,6 +491,34 @@ donatarias_sat:
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
     - actualizacion_sedesol: TIMESTAMP
+evals:
+  LUIGI:
+    INDEX: modalidad_pp
+    SCHEMA:
+    - ciclo_pae: TEXT
+    - id_evaluacion: TEXT
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - modalidad_pp: TEXT
+    - desc_pp: TEXT
+    - tipo_evaluacion: TEXT
+    - evaluador: TEXT
+    - costos: TEXT
+    - ciclo_conclusion: TEXT
+    - url_evaluacion: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - ciclo_pae
+  - id_evaluacion
+  - id_ramo
+  - desc_ramo
+  - modalidad_pp
+  - desc_pp
+  - tipo_evaluacion
+  - evaluador
+  - costos
+  - ciclo_conclusion
+  - url_evaluacion
 indesol:
   LUIGI:
     INDEX: cluni
@@ -611,6 +692,7 @@ msd:
     - tipo_evaluacion: TEXT
     - estimacion: TEXT
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
   - ciclo
   - id_ramo
@@ -720,4 +802,3 @@ segob:
   - poblaciondelacabeceramunicipal
   - superficiedelmunicipioenkm2
   - cve_muni
-
