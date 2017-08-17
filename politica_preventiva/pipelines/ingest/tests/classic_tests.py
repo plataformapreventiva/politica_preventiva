@@ -62,7 +62,7 @@ def header_test(path, task, common_path, suffix, new=True):
                  task + 'is not defined\n' +\
                  'see. pipelines/ingest/common/raw_schemas.yaml \n\n' +\
                  "Turn on the 'new' flag in Luigi.cfg If you want Luigi" +\
-                 " to do it for you"))
+                 " to do it for you")
             
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False, 
