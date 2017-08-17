@@ -51,6 +51,7 @@ class RunPipelines(luigi.WrapperTask):
 
     #current_date = luigi.DateParameter(default=datetime.date(2014, 7, 30))
     current_date = datetime.date.today()
+    logger.debug('prueba del logger')
 
     def requires(self):
 
