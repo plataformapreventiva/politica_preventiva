@@ -4,6 +4,7 @@ import ast
 import boto3
 import datetime
 import luigi
+import logging
 import os
 import pdb
 import psycopg2
@@ -38,6 +39,10 @@ aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 
+# Logger
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
 
 #######################
 # Abstract Tasks
