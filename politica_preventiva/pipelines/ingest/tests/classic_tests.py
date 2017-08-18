@@ -1,15 +1,23 @@
 import argparse
 import csv
+import logging
 import os
 import pdb
 import re
 import sys
 import yaml
 
+from luigi import configuration
 from datetime import datetime
 import pandas as pd
 
 from politica_preventiva.pipelines.utils.string_cleaner_utils import remove_extra_chars
+
+# logger
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
+
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -39,31 +47,34 @@ def header_test(path, task, common_path, suffix, new=True):
     first_line = [remove_extra_chars(x)  for x in first_lines]
     initial_schema = first_line[:] 
     initial_schema.append("actualizacion_sedesol") 
-    initial_schema.append("data_date") 
+    initial_schema.append("data_date")
+
     if str2bool(new):
         header_d[task] = {"RAW": first_line,
                     "LUIGI":{'INDEX':None,
                         "SCHEMA": initial_schema}}
-        # TODO put logger 
-        sys.exit('Please specify the column types of the pipeline_task '+\
+
+        logger.exception('Please specify the column types of the pipeline_task '+\
                  task + '\n see. pipelines/ingest/common/raw_schemas.yaml \n' +\
                  "After you've done that please turn off the" +\
                  " 'new' flag in Luigi.cfg. If you do not,"+\
                  "luigi will continue overwriting your dictionary")
+        sys.exit()
     else:
         try:
             old_header = header_d[task]["RAW"]
             if old_header != first_line:
-               raise("Error! Header schema has change")
+                logger.exception("Error! Header schema has change")
+                sys.exit()
             else:
                 pass
         except:
-            raise("The dictionary of the task: "+\
+            logger.exception("The dictionary of the task: "+\
                  task + 'is not defined\n' +\
                  'see. pipelines/ingest/common/raw_schemas.yaml \n\n' +\
                  "Turn on the 'new' flag in Luigi.cfg If you want Luigi" +\
                  " to do it for you")
-            
+            sys.exit()
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False, 
                 Dumper=noalias_dumper)
@@ -95,8 +106,8 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
         dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
-        raise Exception("Dictionary of task {0} is not defined,\
-         see {1} ".format(pipeline_task, path))
+        logger.exception("Dictionary of task {0} is not defined,"+\
+             "see {1} ".format(pipeline_task, path))
 
     # Update actualizacion
     dictionary['actualizacion_sedesol'] = current_date

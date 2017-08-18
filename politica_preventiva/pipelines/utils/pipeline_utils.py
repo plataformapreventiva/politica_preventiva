@@ -9,6 +9,7 @@ import os
 import string
 import datetime
 import psycopg2
+import logging
 import numpy as np
 import pandas as pd
 import pdb
@@ -33,6 +34,10 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
                   aws_secret_access_key=aws_secret_access_key,
                   region_name="us-west-2")
+# Logger
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
 
 
 def s3_to_pandas(Bucket, Key, sep="|", header=False, python_3=True):
@@ -215,7 +220,7 @@ def dates_list(pipeline, end_date, periodicity):
             dates = year_fraction(p, start_date, end_year, suffix)
 
         else:
-            raise ValueError("""Periodicity is not correctly defined, check
+            logger.exception("""Periodicity is not correctly defined, check
                              Luigi.cfg and choose one [a, b, q, m, w]""")
 
         suffix = suffix.split('-')[0]
