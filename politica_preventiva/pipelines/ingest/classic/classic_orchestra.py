@@ -117,9 +117,8 @@ class ClassicIngestDates(luigi.WrapperTask):
             return dates
 
         except:
-            logger.info('Start date is not defined for the pipeline {0}'+\
-                    'Luigi will get only the information of the last period'.\
-                format(self.pipeline_task))
+            logger.info('Start date is not defined for the pipeline {0}'.format(self.pipeline_task)+\
+                    'Luigi will get only the information of the last period')
             return [dates[-1]]
 
 
@@ -128,7 +127,7 @@ class ClassicIngestDates(luigi.WrapperTask):
                 'will try to download the data of the following periods:{0}'.\
                 format(self.dates))
         
-        yield [UpdateDictionary(current_date=self.current_date,
+        return [UpdateDictionary(current_date=self.current_date,
                                 pipeline_task=self.pipeline_task,
                                 data_date=str(data_date), suffix=self.suffix)
         for data_date in self.dates]
