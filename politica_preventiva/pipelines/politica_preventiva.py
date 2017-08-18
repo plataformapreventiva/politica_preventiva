@@ -51,12 +51,14 @@ class RunPipelines(luigi.WrapperTask):
     Main Wrapper Task of pipelines 
     """
     current_date = datetime.date.today()
+    logger.info('Luigi is running the pipeline on the date: {0}'.format(
+        current_date))
     
     def requires(self):
 
-        yield IngestPipeline(current_date=self.current_date)
-        #yield ETLPipeline(self.current_date)
-        #yield ModelPipeline(self.current_date)
+        return IngestPipeline(current_date=self.current_date)
+        #return ETLPipeline(self.current_date)
+        #return ModelPipeline(self.current_date)
 
 if __name__ == "__main__":
     luigi.run()

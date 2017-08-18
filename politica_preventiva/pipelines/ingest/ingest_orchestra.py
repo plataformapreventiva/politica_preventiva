@@ -28,10 +28,13 @@ class IngestPipeline(luigi.WrapperTask):
     This wrapper task executes ingest pipeline
     It expects a list specifying which ingest pipelines to run
     """
+
     current_date = luigi.DateParameter()
 
     def requires(self):
 
-        yield ClassicIngest(current_date=self.current_date)
-        #yield GeomIngest()
-        #yield PUBIngest()
+        logger.info('Luigi is running the ingest pipeline on the date: {0}'.format(
+                    self.current_date))
+        return ClassicIngest(current_date=self.current_date)
+        # yield GeomIngest()
+        # yield PUBIngest()

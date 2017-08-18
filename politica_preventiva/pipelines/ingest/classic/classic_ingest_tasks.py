@@ -56,6 +56,9 @@ class SourceIngestTask(luigi.Task):
     classic_task_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
+    def requires(self):
+        logget.info('Luigi is trying to run the source script'+\
+                ' of the pipeline_task {0}'.format(self.pipeline_task))
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
@@ -195,16 +198,18 @@ class ipc_ciudades(SourceIngestTask):
         return subprocess.call(cmd, shell=True)
 
 
-class segob(SourceIngestTask):
+class segob_snim(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['python', self.classic_task_scripts + "segob.py",
-        '--output', self.local_ingest_file]
+        extra_cmd = self.extra.split('--')
+        extra_cmd = extra_cmd[0]
+        command_list = ['python', self.classic_task_scripts + 
+        "segob_inafed_snim.py", '--data_date', self.data_date,
+        '--output', self.local_ingest_file, "--extra", extra_cmd]
         cmd = " ".join(command_list)
-        print(cmd)
         return subprocess.call([cmd], shell=True)
 
 
