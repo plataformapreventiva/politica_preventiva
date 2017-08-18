@@ -26,15 +26,6 @@ def clean_and_lower(var_string):
     if isinstance(var_string, str):
         return clean_strings(var_string).lower()
 
-def clean_clave_edo(x):
-    if isinstance(x, str):
-        if x == '30 Ignacio de la Llave':
-            return '30'
-        elif 'Distrito' in x:
-            return '32'
-    else:
-        if (x > 0) and (x <= 32):
-            return str(x).zfill(2)
 
 def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
@@ -48,14 +39,15 @@ def match(pattern, x):
     else:
         return False
 
+
 def return_matches(x):
     l = []
     for i in range(len(palabras_df)):
         ind = palabras_df.iloc[i]
         for pal in ind['palabras_clave']:
-            if (match(pal, x['nombre_programa_clean'].iloc[0])) or (match(pal, x['objetivo_clean'].iloc[0])):
+            if match(pal, x['nombre_objetivo'].iloc[0]):
                 l.append((ind['id']))
-                                                                        
+    l = list(set(l))
     return pd.DataFrame(l, columns=['id_palabra'])
 
 
@@ -78,25 +70,26 @@ def to_sql_array(values):
 if __name__ == "__main__":
     # Read BAse Programas
     bucket = 'dpa-plataforma-preventiva'
-    s3_file = 'utils/BaseProgramas.csv'
-    programas = s3_to_pandas(Bucket=bucket, Key=s3_file)
+    s3_file = 'utils/programas_federales_detalle.csv'
+    programas = s3_to_pandas(Bucket=bucket, Key=s3_file, sep=',', bototype=True)
     # clean programas nombre and objetivo
-    programas['nombre_programa_clean'] = programas['Nombre del programa / intervención'].map(clean_and_lower)
-    programas['objetivo_clean'] = programas['Objetivo'].map(clean_and_lower)
+    programas['nombre_objetivo'] = programas.apply(lambda x: '{}. {}'.format(x['nombre_programa'],
+                                                                              x['OBJ_GRAL_PROG_1']), axis=1)
+    programas['nombre_objetivo'] = programas['nombre_objetivo'].map(clean_and_lower)
 
     # Read palabras clave
-    query = """select * from clean.relacion_sdg_programas"""
+    query = """select * from clean.riesgo_recomendacion"""
     con = connect_to_db()
     palabras_df = pd.read_sql(query, con)
 
-    matches = (programas.groupby('ID').apply(lambda x: return_matches(x))).reset_index()
-    matches = matches.groupby('id_palabra')['ID'].apply(to_sql_array)
+    matches = (programas.groupby('cve_programa').apply(lambda x: return_matches(x))).reset_index()
+    matches = matches.groupby('id_palabra')['cve_programa'].apply(to_sql_array)
 
     cur = con.cursor()
     for d in range(len(matches)):
-        QUERY=(""" UPDATE clean.relacion_sdg_programas
-                    SET programas_sociales= '{programas}'
-                   WHERE clean.relacion_sdg_programas.id={id} """
+        QUERY=(""" UPDATE clean.riesgo_recomendacion
+                    SET programas_ids= '{programas}'
+                   WHERE id={id} """
                    .format(programas=matches.iloc[d],
                            id=matches.index[d]))
         cur.execute(QUERY)

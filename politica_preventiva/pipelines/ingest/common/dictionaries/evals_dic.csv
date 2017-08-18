@@ -1,0 +1,13 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata
+ciclo_pae_eval|Año del PAE al que pertence la evaluación.|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+id_evaluacion_eval|Clave de la evaluación.|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+id_ramo_eval|"Clave del Ramo| según el PEF."|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+desc_ramo_eval|Descripción del Ramo.|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+modalidad_pp_eval|Clave del programa presupuestario.|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+desc_pp_eval|Nombre del PP.|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+tipo_eval|Evaluación aplicada.|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+evaluador_eval|Instancia evaluadora externa.|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+costos_eval|Erogación monetaria por el concepto de costo de Evaluación.|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+ciclo_conclusion_eval|Año del informe de la SHCP|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+url_eval|Url a la evaluación..|SHCP|http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Programas/sed/evaluaciones.csv|evaluaciones|eval||2017-08-03 16:37:48.112662|eval_data.csv
+actualizacion_sedesol|Actualización SEDESOL|SCHP||General||mensual|2017-08-03 16:37:48.112662|SISI
