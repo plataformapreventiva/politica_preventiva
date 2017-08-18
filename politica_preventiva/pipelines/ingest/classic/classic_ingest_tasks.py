@@ -4,6 +4,7 @@ import ast
 import boto3
 import datetime
 import luigi
+import logging
 import os
 import pdb
 import psycopg2
@@ -38,6 +39,10 @@ aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
 
+# Logger
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
 
 #######################
 # Abstract Tasks
@@ -51,6 +56,9 @@ class SourceIngestTask(luigi.Task):
     classic_task_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
+    def requires(self):
+        logget.info('Luigi is trying to run the source script'+\
+                ' of the pipeline_task {0}'.format(self.pipeline_task))
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
@@ -190,16 +198,18 @@ class ipc_ciudades(SourceIngestTask):
         return subprocess.call(cmd, shell=True)
 
 
-class segob(SourceIngestTask):
+class segob_snim(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['python', self.classic_task_scripts + "segob.py",
-        '--output', self.local_ingest_file]
+        extra_cmd = self.extra.split('--')
+        extra_cmd = extra_cmd[0]
+        command_list = ['python', self.classic_task_scripts + 
+        "segob_inafed_snim.py", '--data_date', self.data_date,
+        '--output', self.local_ingest_file, "--extra", extra_cmd]
         cmd = " ".join(command_list)
-        print(cmd)
         return subprocess.call([cmd], shell=True)
 
 
