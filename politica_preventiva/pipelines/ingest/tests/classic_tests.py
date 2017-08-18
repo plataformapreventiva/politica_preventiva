@@ -1,11 +1,12 @@
 import argparse
-from datetime import datetime
 import csv
 import os
 import pdb
 import re
+import sys
 import yaml
 
+from datetime import datetime
 import pandas as pd
 
 from politica_preventiva.pipelines.utils.string_cleaner_utils import remove_extra_chars
@@ -43,6 +44,12 @@ def header_test(path, task, common_path, suffix, new=True):
         header_d[task] = {"RAW": first_line,
                     "LUIGI":{'INDEX':None,
                         "SCHEMA": initial_schema}}
+        # TODO put logger 
+        sys.exit('Please specify the column types of the pipeline_task '+\
+                 task + '\n see. pipelines/ingest/common/raw_schemas.yaml \n' +\
+                 "After you've done that please turn off the" +\
+                 " 'new' flag in Luigi.cfg. If you do not,"+\
+                 "luigi will continue overwriting your dictionary")
     else:
         try:
             old_header = header_d[task]["RAW"]
@@ -51,7 +58,11 @@ def header_test(path, task, common_path, suffix, new=True):
             else:
                 pass
         except:
-            raise("Dictionary not defined")
+            raise("The dictionary of the task: "+\
+                 task + 'is not defined\n' +\
+                 'see. pipelines/ingest/common/raw_schemas.yaml \n\n' +\
+                 "Turn on the 'new' flag in Luigi.cfg If you want Luigi" +\
+                 " to do it for you")
             
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False, 
