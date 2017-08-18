@@ -77,7 +77,13 @@ class DockerTask(SourceIngestTask):
     It can run python and bash scripts.
     
     Note: Remember to use docker_ingest_file instead of local_ingest_file
+    Define the @property def cmd(self):
+        python **/**.py
+        bash **/**.sh
+    See ipc_ciudades or cuenta_publica_anual for reference
+    # TODO() This task will eventually replace SourceIngestTask 
     """
+    
     def run(self):
 
         cmd_docker = '''
