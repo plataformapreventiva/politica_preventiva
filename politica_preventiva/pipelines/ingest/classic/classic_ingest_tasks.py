@@ -57,7 +57,7 @@ class SourceIngestTask(luigi.Task):
     local_path = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
     def requires(self):
-        logget.info('Luigi is trying to run the source script'+\
+        logger.info('Luigi is trying to run the source script'+\
                 ' of the pipeline_task {0}'.format(self.pipeline_task))
 
     def output(self):
