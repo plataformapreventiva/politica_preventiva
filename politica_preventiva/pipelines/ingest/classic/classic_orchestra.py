@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import ast
 import luigi
+import logging
 import os
 import pdb
 import psycopg2
@@ -38,6 +39,10 @@ aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 PLACES_API_KEY = os.environ.get('PLACES_API_KEY')
 
+# logger
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
 
 #######################
 # Classic Ingest Tasks
@@ -56,8 +61,10 @@ class ClassicIngest(luigi.WrapperTask):
     pipelines = parse_cfg_list(conf.get("ClassicIngest", "pipelines"))
 
     def requires(self):
+        logger.info('Luigi is preparing to run the following pipelines: {0}'.\
+                format(self.pipelines))
         # loop through pipeline tasks
-        yield [ClassicIngestDates(current_date=self.current_date,
+        return [ClassicIngestDates(current_date=self.current_date,
                                 pipeline_task=pipeline)
         for pipeline in self.pipelines]
 
@@ -88,10 +95,16 @@ class ClassicIngestDates(luigi.WrapperTask):
                                                      'periodicity')
 
         if self.historical in ['True', 'T', '1', 'TRUE']:
+            logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
+                format(self.pipeline_task))
+ 
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
         else:
+            logger.info('Preparing to get current data for'+\
+                     'the pipeline_task: {0}'.format(self.pipeline_task))
+ 
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
@@ -102,13 +115,19 @@ class ClassicIngestDates(luigi.WrapperTask):
             configuration.get_config().get(self.pipeline_task,
                     'start_date')
             return dates
-        except:
 
+        except:
+            logger.info('Start date is not defined for the pipeline {0}'+\
+                    'Luigi will get only the information of the last period'.\
+                format(self.pipeline_task))
             return [dates[-1]]
 
 
     def requires(self):
-        # loop through pipeline tasks
+        logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
+                'will try to download the data of the following periods:{0}'.\
+                format(self.dates))
+        
         yield [UpdateDictionary(current_date=self.current_date,
                                 pipeline_task=self.pipeline_task,
                                 data_date=str(data_date), suffix=self.suffix)
@@ -162,11 +181,16 @@ class UpdateDictionary(postgres.CopyToTable):
             temp = str(temp).replace(
                 "{", "(").replace("}", ")").replace(":", ",")
             return ast.literal_eval(temp)
-        except:
-            raise("Dictionary header undefined")
+        except Exception as e:
+            logging.exception("The Dictionary schema abstraction is undefined"+\
+                    " please define it in. common/raw_schemas.yaml")
+
 
     def rows(self):
-        # Path of last "ouput" version #TODO(Return to input version)
+        logging.info("Trying to update the dictionary for"+\
+                    " the pipeline_task {0} ".format(self.pipeline_task +\
+                    "data_date {0}".format(self.data_date)))
+
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
                   i in range(len(self.columns))]
@@ -176,6 +200,7 @@ class UpdateDictionary(postgres.CopyToTable):
                                              self.actualizacion,
                                              self.data_date,
                                              self.suffix)
+
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
@@ -233,14 +258,20 @@ class UpdateDB(postgres.CopyToTable):
 
     @property
     def columns(self):
-        try:
+       logging.info("Trying to update the DB for"+\
+            " the pipeline_task {0} ".format(self.pipeline_task +\
+            "data_date-{0}-suffix-{1}".format(self.data_date, self.suffix)))
+
+       try:
             temp = header_d[self.pipeline_task]['LUIGI']['SCHEMA']
             temp = str(temp).replace(
                 "{", "(").replace("}", ")").replace(":", ",")
             return ast.literal_eval(temp)
-        except:
-            print("Go and define the schema for this table")
-            # logging.**(level=logging.DEBUG)
+       except:
+           logger.exception("Please define the schema and variable types"+ 
+                         "for this table  pipeline_task  {0} -"+
+                         "data_date-{1}-suffix-{2}".format(
+                self.pipeline_task, self.data_date, self.suffix))
 
     @property
     def table(self):
@@ -281,14 +312,13 @@ class UpdateDB(postgres.CopyToTable):
             # Create string for Upsert
             unique_sql = ', '.join(column_names)
         else:
-            raise Exception('columns must consist of column strings\
+            logger.exception('columns must consist of column strings\
             or (column string, type string)\
             tuples (was %r ...)' % (self.columns[0],))
+            sys.exit()
 
         index = header_d[self.pipeline_task]['LUIGI']["INDEX"]
 
-        # Change the temp setting of the buffer
-        # cmd = "SET temp_buffers = 1000MB;"
         # Create temporary table temp
         cmd = "CREATE TEMPORARY TABLE tmp  ({0});ANALYZE tmp;".\
             format(create_sql)
