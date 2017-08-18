@@ -74,23 +74,32 @@ class DockerTask(SourceIngestTask):
     Task Abstraction to Dockerize source ingest tasks
     it uses the image python-task
        see more in pipeline/task/python-task/Dockerfile
-    It can run python and bash scripts.
     
-    Note: Remember to use docker_ingest_file instead of local_ingest_file
+    Note: 
+    - politica_preventiva_store should already exists 
+    - Remember to use docker_ingest_file instead of local_ingest_file
+    - It can run python and bash scripts.
+
+    Use:
     Define the @property def cmd(self):
         python **/**.py
         bash **/**.sh
+    
     See ipc_ciudades or cuenta_publica_anual for reference
     # TODO() This task will eventually replace SourceIngestTask 
+    # Check if pdb can be used for debugin purposes
     """
     
     def run(self):
 
+        logger.info('Luigi is using the dockerized version of the task'+\
+                ' {0}'.format(self.pipeline_task))
+
         cmd_docker = '''
-        sudo docker run --rm  -v $PWD:/politica_preventiva\
+         sudo docker run -it --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/politica_preventiva/data\
             politica_preventiva/python-task {0}
-        '''.format(self.cmd)
+         '''.format(self.cmd)
 
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
