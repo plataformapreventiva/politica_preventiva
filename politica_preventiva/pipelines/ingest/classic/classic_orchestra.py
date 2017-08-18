@@ -114,6 +114,9 @@ class ClassicIngestDates(luigi.WrapperTask):
                                 data_date=str(data_date), suffix=self.suffix)
         for data_date in self.dates]
 
+class UpdateLineage()
+    def requires()
+        
 
 class UpdateDictionary(postgres.CopyToTable):
 
