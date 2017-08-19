@@ -16,7 +16,7 @@
 PROJECT_NAME:=$(shell cat .project-name)
 PROJECT_VERSION:=$(shell cat .project-version)
 PROJECT_USER:=$(shell cat .project-user)
-
+WORKERS=10
 
 ## Versión de python
 VERSION_PYTHON:=$(shell cat .python-version)
@@ -85,23 +85,23 @@ clean_venv: ##@limpieza Destruye la carpeta de virtualenv
 create: ##@infraestructura Crea infraestructura necesaria: Pull de imágenes y crea el storage local
 	$(MAKE) --directory=infraestructura create
 
-#start: create ##@infraestructura Inicializa la infraestructura y ejecuta el entrenamiento
-#	$(MAKE) --directory=infraestructura start
+start: create ##@infraestructura Inicializa la infraestructura y ejecuta el entrenamiento
+	$(MAKE) --directory=infraestructura start
 
-#stop: ##@infraestructura Detiene la infraestructura
-#	$(MAKE) --directory=infraestructura stop
+stop: ##@infraestructura Detiene la infraestructura
+	$(MAKE) --directory=infraestructura stop
 
-#status: ##@infraestructura Informa el estatus de la infraestructura
-#	$(MAKE) --directory=infraestructura status
+status: ##@infraestructura Informa el estatus de la infraestructura
+	$(MAKE) --directory=infraestructura status
 
-#logs:   ##@infraestructura Despliega en pantalla las salidas de los logs de la infraestructura
-#	$(MAKE) --directory=infraestructura logs
+logs:   ##@infraestructura Despliega en pantalla las salidas de los logs de la infraestructura
+	$(MAKE) --directory=infraestructura logs
 
-#restart: ##@infraestructura Reinicializa la infraestructura
-#	$(MAKE) --directory=infraestructura restart
+restart: ##@infraestructura Reinicializa la infraestructura
+	$(MAKE) --directory=infraestructura restart
 
-#destroy: ##@infraestructura Destruye la infraestructura
-#	$(MAKE) --directory=infraestructura clean
+destroy: ##@infraestructura Destruye la infraestructura
+	$(MAKE) --directory=infraestructura clean
 
 nuke: ##@infraestructura Destruye la infraestructura (incluyendo las imágenes)
 	$(MAKE) --directory=infraestructura nuke
@@ -126,8 +126,8 @@ tox: clean  ##@test Ejecuta tox
 #create_docs: ##@docs Crea la documentación
 #	$(MAKE) --directory=docs html
 
-#todo:         ##@docs ¿Qué falta por hacer?
-#	pylint --disable=all --enable=W0511 src
+todo:         ##@docs ¿Qué falta por hacer?
+	pylint --disable=all --enable=W0511 src
 
 
 ########################################
@@ -149,7 +149,7 @@ sync_from_s3: ##@data Sincroniza los datos del usuario desde AWS S3
 ########################################
 
 run:       ##@proyecto Ejecuta el pipeline de datos
-	$(MAKE) --directory=$(PROJECT_NAME) run
+	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(WORKERS)
 
 setup: build install ##@proyecto Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
 

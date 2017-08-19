@@ -19,39 +19,44 @@ start: setup
 
 setup: create up
 
+
 up: .running
 
 .running:
-	# Esto corre en infraestructura
+	@sudo cp ../${PROJECT_NAME}/.env ./.env
 	@sudo docker-compose --project-name ${PROJECT_NAME} up -d
 	@touch .running
 
-create: .images_built #.network_built .data_built #.network_built .images_built
+create: .data_built .network_built .images_built
+
 
 .images_built:
-		@for image in $(IMAGES); do \
-			sudo docker build --tag ${DOCKER_REGISTRY}/dpa/$$image:${IMAGE_VERSION} --tag dpa/$$image:latest --tag dpa/$$image:$(IMAGE_VERSION) $$image;done;
-			# sudo docker push ${DOCKER_REGISTRY}/dpa/$$image:$(IMAGE_VERSION); 
-		@touch .images_built
+	@for image in $(IMAGES) ; do \
+	 	 sudo docker build --tag dpa/$$image:$(IMAGE_VERSION) --tag dpa/$$image:latest $$image ; \
+	 done
+	@touch .images_built
 
 .data_built:
 	echo ${DATA_DIRECTORY}
-	[ -d ${DATA_DIRECTORY} ] && sudo docker volume create --name ${PROJECT_NAME}_store --opt type=none --opt device=${DATA_DIRECTORY} --opt o=bind
+	[ -d ${DATA_DIRECTORY} ] && sudo docker volume create --name ${PROJECT_NAME}_store_ --opt type=none --opt device=${DATA_DIRECTORY} --opt o=bind
 	@touch .data_built
 
 .network_built:
-	@sudo docker network create --driver overlay --subnet=10.0.9.0/24 --attachable ${PROJECT_NAME}_net
+	@sudo docker network create ${PROJECT_NAME}_net
 	@touch .network_built
+
 
 .infrastructure_built:
 	@sudo docker-compose --project-name ${PROJECT_NAME} build
 	@touch .infrastructure_built
 
+
 register_images:
 	@echo TODO 
 
+
 stop:
-	sudo docker-compose --project-name ${PROJECT_NAME} stop
+	docker-compose --project-name ${PROJECT_NAME} stop
 	@rm -rf .running || true
 
 status:
