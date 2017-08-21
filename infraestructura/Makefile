@@ -27,18 +27,18 @@ up: .running
 	@sudo docker-compose --project-name ${PROJECT_NAME} up -d
 	@touch .running
 
-create: .data_built .network_built .images_built
+create: .images_built .network_built .data_built  
 
 
 .images_built:
 	@for image in $(IMAGES) ; do \
-	 	 sudo docker build --tag dpa/$$image:$(IMAGE_VERSION) --tag dpa/$$image:latest $$image ; \
+	 	 sudo docker build --tag politica_preventiva/$$image:$(IMAGE_VERSION) --tag politica_preventiva/$$image:latest $$image ; \
 	 done
 	@touch .images_built
 
 .data_built:
 	echo ${DATA_DIRECTORY}
-	[ -d ${DATA_DIRECTORY} ] && sudo docker volume create --name ${PROJECT_NAME}_store_ --opt type=none --opt device=${DATA_DIRECTORY} --opt o=bind
+	[ -d ${DATA_DIRECTORY} ] && sudo docker volume create --name ${PROJECT_NAME}_store --opt type=none --opt device=${DATA_DIRECTORY} --opt o=bind
 	@touch .data_built
 
 .network_built:
@@ -56,7 +56,7 @@ register_images:
 
 
 stop:
-	docker-compose --project-name ${PROJECT_NAME} stop
+	@sudo docker-compose --project-name ${PROJECT_NAME} stop
 	@rm -rf .running || true
 
 status:
@@ -78,7 +78,7 @@ clean_containers:
 	@rm -rf .infrastructure_built || true
 
 clean_images:
-	@sudo docker images -a | grep "dpa" | awk  '{print $1 "\:" $2}' | xargs docker rmi
+	@sudo docker rmi $(sudo docker images | grep 'dpa' | awk '{print $3}')
 	@rm -rf .images_built || true
 
 clean_data:
