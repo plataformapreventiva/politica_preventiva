@@ -89,8 +89,8 @@ start: create ##@infraestructure Create Infrastructure
 stop: ##@infraestructure Stop Infrastructure
 	$(MAKE) --directory=infraestructura stop
 
-restart: ##@infraestructure Restart Infastructure
-	$(MAKE) --directory=infraestructura restart
+restart: ##@infraestructure Restart Tasks Infastructure
+	$(MAKE) --directory=${PROJECT_NAME} restart
 
 status: ##@infraestructure Report the status of the infrastructure 
 	$(MAKE) --directory=infraestructura status

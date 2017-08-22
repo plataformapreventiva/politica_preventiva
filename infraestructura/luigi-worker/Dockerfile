@@ -1,4 +1,4 @@
-FROM dpa/python:0.1
+FROM python:3.5-slim 
 
 MAINTAINER Roberto Sánchez Ávalos <r.sanchezavalos@gmail.com>
 

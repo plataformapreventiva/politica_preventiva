@@ -4,12 +4,12 @@
 ##            Variables               ##
 ########################################
 SHELL := /bin/bash 
-PROJECT_NAME:=politica_preventiva
-DATA_DIRECTORY:=$(CURDIR)/../data
+PROJECT_NAME:= politica_preventiva
+DATA_DIRECTORY:= $(CURDIR)/../data
 DOCKER_REGISTRY:= "localhost:5000"
-IMAGES = python luigi-server base r 
+IMAGES = python luigi-server luigi-worker base r 
 #base python r java luigi-server luigi-worker spark-client hadoop-client
-IMAGE_VERSION:=0.1
+IMAGE_VERSION:= 0.1
 
 ########################################
 ##             Control                ##
@@ -32,7 +32,7 @@ create: .images_built .network_built .data_built
 
 .images_built:
 	@for image in $(IMAGES) ; do \
-	 	 sudo docker build --tag politica_preventiva/$$image:$(IMAGE_VERSION) --tag politica_preventiva/$$image:latest $$image ; \
+	 	 sudo docker build --tag dpa/$$image:$(IMAGE_VERSION) --tag dpa/$$image:latest $$image ; \
 	 done
 	@touch .images_built
 
@@ -66,11 +66,11 @@ logs:
 	@sudo docker-compose --project-name ${PROJECT_NAME} logs
 
 
-restart: stop clean start status
+restart: clean start status
 
-clean: stop clean_containers clean_data clean_network
+clean: stop  clean_images clean_containers clean_data clean_network 
 
-nuke: clean clean_images
+nuke: clean
 
 clean_containers:
 	@sudo docker-compose --project-name ${PROJECT_NAME} down --volumes --remove-orphans
@@ -78,7 +78,7 @@ clean_containers:
 	@rm -rf .infrastructure_built || true
 
 clean_images:
-	@sudo docker rmi $(sudo docker images | grep 'dpa' | awk '{print $3}')
+	@sudo docker rmi -f $( sudo docker images | grep '^dpa' | awk '{print $3}' )
 	@rm -rf .images_built || true
 
 clean_data:

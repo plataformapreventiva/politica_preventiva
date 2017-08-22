@@ -9,6 +9,8 @@ run:
 
 build: .built .built-local-storage
 
+restart: .clean
+
 .built:
 	@for image in $(IMAGES) ; do \
 		sudo docker build --tag ${PROJECT_NAME}/$$image tasks/$$image ; \
