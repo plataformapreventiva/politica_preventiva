@@ -45,7 +45,7 @@ def header_test(path, task, common_path, suffix, new=True):
             reader = csv.reader(f, delimiter='|')
             first_lines = next(reader)
             logger.debug('Remember ingest data file must be \n'+\
-                '\t\t\t\t\t must be delimited by pipes "|"'.)
+                '\t\t\t\t\t must be delimited by pipes "|"')
         except:
             logger.critical('Start date is not defined for the pipeline {0}'+\
                     'Luigi will get only the information of the last period'.\
@@ -87,7 +87,8 @@ def header_test(path, task, common_path, suffix, new=True):
         yaml.dump(header_d, file, default_flow_style=False, 
                 Dumper=noalias_dumper)
         if str2bool(new):
-            sys.exit('\n Error: failed header_test() in classic_test.py.\n')
+            sys.exit('\n After updating the raw_schemas.yaml with the column types' +\
+                    '\n\t\t\t\t\t\t you must change the "new" flag to False in luigi.cfg.\n')
     file = open(path+".done", "w")
     file.close()
 
@@ -116,11 +117,11 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
         dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
-        # raise Exception("Dictionary of task {0} is not defined,\
-        # see {1} ".format(pipeline_task, path))
-
         logger.critical("Dictionary of task {task} is not defined,\
             see {path}".format(task=pipeline_task, path=path))
+        raise Exception("Dictionary of task {0} is not defined,\
+         see {1} ".format(pipeline_task, path))
+
 
     # Update actualizacion
     dictionary['actualizacion_sedesol'] = current_date

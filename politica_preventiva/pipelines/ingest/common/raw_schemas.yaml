@@ -519,6 +519,58 @@ evals:
   - costos
   - ciclo_conclusion
   - url_evaluacion
+finanzas_publicas_estatales:
+  LUIGI:
+    INDEX: id_entidad
+    SCHEMA:
+    - producto: TEXT
+    - cobertura: TEXT
+    - anio: INT
+    - id_entidad: VARCHAR
+    - tema: VARCHAR
+    - categoria: TEXT
+    - descripcion: TEXT
+    - cifra: BIGINT
+    - desc_estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - "\uFEFFproducto"
+  - cobertura
+  - anio
+  - id_entidad
+  - tema
+  - categoria
+  - descripcion
+  - cifra
+  - desc_estatus
+finanzas_publicas_municipales:
+  LUIGI:
+    INDEX: id_municipio
+    SCHEMA:
+    - producto: TEXT
+    - cobertura: TEXT
+    - anio: INT
+    - id_entidad: VARCHAR
+    - id_municipio: VARCHAR
+    - tema: VARCHAR
+    - categoria: TEXT
+    - descripcion_categoria: TEXT
+    - valor: BIGINT
+    - estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - "\uFEFFproducto"
+  - cobertura
+  - anio
+  - id_entidad
+  - id_municipio
+  - tema
+  - categoria
+  - descripcion_categoria
+  - valor
+  - estatus
 indesol:
   LUIGI:
     INDEX: cluni
@@ -803,3 +855,4 @@ segob:
   - poblaciondelacabeceramunicipal
   - superficiedelmunicipioenkm2
   - cve_muni
+
