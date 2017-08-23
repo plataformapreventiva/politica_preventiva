@@ -726,6 +726,7 @@ precios_granos:
     - semana: INT
     - precio: DOUBLE PRECISION
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
   - producto
   - origen
