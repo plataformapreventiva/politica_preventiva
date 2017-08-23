@@ -102,7 +102,7 @@ class ClassicIngestDates(luigi.WrapperTask):
                                             self.current_date,
                                             periodicity)
             logger.debug('Pipeline task {pipeline} has historic dates {hdates}'.\
-                format(self.pipeline_task, dates))
+                format(pipeline=self.pipeline_task, hdates=dates))
         else:
             logger.info('Preparing to get current data for'+ \
                      ' the pipeline_task: {0}'.format(self.pipeline_task))

@@ -450,6 +450,30 @@ class asm(SourceIngestTask):
         return subprocess.call([cmd], shell=True)
 
 
+class finanzas_publicas_estatales(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sudo sh', self.classic_task_scripts + "finanzas_publicas_estatales.sh",
+                        self.data_date, self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
 
 
+class finanzas_publicas_municipales(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sudo sh', self.classic_task_scripts + "finanzas_publicas_municipales.sh",
+                        self.data_date, self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
 
