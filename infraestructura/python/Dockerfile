@@ -7,8 +7,7 @@ ENV REFRESHED_AT 2017-01-06
 ## Actualizamos
 RUN \
     apt-get -qq update; apt-get upgrade -y -qq; \
-    apt-get install -y --no-install-recommends -qq curl locales bzip2 unzip xz-utils build-essential; \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    apt-get install -y  curl locales bzip2 unzip xz-utils build-essential
 
 ## Arreglamos el LOCALE
 RUN echo "es_MX.UTF-8 UTF-8" >> /etc/locale.gen \

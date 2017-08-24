@@ -7,7 +7,7 @@ SHELL := /bin/bash
 PROJECT_NAME:= politica_preventiva
 DATA_DIRECTORY:= $(CURDIR)/../data
 DOCKER_REGISTRY:= "localhost:5000"
-IMAGES = python luigi-server luigi-worker base r 
+IMAGES = python luigi-server 
 #base python r java luigi-server luigi-worker spark-client hadoop-client
 IMAGE_VERSION:= 0.1
 
@@ -29,7 +29,6 @@ up: .running
 
 create: .images_built .network_built .data_built  
 
-
 .images_built:
 	@for image in $(IMAGES) ; do \
 	 	 sudo docker build --tag dpa/$$image:$(IMAGE_VERSION) --tag dpa/$$image:latest $$image ; \
@@ -45,15 +44,12 @@ create: .images_built .network_built .data_built
 	@sudo docker network create ${PROJECT_NAME}_net
 	@touch .network_built
 
-
 .infrastructure_built:
 	@sudo docker-compose --project-name ${PROJECT_NAME} build
 	@touch .infrastructure_built
 
-
 register_images:
 	@echo TODO 
-
 
 stop:
 	@sudo docker-compose --project-name ${PROJECT_NAME} stop
@@ -64,7 +60,6 @@ status:
 
 logs:
 	@sudo docker-compose --project-name ${PROJECT_NAME} logs
-
 
 restart: clean start status
 
