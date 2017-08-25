@@ -1,20 +1,19 @@
 version: "3"
 
-services:                                                                               
+services:                                                     
   luigi-server:        
-    image: politica_preventiva/luigi-server                                                                 
-    ports:                                                                              
-      - "8082:8082"
+    image: dpa/luigi-server-c 
+    ports:
+        - "8082:8082"
     env_file: .env
     networks:
       - politica_preventiva_net
 
 #  luigi-worker:
-#    image: politica_preventiva/luigi-worker
+#    image: politica_preventiva/luigi-worker-c
 #    env_file: .env
 #    networks:
 #      - politica_preventiva_net
-
 
   graphdb:
     image: neo4j:3.1
@@ -23,7 +22,6 @@ services:
       - "7687:7687"
     networks:
       - politica_preventiva_net
-
 
 volumes:
   politica_preventiva_store:

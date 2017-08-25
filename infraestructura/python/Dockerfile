@@ -1,19 +1,15 @@
-FROM python:3.5-slim
+FROM python:3.6-slim
 
-MAINTAINER Adolfo De Unánue <nanounanue@gmail.com>
+MAINTAINER rsanchezavalos <r.sanchezavalos@gmail.com>
 
 ENV REFRESHED_AT 2017-01-06
 
 ## Actualizamos
-RUN \
-    apt-get -qq update; apt-get upgrade -y -qq; \
-    apt-get install -y  curl locales bzip2 unzip xz-utils build-essential
+RUN apt-get clean &&  apt-get update &&  apt-get upgrade
 
-## Arreglamos el LOCALE
-RUN echo "es_MX.UTF-8 UTF-8" >> /etc/locale.gen \
-    && locale-gen es_MX.utf8 \
-    && /usr/sbin/update-locale LANG=es_MX.UTF-8 \
-    && dpkg-reconfigure locales
+RUN \
+    apt-get -y -qq update; apt-get upgrade -y -qq; \
+    apt-get install --no-install-recommends -y  curl locales bzip2 unzip xz-utils build-essential
 
 
 RUN apt-get update \

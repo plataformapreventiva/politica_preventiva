@@ -63,14 +63,12 @@ RUN  echo "eval "$(hub alias -s)"" >> ~/.zshrc
 RUN rm -rf hub-linux-amd64-2.2.5
 
 RUN pyenv install 3
-RUN apt-get --yes  install build-essential checkinstall && \
+RUN apt-get --yes  install build-essential checkinstall 
 
 
 RUN   apt-get --yes install libxss1 libappindicator1 libindicator7  && \
 	apt-get update -yq && \
-	apt-get install build-essential && \
-	apt-get install poppler-utils && \
-	apt-get install -yqq ssh git build-essential && \
+	apt-get install build-essential poppler-utils ssh git build-essential
 
 
 #ADD . /${PROJECT_NAME}/
