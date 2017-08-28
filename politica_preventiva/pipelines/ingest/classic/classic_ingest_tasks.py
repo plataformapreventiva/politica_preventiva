@@ -98,7 +98,7 @@ class DockerTask(SourceIngestTask):
         cmd_docker = '''
          sudo docker run -it --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/politica_preventiva/data\
-            politica_preventiva/python-task {0}
+           politica_preventiva/task/docker-task {0}
          '''.format(self.cmd)
 
         out = subprocess.call(cmd_docker, shell=True)
