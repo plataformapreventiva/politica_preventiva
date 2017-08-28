@@ -14,7 +14,7 @@
 PROJECT_NAME:=$(shell cat .project-name)
 PROJECT_VERSION:=$(shell cat .project-version)
 PROJECT_USER:=$(shell cat .project-user)
-WORKERS=10
+WORKERS=11
 
 ## Python Version
 VERSION_PYTHON:=$(shell cat .python-version)
