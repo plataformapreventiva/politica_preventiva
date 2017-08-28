@@ -7,7 +7,7 @@ SHELL := /bin/bash
 PROJECT_NAME:= politica_preventiva
 DATA_DIRECTORY:= $(CURDIR)/../data
 DOCKER_REGISTRY:= "localhost:5000"
-IMAGES = python  
+IMAGES = python luigi-server-c 
 #base python r java luigi-server luigi-worker spark-client hadoop-client
 IMAGE_VERSION:= 0.1
 
@@ -15,12 +15,10 @@ IMAGE_VERSION:= 0.1
 ##             Control                ##
 ########################################
 
-start: setup
+start: .running
 
 setup: create up
 
-
-up: .running
 
 .running:
 	@sudo cp ../${PROJECT_NAME}/.env ./.env
@@ -73,10 +71,10 @@ clean_containers:
 	@docker-compose --project-name ${PROJECT_NAME} rm -f
 	@rm -rf .infrastructure_built || true
 	@set -e
-clean_image	s:
+clean_images:
 	@set +e
 	@docker images -a | grep "dpa" | awk  '{print $3}' | xargs docker rmi -f
-	@docker images -a | grep "\-c" | awk  '{print $3}' | xargs docker rmi -f
+	#@docker images -a | grep "\-c" | awk  '{print $3}' | xargs docker rmi -f
 	#@docker rmi -f $( docker images | grep '^dpa' | awk '{print $3}' )
 	@rm -rf .images_built || true
 	@set -e

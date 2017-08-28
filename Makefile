@@ -83,7 +83,7 @@ clean_venv: ##@limpieza Destruye la carpeta de virtualenv
 create: ##@infraestructure Create infraestructure for the project (Images, volume & network)
 	$(MAKE) --directory=infraestructura create
 
-start: create ##@infraestructure Create Infrastructure
+start:  ##@infraestructure Create Infrastructure
 	$(MAKE) --directory=infraestructura start
 
 stop: ##@infraestructure Stop Infrastructure
