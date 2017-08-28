@@ -96,7 +96,7 @@ class DockerTask(SourceIngestTask):
                 ' {0}'.format(self.pipeline_task))
 
         cmd_docker = '''
-         sudo docker run -it --rm  -v $PWD:/politica_preventiva\
+         docker run -it --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/politica_preventiva/data\
            politica_preventiva/task/docker-task {0}
          '''.format(self.cmd)
