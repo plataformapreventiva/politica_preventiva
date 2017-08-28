@@ -5,13 +5,19 @@
 	Preprocessing Functions
 """
 import boto3
+import logging
 import pdb
+
 from luigi import configuration
 import pandas as pd
 from io import StringIO
 import politica_preventiva.pipelines.utils.preprocessing_utils as pputils
 from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files, delete_s3_file
 
+# logger
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
 
 def precios_frutos_prep(data_date, s3_file, extra_h, out_key):
     """
