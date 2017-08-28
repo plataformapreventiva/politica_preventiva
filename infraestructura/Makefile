@@ -7,7 +7,7 @@ SHELL := /bin/bash
 PROJECT_NAME:= politica_preventiva
 DATA_DIRECTORY:= $(CURDIR)/../data
 DOCKER_REGISTRY:= "localhost:5000"
-IMAGES = python luigi-server-c  
+IMAGES = python  
 #base python r java luigi-server luigi-worker spark-client hadoop-client
 IMAGE_VERSION:= 0.1
 
@@ -68,20 +68,25 @@ clean: stop  clean_images clean_containers clean_data clean_network
 nuke: clean
 
 clean_containers:
+	@set +e
 	@docker-compose --project-name ${PROJECT_NAME} down --volumes --remove-orphans
 	@docker-compose --project-name ${PROJECT_NAME} rm -f
 	@rm -rf .infrastructure_built || true
-
-clean_images:
+	@set -e
+clean_image	s:
+	@set +e
 	@docker images -a | grep "dpa" | awk  '{print $3}' | xargs docker rmi -f
 	@docker images -a | grep "\-c" | awk  '{print $3}' | xargs docker rmi -f
 	#@docker rmi -f $( docker images | grep '^dpa' | awk '{print $3}' )
 	@rm -rf .images_built || true
-
+	@set -e
 clean_data:
+	@set +e
 	@docker volume rm ${PROJECT_NAME}_store
 	@rm -rf .data_built || true
-
+	@set -e
 clean_network: stop
+	@set +e
 	@docker network rm ${PROJECT_NAME}_net
 	@rm -rf .network_built || true
+	@set -e
