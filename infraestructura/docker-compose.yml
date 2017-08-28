@@ -1,36 +1,27 @@
 version: "3"
 
-services:                                                                               
-  luigi-server:        
-    image: dpa/luigi-server                                                                 
-    ports:                                                                              
-      - "8082:8082"
+services:                                                     
+  luigi-server-c:        
+    image: dpa/luigi-server-c 
+    ports:
+        - "8082:8082"
     env_file: .env
-    #networks:
-    #  - compranet_net
-
-  luigi-worker:
-    image: dpa/luigi-worker
-    env_file: .env
-    #networks:
-    #  - compranet_net
-
+    networks:
+      - politica_preventiva_net
 
   graphdb:
     image: neo4j:3.1
     ports:
       - "7474:7474"
       - "7687:7687"
-    #networks:
-    #  - compranet_net
-
+    networks:
+      - politica_preventiva_net
 
 volumes:
-  compranet_store:
-    #external:
-    #  name: compranet_store
+  politica_preventiva_store:
+    external:
+      name: politica_preventiva_store
 
-#networks:
-#  plataforma  plataforma_preventiva_net:
-#    external: true
-
+networks:
+  politica_preventiva_net:  
+    external: true
