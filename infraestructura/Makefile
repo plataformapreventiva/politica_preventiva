@@ -4,82 +4,87 @@
 ##            Variables               ##
 ########################################
 SHELL := /bin/bash 
-PROJECT_NAME:=politica_preventiva
-DATA_DIRECTORY:=$(CURDIR)/../data
+PROJECT_NAME:= politica_preventiva
+DATA_DIRECTORY:= $(CURDIR)/../data
 DOCKER_REGISTRY:= "localhost:5000"
-IMAGES = python luigi-server base r 
+IMAGES = python luigi-server-c 
 #base python r java luigi-server luigi-worker spark-client hadoop-client
-IMAGE_VERSION:=0.1
+IMAGE_VERSION:= 0.1
 
 ########################################
 ##             Control                ##
 ########################################
 
-start: setup
+start: .running
 
 setup: create up
 
-up: .running
 
 .running:
-	# Esto corre en infraestructura
-	@sudo docker-compose --project-name ${PROJECT_NAME} up -d
+	@sudo cp ../${PROJECT_NAME}/.env ./.env
+	@docker-compose --project-name ${PROJECT_NAME} up -d
 	@touch .running
 
-create: .images_built #.network_built .data_built #.network_built .images_built
+create: .images_built .network_built .data_built  
 
 .images_built:
-		@for image in $(IMAGES); do \
-			sudo docker build --tag ${DOCKER_REGISTRY}/dpa/$$image:${IMAGE_VERSION} --tag dpa/$$image:latest --tag dpa/$$image:$(IMAGE_VERSION) $$image;done;
-			# sudo docker push ${DOCKER_REGISTRY}/dpa/$$image:$(IMAGE_VERSION); 
-		@touch .images_built
+	@for image in $(IMAGES) ; do \
+	 	 docker build --tag dpa/$$image:$(IMAGE_VERSION) --tag dpa/$$image:latest $$image ; \
+	 done
+	@touch .images_built
 
 .data_built:
 	echo ${DATA_DIRECTORY}
-	[ -d ${DATA_DIRECTORY} ] && sudo docker volume create --name ${PROJECT_NAME}_store --opt type=none --opt device=${DATA_DIRECTORY} --opt o=bind
+	[ -d ${DATA_DIRECTORY} ] && docker volume create --name ${PROJECT_NAME}_store --opt type=none --opt device=${DATA_DIRECTORY} --opt o=bind
 	@touch .data_built
 
 .network_built:
-	@sudo docker network create --driver overlay --subnet=10.0.9.0/24 --attachable ${PROJECT_NAME}_net
+	@docker network create ${PROJECT_NAME}_net
 	@touch .network_built
 
 .infrastructure_built:
-	@sudo docker-compose --project-name ${PROJECT_NAME} build
+	@docker-compose --project-name ${PROJECT_NAME} build
 	@touch .infrastructure_built
 
 register_images:
 	@echo TODO 
 
 stop:
-	sudo docker-compose --project-name ${PROJECT_NAME} stop
+	@docker-compose --project-name ${PROJECT_NAME} stop
 	@rm -rf .running || true
 
 status:
-	@sudo docker-compose --project-name ${PROJECT_NAME} ps
+	@docker-compose --project-name ${PROJECT_NAME} ps
 
 logs:
-	@sudo docker-compose --project-name ${PROJECT_NAME} logs
+	@docker-compose --project-name ${PROJECT_NAME} logs
 
+restart: clean start status
 
-restart: stop clean start status
+clean: stop  clean_images clean_containers clean_data clean_network 
 
-clean: stop clean_containers clean_data clean_network
-
-nuke: clean clean_images
+nuke: clean
 
 clean_containers:
-	@sudo docker-compose --project-name ${PROJECT_NAME} down --volumes --remove-orphans
-	@sudo docker-compose --project-name ${PROJECT_NAME} rm -f
+	@set +e
+	@docker-compose --project-name ${PROJECT_NAME} down --volumes --remove-orphans
+	@docker-compose --project-name ${PROJECT_NAME} rm -f
 	@rm -rf .infrastructure_built || true
-
+	@set -e
 clean_images:
-	@sudo docker images -a | grep "dpa" | awk  '{print $1 "\:" $2}' | xargs docker rmi
+	@set +e
+	@docker images -a | grep "dpa" | awk  '{print $3}' | xargs docker rmi -f
+	#@docker images -a | grep "\-c" | awk  '{print $3}' | xargs docker rmi -f
+	#@docker rmi -f $( docker images | grep '^dpa' | awk '{print $3}' )
 	@rm -rf .images_built || true
-
+	@set -e
 clean_data:
-	@sudo docker volume rm ${PROJECT_NAME}_store
+	@set +e
+	@docker volume rm ${PROJECT_NAME}_store
 	@rm -rf .data_built || true
-
+	@set -e
 clean_network: stop
-	@sudo docker network rm ${PROJECT_NAME}_net
+	@set +e
+	@docker network rm ${PROJECT_NAME}_net
 	@rm -rf .network_built || true
+	@set -e

@@ -1,10 +1,8 @@
 ########################################
 # Makefile for pipeline
-# Version 0.1
-# SEDESOL
+# SEDESOL Version 0.1
 # Roberto Sánchez 
-# Tomado de Adolfo De Unánue
-# 11 de marzo de 2017
+# Tomado de Adolfo De Unánue - github @nanounanue
 ########################################
 
 .PHONY: clean data lint init deps sync_to_s3 sync_from_s3
@@ -16,17 +14,17 @@
 PROJECT_NAME:=$(shell cat .project-name)
 PROJECT_VERSION:=$(shell cat .project-version)
 PROJECT_USER:=$(shell cat .project-user)
+WORKERS=11
 
-
-## Versión de python
+## Python Version
 VERSION_PYTHON:=$(shell cat .python-version)
 
-## Bucket de amazon
+## Amazon bucket
 S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 SHELL := /bin/bash
 
 ########################################
-##            Ayuda                   ##
+##              Help                  ##
 ########################################
 
 help:   ##@ayuda Diálogo de ayuda
@@ -78,32 +76,29 @@ clean_venv: ##@limpieza Destruye la carpeta de virtualenv
 	echo ${VERSION_PYTHON} > .python-version
 
 ########################################
-##      Tareas de Ejecución           ##
-##    	de Infraestructura            ##
+##          Set   up  tasks           ##
+##    	    Infrastructure            ##
 ########################################
 
-create: ##@infraestructura Crea infraestructura necesaria: Pull de imágenes y crea el storage local
+create: ##@infraestructure Create infraestructure for the project (Images, volume & network)
 	$(MAKE) --directory=infraestructura create
 
-#start: create ##@infraestructura Inicializa la infraestructura y ejecuta el entrenamiento
-#	$(MAKE) --directory=infraestructura start
+start:  ##@infraestructure Create Infrastructure
+	$(MAKE) --directory=infraestructura start
 
-#stop: ##@infraestructura Detiene la infraestructura
-#	$(MAKE) --directory=infraestructura stop
+stop: ##@infraestructure Stop Infrastructure
+	$(MAKE) --directory=infraestructura stop
 
-#status: ##@infraestructura Informa el estatus de la infraestructura
-#	$(MAKE) --directory=infraestructura status
+restart: ##@infraestructure Restart Tasks Infastructure
+	$(MAKE) --directory=${PROJECT_NAME} restart
 
-#logs:   ##@infraestructura Despliega en pantalla las salidas de los logs de la infraestructura
-#	$(MAKE) --directory=infraestructura logs
+status: ##@infraestructure Report the status of the infrastructure 
+	$(MAKE) --directory=infraestructura status
 
-#restart: ##@infraestructura Reinicializa la infraestructura
-#	$(MAKE) --directory=infraestructura restart
+logs:   ##@infraestructure Displays the outputs of the infrastructure logs	
+	$(MAKE) --directory=infraestructura logs
 
-#destroy: ##@infraestructura Destruye la infraestructura
-#	$(MAKE) --directory=infraestructura clean
-
-nuke: ##@infraestructura Destruye la infraestructura (incluyendo las imágenes)
+nuke: ##@infraestructure Destroy -F infrastructure and images
 	$(MAKE) --directory=infraestructura nuke
 
 ########################################
@@ -126,8 +121,8 @@ tox: clean  ##@test Ejecuta tox
 #create_docs: ##@docs Crea la documentación
 #	$(MAKE) --directory=docs html
 
-#todo:         ##@docs ¿Qué falta por hacer?
-#	pylint --disable=all --enable=W0511 src
+todo:         ##@docs ¿Qué falta por hacer?
+	pylint --disable=all --enable=W0511 src
 
 
 ########################################
@@ -135,13 +130,13 @@ tox: clean  ##@test Ejecuta tox
 ##             de Datos               ##
 ########################################
 
-sync_to_s3: ##@data Sincroniza los datos del usuario hacia AWS S3
-	@aws s3 sync ./data/user/$(PROJECT_USER) s3://$(S3_BUCKET)/user/$(PROJECT_USER)
+#sync_to_s3: ##@data Sincroniza los datos del usuario hacia AWS S3
+#	@aws s3 sync ./data/user/$(PROJECT_USER) s3://$(S3_BUCKET)/user/$(PROJECT_USER)
 
 S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 
-sync_from_s3: ##@data Sincroniza los datos del usuario desde AWS S3
-	@aws s3 sync s3://$(S3_BUCKET)/user/$(PROJECT_USER) ./data/user/$(PROJECT_USER) 
+#sync_from_s3: ##@data Sincroniza los datos del usuario desde AWS S3
+#	@aws s3 sync s3://$(S3_BUCKET)/user/$(PROJECT_USER) ./data/user/$(PROJECT_USER) 
 
 
 ########################################
@@ -149,7 +144,7 @@ sync_from_s3: ##@data Sincroniza los datos del usuario desde AWS S3
 ########################################
 
 run:       ##@proyecto Ejecuta el pipeline de datos
-	$(MAKE) --directory=$(PROJECT_NAME) run
+	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(WORKERS)
 
 setup: build install ##@proyecto Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
 
