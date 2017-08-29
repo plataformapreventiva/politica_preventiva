@@ -19,6 +19,7 @@ from luigi.contrib.s3 import S3Target, S3Client
 import numpy as np
 from os.path import join
 import pandas as pd
+from py2neo import Graph, authenticate, Node, Relationship
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
@@ -97,7 +98,7 @@ class ClassicIngestDates(luigi.WrapperTask):
         if self.historical in ['True', 'T', '1', 'TRUE']:
             logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
                 format(self.pipeline_task))
- 
+
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
@@ -106,7 +107,7 @@ class ClassicIngestDates(luigi.WrapperTask):
         else:
             logger.info('Preparing to get current data for'+ \
                      ' the pipeline_task: {0}'.format(self.pipeline_task))
- 
+
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
@@ -114,7 +115,7 @@ class ClassicIngestDates(luigi.WrapperTask):
             logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
                 format(pipeline=self.pipeline_task, hdates=dates))
         try:
-            # if the pipeline_Task 
+            # if the pipeline_Task
             configuration.get_config().get(self.pipeline_task,
                     'start_date')
             return dates
@@ -130,15 +131,85 @@ class ClassicIngestDates(luigi.WrapperTask):
         logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
                 '\n will try to download the data of the\n following periods:{0}'.\
                 format(self.dates))
-        
-        yield [UpdateDictionary(current_date=self.current_date,
+
+        yield [UpdateLineage(current_date=self.current_date,
                                 pipeline_task=self.pipeline_task,
                                 data_date=str(data_date), suffix=self.suffix)
         for data_date in self.dates]
 
-class UpdateLineage()
-    def requires()
-        
+
+class UpdateLineage(luigi.Task):
+
+    """This Task updates the Neo4j lineage database.
+    """
+
+    current_date = luigi.DateParameter()
+    pipeline_task = luigi.Parameter()
+    client = S3Client()
+    actualizacion = datetime.datetime.now()
+    data_date = luigi.Parameter()
+    suffix = luigi.Parameter()
+
+    common_path = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')  # path where csv is located
+    raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
+    historical = luigi.Parameter('DEFAULT')
+
+    def requires(self):
+
+        UpdateDictionary(current_date=self.current_date,
+                         pipeline_task=self.pipeline_task,
+                         data_date=self.data_date,
+                         suffix=self.suffix)
+
+    def run(self):
+
+        logger.info('Creating ingestion Lineage for the pipeline {0}'.\
+            format(self.pipeline_task))
+        path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
+        nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
+        graph = Graph("http://localhost:7474/db/data/")
+
+        try:
+            # ToDO() schema generation and constraints to specific task
+            graph.schema.create_uniqueness_constraint('Tag', 'tipo')
+            graph.schema.create_uniqueness_constraint('Fraction', 'value')
+            graph.schema.create_uniqueness_constraint('Table', 'value')
+        except:
+            pass
+
+        table = Node('Table', value=self.pipeline_task)
+        year = self.data_date.split('-')[0]
+
+        try:
+            fraction = self.data_date.split('-')[1]
+        except:
+            fraction = ''
+
+        Year = Node('Year', value=year)
+        Fraction = Node('Fraction', value=str(year+'-'+fraction+'-'+self.suffix))
+        relation = Relationship(table, 'for_year', Year)
+        graph.merge(relation)
+        relation = Relationship(Year, 'for_fraction', Fraction)
+        graph.merge(relation)
+
+        for index, row in nodes.iterrows():
+
+            # Create column relations
+            column = Node('columna', id=row['id'], nombre=row['nombre'],
+                          metadata=row['metadata'])
+            relation = Relationship(table, 'that_has_column',
+                                    column, updated=row['actualizacion_sedesol'])
+            graph.merge(relation)
+
+            # Create Tag relations
+            if row['tipo'] != '':
+                tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
+                relation = Relationship(column, 'with_tag', tag)
+                graph.merge(relation)
+            else:
+                pass
+
 
 class UpdateDictionary(postgres.CopyToTable):
 
@@ -308,7 +379,7 @@ class UpdateDB(postgres.CopyToTable):
 
         if isinstance(self.columns[0], six.string_types):
             column_names = self.columns
- 
+
         elif len(self.columns[0]) == 2:
             # Create columns for csv upload
             column_names = [c[0] for c in self.columns]
@@ -494,7 +565,7 @@ class Preprocess(luigi.Task):
         key = self.pipeline_task + "/raw/" + self.data_date +\
             "-" + self.suffix + "-" + \
             self.pipeline_task + extra_h + ".csv"
-        
+
         out_key = "etl/" + self.pipeline_task + "/preprocess/" + \
                   self.data_date + "/" +   self.data_date + "--" + \
                                         self.pipeline_task + extra_h + ".csv"
