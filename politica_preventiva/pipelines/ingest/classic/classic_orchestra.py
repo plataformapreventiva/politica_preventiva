@@ -5,7 +5,6 @@ import logging
 import os
 import pdb
 import psycopg2
-import subprocess
 import tempfile
 import yaml
 import datetime
@@ -20,6 +19,7 @@ import numpy as np
 from os.path import join
 import pandas as pd
 from py2neo import Graph, authenticate, Node, Relationship
+from pathlib import Path
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
@@ -132,15 +132,30 @@ class ClassicIngestDates(luigi.WrapperTask):
                 '\n will try to download the data of the\n following periods:{0}'.\
                 format(self.dates))
 
-        yield [UpdateLineage(current_date=self.current_date,
+        return [UpdateLineage(current_date=self.current_date,
                                 pipeline_task=self.pipeline_task,
                                 data_date=str(data_date), suffix=self.suffix)
-        for data_date in self.dates]
+         for data_date in self.dates]
 
 
 class UpdateLineage(luigi.Task):
 
-    """This Task updates the Neo4j lineage database.
+    """ This Task updates the Neo4j lineage database.
+
+        TODO() 
+        - Column nodes should be unique - Implement it in cypher!
+        - Improve tags (tipo & subtipo) in the dictionary. Likely
+            create a list rather than a single column. Define static tags.
+        - Create Neo4j Task to collect output
+
+        Note
+        ---------
+        Assumes that the dictionary of the pipeline_task is defined
+
+        Returns TODO() Improve this element
+        ---------
+        Returns a temporal .done file saved in
+            politica_preventiva/pipelines/ingest/common/neo4j
     """
 
     current_date = luigi.DateParameter()
@@ -164,51 +179,80 @@ class UpdateLineage(luigi.Task):
 
     def run(self):
 
-        logger.info('Creating ingestion Lineage for the pipeline {0}'.\
+        logger.info('Creating ingestion Neo4j Lineage for the pipeline {0}'.\
             format(self.pipeline_task))
+
+        # Reading from pipeline dictionary
         path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
         nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
-        graph = Graph("http://localhost:7474/db/data/")
+
+        logging.info("Connecting to Neo4j DB {0} ")
 
         try:
-            # ToDO() schema generation and constraints to specific task
+            graph = Graph("http://localhost:7474/db/data/")
+        except Exception as e:
+            logging.exception("Failed to connect to database Neo4J" +\
+                              " when attempting to connect ")
+
+        try:
+            # Create Schema
+            # ToDO() schema generation and constraints should be a task
+            graph.schema.create_uniqueness_constraint('Table', 'value')
             graph.schema.create_uniqueness_constraint('Tag', 'tipo')
             graph.schema.create_uniqueness_constraint('Fraction', 'value')
-            graph.schema.create_uniqueness_constraint('Table', 'value')
+            graph.schema.create_uniqueness_constraint('Column', 'nombre_clave')
+            graph.schema.create_uniqueness_constraint('Year', 'year')
         except:
             pass
-
+ 
+        # Define Nodes
         table = Node('Table', value=self.pipeline_task)
-        year = self.data_date.split('-')[0]
+        years = self.data_date.split('-')[0]
+        graph.merge(table)
 
         try:
             fraction = self.data_date.split('-')[1]
         except:
             fraction = ''
 
-        Year = Node('Year', value=year)
+        Year = Node('Year', year=years)
         Fraction = Node('Fraction', value=str(year+'-'+fraction+'-'+self.suffix))
-        relation = Relationship(table, 'for_year', Year)
-        graph.merge(relation)
-        relation = Relationship(Year, 'for_fraction', Fraction)
+        relation = Relationship(Fraction, 'for_fraction', Year)
+        graph.merge(Fraction)
         graph.merge(relation)
 
         for index, row in nodes.iterrows():
 
             # Create column relations
-            column = Node('columna', id=row['id'], nombre=row['nombre'],
-                          metadata=row['metadata'])
-            relation = Relationship(table, 'that_has_column',
-                                    column, updated=row['actualizacion_sedesol'])
-            graph.merge(relation)
+            column = Node('Column', nombre_clave=row['id'], nombre=row['nombre'])
+            graph.merge(column)
+            from_table = Relationship(column, 'from_table', table,
+                                    pipeline=self.pipeline_task)
+            graph.merge(from_table)
 
-            # Create Tag relations
             if row['tipo'] != '':
                 tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
                 relation = Relationship(column, 'with_tag', tag)
                 graph.merge(relation)
             else:
                 pass
+
+        # Save current date
+        current_date = row['actualizacion_sedesol']
+
+        # Create Tag relations
+        relation = Relationship(table, 'for_year', Fraction,
+                                updated=current_date)
+        graph.merge(relation)
+
+        done = self.common_path + 'neo4j/' + self.pipeline_task+\
+                   self.data_date + '-'+self.suffix + '.done'
+        Path(done).touch()
+
+    def output(self):
+        done = self.common_path + 'neo4j/' + self.pipeline_task+\
+                self.data_date +'-'+self.suffix + '.done'
+        return luigi.LocalTarget(done)
 
 
 class UpdateDictionary(postgres.CopyToTable):
@@ -262,11 +306,10 @@ class UpdateDictionary(postgres.CopyToTable):
             logging.exception("The Dictionary schema abstraction is undefined"+\
                     " please define it in. common/raw_schemas.yaml")
 
-
     def rows(self):
         logging.info("Trying to update the dictionary for"+\
-                    " the pipeline_task {0} ".format(self.pipeline_task +\
-                    "data_date {0}".format(self.data_date)))
+                     "the pipeline_task {0} ".format(self.pipeline_task +\
+                     "data_date {0}".format(self.data_date)))
 
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
@@ -282,9 +325,9 @@ class UpdateDictionary(postgres.CopyToTable):
 
     def requires(self):
         return UpdateDB(current_date=self.current_date,
-                    pipeline_task=self.pipeline_task,
-                    actualizacion=self.actualizacion,
-                    data_date=self.data_date, suffix=self.suffix)
+                        pipeline_task=self.pipeline_task,
+                        actualizacion=self.actualizacion,
+                        data_date=self.data_date, suffix=self.suffix)
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database,
@@ -650,6 +693,7 @@ class RawHeaderTest(luigi.Task):
         common/raw_schemas.yaml
 
     """
+
     docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
@@ -708,4 +752,5 @@ class LocalIngest(luigi.Task):
         return task
 
     def output(self):
+
         return luigi.LocalTarget(self.local_ingest_file)
