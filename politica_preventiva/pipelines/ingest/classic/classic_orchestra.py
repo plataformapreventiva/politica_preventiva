@@ -216,7 +216,7 @@ class UpdateLineage(luigi.Task):
             fraction = ''
 
         Year = Node('Year', year=years)
-        Fraction = Node('Fraction', value=str(year+'-'+fraction+'-'+self.suffix))
+        Fraction = Node('Fraction', value=str(years+'-'+fraction+'-'+self.suffix))
         relation = Relationship(Fraction, 'for_fraction', Year)
         graph.merge(Fraction)
         graph.merge(relation)
