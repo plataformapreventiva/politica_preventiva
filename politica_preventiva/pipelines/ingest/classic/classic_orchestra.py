@@ -93,11 +93,15 @@ class ClassicIngestDates(luigi.WrapperTask):
     def dates(self):
         periodicity = configuration.get_config().get(self.pipeline_task,
                                                      'periodicity')
+        if periodicity == 'None':
+            dates = 'na'
+            self.suffix = 'fixed'
+            return [dates]
 
-        if self.historical in ['True', 'T', '1', 'TRUE']:
+        elif self.historical in ['True', 'T', '1', 'TRUE']:
             logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
                 format(self.pipeline_task))
- 
+
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
@@ -106,7 +110,7 @@ class ClassicIngestDates(luigi.WrapperTask):
         else:
             logger.info('Preparing to get current data for'+ \
                      ' the pipeline_task: {0}'.format(self.pipeline_task))
- 
+
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)

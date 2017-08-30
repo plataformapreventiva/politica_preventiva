@@ -661,6 +661,413 @@ ipc_ciudades:
   - scian_2
   - scian_3
   - ciudad
+iter_2010:
+  LUIGI:
+    INDEX: mun
+    SCHEMA:
+    - entidad: VARCHAR
+    - nom_ent: VARCHAR
+    - mun: VARCHAR
+    - nom_mun: VARCHAR
+    - loc: VARCHAR
+    - nom_loc: VARCHAR
+    - longitud: DECIMAL
+    - latitud: DECIMAL
+    - altitud: DECIMAL
+    - pobtot: NUMERIC
+    - pobmas: VARCHAR
+    - pobfem: VARCHAR
+    - p_0a2: VARCHAR
+    - p_0a2_m: VARCHAR
+    - p_0a2_f: VARCHAR
+    - p_3ymas: VARCHAR
+    - p_3ymas_m: VARCHAR
+    - p_3ymas_f: VARCHAR
+    - p_5ymas: VARCHAR
+    - p_5ymas_m: VARCHAR
+    - p_5ymas_f: VARCHAR
+    - p_12ymas: VARCHAR
+    - p_12ymas_m: VARCHAR
+    - p_12ymas_f: VARCHAR
+    - p_15ymas: VARCHAR
+    - p_15ymas_m: VARCHAR
+    - p_15ymas_f: VARCHAR
+    - p_18ymas: VARCHAR
+    - p_18ymas_m: VARCHAR
+    - p_18ymas_f: VARCHAR
+    - p_3a5: VARCHAR
+    - p_3a5_m: VARCHAR
+    - p_3a5_f: VARCHAR
+    - p_6a11: VARCHAR
+    - p_6a11_m: VARCHAR
+    - p_6a11_f: VARCHAR
+    - p_8a14: VARCHAR
+    - p_8a14_m: VARCHAR
+    - p_8a14_f: VARCHAR
+    - p_12a14: VARCHAR
+    - p_12a14_m: VARCHAR
+    - p_12a14_f: VARCHAR
+    - p_15a17: VARCHAR
+    - p_15a17_m: VARCHAR
+    - p_15a17_f: VARCHAR
+    - p_18a24: VARCHAR
+    - p_18a24_m: VARCHAR
+    - p_18a24_f: VARCHAR
+    - p_15a49_f: VARCHAR
+    - p_60ymas: VARCHAR
+    - p_60ymas_m: VARCHAR
+    - p_60ymas_f: VARCHAR
+    - rel_h_m: VARCHAR
+    - pob0_14: VARCHAR
+    - pob15_64: VARCHAR
+    - pob65_mas: VARCHAR
+    - prom_hnv: VARCHAR
+    - pnacent: VARCHAR
+    - pnacent_m: VARCHAR
+    - pnacent_f: VARCHAR
+    - pnacoe: VARCHAR
+    - pnacoe_m: VARCHAR
+    - pnacoe_f: VARCHAR
+    - pres2005: VARCHAR
+    - pres2005_m: VARCHAR
+    - pres2005_f: VARCHAR
+    - presoe05: VARCHAR
+    - presoe05_m: VARCHAR
+    - presoe05_f: VARCHAR
+    - p3ym_hli: VARCHAR
+    - p3ym_hli_m: VARCHAR
+    - p3ym_hli_f: VARCHAR
+    - p3hlinhe: VARCHAR
+    - p3hlinhe_m: VARCHAR
+    - p3hlinhe_f: VARCHAR
+    - p3hli_he: VARCHAR
+    - p3hli_he_m: VARCHAR
+    - p3hli_he_f: VARCHAR
+    - p5_hli: VARCHAR
+    - p5_hli_nhe: VARCHAR
+    - p5_hli_he: VARCHAR
+    - phog_ind: VARCHAR
+    - pcon_lim: VARCHAR
+    - pclim_mot: VARCHAR
+    - pclim_vis: VARCHAR
+    - pclim_leng: VARCHAR
+    - pclim_aud: VARCHAR
+    - pclim_mot2: VARCHAR
+    - pclim_men: VARCHAR
+    - pclim_men2: VARCHAR
+    - psin_lim: VARCHAR
+    - p3a5_noa: VARCHAR
+    - p3a5_noa_m: VARCHAR
+    - p3a5_noa_f: VARCHAR
+    - p6a11_noa: VARCHAR
+    - p6a11_noam: VARCHAR
+    - p6a11_noaf: VARCHAR
+    - p12a14noa: VARCHAR
+    - p12a14noam: VARCHAR
+    - p12a14noaf: VARCHAR
+    - p15a17a: VARCHAR
+    - p15a17a_m: VARCHAR
+    - p15a17a_f: VARCHAR
+    - p18a24a: VARCHAR
+    - p18a24a_m: VARCHAR
+    - p18a24a_f: VARCHAR
+    - p8a14an: VARCHAR
+    - p8a14an_m: VARCHAR
+    - p8a14an_f: VARCHAR
+    - p15ym_an: VARCHAR
+    - p15ym_an_m: VARCHAR
+    - p15ym_an_f: VARCHAR
+    - p15ym_se: VARCHAR
+    - p15ym_se_m: VARCHAR
+    - p15ym_se_f: VARCHAR
+    - p15pri_in: VARCHAR
+    - p15pri_inm: VARCHAR
+    - p15pri_inf: VARCHAR
+    - p15pri_co: VARCHAR
+    - p15pri_com: VARCHAR
+    - p15pri_cof: VARCHAR
+    - p15sec_in: VARCHAR
+    - p15sec_inm: VARCHAR
+    - p15sec_inf: VARCHAR
+    - p15sec_co: VARCHAR
+    - p15sec_com: VARCHAR
+    - p15sec_cof: VARCHAR
+    - p18ym_pb: VARCHAR
+    - p18ym_pb_m: VARCHAR
+    - p18ym_pb_f: VARCHAR
+    - graproes: VARCHAR
+    - graproes_m: VARCHAR
+    - graproes_f: VARCHAR
+    - pea: VARCHAR
+    - pea_m: VARCHAR
+    - pea_f: VARCHAR
+    - pe_inac: VARCHAR
+    - pe_inac_m: VARCHAR
+    - pe_inac_f: VARCHAR
+    - pocupada: VARCHAR
+    - pocupada_m: VARCHAR
+    - pocupada_f: VARCHAR
+    - pdesocup: VARCHAR
+    - pdesocup_m: VARCHAR
+    - pdesocup_f: VARCHAR
+    - psinder: VARCHAR
+    - pder_ss: VARCHAR
+    - pder_imss: VARCHAR
+    - pder_iste: VARCHAR
+    - pder_istee: VARCHAR
+    - pder_segp: VARCHAR
+    - p12ym_solt: VARCHAR
+    - p12ym_casa: VARCHAR
+    - p12ym_sepa: VARCHAR
+    - pcatolica: VARCHAR
+    - pncatolica: VARCHAR
+    - potras_rel: VARCHAR
+    - psin_relig: VARCHAR
+    - tothog: VARCHAR
+    - hogjef_m: VARCHAR
+    - hogjef_f: VARCHAR
+    - pobhog: VARCHAR
+    - phogjef_m: VARCHAR
+    - phogjef_f: VARCHAR
+    - vivtot: NUMERIC
+    - tvivhab: NUMERIC
+    - tvivpar: VARCHAR
+    - vivpar_hab: VARCHAR
+    - tvivparhab: VARCHAR
+    - vivpar_des: VARCHAR
+    - vivpar_ut: VARCHAR
+    - ocupvivpar: VARCHAR
+    - prom_ocup: VARCHAR
+    - pro_ocup_c: VARCHAR
+    - vph_pisodt: VARCHAR
+    - vph_pisoti: VARCHAR
+    - vph_1dor: VARCHAR
+    - vph_2ymasd: VARCHAR
+    - vph_1cuart: VARCHAR
+    - vph_2cuart: VARCHAR
+    - vph_3ymasc: VARCHAR
+    - vph_c_elec: VARCHAR
+    - vph_s_elec: VARCHAR
+    - vph_aguadv: VARCHAR
+    - vph_aguafv: VARCHAR
+    - vph_excsa: VARCHAR
+    - vph_drenaj: VARCHAR
+    - vph_nodren: VARCHAR
+    - vph_c_serv: VARCHAR
+    - vph_snbien: VARCHAR
+    - vph_radio: VARCHAR
+    - vph_tv: VARCHAR
+    - vph_refri: VARCHAR
+    - vph_lavad: VARCHAR
+    - vph_autom: VARCHAR
+    - vph_pc: VARCHAR
+    - vph_telef: VARCHAR
+    - vph_cel: VARCHAR
+    - vph_inter: VARCHAR
+    - tam_loc: NUMERIC
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad
+  - nom_ent
+  - mun
+  - nom_mun
+  - loc
+  - nom_loc
+  - longitud
+  - latitud
+  - altitud
+  - pobtot
+  - pobmas
+  - pobfem
+  - p_0a2
+  - p_0a2_m
+  - p_0a2_f
+  - p_3ymas
+  - p_3ymas_m
+  - p_3ymas_f
+  - p_5ymas
+  - p_5ymas_m
+  - p_5ymas_f
+  - p_12ymas
+  - p_12ymas_m
+  - p_12ymas_f
+  - p_15ymas
+  - p_15ymas_m
+  - p_15ymas_f
+  - p_18ymas
+  - p_18ymas_m
+  - p_18ymas_f
+  - p_3a5
+  - p_3a5_m
+  - p_3a5_f
+  - p_6a11
+  - p_6a11_m
+  - p_6a11_f
+  - p_8a14
+  - p_8a14_m
+  - p_8a14_f
+  - p_12a14
+  - p_12a14_m
+  - p_12a14_f
+  - p_15a17
+  - p_15a17_m
+  - p_15a17_f
+  - p_18a24
+  - p_18a24_m
+  - p_18a24_f
+  - p_15a49_f
+  - p_60ymas
+  - p_60ymas_m
+  - p_60ymas_f
+  - rel_h_m
+  - pob0_14
+  - pob15_64
+  - pob65_mas
+  - prom_hnv
+  - pnacent
+  - pnacent_m
+  - pnacent_f
+  - pnacoe
+  - pnacoe_m
+  - pnacoe_f
+  - pres2005
+  - pres2005_m
+  - pres2005_f
+  - presoe05
+  - presoe05_m
+  - presoe05_f
+  - p3ym_hli
+  - p3ym_hli_m
+  - p3ym_hli_f
+  - p3hlinhe
+  - p3hlinhe_m
+  - p3hlinhe_f
+  - p3hli_he
+  - p3hli_he_m
+  - p3hli_he_f
+  - p5_hli
+  - p5_hli_nhe
+  - p5_hli_he
+  - phog_ind
+  - pcon_lim
+  - pclim_mot
+  - pclim_vis
+  - pclim_leng
+  - pclim_aud
+  - pclim_mot2
+  - pclim_men
+  - pclim_men2
+  - psin_lim
+  - p3a5_noa
+  - p3a5_noa_m
+  - p3a5_noa_f
+  - p6a11_noa
+  - p6a11_noam
+  - p6a11_noaf
+  - p12a14noa
+  - p12a14noam
+  - p12a14noaf
+  - p15a17a
+  - p15a17a_m
+  - p15a17a_f
+  - p18a24a
+  - p18a24a_m
+  - p18a24a_f
+  - p8a14an
+  - p8a14an_m
+  - p8a14an_f
+  - p15ym_an
+  - p15ym_an_m
+  - p15ym_an_f
+  - p15ym_se
+  - p15ym_se_m
+  - p15ym_se_f
+  - p15pri_in
+  - p15pri_inm
+  - p15pri_inf
+  - p15pri_co
+  - p15pri_com
+  - p15pri_cof
+  - p15sec_in
+  - p15sec_inm
+  - p15sec_inf
+  - p15sec_co
+  - p15sec_com
+  - p15sec_cof
+  - p18ym_pb
+  - p18ym_pb_m
+  - p18ym_pb_f
+  - graproes
+  - graproes_m
+  - graproes_f
+  - pea
+  - pea_m
+  - pea_f
+  - pe_inac
+  - pe_inac_m
+  - pe_inac_f
+  - pocupada
+  - pocupada_m
+  - pocupada_f
+  - pdesocup
+  - pdesocup_m
+  - pdesocup_f
+  - psinder
+  - pder_ss
+  - pder_imss
+  - pder_iste
+  - pder_istee
+  - pder_segp
+  - p12ym_solt
+  - p12ym_casa
+  - p12ym_sepa
+  - pcatolica
+  - pncatolica
+  - potras_rel
+  - psin_relig
+  - tothog
+  - hogjef_m
+  - hogjef_f
+  - pobhog
+  - phogjef_m
+  - phogjef_f
+  - vivtot
+  - tvivhab
+  - tvivpar
+  - vivpar_hab
+  - tvivparhab
+  - vivpar_des
+  - vivpar_ut
+  - ocupvivpar
+  - prom_ocup
+  - pro_ocup_c
+  - vph_pisodt
+  - vph_pisoti
+  - vph_1dor
+  - vph_2ymasd
+  - vph_1cuart
+  - vph_2cuart
+  - vph_3ymasc
+  - vph_c_elec
+  - vph_s_elec
+  - vph_aguadv
+  - vph_aguafv
+  - vph_excsa
+  - vph_drenaj
+  - vph_nodren
+  - vph_c_serv
+  - vph_snbien
+  - vph_radio
+  - vph_tv
+  - vph_refri
+  - vph_lavad
+  - vph_autom
+  - vph_pc
+  - vph_telef
+  - vph_cel
+  - vph_inter
+  - tam_loc
 mir:
   LUIGI:
     INDEX: clave
@@ -855,4 +1262,3 @@ segob:
   - poblaciondelacabeceramunicipal
   - superficiedelmunicipioenkm2
   - cve_muni
-
