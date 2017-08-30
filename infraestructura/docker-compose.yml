@@ -19,7 +19,7 @@ services:
     environment:
         - NEO4J_HEAP_MEMORY=2048
         - NEO4J_CACHE_MEMORY=1G
-        - NEO4J_AUTH=neo4j/sedesol
+        - NEO4J_AUTH=none
 
 volumes:
   politica_preventiva_store:
