@@ -129,16 +129,15 @@ class ClassicIngestDates(luigi.WrapperTask):
                     'Luigi will get only the information of the last period')
             return [dates[-1]]
 
-
     def requires(self):
         logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
-                '\n will try to download the data of the\n following periods:{0}'.\
-                format(self.dates))
+                    '\n will try to download the data of the\n following periods:{0}'.\
+                    format(self.dates))
 
         return [UpdateLineage(current_date=self.current_date,
-                                pipeline_task=self.pipeline_task,
-                                data_date=str(data_date), suffix=self.suffix)
-         for data_date in self.dates]
+                              pipeline_task=self.pipeline_task,
+                              data_date=str(data_date), suffix=self.suffix)
+                for data_date in self.dates]
 
 
 class UpdateLineage(luigi.Task):
@@ -174,11 +173,16 @@ class UpdateLineage(luigi.Task):
     historical = luigi.Parameter('DEFAULT')
 
     def requires(self):
-
-        UpdateDictionary(current_date=self.current_date,
+        return UpdateDictionary(current_date=self.current_date,
                          pipeline_task=self.pipeline_task,
                          data_date=self.data_date,
                          suffix=self.suffix)
+
+    def output(self):
+        done = self.common_path + 'neo4j/' + self.pipeline_task +\
+                self.data_date + '-' + self.suffix + '.done'
+
+        return luigi.LocalTarget(done)
 
     def run(self):
 
@@ -187,7 +191,12 @@ class UpdateLineage(luigi.Task):
 
         # Reading from pipeline dictionary
         path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
-        nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
+
+        try:
+            nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
+        except:
+            logging.exception('Dictionary is not defined, see file {0}'.format(
+                path))
 
         logging.info("Connecting to Neo4j DB {0} ")
 
@@ -196,7 +205,6 @@ class UpdateLineage(luigi.Task):
         except Exception as e:
             logging.exception("Failed to connect to database Neo4J" +\
                               " when attempting to connect ")
-
         try:
             # Create Schema
             # ToDO() schema generation and constraints should be a task
@@ -205,6 +213,7 @@ class UpdateLineage(luigi.Task):
             graph.schema.create_uniqueness_constraint('Fraction', 'value')
             graph.schema.create_uniqueness_constraint('Column', 'nombre_clave')
             graph.schema.create_uniqueness_constraint('Year', 'year')
+
         except:
             pass
 
@@ -250,13 +259,10 @@ class UpdateLineage(luigi.Task):
 
         done = self.common_path + 'neo4j/' + self.pipeline_task+\
                    self.data_date + '-'+self.suffix + '.done'
+
         Path(done).touch()
 
-    def output(self):
-        done = self.common_path + 'neo4j/' + self.pipeline_task+\
-                self.data_date +'-'+self.suffix + '.done'
-        return luigi.LocalTarget(done)
-
+        return True
 
 class UpdateDictionary(postgres.CopyToTable):
 
@@ -271,6 +277,7 @@ class UpdateDictionary(postgres.CopyToTable):
         ---------
         Returns a PostgresTarget representing the inserted dataset
     """
+
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     client = S3Client()

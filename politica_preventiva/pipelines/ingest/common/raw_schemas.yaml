@@ -370,7 +370,7 @@ cuenta_publica_trimestral:
   - monto_pagado
 denue:
   LUIGI:
-    INDEX: null
+    INDEX: d_llave
     SCHEMA:
     - base: text
     - d_llave: int
