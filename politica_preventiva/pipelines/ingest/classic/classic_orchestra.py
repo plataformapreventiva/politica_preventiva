@@ -61,11 +61,11 @@ class ClassicIngest(luigi.WrapperTask):
     pipelines = parse_cfg_list(conf.get("ClassicIngest", "pipelines"))
 
     def requires(self):
-        logger.info('Luigi is preparing to run the following pipelines: {0}'.\
+        logger.info('Running the following pipelines: {0}'.\
                 format(self.pipelines))
         # loop through pipeline tasks
         return [ClassicIngestDates(current_date=self.current_date,
-                                pipeline_task=pipeline)
+                                   pipeline_task=pipeline)
         for pipeline in self.pipelines]
 
 
@@ -93,23 +93,30 @@ class ClassicIngestDates(luigi.WrapperTask):
     def dates(self):
         periodicity = configuration.get_config().get(self.pipeline_task,
                                                      'periodicity')
+        if periodicity == 'None':
+            dates = 'na'
+            self.suffix = 'fixed'
+            return [dates]
 
-        if self.historical in ['True', 'T', '1', 'TRUE']:
+        elif self.historical in ['True', 'T', '1', 'TRUE']:
             logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
                 format(self.pipeline_task))
- 
+
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
+            logger.debug('Pipeline task {pipeline} has historic dates {hdates}'.\
+                format(pipeline=self.pipeline_task, hdates=dates))
         else:
-            logger.info('Preparing to get current data for'+\
-                     'the pipeline_task: {0}'.format(self.pipeline_task))
- 
+            logger.info('Preparing to get current data for'+ \
+                     ' the pipeline_task: {0}'.format(self.pipeline_task))
+
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
             dates = dates[-2:]
-        
+            logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
+                format(pipeline=self.pipeline_task, hdates=dates))
         try:
             # if the pipeline_Task 
             configuration.get_config().get(self.pipeline_task,
@@ -117,18 +124,17 @@ class ClassicIngestDates(luigi.WrapperTask):
             return dates
 
         except:
-            logger.info('Start date is not defined for the pipeline {0}'+\
-                    'Luigi will get only the information of the last period'.\
-                format(self.pipeline_task))
+            logger.info('Start date is not defined for the pipeline {0}'.format(self.pipeline_task)+\
+                    'Luigi will get only the information of the last period')
             return [dates[-1]]
 
 
     def requires(self):
         logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
-                'will try to download the data of the following periods:{0}'.\
+                '\n will try to download the data of the\n following periods:{0}'.\
                 format(self.dates))
         
-        yield [UpdateDictionary(current_date=self.current_date,
+        return [UpdateDictionary(current_date=self.current_date,
                                 pipeline_task=self.pipeline_task,
                                 data_date=str(data_date), suffix=self.suffix)
         for data_date in self.dates]
