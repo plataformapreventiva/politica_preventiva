@@ -60,7 +60,7 @@ class SourceIngestTask(luigi.Task):
     def requires(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        
+
         logger.info('Luigi is trying to run the source script'+\
                 ' of the pipeline_task {0}'.format(self.pipeline_task))
 
@@ -68,14 +68,14 @@ class SourceIngestTask(luigi.Task):
         return luigi.LocalTarget(self.local_ingest_file)
 
 class DockerTask(SourceIngestTask):
-    
+
     """
     Task Abstraction to Dockerize source ingest tasks
     it uses the image python-task
        see more in pipeline/task/python-task/Dockerfile
-    
-    Note: 
-    - politica_preventiva_store should already exists 
+
+    Note:
+    - politica_preventiva_storeshould already exists
     - Remember to use docker_ingest_file instead of local_ingest_file
     - It can run python and bash scripts.
 
@@ -83,12 +83,12 @@ class DockerTask(SourceIngestTask):
     Define the @property def cmd(self):
         python **/**.py
         bash **/**.sh
-    
+
     See ipc_ciudades or cuenta_publica_anual for reference
-    # TODO() This task will eventually replace SourceIngestTask 
+    # TODO() This task will eventually replace SourceIngestTask
     # Check if pdb can be used for debugin purposes
     """
-    
+
     def run(self):
 
         logger.info('Luigi is using the dockerized version of the task'+\
@@ -100,7 +100,7 @@ class DockerTask(SourceIngestTask):
            politica_preventiva/task/docker-task {0}
          '''.format(self.cmd)
 
-        out = subprocess.call(cmd_docker, shell=True)
+        out = subprocess.call(cmd_docker,shell=True)
         logger.info(out)
 
 
@@ -116,12 +116,12 @@ class denue(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo ', self.classic_task_scripts +\
+        command_list = [' ', self.classic_task_scripts +\
                 'denue.sh', self.local_path + \
                 '/' + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call(cmd, shell=True)
+        return subprocess.call(cmd,shell=True)
 
 
 
@@ -149,7 +149,7 @@ class pub(luigi.Task):
                 error_bad_lines = False, dtype=str, encoding="utf-8")
 
 
-        return subprocess.call(cmd, shell=True)
+        return subprocess.call(cmd,shell=True)
 
     def output(self):
 
@@ -162,21 +162,21 @@ class cuenta_publica_trimestral(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo sh', self.classic_task_scripts +\
+        command_list = ['sh', self.classic_task_scripts +\
                 'cuenta_publica_trimestral.sh', self.data_date,
                 self.local_path + \
                 '/' + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call(cmd, shell=True)
+        return subprocess.call(cmd,shell=True)
 
 
 class cuenta_publica_anual(DockerTask):
 
     @property
-    def cmd(self): 
+    def cmd(self):
         year = self.data_date.split("-")[0]
-        command_list = [' sh', self.classic_task_scripts +\
+        command_list = ['sh', self.classic_task_scripts +\
                 'cuenta_publica_anual.sh', self.data_date, self.local_path + \
                 '/' + self.pipeline_task, self.docker_ingest_file]
         return " ".join(command_list)
@@ -197,7 +197,7 @@ class sagarpa(SourceIngestTask):
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class sagarpa_cierre(SourceIngestTask):
@@ -213,12 +213,12 @@ class sagarpa_cierre(SourceIngestTask):
                         '--cierre', 'True', '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 class ipc_ciudades(SourceIngestTask):
 
     @property
-    def cmd(self):  
+    def cmd(self):
         cmd = '''
             python {0}ipc.py\
             --year {1} --output {2}
@@ -233,7 +233,7 @@ class segob_snim(DockerTask):
     def cmd(self):
         extra_cmd = self.extra.split('--')
         extra_cmd = extra_cmd[0]
-        command_list = ['python', self.classic_task_scripts + 
+        command_list = ['python', self.classic_task_scripts +
         "segob_snim.py", '--data_date', self.data_date,
         '--output', self.local_ingest_file, "--extra", extra_cmd]
         return  " ".join(command_list)
@@ -257,7 +257,7 @@ class precios_granos(SourceIngestTask):
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class precios_frutos(SourceIngestTask):
@@ -277,7 +277,7 @@ class precios_frutos(SourceIngestTask):
         cmd = " ".join(command_list)
         print(cmd)
         #pdb.set_trace()
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class distance_to_services(luigi.Task):
@@ -347,7 +347,7 @@ class cenapred(SourceIngestTask):
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class cajeros_banxico(SourceIngestTask):
@@ -365,7 +365,7 @@ class cajeros_banxico(SourceIngestTask):
         cmd = " ".join(command_list)
         print(cmd)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class indesol(SourceIngestTask):
@@ -377,13 +377,13 @@ class indesol(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo sh', self.classic_task_scripts + "indesol.sh",
+        command_list = ['sh', self.classic_task_scripts + "indesol.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
 
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class donatarias_sat(SourceIngestTask):
@@ -394,14 +394,14 @@ class donatarias_sat(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        command_list = ['sudo sh', self.classic_task_scripts + "donatarias_sat.sh",
+        command_list = ['sh', self.classic_task_scripts + "donatarias_sat.sh",
                         self.data_date,
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
 
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 class cuaps_sedesol(SourceIngestTask):
     """
@@ -417,7 +417,7 @@ class cuaps_sedesol(SourceIngestTask):
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 class mir(SourceIngestTask):
     """
@@ -427,13 +427,13 @@ class mir(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo sh', self.classic_task_scripts + "mir.sh",
+        command_list = ['sh', self.classic_task_scripts + "mir.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
 
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class msd(SourceIngestTask):
@@ -442,12 +442,12 @@ class msd(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo sh', self.classic_task_scripts + "msd.sh",
+        command_list = ['sh', self.classic_task_scripts + "msd.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 class evals(SourceIngestTask):
 
@@ -455,12 +455,12 @@ class evals(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo sh', self.classic_task_scripts + "evals.sh",
+        command_list = ['sh', self.classic_task_scripts + "evals.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 class asm(SourceIngestTask):
 
@@ -468,12 +468,12 @@ class asm(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo sh', self.classic_task_scripts + "asm.sh",
+        command_list = ['sh', self.classic_task_scripts + "asm.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class finanzas_publicas_estatales(SourceIngestTask):
@@ -487,7 +487,7 @@ class finanzas_publicas_estatales(SourceIngestTask):
                         self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 
 class finanzas_publicas_municipales(SourceIngestTask):
@@ -501,7 +501,7 @@ class finanzas_publicas_municipales(SourceIngestTask):
                         self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
 
 class iter_2010(SourceIngestTask):
 
@@ -513,4 +513,4 @@ class iter_2010(SourceIngestTask):
                         self.local_path + self.pipeline_task, self.local_ingest_file]
         cmd = " ".join(command_list)
 
-        return subprocess.call([cmd], shell=True)
+        return subprocess.call([cmd],shell=True)
