@@ -1,8 +1,8 @@
 version: "3"
 
-services:                                                     
-  luigi-server-c:        
-    image: dpa/luigi-server-c 
+services:
+  luigi-server-c:
+    image: dpa/luigi-server-c
     ports:
         - "8082:8082"
     env_file: .env
@@ -16,6 +16,10 @@ services:
       - "7687:7687"
     networks:
       - politica_preventiva_net
+    environment:
+        - NEO4J_HEAP_MEMORY=2048
+        - NEO4J_CACHE_MEMORY=1G
+        - NEO4J_AUTH=none
 
 volumes:
   politica_preventiva_store:
@@ -23,5 +27,6 @@ volumes:
       name: politica_preventiva_store
 
 networks:
-  politica_preventiva_net:  
+  politica_preventiva_net:
     external: true
+
