@@ -180,6 +180,49 @@ cenapred:
   - hoteles
   - num_col
   - url
+cfe:
+  LUIGI:
+    INDEX: null
+    SCHEMA:
+    - cveedo
+    - cveinegi
+    - cvemun
+    - entidadfederativa
+    - municipio
+    - tarifa
+    - enero
+    - febrero
+    - marzo
+    - abril
+    - mayo
+    - junio
+    - julio
+    - agosto
+    - septiembre
+    - octubre
+    - noviembre
+    - diciembre
+    - actualizacion_sedesol
+    - data_date
+  RAW:
+  - cveedo
+  - cveinegi
+  - cvemun
+  - entidadfederativa
+  - municipio
+  - tarifa
+  - enero
+  - febrero
+  - marzo
+  - abril
+  - mayo
+  - junio
+  - julio
+  - agosto
+  - septiembre
+  - octubre
+  - noviembre
+  - diciembre
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
@@ -855,4 +898,3 @@ segob:
   - poblaciondelacabeceramunicipal
   - superficiedelmunicipioenkm2
   - cve_muni
-

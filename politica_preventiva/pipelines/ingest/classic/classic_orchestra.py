@@ -626,6 +626,7 @@ class LocalIngest(luigi.Task):
     def requires(self):
 
         classic_tasks = eval(self.pipeline_task)
+        pdb.set_trace()
         task = classic_tasks(data_date=self.data_date,
                              pipeline_task=self.pipeline_task,
                              local_ingest_file=self.local_ingest_file,

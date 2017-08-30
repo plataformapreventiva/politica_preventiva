@@ -97,6 +97,25 @@ def precios_granos_prep(data_date, s3_file, extra_h, out_key):
     return True
 
 
+def cfe(data_date, s3_file, extra_h, out_key):
+    """
+    Preprocessing function for CFE: each month of the year
+    has its own column.
+    """
+
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket, 'etl/' + s3_file, out_key)
+
+    if df is not None:
+        columns = ['enero', 'febrero', 'marzo', 'abril', 
+                   'mayo', 'junio', 'julio', 'agosto',
+                   'septiembre', 'octubre', 'noviembre', 'diciembre']
+        df = pputils.gather(df, 'mes', 'usuarios', columns)
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+        
+    return True
+
+
 def sagarpa_prep(data_date, s3_file, extra_h, out_key):
     """
     Preprocessing function for sagarpa: reads df from s3, completes missing values,
