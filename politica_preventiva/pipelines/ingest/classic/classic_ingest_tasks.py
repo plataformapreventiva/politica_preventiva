@@ -488,3 +488,16 @@ class iter_2010(SourceIngestTask):
         cmd = " ".join(command_list)
 
         return subprocess.call([cmd], shell=True)
+
+class defunciones_generales(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts + "defunciones_generales.sh",
+                        self.data_date, self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
