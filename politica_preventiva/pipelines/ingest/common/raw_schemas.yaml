@@ -368,6 +368,115 @@ cuenta_publica_trimestral:
   - monto_aprobado
   - monto_modificado
   - monto_pagado
+defunciones_fetales:
+  LUIGI:
+    INDEX: mun_regis
+    SCHEMA:
+    - ent_regis: TEXT
+    - mun_regis: TEXT
+    - ent_resid: TEXT
+    - mun_resid: TEXT
+    - loc_rh: TEXT
+    - tloc_resid: TEXT
+    - ent_ocurr: TEXT
+    - mun_ocurr: TEXT
+    - loc_ocurr: TEXT
+    - tloc_ocurr: TEXT
+    - causa_def: TEXT
+    - sex_prod: TEXT
+    - eda_prod: TEXT
+    - pes_prod: TEXT
+    - de_un_emba: TEXT
+    - atn_pren: TEXT
+    - emba_fue: TEXT
+    - ocu_part: TEXT
+    - dia_regis: TEXT
+    - mes_regis: TEXT
+    - anio_regis: TEXT
+    - dia_ocurr: TEXT
+    - mes_ocurr: TEXT
+    - anio_ocur: TEXT
+    - sitio_ocur: TEXT
+    - certific: TEXT
+    - atencion: TEXT
+    - tip_abor: TEXT
+    - pro_expu: TEXT
+    - nac_vivo: TEXT
+    - nac_muer: TEXT
+    - derecho: TEXT
+    - eda_madr: TEXT
+    - edo_civil: TEXT
+    - ocu_madr: TEXT
+    - esc_madr: TEXT
+    - horas: TEXT
+    - minutos: TEXT
+    - cond_mad: TEXT
+    - dia_cert: TEXT
+    - mes_cert: TEXT
+    - anio_cert: TEXT
+    - violencia: TEXT
+    - par_agre: TEXT
+    - lengua_ind: TEXT
+    - cond_act: TEXT
+    - nacionalid: TEXT
+    - paren_info: TEXT
+    - consultas: TEXT
+    - edo_piel: TEXT
+    - dis_re_oax: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - ent_regis
+  - mun_regis
+  - ent_resid
+  - mun_resid
+  - loc_rh
+  - tloc_resid
+  - ent_ocurr
+  - mun_ocurr
+  - loc_ocurr
+  - tloc_ocurr
+  - causa_def
+  - sex_prod
+  - eda_prod
+  - pes_prod
+  - de_un_emba
+  - atn_pren
+  - emba_fue
+  - ocu_part
+  - dia_regis
+  - mes_regis
+  - anio_regis
+  - dia_ocurr
+  - mes_ocurr
+  - anio_ocur
+  - sitio_ocur
+  - certific
+  - atencion
+  - tip_abor
+  - pro_expu
+  - nac_vivo
+  - nac_muer
+  - derecho
+  - eda_madr
+  - edo_civil
+  - ocu_madr
+  - esc_madr
+  - horas
+  - minutos
+  - cond_mad
+  - dia_cert
+  - mes_cert
+  - anio_cert
+  - violencia
+  - par_agre
+  - lengua_ind
+  - cond_act
+  - nacionalid
+  - paren_info
+  - consultas
+  - edo_piel
+  - dis_re_oax
 defunciones_generales:
   LUIGI:
     INDEX: mun_regis
