@@ -40,7 +40,6 @@ def s3_to_pandas(Bucket, Key, sep="|", header=False, python_3=True):
     Downloads csv from s3 bucket into a pandas Dataframe
     Assumes aws keys as environment variables
     """
-
     aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
     s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key)
