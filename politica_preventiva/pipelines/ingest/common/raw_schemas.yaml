@@ -180,6 +180,41 @@ cenapred:
   - hoteles
   - num_col
   - url
+cfe:
+  LUIGI:
+    INDEX: cvemun
+    SCHEMA:
+    - tipo: TEXT
+    - cveedo: TEXT
+    - cveinegi: TEXT
+    - cvemun: TEXT
+    - entidadfederativa: TEXT
+    - municipio: TEXT
+    - tarifa: TEXT
+    - mes: TEXT
+    - num: BIGINT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - tipo
+  - cveedo
+  - cveinegi
+  - cvemun
+  - entidadfederativa
+  - municipio
+  - tarifa
+  - enero
+  - febrero
+  - marzo
+  - abril
+  - mayo
+  - junio
+  - julio
+  - agosto
+  - septiembre
+  - octubre
+  - noviembre
+  - diciembre
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
@@ -519,6 +554,58 @@ evals:
   - costos
   - ciclo_conclusion
   - url_evaluacion
+finanzas_publicas_estatales:
+  LUIGI:
+    INDEX: id_entidad
+    SCHEMA:
+    - producto: TEXT
+    - cobertura: TEXT
+    - anio: INT
+    - id_entidad: VARCHAR
+    - tema: VARCHAR
+    - categoria: TEXT
+    - descripcion: TEXT
+    - cifra: BIGINT
+    - desc_estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - "\uFEFFproducto"
+  - cobertura
+  - anio
+  - id_entidad
+  - tema
+  - categoria
+  - descripcion
+  - cifra
+  - desc_estatus
+finanzas_publicas_municipales:
+  LUIGI:
+    INDEX: id_municipio
+    SCHEMA:
+    - producto: TEXT
+    - cobertura: TEXT
+    - anio: INT
+    - id_entidad: VARCHAR
+    - id_municipio: VARCHAR
+    - tema: VARCHAR
+    - categoria: TEXT
+    - descripcion_categoria: TEXT
+    - valor: BIGINT
+    - estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - "\uFEFFproducto"
+  - cobertura
+  - anio
+  - id_entidad
+  - id_municipio
+  - tema
+  - categoria
+  - descripcion_categoria
+  - valor
+  - estatus
 indesol:
   LUIGI:
     INDEX: cluni
@@ -726,6 +813,7 @@ precios_granos:
     - semana: INT
     - precio: DOUBLE PRECISION
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
   - producto
   - origen
