@@ -1,0 +1,12 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+tipo|Indica si se trata del número de usuarios o del número de kWh de venta.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710||2017-a
+cveedo|Clave de la entidad.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710||2017-a
+cveinegi|Clave de entidad INEGI.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710||2017-a
+cvemun|Clave de municipio.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710||2017-a
+entidadfederativa|Nombre de entidad.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710||2017-a
+municipio|Nombre del municipio.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710||2017-a
+tarifa|Tipo de tarifa.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710|Para conocer los tipos de tarifas visita: http://app.cfe.gob.mx/Aplicaciones/CCFE/Tarifas/Tarifas/tarifas_negocio.asp|2017-a
+mes|Mes del año.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710||2017-a
+num|Número de usuarios o kilowatt-hora de energía según tipo.|CFE|http://datos.cfe.gob.mx/Datos/|Capacidades|Comunicación|2017|2017-09-04 20:58:48.586710||2017-a
+actualizacion_sedesol|Fecha de actualización de datos en Sedesol.|Sedesol||||2017|2017-09-04 20:58:48.586710||2017-a
+data_date|Año.|Sedesol||||2017|2017-09-04 20:58:48.586710||2017-a

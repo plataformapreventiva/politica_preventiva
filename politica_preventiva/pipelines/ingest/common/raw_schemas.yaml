@@ -180,6 +180,41 @@ cenapred:
   - hoteles
   - num_col
   - url
+cfe:
+  LUIGI:
+    INDEX: cvemun
+    SCHEMA:
+    - tipo: TEXT
+    - cveedo: TEXT
+    - cveinegi: TEXT
+    - cvemun: TEXT
+    - entidadfederativa: TEXT
+    - municipio: TEXT
+    - tarifa: TEXT
+    - mes: TEXT
+    - num: BIGINT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - tipo
+  - cveedo
+  - cveinegi
+  - cvemun
+  - entidadfederativa
+  - municipio
+  - tarifa
+  - enero
+  - febrero
+  - marzo
+  - abril
+  - mayo
+  - junio
+  - julio
+  - agosto
+  - septiembre
+  - octubre
+  - noviembre
+  - diciembre
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia

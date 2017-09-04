@@ -57,8 +57,8 @@ class SourceIngestTask(luigi.Task):
     local_path = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
     def requires(self):
-        logger.info('Luigi is trying to run the source script'+\
-                ' of the pipeline_task {0}'.format(self.pipeline_task))
+        logger.info('Luigi is trying to run the source script\n'+\
+                ' \t\t\t\t\tof the pipeline_task {0}'.format(self.pipeline_task))
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
@@ -250,7 +250,6 @@ class precios_frutos(SourceIngestTask):
                 self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
-        #pdb.set_trace()
         return subprocess.call([cmd], shell=True)
 
 
@@ -415,13 +414,28 @@ class msd(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-
+        
         command_list = ['sudo sh', self.classic_task_scripts + "msd.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
         cmd = " ".join(command_list)
 
         return subprocess.call([cmd], shell=True)
+
+
+class cfe(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+        command_list = ['sh', self.classic_task_scripts + "cfe.sh",
+                        self.data_date,
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
 
 class evals(SourceIngestTask):
 
