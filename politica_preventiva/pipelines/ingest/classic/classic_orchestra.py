@@ -173,16 +173,11 @@ class UpdateLineage(luigi.Task):
     historical = luigi.Parameter('DEFAULT')
 
     def requires(self):
+
         return UpdateDictionary(current_date=self.current_date,
                          pipeline_task=self.pipeline_task,
                          data_date=self.data_date,
                          suffix=self.suffix)
-
-    def output(self):
-        done = self.common_path + 'neo4j/' + self.pipeline_task +\
-                self.data_date + '-' + self.suffix + '.done'
-
-        return luigi.LocalTarget(done)
 
     def run(self):
 
@@ -191,12 +186,7 @@ class UpdateLineage(luigi.Task):
 
         # Reading from pipeline dictionary
         path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
-
-        try:
-            nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
-        except:
-            logging.exception('Dictionary is not defined, see file {0}'.format(
-                path))
+        nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
 
         logging.info("Connecting to Neo4j DB {0} ")
 
@@ -205,6 +195,7 @@ class UpdateLineage(luigi.Task):
         except Exception as e:
             logging.exception("Failed to connect to database Neo4J" +\
                               " when attempting to connect ")
+
         try:
             # Create Schema
             # ToDO() schema generation and constraints should be a task
@@ -213,10 +204,9 @@ class UpdateLineage(luigi.Task):
             graph.schema.create_uniqueness_constraint('Fraction', 'value')
             graph.schema.create_uniqueness_constraint('Column', 'nombre_clave')
             graph.schema.create_uniqueness_constraint('Year', 'year')
-
         except:
             pass
-
+ 
         # Define Nodes
         table = Node('Table', value=self.pipeline_task)
         years = self.data_date.split('-')[0]
@@ -259,10 +249,14 @@ class UpdateLineage(luigi.Task):
 
         done = self.common_path + 'neo4j/' + self.pipeline_task+\
                    self.data_date + '-'+self.suffix + '.done'
-
         Path(done).touch()
 
-        return True
+    def output(self):
+        done = self.common_path + 'neo4j/' + self.pipeline_task+\
+                self.data_date +'-'+self.suffix + '.done'
+
+        return luigi.LocalTarget(done)
+
 
 class UpdateDictionary(postgres.CopyToTable):
 
@@ -416,6 +410,8 @@ class UpdateDB(postgres.CopyToTable):
         # Path of last "ouput" version #TODO(Return to input version)
         data = pd.read_csv(self.input().path, sep="|", encoding="utf-8", dtype=str,
                            error_bad_lines=False, header=None)
+        
+        pdb.set_trace()
         data.drop_duplicates(keep='first',inplace=True)
         data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
         data = data.where((pd.notnull(data)), None)
@@ -680,7 +676,14 @@ class LocalToS3(luigi.Task):
         local_ingest_file = self.local_path + self.pipeline_task +\
             "/" + self.data_date + "-" + self.suffix + "-" + self.pipeline_task +\
             extra_h + ".csv"
-        self.client.put(local_ingest_file, self.output().path)
+
+        try:
+            self.client.put(local_ingest_file, self.output().path)
+        except:
+            logger.debug('The raw file of the pipeline {0}'.format(self.pipeline_task) +\
+            ' is kinda big, Luigi will try to upload it in chunks')
+
+            s3_utils.big_file_to_s3(local_ingest_file, self.output().path)
 
         os.remove(local_ingest_file + ".done")
 
