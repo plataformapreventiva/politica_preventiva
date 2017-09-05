@@ -6,7 +6,7 @@ IMAGES = docker-task
 run:
 	@LUIGI_CONFIG_PATH=./pipelines/luigi.cfg  $(PROJECT_NAME) --server 0.0.0.0 --port 8082 --workers $(WORKERS)
 
-build: .built .built-local-storage
+setup: .built .built-local-storage
 
 restart: .clean
 

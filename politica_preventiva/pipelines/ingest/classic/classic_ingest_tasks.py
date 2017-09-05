@@ -96,7 +96,7 @@ class DockerTask(SourceIngestTask):
 
         cmd_docker = '''
          docker run -it --rm  -v $PWD:/politica_preventiva\
-                -v politica_preventiva_store:/politica_preventiva/data\
+                -v politica_preventiva_store:/data\
            politica_preventiva/task/docker-task {0}
          '''.format(self.cmd)
 
@@ -115,10 +115,10 @@ class denue(DockerTask):
     def cmd(self):
         command_list = ['sh', self.classic_task_scripts +\
                 'denue.sh', self.local_path + \
-                '/' + self.pipeline_task, self.local_ingest_file]
-        cmd = " ".join(command_list)
+                 self.pipeline_task, self.docker_ingest_file]
+        return " ".join(command_list)
 
-        return subprocess.call(cmd,shell=True)
+
 
 
 
