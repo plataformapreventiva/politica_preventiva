@@ -259,15 +259,6 @@ class UpdateLineage(luigi.Task):
                 self.data_date +'-'+self.suffix + '.done'
 
         return luigi.LocalTarget(done)
-=======
-                '\n will try to download the data of the\n following periods:{0}'.\
-                format(self.dates))
-        
-        yield [UpdateDictionary(current_date=self.current_date,
-                                pipeline_task=self.pipeline_task,
-                                data_date=str(data_date), suffix=self.suffix)
-        for data_date in self.dates]
->>>>>>> e0bcc2307b5c2158ea6716128f1405b7c9a71cc0
 
 
 class UpdateDictionary(postgres.CopyToTable):
