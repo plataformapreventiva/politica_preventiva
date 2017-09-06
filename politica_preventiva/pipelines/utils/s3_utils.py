@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 This script performs efficient concatenation of files stored in S3. Given a
 folder, output location, and optional suffix, all files with the given suffix
@@ -7,12 +8,19 @@ operations when necessary.
 Run `python combineS3Files.py -h` for more info.
 '''
 
-import boto3
-import os
-import threading
 import argparse
+import boto
+import boto3
 import logging
+import math
+import os
 import pdb
+import sys
+import threading
+
+from boto.s3.key import Key
+from filechunkio import FileChunkIO
+
 
 # Script expects everything to happen in one bucket
 BUCKET = "" # set by command line args
@@ -175,6 +183,65 @@ def complete_concatenation(s3, bucket, result_filename, upload_id, parts_mapping
     else:
         resp = s3.complete_multipart_upload(Bucket=bucket, Key=result_filename, UploadId=upload_id, MultipartUpload={'Parts': parts_mapping})
         logging.warning("Finished concatenation for file {}, with upload id #{}, and parts mapping: {}".format(result_filename, upload_id, parts_mapping))
+
+
+def big_file_to_s3(filename, bucket):
+
+    '''
+    Function to upload big files to s3.
+    It uses multipart upload with FileChunkIO module
+    '''
+
+    file = open(filename, 'r+')
+
+    source_size = 0
+    source_path = file.name
+    try:
+        source_size = os.fstat(file.fileno()).st_size
+    except:
+        # Not all file objects implement fileno(),
+        # so we fall back on this
+        file.seek(0, os.SEEK_END)
+        source_size = file.tell()
+
+    print('source_size=%s MB' %(source_size/(1024*1024)))
+
+    aws_access_key = boto.config.get('Credentials', 'aws_access_key_id')
+    aws_secret_access_key = boto.config.get('Credentials', 'aws_secret_access_key')
+
+    conn = boto.connect_s3(aws_access_key, aws_secret_access_key)
+
+    bucket = conn.get_bucket(bucket, validate=True)
+    print('bucket=%s' %(bucket))
+
+    # Create a multipart upload request
+    mp = bucket.initiate_multipart_upload(os.path.basename(source_path))
+
+    # Use a chunk size of 50 MiB (feel free to change this)
+    chunk_size = 52428800
+    chunk_count = int(math.ceil(source_size / chunk_size))
+    print('chunk_count=%s' %(chunk_count))
+
+    # Send the file parts, using FileChunkIO to create a file-like object
+    # that points to a certain byte range within the original file. We
+    # set bytes to never exceed the original file size.
+    sent = 0
+    for i in range(chunk_count + 1):
+        offset = chunk_size * i
+        bytes = min(chunk_size, source_size - offset)
+        sent = sent +  bytes
+        with FileChunkIO(source_path, 'r', offset=offset,
+                         bytes=bytes) as fp:
+            mp.upload_part_from_file(fp, part_num=i + 1)
+        print('%s: sent = %s MBytes ' %(i, sent/1024/1024))
+
+    # Finish the upload
+    mp.complete_upload()
+
+    if sent == source_size:
+        return True
+    return False
+
 
 
 if __name__ == "__main__":

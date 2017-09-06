@@ -49,6 +49,7 @@ logger = logging.getLogger("dpa-sedesol")
 # Classic Ingest Tasks
 #########
 
+
 class ClassicIngest(luigi.WrapperTask):
 
     """ Wrapper of Classic Ingestion.
@@ -125,7 +126,8 @@ class ClassicIngestDates(luigi.WrapperTask):
             return dates
 
         except:
-            logger.info('Start date is not defined for the pipeline {0}'.format(self.pipeline_task)+\
+            logger.info('Start date is not defined for the pipeline {0}'.format(
+                                                                  self.pipeline_task)+\
                     'Luigi will get only the information of the last period')
             return [dates[-1]]
 
@@ -187,7 +189,9 @@ class UpdateLineage(luigi.Task):
         # Reading from pipeline dictionary
         path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
         nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
-
+        actualizacion_sedesol = nodes.actualizacion_sedesol[0] 
+        nodes = nodes[nodes.id !='actualizacion_sedesol']
+        nodes = nodes[nodes.id !='data_date']
         logging.info("Connecting to Neo4j DB {0} ")
 
         try:
@@ -195,7 +199,7 @@ class UpdateLineage(luigi.Task):
         except Exception as e:
             logging.exception("Failed to connect to database Neo4J" +\
                               " when attempting to connect ")
-
+            raise('Failed to connect to database Neo4J')
         try:
             # Create Schema
             # ToDO() schema generation and constraints should be a task
@@ -407,21 +411,37 @@ class UpdateDB(postgres.CopyToTable):
                 str(self.suffix) + 'db'
 
     def rows(self):
-        # Path of last "ouput" version #TODO(Return to input version)
-        data = pd.read_csv(self.input().path, sep="|", encoding="utf-8", dtype=str,
-                           error_bad_lines=False, header=None)
-        
-        pdb.set_trace()
-        data.drop_duplicates(keep='first',inplace=True)
-        data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
-        data = data.where((pd.notnull(data)), None)
-        data = data.iloc[1:]
+        """
+        Returs lists corresponding to each row to be inserted.
+        """
 
-        # add timestamp to postgres table
-        data["actualizacion_sedesol"] = self.actualizacion
-        data["data_date"] = str(self.data_date) + "-" + \
-                            self.suffix
-        return [tuple(x) for x in data.to_records(index=False)]
+        s3 = boto3.client('s3')
+        keyname = self.input().path.split('preventiva/')[1]
+        response = s3.head_object(Bucket='dpa-plataforma-preventiva', Key=keyname)
+
+        # If the file is greater than 5 gb, ingest line per line
+        # TODO append B as a list to respect the data type
+        if response['ContentLength'] > 5368709120:
+            with self.input().open('r') as fobj:
+                for line in fobj:
+                    line = line.replace('nan|N/E|^\-$', '')
+                    line = line.strip('\n').split('|')
+                    line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
+                    line.append(str(self.data_date) + '-' + self.suffix)
+                    yield  [x if x != '' else None for x in line]
+
+        else:
+            # TODO() remove this step, checkout for concatenation and header removal.
+            data = pd.read_csv(self.input().path, sep="|", encoding="utf-8",
+                               dtype=str, error_bad_lines=False, header=None)
+            data.drop_duplicates(keep='first',inplace=True)
+            data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
+            data = data.where((pd.notnull(data)), None)
+            data = data.iloc[1:]
+            data["actualizacion_sedesol"] = self.actualizacion
+            data["data_date"] = str(self.data_date) + "-" + \
+                                self.suffix
+            return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
         connection = self.output().connect()
@@ -568,7 +588,6 @@ class Concatenation(luigi.Task):
         # folder to concatenate
         folder_to_concatenate = self.pipeline_task + "/preprocess/" +\
                                 self.data_date + "/"
-
         # function for appending all .csv files in folder_to_concatenate
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate,
                                    result_filepath, '.csv')
@@ -682,8 +701,8 @@ class LocalToS3(luigi.Task):
         except:
             logger.debug('The raw file of the pipeline {0}'.format(self.pipeline_task) +\
             ' is kinda big, Luigi will try to upload it in chunks')
-
-            s3_utils.big_file_to_s3(local_ingest_file, self.output().path)
+            output = self.output().path.split('preventiva/')[1]
+            s3_utils.big_file_to_s3(local_ingest_file, output)
 
         os.remove(local_ingest_file + ".done")
 
