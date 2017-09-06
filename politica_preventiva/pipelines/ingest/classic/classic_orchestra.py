@@ -132,7 +132,6 @@ class ClassicIngestDates(luigi.WrapperTask):
 
     def requires(self):
         logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
-<<<<<<< HEAD
                     '\n will try to download the data of the\n following periods:{0}'.\
                     format(self.dates))
 
