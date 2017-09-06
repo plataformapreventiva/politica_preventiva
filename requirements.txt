@@ -14,3 +14,4 @@ csvkit
 requests
 py2neo==3.1.2
 filechunkio
+#sqlite3

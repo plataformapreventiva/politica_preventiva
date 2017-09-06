@@ -5,6 +5,7 @@ import logging
 import os
 import pdb
 import psycopg2
+import subprocess
 import tempfile
 import yaml
 import datetime
@@ -18,8 +19,6 @@ from luigi.contrib.s3 import S3Target, S3Client
 import numpy as np
 from os.path import join
 import pandas as pd
-from py2neo import Graph, authenticate, Node, Relationship
-from pathlib import Path
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
@@ -120,7 +119,7 @@ class ClassicIngestDates(luigi.WrapperTask):
             logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
                 format(pipeline=self.pipeline_task, hdates=dates))
         try:
-            # if the pipeline_Task
+            # if the pipeline_Task 
             configuration.get_config().get(self.pipeline_task,
                     'start_date')
             return dates
@@ -133,6 +132,7 @@ class ClassicIngestDates(luigi.WrapperTask):
 
     def requires(self):
         logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
+<<<<<<< HEAD
                     '\n will try to download the data of the\n following periods:{0}'.\
                     format(self.dates))
 
@@ -260,6 +260,15 @@ class UpdateLineage(luigi.Task):
                 self.data_date +'-'+self.suffix + '.done'
 
         return luigi.LocalTarget(done)
+=======
+                '\n will try to download the data of the\n following periods:{0}'.\
+                format(self.dates))
+        
+        yield [UpdateDictionary(current_date=self.current_date,
+                                pipeline_task=self.pipeline_task,
+                                data_date=str(data_date), suffix=self.suffix)
+        for data_date in self.dates]
+>>>>>>> e0bcc2307b5c2158ea6716128f1405b7c9a71cc0
 
 
 class UpdateDictionary(postgres.CopyToTable):
@@ -314,10 +323,11 @@ class UpdateDictionary(postgres.CopyToTable):
             logging.exception("The Dictionary schema abstraction is undefined"+\
                     " please define it in. common/raw_schemas.yaml")
 
+
     def rows(self):
         logging.info("Trying to update the dictionary for"+\
-                     "the pipeline_task {0} ".format(self.pipeline_task +\
-                     "data_date {0}".format(self.data_date)))
+                    " the pipeline_task {0} ".format(self.pipeline_task +\
+                    "data_date {0}".format(self.data_date)))
 
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
@@ -333,9 +343,9 @@ class UpdateDictionary(postgres.CopyToTable):
 
     def requires(self):
         return UpdateDB(current_date=self.current_date,
-                        pipeline_task=self.pipeline_task,
-                        actualizacion=self.actualizacion,
-                        data_date=self.data_date, suffix=self.suffix)
+                    pipeline_task=self.pipeline_task,
+                    actualizacion=self.actualizacion,
+                    data_date=self.data_date, suffix=self.suffix)
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database,
@@ -448,7 +458,7 @@ class UpdateDB(postgres.CopyToTable):
 
         if isinstance(self.columns[0], six.string_types):
             column_names = self.columns
-
+ 
         elif len(self.columns[0]) == 2:
             # Create columns for csv upload
             column_names = [c[0] for c in self.columns]
@@ -633,7 +643,7 @@ class Preprocess(luigi.Task):
         key = self.pipeline_task + "/raw/" + self.data_date +\
             "-" + self.suffix + "-" + \
             self.pipeline_task + extra_h + ".csv"
-
+        
         out_key = "etl/" + self.pipeline_task + "/preprocess/" + \
                   self.data_date + "/" +   self.data_date + "--" + \
                                         self.pipeline_task + extra_h + ".csv"
@@ -725,7 +735,6 @@ class RawHeaderTest(luigi.Task):
         common/raw_schemas.yaml
 
     """
-
     docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
@@ -784,5 +793,4 @@ class LocalIngest(luigi.Task):
         return task
 
     def output(self):
-
         return luigi.LocalTarget(self.local_ingest_file)

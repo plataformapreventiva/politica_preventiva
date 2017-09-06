@@ -49,7 +49,7 @@ def header_test(path, task, common_path, suffix, new=True):
         except:
             logger.critical('Start date is not defined for the pipeline {0}'+\
                     'Luigi will get only the information of the last period'.\
-                format(self.pipeline_task))
+                format(task))
             sys.exit('\n Error: failed parsing ingest data file.')
     first_line = [remove_extra_chars(x)  for x in first_lines]
     initial_schema = first_line[:] 

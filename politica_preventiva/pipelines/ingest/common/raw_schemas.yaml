@@ -223,6 +223,41 @@ cenapred:
   - hoteles
   - num_col
   - url
+cfe:
+  LUIGI:
+    INDEX: cvemun
+    SCHEMA:
+    - tipo: TEXT
+    - cveedo: TEXT
+    - cveinegi: TEXT
+    - cvemun: TEXT
+    - entidadfederativa: TEXT
+    - municipio: TEXT
+    - tarifa: TEXT
+    - mes: TEXT
+    - num: BIGINT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - tipo
+  - cveedo
+  - cveinegi
+  - cvemun
+  - entidadfederativa
+  - municipio
+  - tarifa
+  - enero
+  - febrero
+  - marzo
+  - abril
+  - mayo
+  - junio
+  - julio
+  - agosto
+  - septiembre
+  - octubre
+  - noviembre
+  - diciembre
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
@@ -411,6 +446,240 @@ cuenta_publica_trimestral:
   - monto_aprobado
   - monto_modificado
   - monto_pagado
+defunciones_fetales:
+  LUIGI:
+    INDEX: mun_regis
+    SCHEMA:
+    - ent_regis: TEXT
+    - mun_regis: TEXT
+    - ent_resid: TEXT
+    - mun_resid: TEXT
+    - loc_rh: TEXT
+    - tloc_resid: TEXT
+    - ent_ocurr: TEXT
+    - mun_ocurr: TEXT
+    - loc_ocurr: TEXT
+    - tloc_ocurr: TEXT
+    - causa_def: TEXT
+    - sex_prod: TEXT
+    - eda_prod: TEXT
+    - pes_prod: TEXT
+    - de_un_emba: TEXT
+    - atn_pren: TEXT
+    - emba_fue: TEXT
+    - ocu_part: TEXT
+    - dia_regis: TEXT
+    - mes_regis: TEXT
+    - anio_regis: TEXT
+    - dia_ocurr: TEXT
+    - mes_ocurr: TEXT
+    - anio_ocur: TEXT
+    - sitio_ocur: TEXT
+    - certific: TEXT
+    - atencion: TEXT
+    - tip_abor: TEXT
+    - pro_expu: TEXT
+    - nac_vivo: TEXT
+    - nac_muer: TEXT
+    - derecho: TEXT
+    - eda_madr: TEXT
+    - edo_civil: TEXT
+    - ocu_madr: TEXT
+    - esc_madr: TEXT
+    - horas: TEXT
+    - minutos: TEXT
+    - cond_mad: TEXT
+    - dia_cert: TEXT
+    - mes_cert: TEXT
+    - anio_cert: TEXT
+    - violencia: TEXT
+    - par_agre: TEXT
+    - lengua_ind: TEXT
+    - cond_act: TEXT
+    - nacionalid: TEXT
+    - paren_info: TEXT
+    - consultas: TEXT
+    - edo_piel: TEXT
+    - dis_re_oax: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - ent_regis
+  - mun_regis
+  - ent_resid
+  - mun_resid
+  - loc_rh
+  - tloc_resid
+  - ent_ocurr
+  - mun_ocurr
+  - loc_ocurr
+  - tloc_ocurr
+  - causa_def
+  - sex_prod
+  - eda_prod
+  - pes_prod
+  - de_un_emba
+  - atn_pren
+  - emba_fue
+  - ocu_part
+  - dia_regis
+  - mes_regis
+  - anio_regis
+  - dia_ocurr
+  - mes_ocurr
+  - anio_ocur
+  - sitio_ocur
+  - certific
+  - atencion
+  - tip_abor
+  - pro_expu
+  - nac_vivo
+  - nac_muer
+  - derecho
+  - eda_madr
+  - edo_civil
+  - ocu_madr
+  - esc_madr
+  - horas
+  - minutos
+  - cond_mad
+  - dia_cert
+  - mes_cert
+  - anio_cert
+  - violencia
+  - par_agre
+  - lengua_ind
+  - cond_act
+  - nacionalid
+  - paren_info
+  - consultas
+  - edo_piel
+  - dis_re_oax
+defunciones_generales:
+  LUIGI:
+    INDEX: mun_regis
+    SCHEMA:
+    - ent_regis: TEXT
+    - mun_regis: TEXT
+    - ent_resid: TEXT
+    - mun_resid: TEXT
+    - tloc_resid: TEXT
+    - loc_resid: TEXT
+    - ent_ocurr: TEXT
+    - mun_ocurr: TEXT
+    - tloc_ocurr: TEXT
+    - loc_ocurr: TEXT
+    - causa_def: TEXT
+    - lista_mex: TEXT
+    - sexo: TEXT
+    - edad: TEXT
+    - dia_ocurr: TEXT
+    - mes_ocurr: TEXT
+    - anio_ocur: TEXT
+    - dia_regis: TEXT
+    - mes_regis: TEXT
+    - anio_regis: TEXT
+    - dia_nacim: TEXT
+    - mes_nacim: TEXT
+    - anio_nacim: TEXT
+    - ocupacion: TEXT
+    - escolarida: TEXT
+    - edo_civil: TEXT
+    - presunto: TEXT
+    - ocurr_trab: TEXT
+    - lugar_ocur: TEXT
+    - necropsia: TEXT
+    - asist_medi: TEXT
+    - sitio_ocur: TEXT
+    - cond_cert: TEXT
+    - nacionalid: TEXT
+    - derechohab: TEXT
+    - embarazo: TEXT
+    - rel_emba: TEXT
+    - horas: TEXT
+    - minutos: TEXT
+    - capitulo: TEXT
+    - grupo: TEXT
+    - lista1: TEXT
+    - gr_lismex: TEXT
+    - vio_fami: TEXT
+    - area_ur: TEXT
+    - edad_agru: TEXT
+    - complicaro: TEXT
+    - dia_cert: TEXT
+    - mes_cert: TEXT
+    - anio_cert: TEXT
+    - maternas: TEXT
+    - lengua: TEXT
+    - cond_act: TEXT
+    - par_agre: TEXT
+    - ent_ocules: TEXT
+    - mun_ocules: TEXT
+    - loc_ocules: TEXT
+    - razon_m: TEXT
+    - dis_re_oax: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - ent_regis
+  - mun_regis
+  - ent_resid
+  - mun_resid
+  - tloc_resid
+  - loc_resid
+  - ent_ocurr
+  - mun_ocurr
+  - tloc_ocurr
+  - loc_ocurr
+  - causa_def
+  - lista_mex
+  - sexo
+  - edad
+  - dia_ocurr
+  - mes_ocurr
+  - anio_ocur
+  - dia_regis
+  - mes_regis
+  - anio_regis
+  - dia_nacim
+  - mes_nacim
+  - anio_nacim
+  - ocupacion
+  - escolarida
+  - edo_civil
+  - presunto
+  - ocurr_trab
+  - lugar_ocur
+  - necropsia
+  - asist_medi
+  - sitio_ocur
+  - cond_cert
+  - nacionalid
+  - derechohab
+  - embarazo
+  - rel_emba
+  - horas
+  - minutos
+  - capitulo
+  - grupo
+  - lista1
+  - gr_lismex
+  - vio_fami
+  - area_ur
+  - edad_agru
+  - complicaro
+  - dia_cert
+  - mes_cert
+  - anio_cert
+  - maternas
+  - lengua
+  - cond_act
+  - par_agre
+  - ent_ocules
+  - mun_ocules
+  - loc_ocules
+  - razon_m
+  - dis_re_oax
 denue:
   LUIGI:
     INDEX: d_llave
