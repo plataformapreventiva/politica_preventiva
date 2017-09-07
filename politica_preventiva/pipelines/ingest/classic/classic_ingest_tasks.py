@@ -108,7 +108,7 @@ class denue(DockerTask):
         command_list = ['sh', self.classic_task_scripts +
                         'denue.sh', self.local_path +
                         self.pipeline_task, self.local_ingest_file]
- 
+
         return " ".join(command_list)
 
 
@@ -541,3 +541,16 @@ class defunciones_fetales(SourceIngestTask):
         cmd = " ".join(command_list)
 
         return subprocess.call([cmd], shell=True)
+
+
+class coneval_estados(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['sh', self.classic_task_scripts +
+                        'coneval_estados.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
+
