@@ -6,6 +6,7 @@ ENV PROJECT_NAME politica_preventiva
 ADD . /${PROJECT_NAME}/
 WORKDIR /${PROJECT_NAME}
 
+RUN apt-get -y install wget
 #RUN mkdir /${PROJECT_NAME}/data
 
 

@@ -1,3 +1,46 @@
+RAW:
+- base
+- id
+- nom_estab
+- raz_social
+- codigo_act
+- nombre_act
+- per_ocu
+- tipo_vial
+- nom_vial
+- tipo_v_e_1
+- nom_v_e_1
+- tipo_v_e_2
+- nom_v_e_2
+- tipo_v_e_3
+- nom_v_e_3
+- numero_ext
+- letra_ext
+- edificio
+- edificio_e
+- numero_int
+- letra_int
+- tipo_asent
+- nomb_asent
+- tipocencom
+- nom_cencom
+- num_local
+- cod_postal
+- cve_ent
+- entidad
+- cve_mun
+- municipio
+- cve_loc
+- localidad
+- ageb
+- manzana
+- telefono
+- correoelec
+- www
+- tipounieco
+- latitud
+- longitud
+- fecha_alta
 asm:
   LUIGI:
     INDEX: modalidad_pp
@@ -639,10 +682,9 @@ defunciones_generales:
   - dis_re_oax
 denue:
   LUIGI:
-    INDEX: null
+    INDEX: d_llave
     SCHEMA:
-    - base: text
-    - d_llave: int
+    - d_llave: text
     - nom_est: text
     - raz_soc: text
     - cve_scian: text
@@ -656,11 +698,11 @@ denue:
     - nomref2: text
     - tiporef3: text
     - nomref3: text
-    - numextnum: int
+    - numextnum: text
     - numextalf: text
     - edif_nom: text
     - edif_piso: text
-    - numintnum: int
+    - numintnum: text
     - numintalf: text
     - tipoasen: text
     - nomasen: text
@@ -680,53 +722,11 @@ denue:
     - dir_elec_1: text
     - sitio_web: text
     - tipo_est: text
-    - coord_y: int
-    - coord_x: int
+    - coord_y: text
+    - coord_x: text
     - fecha_alta: text
     - actualizacion_sedesol: timestamp
-  RAW:
-  - base
-  - id
-  - nombredelaunidadeconomica
-  - razonsocial
-  - codigodelaclasedeactividadscian
-  - nombredeclasedelaactividad
-  - descripcionestratopersonalocupado
-  - tipodevialidad
-  - nombredelavialidad
-  - tipodeentrevialidad1
-  - nombredeentrevialidad1
-  - tipodeentrevialidad2
-  - nombredeentrevialidad2
-  - tipodeentrevialidad3
-  - nombredeentrevialidad3
-  - numeroexteriorokilometro
-  - letraexterior
-  - edificio
-  - edificiopiso
-  - numerointerior
-  - letrainterior
-  - tipodeasentamientohumano
-  - nombredeasentamientohumano
-  - tipocentrocomercial
-  - corredorindustrial,centrocomercialomercadopublico
-  - numerodelocal
-  - codigopostal
-  - claveentidad
-  - entidadfederativa
-  - clavemunicipio
-  - municipio
-  - clavelocalidad
-  - localidad
-  - areageoestadisticabasica
-  - manzana
-  - numerodetelefono
-  - correoelectronico
-  - sitioeninternet
-  - tipodeestablecimiento
-  - latitud
-  - longitud
-  - fechadeincorporacionaldenue
+    - data_date: TEXT
 dictionary:
   LUIGI:
     SCHEMA:
