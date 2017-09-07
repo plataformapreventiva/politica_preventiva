@@ -44,7 +44,6 @@ class SourceIngestTask(luigi.Task):
     data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-    docker_ingest_file = luigi.Parameter()
     classic_task_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
@@ -69,7 +68,7 @@ class DockerTask(SourceIngestTask):
 
     Note:
     - politica_preventiva_storeshould already exists
-    - Remember to use docker_ingest_file instead of local_ingest_file
+    - Remember to use local_ingest_file instead of local_ingest_file
     - It can run python and bash scripts.
 
     Use:
@@ -108,7 +107,7 @@ class denue(DockerTask):
 
         command_list = ['sh', self.classic_task_scripts +
                         'denue.sh', self.local_path +
-                        self.pipeline_task, self.docker_ingest_file]
+                        self.pipeline_task, self.local_ingest_file]
  
         return " ".join(command_list)
 
@@ -142,19 +141,16 @@ class pub(luigi.Task):
         return luigi.LocalTarget(self.local_ingest_file)
 
 
-class cuenta_publica_trimestral(SourceIngestTask):
-
-    def run(self):
-        if not os.path.exists(self.local_path + self.pipeline_task):
-            os.makedirs(self.local_path + self.pipeline_task)
+class cuenta_publica_trimestral(DockerTask):
+    @property
+    def cmd(self):
 
         command_list = ['sh', self.classic_task_scripts +
                         'cuenta_publica_trimestral.sh', self.data_date,
                         self.local_path +
                         '/' + self.pipeline_task, self.local_ingest_file]
-        cmd = " ".join(command_list)
 
-        return subprocess.call(cmd, shell=True)
+        return " ".join(command_list)
 
 
 class cuenta_publica_anual(DockerTask):
@@ -165,7 +161,7 @@ class cuenta_publica_anual(DockerTask):
         command_list = ['sh', self.classic_task_scripts +
                         'cuenta_publica_anual.sh', self.data_date,
                         self.local_path +
-                        '/' + self.pipeline_task, self.docker_ingest_file]
+                        '/' + self.pipeline_task, self.local_ingest_file]
 
         return " ".join(command_list)
 
@@ -211,7 +207,7 @@ class ipc_ciudades(SourceIngestTask):
             python {0}ipc.py\
             --year {1} --output {2}
         '''.format(self.classic_task_scripts, self.data_date,
-                   self.docker_ingest_file)
+                   self.local_ingest_file)
         return cmd 
 
 

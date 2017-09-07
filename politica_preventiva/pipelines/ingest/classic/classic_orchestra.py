@@ -19,6 +19,9 @@ from luigi.contrib.s3 import S3Target, S3Client
 import numpy as np
 from os.path import join
 import pandas as pd
+from pathlib import Path
+from py2neo import Graph, Node, Relationship
+
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
@@ -675,16 +678,12 @@ class LocalToS3(luigi.Task):
 
     def requires(self):
         extra_h = get_extra_str(self.extra)
-        docker_ingest_file =  self.docker_path + self.pipeline_task +\
-            "/" + self.data_date + "-" + self.suffix + "-" + self.pipeline_task +\
-            extra_h + ".csv"
         local_ingest_file = self.local_path + self.pipeline_task +\
             "/" + self.data_date + "-" + self.suffix + "-" + self.pipeline_task +\
             extra_h + ".csv"
 
         task = RawHeaderTest(pipeline_task=self.pipeline_task,
                              data_date=self.data_date,
-                             docker_ingest_file=docker_ingest_file,
                              local_ingest_file=local_ingest_file,
                              extra=self.extra, suffix=self.suffix)
         return task
@@ -725,7 +724,6 @@ class RawHeaderTest(luigi.Task):
         common/raw_schemas.yaml
 
     """
-    docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
     extra = luigi.Parameter()
@@ -741,7 +739,6 @@ class RawHeaderTest(luigi.Task):
         return LocalIngest(pipeline_task=self.pipeline_task,
                            data_date=self.data_date,
                            local_ingest_file=self.local_ingest_file,
-                           docker_ingest_file=self.docker_ingest_file,
                            extra=self.extra)
 
     def run(self):
@@ -769,7 +766,6 @@ class LocalIngest(luigi.Task):
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-    docker_ingest_file = luigi.Parameter()
     extra = luigi.Parameter()
 
     def requires(self):
@@ -778,7 +774,6 @@ class LocalIngest(luigi.Task):
         task = classic_tasks(data_date=self.data_date,
                              pipeline_task=self.pipeline_task,
                              local_ingest_file=self.local_ingest_file,
-                             docker_ingest_file=self.docker_ingest_file,
                              extra=self.extra)
         return task
 
