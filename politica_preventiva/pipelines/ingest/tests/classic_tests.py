@@ -69,11 +69,13 @@ def header_test(path, task, common_path, suffix, new=True):
                  "After you've done that please turn change the" +\
                  " 'new' flag to False in Luigi.cfg. If you do not,"+\
                  "luigi will continue overwriting your dictionary \n\n")
+        sys.exit()
     else:
         try:
             old_header = header_d[task]["RAW"]
             if old_header != first_line:
                 logger.critical("Error! Header schema has change")
+                sys.exit()
             else:
                 pass
         except:
@@ -82,7 +84,8 @@ def header_test(path, task, common_path, suffix, new=True):
                  'see. pipelines/ingest/common/raw_schemas.yaml \n\n' +\
                  "Turn on the 'new' flag in Luigi.cfg If you want Luigi" +\
                  " to do it for you")
-            
+            sys.exit()
+
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False, 
                 Dumper=noalias_dumper)
