@@ -26,8 +26,7 @@ then
 
 else
     echo 'No information for that year'
-    touch $local_ingest_file
-    return
+    exit
 fi 
 
 curl http://www.coneval.org.mx/Informes/Pobreza/Datos_abiertos/Pobreza/${name_file}.zip > $local_path/coneval_$year.zip
