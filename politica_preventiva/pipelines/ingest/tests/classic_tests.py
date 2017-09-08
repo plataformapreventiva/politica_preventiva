@@ -59,6 +59,7 @@ def header_test(path, task, common_path, suffix, new=True):
             row_set.register_processor(offset_processor(offset + 1))
             types = type_guess(row_set.sample, strict=True)
             types = ['TEXT' if str(x) == 'String' else str(x) for x in types]
+            types = ['FLOAT' if str(x) == 'Decimal' else str(x) for x in types]
 
         except:
             logger.debug('Remember ingest data file must be \n' +\
