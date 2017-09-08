@@ -273,7 +273,7 @@ coneval_estados:
     - ubica_geo: Integer
     - edad: Integer
     - sexo: Integer
-    - tamhogesc: Decimal
+    - tamhogesc: FLOAT
     - parentesco: Integer
     - ic_rezedu: TEXT
     - anac_e: Integer
@@ -307,7 +307,7 @@ coneval_estados:
     - ins_ali: TEXT
     - plb_m: Bool
     - plb: Bool
-    - ictpc: Decimal
+    - ictpc: FLOAT
     - est_dis: Integer
     - upm: Integer
     - i_privacion: Integer
@@ -320,21 +320,21 @@ coneval_estados:
     - carencias: TEXT
     - carencias3: TEXT
     - cuadrantes: TEXT
-    - prof_b1: Decimal
-    - prof_bm1: Decimal
-    - profun: Decimal
-    - int_pob: Decimal
-    - int_pobe: Decimal
-    - int_vulcar: Decimal
-    - int_caren: Decimal
-    - ict: Decimal
-    - ing_mon: Decimal
-    - ing_lab: Decimal
-    - ing_ren: Decimal
-    - ing_tra: Decimal
-    - nomon: Decimal
-    - pago_esp: Decimal
-    - reg_esp: Decimal
+    - prof_b1: FLOAT
+    - prof_bm1: FLOAT
+    - profun: FLOAT
+    - int_pob: FLOAT
+    - int_pobe: FLOAT
+    - int_vulcar: FLOAT
+    - int_caren: FLOAT
+    - ict: FLOAT
+    - ing_mon: FLOAT
+    - ing_lab: FLOAT
+    - ing_ren: FLOAT
+    - ing_tra: FLOAT
+    - nomon: FLOAT
+    - pago_esp: FLOAT
+    - reg_esp: FLOAT
     - hli: TEXT
     - discap: TEXT
     - actualizacion_sedesol: TIMESTAMP
