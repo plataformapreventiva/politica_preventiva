@@ -10,6 +10,10 @@ import yaml
 from luigi import configuration
 from datetime import datetime
 import pandas as pd
+from messytables import CSVTableSet, type_guess, \
+          types_processor, headers_guess, headers_processor, \
+          offset_processor, any_tableset
+
 
 from politica_preventiva.pipelines.utils.string_cleaner_utils import remove_extra_chars
 
@@ -35,27 +39,32 @@ def header_test(path, task, common_path, suffix, new=True):
     """
     noalias_dumper = yaml.dumper.SafeDumper
     noalias_dumper.ignore_aliases = lambda self, data: True
-
     # Load Header dic
     with open(common_path + 'raw_schemas.yaml', 'r') as file:
         header_d = yaml.load(file)
 
-    with open(path, newline='') as f:
+    # with open(path, newline='') as f:
+    with open(path, 'rb') as f:
         try:
-            reader = csv.reader(f, delimiter='|')
-            first_lines = next(reader)
-            logger.debug('Remember ingest data file must be \n'+\
-                '\t\t\t\t\t must be delimited by pipes "|"')
+            # Guess Data types and collect header
+            table_set = CSVTableSet(f)
+            row_set = table_set.tables[0]
+            offset, first_lines = headers_guess(row_set.sample)
+            row_set.register_processor(offset_processor(offset + 1))
+            types = type_guess(row_set.sample, strict=True)
+
         except:
-            logger.critical('Start date is not defined for the pipeline {0}'+\
-                    'Luigi will get only the information of the last period'.\
-                format(task))
+            logger.debug('Remember ingest data file must be \n' +\
+                '\t\t\t\t\t must be delimited by pipes "|"'.format(task))
             sys.exit('\n Error: failed parsing ingest data file.')
+
     first_line = [remove_extra_chars(x)  for x in first_lines]
-    initial_schema = first_line[:] 
-    initial_schema.append("actualizacion_sedesol") 
-    initial_schema.append("data_date") 
-    
+    initial_schema = first_line[:]
+    initial_schema.append("actualizacion_sedesol")
+    types.append('String')
+    initial_schema.append("TIMESTAMP")
+    types.append('String')
+    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)] 
     if str2bool(new):
         header_d[task] = {"RAW": first_line,
                           "LUIGI":{'INDEX':None,
@@ -69,12 +78,11 @@ def header_test(path, task, common_path, suffix, new=True):
                  "After you've done that please turn change the" +\
                  " 'new' flag to False in Luigi.cfg. If you do not,"+\
                  "luigi will continue overwriting your dictionary \n\n")
-        sys.exit()
     else:
         try:
             old_header = header_d[task]["RAW"]
             if old_header != first_line:
-                logger.critical("Error! Header schema has change")
+                logger.critical("Error! Header schema has changed")
                 sys.exit()
             else:
                 pass
