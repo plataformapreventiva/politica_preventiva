@@ -30,6 +30,12 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
+def safe_execute(default, function):
+    try:
+        return function
+    except:
+        return default
+
 
 def header_test(path, task, common_path, suffix, new=True):
     """"
@@ -52,6 +58,7 @@ def header_test(path, task, common_path, suffix, new=True):
             offset, first_lines = headers_guess(row_set.sample)
             row_set.register_processor(offset_processor(offset + 1))
             types = type_guess(row_set.sample, strict=True)
+            types = ['TEXT' if str(x) == 'String' else str(x) for x in types]
 
         except:
             logger.debug('Remember ingest data file must be \n' +\
@@ -61,11 +68,19 @@ def header_test(path, task, common_path, suffix, new=True):
     first_line = [remove_extra_chars(x)  for x in first_lines]
     initial_schema = first_line[:]
     initial_schema.append("actualizacion_sedesol")
-    types.append('String')
-    initial_schema.append("TIMESTAMP")
-    types.append('String')
-    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)] 
-    if str2bool(new):
+    types.append('TIMESTAMP')
+    initial_schema.append("data_date")
+    types.append('TEXT')
+    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
+
+    # Check if the schema is complete
+    try:
+        schema_check =  header_d[task]['LUIGI']['SCHEMA'][1]
+    except:
+        schema_check = False
+
+    # if str2bool(new):
+    if isinstance(schema_check,dict) == False:
         header_d[task] = {"RAW": first_line,
                           "LUIGI":{'INDEX':None,
                           "SCHEMA": initial_schema}}
@@ -97,9 +112,9 @@ def header_test(path, task, common_path, suffix, new=True):
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False, 
                 Dumper=noalias_dumper)
-        if str2bool(new):
-            sys.exit('\n After updating the raw_schemas.yaml with the column types' +\
-                    '\n\t\t\t\t\t\t you must change the "new" flag to False in luigi.cfg.\n')
+        # if str2bool(new):
+        #    sys.exit('\n After updating the raw_schemas.yaml with the column types' +\
+        #            '\n\t\t\t\t\t\t you must change the "new" flag to False in luigi.cfg.\n')
     file = open(path+".done", "w")
     file.close()
 
