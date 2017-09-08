@@ -10,6 +10,10 @@ import yaml
 from luigi import configuration
 from datetime import datetime
 import pandas as pd
+from messytables import CSVTableSet, type_guess, \
+          types_processor, headers_guess, headers_processor, \
+          offset_processor, any_tableset
+
 
 from politica_preventiva.pipelines.utils.string_cleaner_utils import remove_extra_chars
 
@@ -26,6 +30,12 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
+def safe_execute(default, function):
+    try:
+        return function
+    except:
+        return default
+
 
 def header_test(path, task, common_path, suffix, new=True):
     """"
@@ -35,28 +45,43 @@ def header_test(path, task, common_path, suffix, new=True):
     """
     noalias_dumper = yaml.dumper.SafeDumper
     noalias_dumper.ignore_aliases = lambda self, data: True
-
     # Load Header dic
     with open(common_path + 'raw_schemas.yaml', 'r') as file:
         header_d = yaml.load(file)
 
-    with open(path, newline='') as f:
+    # with open(path, newline='') as f:
+    with open(path, 'rb') as f:
         try:
-            reader = csv.reader(f, delimiter='|')
-            first_lines = next(reader)
-            logger.debug('Remember ingest data file must be \n'+\
-                '\t\t\t\t\t must be delimited by pipes "|"')
+            # Guess Data types and collect header
+            table_set = CSVTableSet(f)
+            row_set = table_set.tables[0]
+            offset, first_lines = headers_guess(row_set.sample)
+            row_set.register_processor(offset_processor(offset + 1))
+            types = type_guess(row_set.sample, strict=True)
+            types = ['TEXT' if str(x) == 'String' else str(x) for x in types]
+            types = ['FLOAT' if str(x) == 'Decimal' else str(x) for x in types]
+
         except:
-            logger.critical('Start date is not defined for the pipeline {0}'+\
-                    'Luigi will get only the information of the last period'.\
-                format(task))
+            logger.debug('Remember ingest data file must be \n' +\
+                '\t\t\t\t\t must be delimited by pipes "|"'.format(task))
             sys.exit('\n Error: failed parsing ingest data file.')
+
     first_line = [remove_extra_chars(x)  for x in first_lines]
-    initial_schema = first_line[:] 
-    initial_schema.append("actualizacion_sedesol") 
-    initial_schema.append("data_date") 
-    
-    if str2bool(new):
+    initial_schema = first_line[:]
+    initial_schema.append("actualizacion_sedesol")
+    types.append('TIMESTAMP')
+    initial_schema.append("data_date")
+    types.append('TEXT')
+    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
+
+    # Check if the schema is complete
+    try:
+        schema_check =  header_d[task]['LUIGI']['SCHEMA'][1]
+    except:
+        schema_check = False
+
+    # if str2bool(new):
+    if isinstance(schema_check,dict) == False:
         header_d[task] = {"RAW": first_line,
                           "LUIGI":{'INDEX':None,
                           "SCHEMA": initial_schema}}
@@ -73,7 +98,8 @@ def header_test(path, task, common_path, suffix, new=True):
         try:
             old_header = header_d[task]["RAW"]
             if old_header != first_line:
-                logger.critical("Error! Header schema has change")
+                logger.critical("Error! Header schema has changed")
+                sys.exit()
             else:
                 pass
         except:
@@ -82,13 +108,14 @@ def header_test(path, task, common_path, suffix, new=True):
                  'see. pipelines/ingest/common/raw_schemas.yaml \n\n' +\
                  "Turn on the 'new' flag in Luigi.cfg If you want Luigi" +\
                  " to do it for you")
-            
+            sys.exit()
+
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
         yaml.dump(header_d, file, default_flow_style=False, 
                 Dumper=noalias_dumper)
-        if str2bool(new):
-            sys.exit('\n After updating the raw_schemas.yaml with the column types' +\
-                    '\n\t\t\t\t\t\t you must change the "new" flag to False in luigi.cfg.\n')
+        # if str2bool(new):
+        #    sys.exit('\n After updating the raw_schemas.yaml with the column types' +\
+        #            '\n\t\t\t\t\t\t you must change the "new" flag to False in luigi.cfg.\n')
     file = open(path+".done", "w")
     file.close()
 

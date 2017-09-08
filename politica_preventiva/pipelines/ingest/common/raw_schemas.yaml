@@ -258,6 +258,163 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+coneval_estados:
+  LUIGI:
+    INDEX: null
+    SCHEMA:
+    - proyecto: Bool
+    - folioviv: Integer
+    - foliohog: Integer
+    - numren: Integer
+    - factor: Integer
+    - tam_loc: Bool
+    - rururb: TEXT
+    - ent: TEXT
+    - ubica_geo: Integer
+    - edad: Integer
+    - sexo: Integer
+    - tamhogesc: FLOAT
+    - parentesco: Integer
+    - ic_rezedu: TEXT
+    - anac_e: Integer
+    - inas_esc: TEXT
+    - niv_ed: TEXT
+    - ic_asalud: TEXT
+    - serv_sal: TEXT
+    - ic_segsoc: TEXT
+    - ss_dir: TEXT
+    - pea: TEXT
+    - par: TEXT
+    - jef_ss: TEXT
+    - cony_ss: TEXT
+    - hijo_ss: TEXT
+    - s_salud: TEXT
+    - pam: TEXT
+    - ic_cv: TEXT
+    - icv_pisos: TEXT
+    - icv_muros: TEXT
+    - icv_techos: TEXT
+    - icv_hac: TEXT
+    - ic_sbv: TEXT
+    - isb_agua: TEXT
+    - isb_dren: TEXT
+    - isb_luz: TEXT
+    - isb_combus: TEXT
+    - ic_ali: TEXT
+    - id_men: TEXT
+    - tot_iaad: Integer
+    - tot_iamen: Integer
+    - ins_ali: TEXT
+    - plb_m: Bool
+    - plb: Bool
+    - ictpc: FLOAT
+    - est_dis: Integer
+    - upm: Integer
+    - i_privacion: Integer
+    - pobreza: TEXT
+    - pobreza_e: TEXT
+    - pobreza_m: TEXT
+    - vul_car: TEXT
+    - vul_ing: TEXT
+    - no_pobv: TEXT
+    - carencias: TEXT
+    - carencias3: TEXT
+    - cuadrantes: TEXT
+    - prof_b1: FLOAT
+    - prof_bm1: FLOAT
+    - profun: FLOAT
+    - int_pob: FLOAT
+    - int_pobe: FLOAT
+    - int_vulcar: FLOAT
+    - int_caren: FLOAT
+    - ict: FLOAT
+    - ing_mon: FLOAT
+    - ing_lab: FLOAT
+    - ing_ren: FLOAT
+    - ing_tra: FLOAT
+    - nomon: FLOAT
+    - pago_esp: FLOAT
+    - reg_esp: FLOAT
+    - hli: TEXT
+    - discap: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - proyecto
+  - folioviv
+  - foliohog
+  - numren
+  - factor
+  - tam_loc
+  - rururb
+  - ent
+  - ubica_geo
+  - edad
+  - sexo
+  - tamhogesc
+  - parentesco
+  - ic_rezedu
+  - anac_e
+  - inas_esc
+  - niv_ed
+  - ic_asalud
+  - serv_sal
+  - ic_segsoc
+  - ss_dir
+  - pea
+  - par
+  - jef_ss
+  - cony_ss
+  - hijo_ss
+  - s_salud
+  - pam
+  - ic_cv
+  - icv_pisos
+  - icv_muros
+  - icv_techos
+  - icv_hac
+  - ic_sbv
+  - isb_agua
+  - isb_dren
+  - isb_luz
+  - isb_combus
+  - ic_ali
+  - id_men
+  - tot_iaad
+  - tot_iamen
+  - ins_ali
+  - plb_m
+  - plb
+  - ictpc
+  - est_dis
+  - upm
+  - i_privacion
+  - pobreza
+  - pobreza_e
+  - pobreza_m
+  - vul_car
+  - vul_ing
+  - no_pobv
+  - carencias
+  - carencias3
+  - cuadrantes
+  - prof_b1
+  - prof_bm1
+  - profun
+  - int_pob
+  - int_pobe
+  - int_vulcar
+  - int_caren
+  - ict
+  - ing_mon
+  - ing_lab
+  - ing_ren
+  - ing_tra
+  - nomon
+  - pago_esp
+  - reg_esp
+  - hli
+  - discap
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia

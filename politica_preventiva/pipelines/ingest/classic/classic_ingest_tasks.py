@@ -89,7 +89,7 @@ class DockerTask(SourceIngestTask):
         cmd_docker = '''
          docker run -it --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/data\
-           politica_preventiva/task/docker-task {0}
+           politica_preventiva/task/docker-task {0} &>/dev/null
          '''.format(self.cmd)
 
         out = subprocess.call(cmd_docker, shell=True)
@@ -99,7 +99,6 @@ class DockerTask(SourceIngestTask):
 # Classic Ingest Tasks
 #######
 
-
 class denue(DockerTask):
 
     @property
@@ -108,7 +107,7 @@ class denue(DockerTask):
         command_list = ['sh', self.classic_task_scripts +
                         'denue.sh', self.local_path +
                         self.pipeline_task, self.local_ingest_file]
- 
+
         return " ".join(command_list)
 
 
@@ -148,7 +147,7 @@ class cuenta_publica_trimestral(DockerTask):
         command_list = ['sh', self.classic_task_scripts +
                         'cuenta_publica_trimestral.sh', self.data_date,
                         self.local_path +
-                        '/' + self.pipeline_task, self.local_ingest_file]
+                        self.pipeline_task, self.local_ingest_file]
 
         return " ".join(command_list)
 
@@ -161,7 +160,7 @@ class cuenta_publica_anual(DockerTask):
         command_list = ['sh', self.classic_task_scripts +
                         'cuenta_publica_anual.sh', self.data_date,
                         self.local_path +
-                        '/' + self.pipeline_task, self.local_ingest_file]
+                        self.pipeline_task, self.local_ingest_file]
 
         return " ".join(command_list)
 
@@ -208,7 +207,7 @@ class ipc_ciudades(SourceIngestTask):
             --year {1} --output {2}
         '''.format(self.classic_task_scripts, self.data_date,
                    self.local_ingest_file)
-        return cmd 
+        return cmd
 
 
 class segob_snim(DockerTask):
@@ -541,3 +540,16 @@ class defunciones_fetales(SourceIngestTask):
         cmd = " ".join(command_list)
 
         return subprocess.call([cmd], shell=True)
+
+
+class coneval_estados(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['sh', self.classic_task_scripts +
+                        'coneval_estados.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
+
