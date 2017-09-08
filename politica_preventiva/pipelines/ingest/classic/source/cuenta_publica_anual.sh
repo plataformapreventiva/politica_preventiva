@@ -35,5 +35,5 @@ curl $url \
 echo "Changing encoding"
 # Remove header?
 # sed '1d' $2.temp > $2.temp2
-iconv -f iso-8859-1 -t utf-8 $3.temp | csvformat -D "|" > $3
+iconv -f iso-8859-1 -t utf-8 $3.temp | sed 's/"//g' | csvformat -D "|" > $3
 rm $3.temp; 
