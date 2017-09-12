@@ -38,4 +38,3 @@ for fname in $array
 do
 	tail -n+3 $fname | awk -F'|' 'NF==41' >> $2
 done
-

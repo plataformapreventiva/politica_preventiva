@@ -1,46 +1,3 @@
-RAW:
-- base
-- id
-- nom_estab
-- raz_social
-- codigo_act
-- nombre_act
-- per_ocu
-- tipo_vial
-- nom_vial
-- tipo_v_e_1
-- nom_v_e_1
-- tipo_v_e_2
-- nom_v_e_2
-- tipo_v_e_3
-- nom_v_e_3
-- numero_ext
-- letra_ext
-- edificio
-- edificio_e
-- numero_int
-- letra_int
-- tipo_asent
-- nomb_asent
-- tipocencom
-- nom_cencom
-- num_local
-- cod_postal
-- cve_ent
-- entidad
-- cve_mun
-- municipio
-- cve_loc
-- localidad
-- ageb
-- manzana
-- telefono
-- correoelec
-- www
-- tipounieco
-- latitud
-- longitud
-- fecha_alta
 asm:
   LUIGI:
     INDEX: modalidad_pp
@@ -258,6 +215,121 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+coneval_estados:
+  LUIGI:
+    INDEX: ent
+    SCHEMA:
+    - proyecto: TEXT
+    - folioviv: TEXT
+    - foliohog: Integer
+    - numren: Integer
+    - tam_loc: Integer
+    - rururb: TEXT
+    - ent: TEXT
+    - edad: Integer
+    - sexo: Integer
+    - tamhogesc: FLOAT
+    - ic_rezedu: FLOAT
+    - anac_e: Integer
+    - inas_esc: TEXT
+    - niv_ed: TEXT
+    - ic_asalud: FLOAT
+    - ic_segsoc: FLOAT
+    - ss_dir: FLOAT
+    - pea: TEXT
+    - par: Integer
+    - jef_ss: FLOAT
+    - cony_ss: FLOAT
+    - hijo_ss: FLOAT
+    - s_salud: FLOAT
+    - pam: TEXT
+    - ic_cv: FLOAT
+    - icv_hac: FLOAT
+    - ic_sbv: FLOAT
+    - isb_combus: FLOAT
+    - ic_ali: FLOAT
+    - id_men: FLOAT
+    - tot_iaad: TEXT
+    - tot_iamen: TEXT
+    - ins_ali: Integer
+    - plb_m: FLOAT
+    - plb: FLOAT
+    - ictpc: FLOAT
+    - i_privacion: Integer
+    - pobreza: FLOAT
+    - pobreza_e: FLOAT
+    - pobreza_m: FLOAT
+    - vul_car: FLOAT
+    - vul_ing: FLOAT
+    - no_pobv: FLOAT
+    - carencias: FLOAT
+    - carencias3: FLOAT
+    - cuadrantes: FLOAT
+    - prof_b1: FLOAT
+    - prof_bm1: FLOAT
+    - profun: FLOAT
+    - int_pob: FLOAT
+    - int_pobe: FLOAT
+    - int_vulcar: FLOAT
+    - int_caren: FLOAT
+    - ict: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - proyecto
+  - folioviv
+  - foliohog
+  - numren
+  - tam_loc
+  - rururb
+  - ent
+  - edad
+  - sexo
+  - tamhogesc
+  - ic_rezedu
+  - anac_e
+  - inas_esc
+  - niv_ed
+  - ic_asalud
+  - ic_segsoc
+  - ss_dir
+  - pea
+  - par
+  - jef_ss
+  - cony_ss
+  - hijo_ss
+  - s_salud
+  - pam
+  - ic_cv
+  - icv_hac
+  - ic_sbv
+  - isb_combus
+  - ic_ali
+  - id_men
+  - tot_iaad
+  - tot_iamen
+  - ins_ali
+  - plb_m
+  - plb
+  - ictpc
+  - i_privacion
+  - pobreza
+  - pobreza_e
+  - pobreza_m
+  - vul_car
+  - vul_ing
+  - no_pobv
+  - carencias
+  - carencias3
+  - cuadrantes
+  - prof_b1
+  - prof_bm1
+  - profun
+  - int_pob
+  - int_pobe
+  - int_vulcar
+  - int_caren
+  - ict
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
