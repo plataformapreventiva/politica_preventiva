@@ -217,53 +217,53 @@ cfe:
   - diciembre
 coneval_estados:
   LUIGI:
-    INDEX: ent
+    INDEX: folioviv
     SCHEMA:
-    - proyecto: TEXT
-    - folioviv: TEXT
+    - proyecto: INTEGER
+    - folioviv: Integer
     - foliohog: Integer
     - numren: Integer
-    - tam_loc: Integer
-    - rururb: TEXT
-    - ent: TEXT
+    - tam_loc: INTEGER
+    - rururb: FLOAT
+    - ent: Integer
     - edad: Integer
-    - sexo: Integer
+    - sexo: INTEGER
     - tamhogesc: FLOAT
-    - ic_rezedu: FLOAT
-    - anac_e: Integer
+    - ic_rezedu: TEXT
+    - anac_e: TEXT
     - inas_esc: TEXT
-    - niv_ed: TEXT
-    - ic_asalud: FLOAT
-    - ic_segsoc: FLOAT
-    - ss_dir: FLOAT
-    - pea: TEXT
-    - par: Integer
-    - jef_ss: FLOAT
-    - cony_ss: FLOAT
-    - hijo_ss: FLOAT
-    - s_salud: FLOAT
-    - pam: TEXT
-    - ic_cv: FLOAT
-    - icv_hac: FLOAT
-    - ic_sbv: FLOAT
-    - isb_combus: FLOAT
-    - ic_ali: FLOAT
-    - id_men: FLOAT
+    - niv_ed: INTEGER
+    - ic_asalud: TEXT
+    - ic_segsoc: Integer
+    - ss_dir: Integer
+    - pea: INTEGER
+    - par: INTEGER
+    - jef_ss: INTEGER
+    - cony_ss: INTEGER
+    - hijo_ss: INTEGER
+    - s_salud: TEXT
+    - pam: INTEGER
+    - ic_cv: INTEGER
+    - icv_hac: INTEGER
+    - ic_sbv: INTEGER
+    - isb_combus: INTEGER
+    - ic_ali: Integer
+    - id_men: INTEGER
     - tot_iaad: TEXT
-    - tot_iamen: TEXT
-    - ins_ali: Integer
-    - plb_m: FLOAT
-    - plb: FLOAT
-    - ictpc: FLOAT
-    - i_privacion: Integer
-    - pobreza: FLOAT
-    - pobreza_e: FLOAT
-    - pobreza_m: FLOAT
-    - vul_car: FLOAT
-    - vul_ing: FLOAT
-    - no_pobv: FLOAT
-    - carencias: FLOAT
-    - carencias3: FLOAT
+    - tot_iamen: Integer
+    - ins_ali: INTEGER
+    - plb_m: INTEGER
+    - plb: Integer
+    - ictpc: INTEGER
+    - i_privacion: INTEGER
+    - pobreza: INTEGER
+    - pobreza_e: INTEGER
+    - pobreza_m: INTEGER
+    - vul_car: INTEGER
+    - vul_ing: INTEGER
+    - no_pobv: INTEGER
+    - carencias: INTEGER
+    - carencias3: INTEGER
     - cuadrantes: FLOAT
     - prof_b1: FLOAT
     - prof_bm1: FLOAT
@@ -271,7 +271,7 @@ coneval_estados:
     - int_pob: FLOAT
     - int_pobe: FLOAT
     - int_vulcar: FLOAT
-    - int_caren: FLOAT
+    - int_caren: INTEGER
     - ict: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
