@@ -60,7 +60,6 @@ def header_test(path, task, common_path, suffix, new=True):
             types = type_guess(row_set.sample, strict=True)
             types = ['TEXT' if str(x) == 'String' else str(x) for x in types]
             types = ['FLOAT' if str(x) == 'Decimal' else str(x) for x in types]
-
         except:
             logger.debug('Remember ingest data file must be \n' +\
                 '\t\t\t\t\t must be delimited by pipes "|"'.format(task))
@@ -69,12 +68,12 @@ def header_test(path, task, common_path, suffix, new=True):
     first_line = [remove_extra_chars(x)  for x in first_lines]
     initial_schema = first_line[:]
     initial_schema.append("actualizacion_sedesol")
-    types.append('TIMESTAMP')
-    initial_schema.append("data_date")
-    types.append('TEXT')
-    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
 
-    # Check if the schema is complete
+    types.append('String')
+    initial_schema.append("TIMESTAMP")
+    
+    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)] 
+   
     try:
         schema_check =  header_d[task]['LUIGI']['SCHEMA'][1]
     except:
