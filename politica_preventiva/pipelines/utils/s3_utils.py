@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 This script performs efficient concatenation of files stored in S3. Given a
 folder, output location, and optional suffix, all files with the given suffix
@@ -7,12 +8,19 @@ operations when necessary.
 Run `python combineS3Files.py -h` for more info.
 '''
 
-import boto3
-import os
-import threading
 import argparse
+import boto
+import boto3
 import logging
+import math
+import os
 import pdb
+import sys
+import threading
+
+from boto.s3.key import Key
+from filechunkio import FileChunkIO
+
 
 # Script expects everything to happen in one bucket
 BUCKET = "" # set by command line args
@@ -30,20 +38,30 @@ def s3_download(bucket, s3_file, local_file):
     s3 = new_s3_client()
     s3.download_file(Bucket=bucket, Key=s3_file, Filename=local_file)
 
-def run_concatenation(bucket, folder_to_concatenate, result_filepath, file_suffix, max_filesize=999999999):
+
+def run_concatenation(bucket, folder_to_concatenate, result_filepath, file_suffix, max_filesize=5368709120):
+
     bucket_split_path = [x for x in bucket.split('/') if x and x != 's3:']
+
     if len(bucket_split_path) > 1:
         folder_to_concatenate = "/".join(bucket_split_path[1:]) + "/" + folder_to_concatenate
         result_filepath = "/".join(bucket_split_path[1:]) + "/" + result_filepath
+
     bucket = bucket_split_path[0]
     s3 = new_s3_client()
+    # s3 = boto3.client('s3')
     parts_list = collect_parts(s3, bucket,folder_to_concatenate, file_suffix)
-    logging.warning("Found {} parts to concatenate in {}/{}".format(len(parts_list), bucket, folder_to_concatenate))
-    check = check_size(parts_list, max_filesize)
+
+    logging.warning("Found {} parts to concatenate in {}/{}".format(len(parts_list),
+                                                                    bucket,
+                                                                    folder_to_concatenate))
+    check = True # check_size(parts_list, max_filesize)
 
     if check:
-        run_single_concatenation(s3, bucket, parts_list, "{}".format(result_filepath))
+        run_single_concatenation(s3, bucket,
+                                 parts_list, "{}".format(result_filepath))
     else:
+        raise
         local_appending(s3, bucket, parts_list, "{}".format(result_filepath))
 
 
@@ -51,11 +69,15 @@ def run_single_concatenation(s3, bucket, parts_list, result_filepath):
     if len(parts_list) > 1:
         # perform multi-part upload
         upload_id = initiate_concatenation(s3, bucket, result_filepath)
-        parts_mapping = assemble_parts_to_concatenate(s3, bucket, result_filepath, upload_id, parts_list)
+        parts_mapping = assemble_parts_to_concatenate(s3, bucket,
+                                                      result_filepath,
+                                                      upload_id,
+                                                      parts_list)
         complete_concatenation(s3, bucket, result_filepath, upload_id, parts_mapping)
+
     elif len(parts_list) == 1:
         # can perform a simple S3 copy since there is just a single file
-        resp = s3.copy_object(Bucket=bucket, CopySource="{}/{}".format(bucket, parts_list[0][0]), Key=result_filepath)
+        resp = s3_folder_to_folder(bucket, parts_list[0][0], result_filepath)
         logging.warning("Copied single file to {} and got response {}".format(result_filepath, resp))
     else:
         logging.warning("No files to concatenate for {}".format(result_filepath))
@@ -101,7 +123,8 @@ def _list_all_objects_with_size(s3, bucket, folder):
 def initiate_concatenation(s3, bucket, result_filename):
     # performing the concatenation in S3 requires creating a multi-part upload
     # and then referencing the S3 files we wish to concatenate as "parts" of that upload
-    resp = s3.create_multipart_upload(Bucket=bucket, Key=result_filename)
+    #resp = s3.create_multipart_upload(Bucket=bucket, Key=result_filename)
+    resp = s3.MultipartUpload(Bucket=bucket, Key=result_filename)
     logging.warning("Initiated concatenation attempt for {}, and got response: {}".format(result_filename, resp))
     return resp['UploadId']
 
@@ -172,9 +195,92 @@ def complete_concatenation(s3, bucket, result_filename, upload_id, parts_mapping
     if len(parts_mapping) == 0:
         resp = s3.abort_multipart_upload(Bucket=bucket, Key=result_filename, UploadId=upload_id)
         logging.warning("Aborted concatenation for file {}, with upload id #{} due to empty parts mapping".format(result_filename, upload_id))
+
     else:
-        resp = s3.complete_multipart_upload(Bucket=bucket, Key=result_filename, UploadId=upload_id, MultipartUpload={'Parts': parts_mapping})
+        #resp = s3.complete_multipart_upload(Bucket=bucket, Key=result_filename, 
+        #       UploadId=upload_id, MultipartUpload={'Parts': parts_mapping})
+        resp = s3.multipart_upload.complete( MultipartUpload={'Parts': parts_mapping})
         logging.warning("Finished concatenation for file {}, with upload id #{}, and parts mapping: {}".format(result_filename, upload_id, parts_mapping))
+
+
+def s3_folder_to_folder(bucket, src_key_name, new_key_name):
+    s3 = boto3.resource('s3') 
+    copy_source = { 'Bucket': bucket , 'Key': src_key_name}
+    s3.meta.client.copy(copy_source, bucket, new_key_name) 
+
+
+def big_file_to_s3( filename, s3_name):
+    session = boto3.Session()
+    s3_client = session.client( 's3' )
+    try:
+        print("Uploading file:".format(filename))
+
+        tc = boto3.s3.transfer.TransferConfig()
+        t = boto3.s3.transfer.S3Transfer( client=s3_client, 
+                                         config=tc )
+        t.upload_file( filename, 'dpa-plataforma-preventiva', s3_name)
+
+    except Exception as e:
+        print("Error uploading: %s".format( e ) )
+
+
+def abig_file_to_s3(filename, bucket):
+
+    '''
+    Function to upload big files to s3.
+    It uses multipart upload with FileChunkIO module
+    '''
+
+    file = open(filename, 'r+')
+
+    source_size = 0
+    source_path = file.name
+    try:
+        source_size = os.fstat(file.fileno()).st_size
+    except:
+        # Not all file objects implement fileno(),
+        # so we fall back on this
+        file.seek(0, os.SEEK_END)
+        source_size = file.tell()
+
+    print('source_size=%s MB' %(source_size/(1024*1024)))
+
+    aws_access_key = boto.config.get('Credentials', 'aws_access_key_id')
+    aws_secret_access_key = boto.config.get('Credentials', 'aws_secret_access_key')
+
+    conn = boto.connect_s3(aws_access_key, aws_secret_access_key)
+
+    bucket = conn.get_bucket(bucket, validate=True)
+    print('bucket=%s' %(bucket))
+
+    # Create a multipart upload request
+    mp = bucket.initiate_multipart_upload(os.path.basename(source_path))
+
+    # Use a chunk size of 50 MiB (feel free to change this)
+    chunk_size = 52428800
+    chunk_count = int(math.ceil(source_size / chunk_size))
+    print('chunk_count=%s' %(chunk_count))
+
+    # Send the file parts, using FileChunkIO to create a file-like object
+    # that points to a certain byte range within the original file. We
+    # set bytes to never exceed the original file size.
+    sent = 0
+    for i in range(chunk_count + 1):
+        offset = chunk_size * i
+        bytes = min(chunk_size, source_size - offset)
+        sent = sent +  bytes
+        with FileChunkIO(source_path, 'r', offset=offset,
+                         bytes=bytes) as fp:
+            mp.upload_part_from_file(fp, part_num=i + 1)
+        print('%s: sent = %s MBytes ' %(i, sent/1024/1024))
+
+    # Finish the upload
+    mp.complete_upload()
+
+    if sent == source_size:
+        return True
+    return False
+
 
 
 if __name__ == "__main__":

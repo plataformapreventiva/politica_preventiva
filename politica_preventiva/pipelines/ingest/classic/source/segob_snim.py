@@ -58,7 +58,7 @@ def ingest_segob_snim(output, data_date, tipo):
         "30":  "212",
         "31":  "106",
         "32":  "58"}
-    
+       
     for estado in estados:
         for municipio in list(range(1, 1+int(dict_edos[str(estado)]))):
             cookies = {
@@ -83,11 +83,11 @@ def ingest_segob_snim(output, data_date, tipo):
                 'tipo': 'm',
                 'reporte': 'dg{0}'.format(data_date)
             }
-
             try:
                 response = requests.post(
                     'http://www.snim.rami.gob.mx/tbl_{0}.php'.format(tipo),
                     headers=headers, cookies=cookies, data=data)
+
             except:
                 pass
 
@@ -112,14 +112,16 @@ def ingest_segob_snim(output, data_date, tipo):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Download SEGOB data for municipalities')
 
-    parser.add_argument('--output', type=str,
-        help = 'Name of output file')
     parser.add_argument('--data_date', type=str,
         help = 'Data date of data')
+    parser.add_argument('--output', type=str,
+        help = 'Name of output file')
     parser.add_argument('--extra', type=str, default='poblacion')
     
     args = parser.parse_args()
+    data_date = args.output
     output = args.output
-
-    ingest_segob_snim(output,data_date,tipo)
+    extra = args.output
+    
+    ingest_segob_snim(output,data_date,tipo=extra)
 

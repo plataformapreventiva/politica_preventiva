@@ -5,7 +5,7 @@
 ########################################
 SHELL := /bin/bash 
 PROJECT_NAME:= politica_preventiva
-DATA_DIRECTORY:= $(CURDIR)/../data
+DATA_DIRECTORY:= /home/data
 DOCKER_REGISTRY:= "localhost:5000"
 IMAGES = python luigi-server-c 
 #base python r java luigi-server luigi-worker spark-client hadoop-client
