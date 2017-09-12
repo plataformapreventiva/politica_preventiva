@@ -51,6 +51,7 @@ class RunPipelines(luigi.WrapperTask):
     Main Wrapper Task of pipelines 
     """
     current_date = datetime.date.today()
+    # current_date = luigi.DateParameter(default=datetime.date(2017, 8, 12))
     logger.info('Luigi is running the pipeline on the date: {0}'.format(
         current_date))
 

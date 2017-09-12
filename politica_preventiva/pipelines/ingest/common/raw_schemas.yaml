@@ -219,51 +219,51 @@ coneval_estados:
   LUIGI:
     INDEX: folioviv
     SCHEMA:
-    - proyecto: Bool
+    - proyecto: INTEGER
     - folioviv: Integer
     - foliohog: Integer
     - numren: Integer
-    - tam_loc: Bool
+    - tam_loc: INTEGER
     - rururb: FLOAT
     - ent: Integer
     - edad: Integer
-    - sexo: Bool
+    - sexo: INTEGER
     - tamhogesc: FLOAT
     - ic_rezedu: TEXT
     - anac_e: TEXT
     - inas_esc: TEXT
-    - niv_ed: Bool
+    - niv_ed: INTEGER
     - ic_asalud: TEXT
     - ic_segsoc: Integer
     - ss_dir: Integer
-    - pea: Bool
-    - par: Bool
-    - jef_ss: Bool
-    - cony_ss: Bool
-    - hijo_ss: Bool
+    - pea: INTEGER
+    - par: INTEGER
+    - jef_ss: INTEGER
+    - cony_ss: INTEGER
+    - hijo_ss: INTEGER
     - s_salud: TEXT
-    - pam: Bool
-    - ic_cv: Bool
-    - icv_hac: Bool
-    - ic_sbv: Bool
-    - isb_combus: Bool
+    - pam: INTEGER
+    - ic_cv: INTEGER
+    - icv_hac: INTEGER
+    - ic_sbv: INTEGER
+    - isb_combus: INTEGER
     - ic_ali: Integer
-    - id_men: Bool
+    - id_men: INTEGER
     - tot_iaad: TEXT
     - tot_iamen: Integer
-    - ins_ali: Bool
-    - plb_m: Bool
+    - ins_ali: INTEGER
+    - plb_m: INTEGER
     - plb: Integer
-    - ictpc: Bool
-    - i_privacion: Bool
-    - pobreza: Bool
-    - pobreza_e: Bool
-    - pobreza_m: Bool
-    - vul_car: Bool
-    - vul_ing: Bool
-    - no_pobv: Bool
-    - carencias: Bool
-    - carencias3: Integer
+    - ictpc: INTEGER
+    - i_privacion: INTEGER
+    - pobreza: INTEGER
+    - pobreza_e: INTEGER
+    - pobreza_m: INTEGER
+    - vul_car: INTEGER
+    - vul_ing: INTEGER
+    - no_pobv: INTEGER
+    - carencias: INTEGER
+    - carencias3: INTEGER
     - cuadrantes: FLOAT
     - prof_b1: FLOAT
     - prof_bm1: FLOAT
@@ -271,7 +271,7 @@ coneval_estados:
     - int_pob: FLOAT
     - int_pobe: FLOAT
     - int_vulcar: FLOAT
-    - int_caren: TEXT
+    - int_caren: INTEGER
     - ict: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
