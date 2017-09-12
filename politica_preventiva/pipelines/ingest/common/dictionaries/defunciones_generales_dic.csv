@@ -1,0 +1,63 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+ent_regis|entidad de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+mun_regis|municipio de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+ent_resid|entidad de residencia habitual del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+mun_resid|municipio de residencia habitual del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+tloc_resid|tamaño de localidad de residencia habitual del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Clasificación de las localidades de acuerdo al número de personas que las habitan |2015-a
+loc_resid|localidad de residencia habitual del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLDE15.dbf.  Ent_resid + Mun_resid + Loc_resid con Cve_ent + Cve_mun + Cve_loc |2015-a
+ent_ocurr|entidad de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLDE15.dbf |2015-a
+mun_ocurr|municipio de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLDE15.dbf |2015-a
+tloc_ocurr|tamaño de localidad de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Clasificación de las localidades de acuerdo al número de personas que las habitan |2015-a
+loc_ocurr|localidad de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLDE15.dbf |2015-a
+causa_def|causa de la defunción (lista detallada)|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CATMINDE.dbf Condición de relación: Causa_def con Clave |2015-a
+lista_mex|causa de la defunción (lista mexicana)|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo LISTAMEX.dbf |2015-a
+sexo|sexo del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|"1- hombres| 2- mujer| 9- no especificado"|2015-a
+edad|edad del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Tiempo transcurrido entre la fecha de nacimiento de la persona y la del momento en que ocurre o se registra el hecho vital.|2015-a
+dia_ocurr|día de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+mes_ocurr|mes de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+anio_ocur|año de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+dia_regis|día de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+mes_regis|mes de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+anio_regis|año de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+dia_nacim|día de nacimiento del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+mes_nacim|mes de nacimiento del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+anio_nacim|año de nacimiento del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+ocupacion|ocupación del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+escolarida|nivel de escolaridad del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+edo_civil|estado conyugal del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+presunto|tipo de defunción (presunto)|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|"1  Accidente| 2  Homicidio| 3  Suicidio| 4  Se ignora| 5  Operaciones legales y de guerra| 8 No aplica para muerte natural
+"|2015-a
+ocurr_trab|ocurrió en el desempeño de su trabajo|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+lugar_ocur|sitio de ocurrencia de la lesión|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+necropsia|condición de necropsia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+asist_medi|condición de atención médica|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+sitio_ocur|sitio de ocurrencia de la defunción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+cond_cert|persona que certificó la defunción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+nacionalid|nacionalidad del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+derechohab|afiliación a los servicios de salud del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+embarazo|condición de embarazo|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+rel_emba|causas relacionadas con el embarazo|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+horas|hora de la defunción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+minutos|minutos de la defunción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+capitulo|causas detalladas CIE (capítulo)|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CAPGPO.dbf |2015-a
+grupo|causas detalladas CIE (grupo)|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CAPGPO.dbf Condición de relación: Capitulo + Grupo con Capitulo+ Grupo |2015-a
+lista1|lista de tabulación 1 para mortalidad de la CIE|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo LISTA1.dbf Condición de relación: Lista1 con Clave |2015-a
+gr_lismex|lista mexicana de enfermedades (grupo)|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo LISTAMEX.dbf Condición de relación: Gr_lismex con Clave |2015-a
+vio_fami|condición de violencia familiar|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+area_ur|área urbana-rural de residencia habitual del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+edad_agru|edad agrupada del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+complicaro|complicaron el embarazo|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|etiquetas|2015-a
+dia_cert|día de certificación|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+mes_cert|mes de certificación|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+anio_cert|año de certificación|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+maternas|defunciones maternas totales|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CATMINDE.dbf Condición de relación: Maternas con Clave |2015-a
+lengua|condición de habla lengua indígena del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+cond_act|condición de actividad económica del fallecido|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+par_agre|parentesco del presunto agresor|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo PARENTESCO.dbf Condición de relación: Par_agre con clave |2015-a
+ent_ocules|entidad de ocurrencia de la lesión|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+mun_ocules|municipio de ocurrencia de la lesión|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+loc_ocules|localidad de ocurrencia de la lesión|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+razon_m|defunciones para calcular la razón de la mortalidad materna|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011||2015-a
+dis_re_oax|distritos de registro de Oaxaca|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|||anual|2017-08-30 21:15:35.061011|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLDE15.dbf Condición de relación: Ent_regis + Dis_reoax con Cve_ent + Cve_mun |2015-a
+actualizacion_sedesol|actualización sedesol|SEDESOL|||||2017-08-30 21:15:35.061011||2015-a
+data_date|fecha del dato|SEDESOL|||||2017-08-30 21:15:35.061011||2015-a

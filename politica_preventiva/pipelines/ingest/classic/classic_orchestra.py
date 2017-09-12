@@ -5,6 +5,7 @@ import logging
 import os
 import pdb
 import psycopg2
+import re
 import subprocess
 import tempfile
 import yaml
@@ -19,6 +20,9 @@ from luigi.contrib.s3 import S3Target, S3Client
 import numpy as np
 from os.path import join
 import pandas as pd
+from pathlib import Path
+from py2neo import Graph, Node, Relationship
+
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
@@ -48,6 +52,7 @@ logger = logging.getLogger("dpa-sedesol")
 # Classic Ingest Tasks
 #########
 
+
 class ClassicIngest(luigi.WrapperTask):
 
     """ Wrapper of Classic Ingestion.
@@ -61,11 +66,11 @@ class ClassicIngest(luigi.WrapperTask):
     pipelines = parse_cfg_list(conf.get("ClassicIngest", "pipelines"))
 
     def requires(self):
-        logger.info('Luigi is preparing to run the following pipelines: {0}'.\
+        logger.info('Running the following pipelines: {0}'.\
                 format(self.pipelines))
         # loop through pipeline tasks
         return [ClassicIngestDates(current_date=self.current_date,
-                                pipeline_task=pipeline)
+                                   pipeline_task=pipeline)
         for pipeline in self.pipelines]
 
 
@@ -93,23 +98,30 @@ class ClassicIngestDates(luigi.WrapperTask):
     def dates(self):
         periodicity = configuration.get_config().get(self.pipeline_task,
                                                      'periodicity')
+        if periodicity == 'None':
+            dates = 'na'
+            self.suffix = 'fixed'
+            return [dates]
 
-        if self.historical in ['True', 'T', '1', 'TRUE']:
+        elif self.historical in ['True', 'T', '1', 'TRUE']:
             logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
                 format(self.pipeline_task))
- 
+
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
+            logger.debug('Pipeline task {pipeline} has historic dates {hdates}'.\
+                format(pipeline=self.pipeline_task, hdates=dates))
         else:
-            logger.info('Preparing to get current data for'+\
-                     'the pipeline_task: {0}'.format(self.pipeline_task))
- 
+            logger.info('Preparing to get current data for'+ \
+                     ' the pipeline_task: {0}'.format(self.pipeline_task))
+
             dates, self.suffix = dates_list(self.pipeline_task,
                                             self.current_date,
                                             periodicity)
             dates = dates[-2:]
-        
+            logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
+                format(pipeline=self.pipeline_task, hdates=dates))
         try:
             # if the pipeline_Task 
             configuration.get_config().get(self.pipeline_task,
@@ -117,21 +129,140 @@ class ClassicIngestDates(luigi.WrapperTask):
             return dates
 
         except:
-            logger.info('Start date is not defined for the pipeline {0}'+\
-                    'Luigi will get only the information of the last period'.\
-                format(self.pipeline_task))
+            logger.info('Start date is not defined for the pipeline {0}'.format(
+                                                                  self.pipeline_task)+\
+                    'Luigi will get only the information of the last period')
             return [dates[-1]]
-
 
     def requires(self):
         logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
-                'will try to download the data of the following periods:{0}'.\
-                format(self.dates))
-        
-        yield [UpdateDictionary(current_date=self.current_date,
-                                pipeline_task=self.pipeline_task,
-                                data_date=str(data_date), suffix=self.suffix)
-        for data_date in self.dates]
+                    '\n will try to download the data of the\n following periods:{0}'.\
+                    format(self.dates))
+
+        return [UpdateLineage(current_date=self.current_date,
+                              pipeline_task=self.pipeline_task,
+                              data_date=str(data_date), suffix=self.suffix)
+                for data_date in self.dates]
+
+
+class UpdateLineage(luigi.Task):
+
+    """ This Task updates the Neo4j lineage database.
+
+        TODO() 
+        - Column nodes should be unique - Implement it in cypher!
+        - Improve tags (tipo & subtipo) in the dictionary. Likely
+            create a list rather than a single column. Define static tags.
+        - Create Neo4j Task to collect output
+
+        Note
+        ---------
+        Assumes that the dictionary of the pipeline_task is defined
+
+        Returns TODO() Improve this element
+        ---------
+        Returns a temporal .done file saved in
+            politica_preventiva/pipelines/ingest/common/neo4j
+    """
+
+    current_date = luigi.DateParameter()
+    pipeline_task = luigi.Parameter()
+    client = S3Client()
+    actualizacion = datetime.datetime.now()
+    data_date = luigi.Parameter()
+    suffix = luigi.Parameter()
+
+    common_path = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')  # path where csv is located
+    raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
+    historical = luigi.Parameter('DEFAULT')
+
+    def requires(self):
+
+        return UpdateDictionary(current_date=self.current_date,
+                         pipeline_task=self.pipeline_task,
+                         data_date=self.data_date,
+                         suffix=self.suffix)
+
+    def run(self):
+
+        logger.info('Creating ingestion Neo4j Lineage for the pipeline {0}'.\
+            format(self.pipeline_task))
+
+        # Reading from pipeline dictionary
+        path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
+        nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
+        actualizacion_sedesol = nodes.actualizacion_sedesol[0] 
+        nodes = nodes[nodes.id !='actualizacion_sedesol']
+        nodes = nodes[nodes.id !='data_date']
+        logging.info("Connecting to Neo4j DB {0} ")
+
+        try:
+            graph = Graph("http://localhost:7474/db/data/")
+        except Exception as e:
+            logging.exception("Failed to connect to database Neo4J" +\
+                              " when attempting to connect ")
+            raise('Failed to connect to database Neo4J')
+        try:
+            # Create Schema
+            # ToDO() schema generation and constraints should be a task
+            graph.schema.create_uniqueness_constraint('Table', 'value')
+            graph.schema.create_uniqueness_constraint('Tag', 'tipo')
+            graph.schema.create_uniqueness_constraint('Fraction', 'value')
+            graph.schema.create_uniqueness_constraint('Column', 'nombre_clave')
+            graph.schema.create_uniqueness_constraint('Year', 'year')
+        except:
+            pass
+ 
+        # Define Nodes
+        table = Node('Table', value=self.pipeline_task)
+        years = self.data_date.split('-')[0]
+        graph.merge(table)
+
+        try:
+            fraction = self.data_date.split('-')[1]
+        except:
+            fraction = ''
+
+        Year = Node('Year', year=years)
+        Fraction = Node('Fraction', value=str(years+'-'+fraction+'-'+self.suffix))
+        relation = Relationship(Fraction, 'for_fraction', Year)
+        graph.merge(Fraction)
+        graph.merge(relation)
+
+        for index, row in nodes.iterrows():
+
+            # Create column relations
+            column = Node('Column', nombre_clave=row['id'], nombre=row['nombre'])
+            graph.merge(column)
+            from_table = Relationship(column, 'from_table', table,
+                                    pipeline=self.pipeline_task)
+            graph.merge(from_table)
+
+            if row['tipo'] != '':
+                tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
+                relation = Relationship(column, 'with_tag', tag)
+                graph.merge(relation)
+            else:
+                pass
+
+        # Save current date
+        current_date = row['actualizacion_sedesol']
+
+        # Create Tag relations
+        relation = Relationship(table, 'for_year', Fraction,
+                                updated=current_date)
+        graph.merge(relation)
+
+        done = self.common_path + 'neo4j/' + self.pipeline_task+\
+                   self.data_date + '-'+self.suffix + '.done'
+        Path(done).touch()
+
+    def output(self):
+        done = self.common_path + 'neo4j/' + self.pipeline_task+\
+                self.data_date +'-'+self.suffix + '.done'
+
+        return luigi.LocalTarget(done)
 
 
 class UpdateDictionary(postgres.CopyToTable):
@@ -147,6 +278,7 @@ class UpdateDictionary(postgres.CopyToTable):
         ---------
         Returns a PostgresTarget representing the inserted dataset
     """
+
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     client = S3Client()
@@ -283,19 +415,44 @@ class UpdateDB(postgres.CopyToTable):
                 str(self.suffix) + 'db'
 
     def rows(self):
-        # Path of last "ouput" version #TODO(Return to input version)
-        data = pd.read_csv(self.input().path, sep="|", encoding="utf-8", dtype=str,
-                           error_bad_lines=False, header=None)
-        data.drop_duplicates(keep='first',inplace=True)
-        data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
-        data = data.where((pd.notnull(data)), None)
-        data = data.iloc[1:]
+        """
+        Returs lists corresponding to each row to be inserted.
+        """
 
-        # add timestamp to postgres table
-        data["actualizacion_sedesol"] = self.actualizacion
-        data["data_date"] = str(self.data_date) + "-" + \
-                            self.suffix
-        return [tuple(x) for x in data.to_records(index=False)]
+        s3 = boto3.client('s3')
+        keyname = self.input().path.split('preventiva/')[1]
+        response = s3.head_object(Bucket='dpa-plataforma-preventiva', Key=keyname)
+        # If the file is greater than 5 gb, ingest line per line
+        # TODO append B as a list to respect the data type
+        if response['ContentLength'] > 100: # 5368709120:
+            with self.input().open('r') as fobj:
+                check = True
+                for line in fobj:
+                    if check:
+                        check = False
+                        header = line
+                        pass
+                    elif line == header:
+                        pass
+                    else:
+                        line = re.sub("na|nan|N/E|^\-$", '', line)
+                        line = line.strip('\n').split('|')
+                        line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
+                        line.append(str(self.data_date) + '-' + self.suffix)
+                        yield  [x if x != '' else None for x in line]
+
+        else:
+            # TODO() remove this step, checkout for concatenation and header removal.
+            data = pd.read_csv(self.input().path, sep="|", encoding="utf-8",
+                               dtype=str, error_bad_lines=False, header=None)
+            data.drop_duplicates(keep='first',inplace=True)
+            data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
+            data = data.where((pd.notnull(data)), None)
+            data = data.iloc[1:]
+            data[len(data.columns)]  = self.actualizacion
+            data[len(data.columns)]  = str(self.data_date) + "-" + \
+                                self.suffix
+            return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
         connection = self.output().connect()
@@ -326,7 +483,6 @@ class UpdateDB(postgres.CopyToTable):
          tmp ({0});'.format(index, self.pipeline_task)
 
         cursor.execute(cmd)
-
         # Copy to TEMP table
         cursor.copy_from(file, "tmp", null=r'\\N', sep=self.column_separator,
                          columns=column_names)
@@ -340,17 +496,18 @@ class UpdateDB(postgres.CopyToTable):
 
         # SET except from TEMP to raw table ordered
         cmd += "INSERT INTO {0} \
-            SELECT {1} FROM tmp EXCEPT SELECT {1} FROM {0} ;".\
+            SELECT {1} FROM tmp;".\
             format(self.table, unique_sql, index)
+            # EXCEPT SELECT {1} FROM {0} ;".\
         cursor.execute(cmd)
         connection.commit()
+
         return True
 
     def run(self):
 
         if not (self.table and self.columns):
             raise Exception("table and columns need to be specified")
-
         connection = self.output().connect()
         tmp_dir = luigi.configuration.get_config().get('postgres',
                                                        'local-tmp-dir', None)
@@ -363,7 +520,6 @@ class UpdateDB(postgres.CopyToTable):
                 self.map_column(val) for val in row)
             rowstr += "\n"
             tmp_file.write(rowstr.encode('utf-8'))
-
         tmp_file.seek(0)
 
         for attempt in range(2):
@@ -442,7 +598,6 @@ class Concatenation(luigi.Task):
         # folder to concatenate
         folder_to_concatenate = self.pipeline_task + "/preprocess/" +\
                                 self.data_date + "/"
-
         # function for appending all .csv files in folder_to_concatenate
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate,
                                    result_filepath, '.csv')
@@ -530,16 +685,12 @@ class LocalToS3(luigi.Task):
 
     def requires(self):
         extra_h = get_extra_str(self.extra)
-        docker_ingest_file =  self.docker_path + self.pipeline_task +\
-            "/" + self.data_date + "-" + self.suffix + "-" + self.pipeline_task +\
-            extra_h + ".csv"
         local_ingest_file = self.local_path + self.pipeline_task +\
             "/" + self.data_date + "-" + self.suffix + "-" + self.pipeline_task +\
             extra_h + ".csv"
 
         task = RawHeaderTest(pipeline_task=self.pipeline_task,
                              data_date=self.data_date,
-                             docker_ingest_file=docker_ingest_file,
                              local_ingest_file=local_ingest_file,
                              extra=self.extra, suffix=self.suffix)
         return task
@@ -550,7 +701,14 @@ class LocalToS3(luigi.Task):
         local_ingest_file = self.local_path + self.pipeline_task +\
             "/" + self.data_date + "-" + self.suffix + "-" + self.pipeline_task +\
             extra_h + ".csv"
-        self.client.put(local_ingest_file, self.output().path)
+
+        try:
+            self.client.put(local_ingest_file, self.output().path)
+        except:
+            logger.debug('The raw file of the pipeline {0}'.format(self.pipeline_task) +\
+            ' is kinda big, Luigi will try to upload it in chunks')
+            output = self.output().path.split('preventiva/')[1]
+            s3_utils.big_file_to_s3(local_ingest_file, output)
 
         os.remove(local_ingest_file + ".done")
 
@@ -573,7 +731,6 @@ class RawHeaderTest(luigi.Task):
         common/raw_schemas.yaml
 
     """
-    docker_ingest_file = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
     extra = luigi.Parameter()
@@ -589,7 +746,6 @@ class RawHeaderTest(luigi.Task):
         return LocalIngest(pipeline_task=self.pipeline_task,
                            data_date=self.data_date,
                            local_ingest_file=self.local_ingest_file,
-                           docker_ingest_file=self.docker_ingest_file,
                            extra=self.extra)
 
     def run(self):
@@ -617,7 +773,6 @@ class LocalIngest(luigi.Task):
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-    docker_ingest_file = luigi.Parameter()
     extra = luigi.Parameter()
 
     def requires(self):
@@ -626,7 +781,6 @@ class LocalIngest(luigi.Task):
         task = classic_tasks(data_date=self.data_date,
                              pipeline_task=self.pipeline_task,
                              local_ingest_file=self.local_ingest_file,
-                             docker_ingest_file=self.docker_ingest_file,
                              extra=self.extra)
         return task
 

@@ -1,23 +1,19 @@
-FROM dpa/python:0.1
-
-MAINTAINER Adolfo De Unánue <nanounanue@gmail.com>
+FROM python:3.5-onbuild
 
 ADD requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
 
 RUN mkdir /etc/luigi
 ADD luigi.cfg /etc/luigi/luigi.cfg
-ADD logging.cfg /etc/luigi/logging.cfg
-VOLUME /etc/luigi
 
 RUN mkdir /var/log/luigid
 ADD logrotate.cfg /etc/logrotate.d/luigid
 VOLUME /var/log/luigid
 
-RUN mkdir -p /luigid/state
-VOLUME /luigid/state
+RUN mkdir /var/run/luigid
+VOLUME /var/run/luigid
 
 CMD ["/usr/local/bin/luigid"]
-EXPOSE 8082
+EXPOSE 8083:8082
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
