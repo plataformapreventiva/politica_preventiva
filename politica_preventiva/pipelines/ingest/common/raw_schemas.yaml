@@ -1,46 +1,3 @@
-RAW:
-- base
-- id
-- nom_estab
-- raz_social
-- codigo_act
-- nombre_act
-- per_ocu
-- tipo_vial
-- nom_vial
-- tipo_v_e_1
-- nom_v_e_1
-- tipo_v_e_2
-- nom_v_e_2
-- tipo_v_e_3
-- nom_v_e_3
-- numero_ext
-- letra_ext
-- edificio
-- edificio_e
-- numero_int
-- letra_int
-- tipo_asent
-- nomb_asent
-- tipocencom
-- nom_cencom
-- num_local
-- cod_postal
-- cve_ent
-- entidad
-- cve_mun
-- municipio
-- cve_loc
-- localidad
-- ageb
-- manzana
-- telefono
-- correoelec
-- www
-- tipounieco
-- latitud
-- longitud
-- fecha_alta
 asm:
   LUIGI:
     INDEX: modalidad_pp
@@ -260,66 +217,54 @@ cfe:
   - diciembre
 coneval_estados:
   LUIGI:
-    INDEX: null
+    INDEX: ent
     SCHEMA:
-    - proyecto: Bool
-    - folioviv: Integer
+    - proyecto: TEXT
+    - folioviv: TEXT
     - foliohog: Integer
     - numren: Integer
-    - factor: Integer
-    - tam_loc: Bool
+    - tam_loc: Integer
     - rururb: TEXT
     - ent: TEXT
-    - ubica_geo: Integer
     - edad: Integer
     - sexo: Integer
     - tamhogesc: FLOAT
-    - parentesco: Integer
-    - ic_rezedu: TEXT
+    - ic_rezedu: FLOAT
     - anac_e: Integer
     - inas_esc: TEXT
     - niv_ed: TEXT
-    - ic_asalud: TEXT
-    - serv_sal: TEXT
-    - ic_segsoc: TEXT
-    - ss_dir: TEXT
+    - ic_asalud: FLOAT
+    - ic_segsoc: FLOAT
+    - ss_dir: FLOAT
     - pea: TEXT
-    - par: TEXT
-    - jef_ss: TEXT
-    - cony_ss: TEXT
-    - hijo_ss: TEXT
-    - s_salud: TEXT
+    - par: Integer
+    - jef_ss: FLOAT
+    - cony_ss: FLOAT
+    - hijo_ss: FLOAT
+    - s_salud: FLOAT
     - pam: TEXT
-    - ic_cv: TEXT
-    - icv_pisos: TEXT
-    - icv_muros: TEXT
-    - icv_techos: TEXT
-    - icv_hac: TEXT
-    - ic_sbv: TEXT
-    - isb_agua: TEXT
-    - isb_dren: TEXT
-    - isb_luz: TEXT
-    - isb_combus: TEXT
-    - ic_ali: TEXT
-    - id_men: TEXT
-    - tot_iaad: Integer
-    - tot_iamen: Integer
-    - ins_ali: TEXT
-    - plb_m: Bool
-    - plb: Bool
+    - ic_cv: FLOAT
+    - icv_hac: FLOAT
+    - ic_sbv: FLOAT
+    - isb_combus: FLOAT
+    - ic_ali: FLOAT
+    - id_men: FLOAT
+    - tot_iaad: TEXT
+    - tot_iamen: TEXT
+    - ins_ali: Integer
+    - plb_m: FLOAT
+    - plb: FLOAT
     - ictpc: FLOAT
-    - est_dis: Integer
-    - upm: Integer
     - i_privacion: Integer
-    - pobreza: TEXT
-    - pobreza_e: TEXT
-    - pobreza_m: TEXT
-    - vul_car: TEXT
-    - vul_ing: TEXT
-    - no_pobv: TEXT
-    - carencias: TEXT
-    - carencias3: TEXT
-    - cuadrantes: TEXT
+    - pobreza: FLOAT
+    - pobreza_e: FLOAT
+    - pobreza_m: FLOAT
+    - vul_car: FLOAT
+    - vul_ing: FLOAT
+    - no_pobv: FLOAT
+    - carencias: FLOAT
+    - carencias3: FLOAT
+    - cuadrantes: FLOAT
     - prof_b1: FLOAT
     - prof_bm1: FLOAT
     - profun: FLOAT
@@ -328,15 +273,6 @@ coneval_estados:
     - int_vulcar: FLOAT
     - int_caren: FLOAT
     - ict: FLOAT
-    - ing_mon: FLOAT
-    - ing_lab: FLOAT
-    - ing_ren: FLOAT
-    - ing_tra: FLOAT
-    - nomon: FLOAT
-    - pago_esp: FLOAT
-    - reg_esp: FLOAT
-    - hli: TEXT
-    - discap: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
@@ -344,21 +280,17 @@ coneval_estados:
   - folioviv
   - foliohog
   - numren
-  - factor
   - tam_loc
   - rururb
   - ent
-  - ubica_geo
   - edad
   - sexo
   - tamhogesc
-  - parentesco
   - ic_rezedu
   - anac_e
   - inas_esc
   - niv_ed
   - ic_asalud
-  - serv_sal
   - ic_segsoc
   - ss_dir
   - pea
@@ -369,14 +301,8 @@ coneval_estados:
   - s_salud
   - pam
   - ic_cv
-  - icv_pisos
-  - icv_muros
-  - icv_techos
   - icv_hac
   - ic_sbv
-  - isb_agua
-  - isb_dren
-  - isb_luz
   - isb_combus
   - ic_ali
   - id_men
@@ -386,8 +312,6 @@ coneval_estados:
   - plb_m
   - plb
   - ictpc
-  - est_dis
-  - upm
   - i_privacion
   - pobreza
   - pobreza_e
@@ -406,15 +330,6 @@ coneval_estados:
   - int_vulcar
   - int_caren
   - ict
-  - ing_mon
-  - ing_lab
-  - ing_ren
-  - ing_tra
-  - nomon
-  - pago_esp
-  - reg_esp
-  - hli
-  - discap
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
