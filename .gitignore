@@ -153,3 +153,6 @@ site/
 **/.RData
 **/.Rproj.user
 .Rproj.user
+
+# Diccionarios
+!./politica_preventiva/pipelines/ingest/common/dictionaries/*
