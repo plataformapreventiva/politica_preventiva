@@ -5,6 +5,7 @@ import logging
 import os
 import pdb
 import psycopg2
+import re
 import subprocess
 import tempfile
 import yaml
@@ -421,17 +422,24 @@ class UpdateDB(postgres.CopyToTable):
         s3 = boto3.client('s3')
         keyname = self.input().path.split('preventiva/')[1]
         response = s3.head_object(Bucket='dpa-plataforma-preventiva', Key=keyname)
-
         # If the file is greater than 5 gb, ingest line per line
         # TODO append B as a list to respect the data type
-        if response['ContentLength'] > 5368709120:
+        if response['ContentLength'] > 100: # 5368709120:
             with self.input().open('r') as fobj:
+                check = True
                 for line in fobj:
-                    line = line.replace('nan|N/E|^\-$', '')
-                    line = line.strip('\n').split('|')
-                    line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
-                    line.append(str(self.data_date) + '-' + self.suffix)
-                    yield  [x if x != '' else None for x in line]
+                    if check:
+                        check = False
+                        header = line
+                        pass
+                    elif line == header:
+                        pass
+                    else:
+                        line = re.sub("na|nan|N/E|^\-$", '', line)
+                        line = line.strip('\n').split('|')
+                        line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
+                        line.append(str(self.data_date) + '-' + self.suffix)
+                        yield  [x if x != '' else None for x in line]
 
         else:
             # TODO() remove this step, checkout for concatenation and header removal.
@@ -441,8 +449,8 @@ class UpdateDB(postgres.CopyToTable):
             data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
             data = data.where((pd.notnull(data)), None)
             data = data.iloc[1:]
-            data["actualizacion_sedesol"] = self.actualizacion
-            data["data_date"] = str(self.data_date) + "-" + \
+            data[len(data.columns)]  = self.actualizacion
+            data[len(data.columns)]  = str(self.data_date) + "-" + \
                                 self.suffix
             return [tuple(x) for x in data.to_records(index=False)]
 
@@ -475,7 +483,6 @@ class UpdateDB(postgres.CopyToTable):
          tmp ({0});'.format(index, self.pipeline_task)
 
         cursor.execute(cmd)
-
         # Copy to TEMP table
         cursor.copy_from(file, "tmp", null=r'\\N', sep=self.column_separator,
                          columns=column_names)
@@ -489,17 +496,18 @@ class UpdateDB(postgres.CopyToTable):
 
         # SET except from TEMP to raw table ordered
         cmd += "INSERT INTO {0} \
-            SELECT {1} FROM tmp EXCEPT SELECT {1} FROM {0} ;".\
+            SELECT {1} FROM tmp;".\
             format(self.table, unique_sql, index)
+            # EXCEPT SELECT {1} FROM {0} ;".\
         cursor.execute(cmd)
         connection.commit()
+
         return True
 
     def run(self):
 
         if not (self.table and self.columns):
             raise Exception("table and columns need to be specified")
-
         connection = self.output().connect()
         tmp_dir = luigi.configuration.get_config().get('postgres',
                                                        'local-tmp-dir', None)
@@ -512,7 +520,6 @@ class UpdateDB(postgres.CopyToTable):
                 self.map_column(val) for val in row)
             rowstr += "\n"
             tmp_file.write(rowstr.encode('utf-8'))
-
         tmp_file.seek(0)
 
         for attempt in range(2):
