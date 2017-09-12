@@ -53,7 +53,7 @@ class RunPipelines(luigi.WrapperTask):
     current_date = datetime.date.today()
     logger.info('Luigi is running the pipeline on the date: {0}'.format(
         current_date))
-    
+
     def requires(self):
 
         return IngestPipeline(current_date=self.current_date)
