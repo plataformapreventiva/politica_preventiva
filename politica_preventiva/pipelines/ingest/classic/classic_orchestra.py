@@ -332,7 +332,6 @@ class UpdateDictionary(postgres.CopyToTable):
                                              self.actualizacion,
                                              self.data_date,
                                              self.suffix)
-
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):

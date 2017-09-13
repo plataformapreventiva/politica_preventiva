@@ -254,7 +254,7 @@ coneval_estados:
     - ins_ali: INTEGER
     - plb_m: INTEGER
     - plb: Integer
-    - ictpc: INTEGER
+    - ictpc: FLOATR
     - i_privacion: INTEGER
     - pobreza: INTEGER
     - pobreza_e: INTEGER
