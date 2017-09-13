@@ -141,12 +141,15 @@ class ClassicIngestDates(luigi.WrapperTask):
 
         skip = [x.strip() for x in configuration.get_config().get(self.pipeline_task,
                                                      'skip').split(',')]
-        self.dates = [x for x in self.dates if x not in skip]
+        lista = []
+        for x in self.dates:
+            if x not in skip:
+                lista.append(x)
 
         return [UpdateLineage(current_date=self.current_date,
                               pipeline_task=self.pipeline_task,
                               data_date=str(data_date), suffix=self.suffix)
-                for data_date in self.dates]
+                for data_date in lista]
 
 
 class UpdateLineage(luigi.Task):
@@ -336,7 +339,6 @@ class UpdateDictionary(postgres.CopyToTable):
                                              self.actualizacion,
                                              self.data_date,
                                              self.suffix)
-
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
