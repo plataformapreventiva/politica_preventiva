@@ -1,57 +1,57 @@
 id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
-proyecto|Proyecto|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|1. MCS; 2. ENIGH|"NA"
-folioviv|Folio de la vivienda|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-foliohog|Folio del hogar|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-numren|Número de renglón|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-tam_loc|Tamaño de la localidad|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|1. Localidades con 100 000 y más habitantes; 2. Localidades con 15 000 a 99 999 habitantes; 3. Localidades con 2 500 a 14 999 habitantes; 4. Localidades con menos de 2500 habitantes|"NA"
-rururb|Identificador de localidades rurales|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. Localidades urbanas; 1. Localidades rurales|"NA"
-ent|Identificador de la entidad federativa|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-edad|Edad reportada al momento de la entrevista|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-sexo|Sexo|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|1. Masculino; 2. Femenino|"NA"
-tamhogesc|Tamaño de hogar ajustado|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-ic_rezedu|Indicador de carencia por rezago educativo|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-anac_e|Año de nacimiento|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-inas_esc|Inasistencia a la escuela|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. Si asiste; 1. No asiste|"NA"
-niv_ed|Nivel educativo|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. Con primaria incompleta o menos; 1. Primaria completa o secundaria incompleta; 2. Secundaria completa o mayor nivel educativo|"NA"
-ic_asalud|Indicador de carencia por acceso a servicios de salud|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No presenta carencia; 1. Presenta carencia|"NA"
-ic_segsoc|Indicador de carencia por acceso a la seguridad social|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No presenta carencia; 1. Presenta carencia|"NA"
-ss_dir|Acceso directo a la seguridad social|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. Sin acceso; 1. Con acceso|"NA"
-pea|Población económicamente activa|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. PNEA; 1. PEA ocupada; 2. PEA desocupada|"NA"
-par|Integrantes que tienen acceso por otros miembros|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|1. Jefe/a del hogar; 2. Cónyuge del jefe/a; 3. Hijo del jefe/a; 4. Padre o madre del jefe/a; 5. Suegro del jefe/a; 6. Sin parentesco directo|"NA"
-jef_ss|Acceso directo a la seguridad social de la jefatura del hogar|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No cuenta; 1. Sí cuenta.|"NA"
-cony_ss|Acceso directo a la seguridad social de cónyuge de la jefatura del hogar|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No cuenta; 1. Sí cuenta.|"NA"
-hijo_ss|Acceso directo a la seguridad social de hijos(as) de la jefatura del hogar|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No cuenta; 1. Sí cuenta.|"NA"
-s_salud|Servicios médicos por otros núcleos familiares o por contratación propia|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No cuenta; 1. Sí cuenta.|"NA"
-pam|Programa de adultos mayores|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-ic_cv|Indicador de carencia por calidad y espacios de la vivienda|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-icv_hac|Índice de carencia por índice de hacinamiento de la vivienda|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No presenta carencia; 1. Presenta carencia|"NA"
-ic_sbv|Indicador de carencia de acceso a servicios básicos en la vivienda|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No presenta carencia; 1. Presenta carencia|"NA"
-isb_combus|Indicador de carencia por acceso a los servicios de combustible|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No presenta carencia; 1. Presenta carencia|"NA"
-ic_ali|Indicador de carencia por acceso a la alimentación|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. No presenta carencia; 1. Presenta carencia|"NA"
-id_men|Hogares con población de 0 a 17 años|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. Sin población de 0 a 17 años; 1. Con población de 0 a 17 años|"NA"
-tot_iaad|Escala de Inseguridad Alimentaria para hogares sin menores de 18 años|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-tot_iamen|Escala de Inseguridad Alimentaria para hogares con menores de 18 años|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-ins_ali|Grado de inseguridad alimentaria|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|0. Seguridad alimentaria; 1. Inseguridad alimentaria leve; 2. Inseguridad alimentaria moderada; 3. Inseguridad alimentaria severa|"NA"
-plb_m|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-plb|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-ictpc|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-i_privacion|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-pobreza|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-pobreza_e|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-pobreza_m|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-vul_car|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-vul_ing|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-no_pobv|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-carencias|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-carencias3|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-cuadrantes|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-prof_b1|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-prof_bm1|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-profun|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-int_pob|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-int_pobe|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-int_vulcar|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-int_caren|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-ict|"NA"|CONEVAL|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-actualizacion_sedesol|"NA"|Sedesol|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
-data_date|"NA"|Sedesol|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"|"NA"
+proyecto|Proyecto|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|1. MCS; 2. ENIGH|2010-a
+folioviv|Folio de la vivienda|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+foliohog|Folio del hogar|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+numren|Número de renglón|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+tam_loc|Tamaño de la localidad|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|1. Localidades con 100 000 y más habitantes; 2. Localidades con 15 000 a 99 999 habitantes; 3. Localidades con 2 500 a 14 999 habitantes; 4. Localidades con menos de 2500 habitantes|2010-a
+rururb|Identificador de localidades rurales|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Localidades urbanas; 1. Localidades rurales|2010-a
+ent|Identificador de la entidad federativa|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+edad|Edad reportada al momento de la entrevista|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+sexo|Sexo|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|1. Masculino; 2. Femenino|2010-a
+tamhogesc|Tamaño de hogar ajustado|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+ic_rezedu|Indicador de carencia por rezago educativo|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+anac_e|Año de nacimiento|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+inas_esc|Inasistencia a la escuela|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Si asiste; 1. No asiste|2010-a
+niv_ed|Nivel educativo|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Con primaria incompleta o menos; 1. Primaria completa o secundaria incompleta; 2. Secundaria completa o mayor nivel educativo|2010-a
+ic_asalud|Indicador de carencia por acceso a servicios de salud|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No presenta carencia; 1. Presenta carencia|2010-a
+ic_segsoc|Indicador de carencia por acceso a la seguridad social|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No presenta carencia; 1. Presenta carencia|2010-a
+ss_dir|Acceso directo a la seguridad social|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Sin acceso; 1. Con acceso|2010-a
+pea|Población económicamente activa|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. PNEA; 1. PEA ocupada; 2. PEA desocupada|2010-a
+par|Integrantes que tienen acceso por otros miembros|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|1. Jefe/a del hogar; 2. Cónyuge del jefe/a; 3. Hijo del jefe/a; 4. Padre o madre del jefe/a; 5. Suegro del jefe/a; 6. Sin parentesco directo|2010-a
+jef_ss|Acceso directo a la seguridad social de la jefatura del hogar|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No cuenta; 1. Sí cuenta.|2010-a
+cony_ss|Acceso directo a la seguridad social de cónyuge de la jefatura del hogar|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No cuenta; 1. Sí cuenta.|2010-a
+hijo_ss|Acceso directo a la seguridad social de hijos(as) de la jefatura del hogar|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No cuenta; 1. Sí cuenta.|2010-a
+s_salud|Servicios médicos por otros núcleos familiares o por contratación propia|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No cuenta; 1. Sí cuenta.|2010-a
+pam|Programa de adultos mayores|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+ic_cv|Indicador de carencia por calidad y espacios de la vivienda|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+icv_hac|Índice de carencia por índice de hacinamiento de la vivienda|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No presenta carencia; 1. Presenta carencia|2010-a
+ic_sbv|Indicador de carencia de acceso a servicios básicos en la vivienda|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No presenta carencia; 1. Presenta carencia|2010-a
+isb_combus|Indicador de carencia por acceso a los servicios de combustible|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No presenta carencia; 1. Presenta carencia|2010-a
+ic_ali|Indicador de carencia por acceso a la alimentación|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No presenta carencia; 1. Presenta carencia|2010-a
+id_men|Hogares con población de 0 a 17 años|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Sin población de 0 a 17 años; 1. Con población de 0 a 17 años|2010-a
+tot_iaad|Escala de Inseguridad Alimentaria para hogares sin menores de 18 años|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+tot_iamen|Escala de Inseguridad Alimentaria para hogares con menores de 18 años|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+ins_ali|Grado de inseguridad alimentaria|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Seguridad alimentaria; 1. Inseguridad alimentaria leve; 2. Inseguridad alimentaria moderada; 3. Inseguridad alimentaria severa|2010-a
+plb_m|Población con un ingreso menor a la línea de bienestar mínimo|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Ingreso superior a la línea de bienestar mínimo; 1. Ingreso inferior a la línea de bienestar mínimo|2010-a
+plb|Población con un ingreso menor a la línea de bienestar|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Ingreso superior a la línea de bienestar; 1. Ingreso inferior a la línea de bienestar|2010-a
+ictpc|Ingreso corriente total per cápita|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+i_privacion|Índice de Privación Social|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+pobreza|Pobreza|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No pobre; 1. Pobre|2010-a
+pobreza_e|Pobreza extrema|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No pobre extremo; 1. Pobre extremo|2010-a
+pobreza_m|Pobreza moderada|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No pobre moderado; 1. Pobre moderado|2010-a
+vul_car|Población vulnerable por carencias|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No vulnerable; 1. Vulnerable|2010-a
+vul_ing|Población vulnerable por ingresos|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No vulnerable; 1. Vulnerable|2010-a
+no_pobv|Población no pobre y no vulnerable|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. No vulnerable; 1. Vulnerable|2010-a
+carencias|Población con al menos una carencia|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Población sin carencias; 1. Población con al menos una carencia.|2010-a
+carencias3|Población con tres o más carencias|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|0. Población con menos de tres carencias; 1. Población con tres o más carencias|2010-a
+cuadrantes|Cuadrantes de Bienestar y Derechos Sociales|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431|1. Pobres; 2. Vulnerables por carencias; 3. Vulnerables por ingresos; 4. No pobres y no vulnerables|2010-a
+prof_b1|Índice FGT con alfa igual a 1 (línea de bienestar)|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+prof_bm1|Índice FGT con alfa igual a 1 (línea de bienestar mínimo)|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+profun|Profundidad de la privación social|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+int_pob|Intensidad de la privación social: pobres|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+int_pobe|Intensidad de la privación social: pobres extremos|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+int_vulcar|Intensidad de la privación social: población vulnerable por carencias|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+int_caren|Intensidad de la privación social: población carenciada|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+ict|Ingreso corriente total del hogar|CONEVAL|http://complejidad.datos.gob.mx/|Vulnerabilidades|Pobreza|2010-2016|2017-09-13 02:35:16.893431||2010-a
+actualizacion_sedesol|Fecha de actualización de datos en Sedesol.|Sedesol|||||2017-09-13 02:35:16.893431||2010-a
+data_date|Año.|Sedesol|||||2017-09-13 02:35:16.893431||2010-a

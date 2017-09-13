@@ -131,8 +131,12 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
 
     try:
         dictionary = pd.read_csv(path, sep="|")
+        # If your column 'nombre' has at least one null your task fails..
         assert dictionary["nombre"].isnull().\
-                value_counts().index[0]!=True, "error"
+                value_counts().index[0]!=True, "Your dictionary is not complete."
+        dictionary['actualizacion_sedesol'] = current_date
+        dictionary['data_date'] = data_date + '-' + suffix
+        dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
 
     except:
         task_schema = header_d[pipeline_task]["LUIGI"]["SCHEMA"]
@@ -142,9 +146,6 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
         # parse raw_schemas.yaml to convert to data frame
         dictionary = dictionary.reindex(columns=[*dictionary.\
                 columns.tolist(), *dic_header], fill_value=None)
-        dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
-        dictionary['actualizacion_sedesol'] = current_date
-        dictionary['data_date'] = data_date + '-' + suffix
         # Update actualizacion
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix

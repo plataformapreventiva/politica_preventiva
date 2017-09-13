@@ -219,9 +219,9 @@ coneval_estados:
   LUIGI:
     INDEX: folioviv
     SCHEMA:
-    - proyecto: INTEGER
-    - folioviv: Integer
-    - foliohog: Integer
+    - proyecto: TEXT
+    - folioviv: TEXT
+    - foliohog: TEXT
     - numren: Integer
     - tam_loc: INTEGER
     - rururb: FLOAT
@@ -253,8 +253,8 @@ coneval_estados:
     - tot_iamen: Integer
     - ins_ali: INTEGER
     - plb_m: INTEGER
-    - plb: Integer
-    - ictpc: INTEGER
+    - plb: INTEGER
+    - ictpc: FLOAT
     - i_privacion: INTEGER
     - pobreza: INTEGER
     - pobreza_e: INTEGER
@@ -271,7 +271,7 @@ coneval_estados:
     - int_pob: FLOAT
     - int_pobe: FLOAT
     - int_vulcar: FLOAT
-    - int_caren: INTEGER
+    - int_caren: FLOAT
     - ict: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
