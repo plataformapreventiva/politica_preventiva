@@ -139,6 +139,10 @@ class ClassicIngestDates(luigi.WrapperTask):
                     '\n will try to download the data of the\n following periods:{0}'.\
                     format(self.dates))
 
+        skip = [x.strip() for x in configuration.get_config().get(self.pipeline_task,
+                                                     'skip').split(',')]
+        self.dates = [x for x in self.dates if x not in skip]
+
         return [UpdateLineage(current_date=self.current_date,
                               pipeline_task=self.pipeline_task,
                               data_date=str(data_date), suffix=self.suffix)

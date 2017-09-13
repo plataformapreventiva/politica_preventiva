@@ -181,7 +181,7 @@ def dates_list(pipeline, end_date, periodicity):
             suffix = 'a'
             end_date = end_date.strftime('%Y')
             start_date = look_for_end_date(pipeline, end_date)
-            dates = [int(year) for year in range(int(start_date), end_year + 1)]
+            dates = [str(year) for year in range(int(start_date), end_year + 1)]
 
         elif periodicity in ["biannual", 'b']:
 
