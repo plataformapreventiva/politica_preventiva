@@ -140,8 +140,7 @@ class ClassicIngestDates(luigi.WrapperTask):
                     format(self.dates))
 
         skip = [x.strip() for x in configuration.get_config().get(self.pipeline_task,
-            'skip').split(',')]
-
+                                                     'skip').split(',')]
         lista = []
         for x in self.dates:
             if x not in skip:

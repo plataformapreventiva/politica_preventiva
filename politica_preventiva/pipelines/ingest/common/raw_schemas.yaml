@@ -219,51 +219,52 @@ coneval_estados:
   LUIGI:
     INDEX: folioviv
     SCHEMA:
-    - proyecto: TEXT
+    - proyecto: INT
+    - factor: INT
     - folioviv: TEXT
     - foliohog: TEXT
     - numren: Integer
-    - tam_loc: INTEGER
-    - rururb: FLOAT
-    - ent: Integer
+    - tam_loc: INT
+    - rururb: INT
+    - cve_ent: TEXT
     - edad: Integer
-    - sexo: INTEGER
+    - sexo: INT
     - tamhogesc: FLOAT
-    - ic_rezedu: TEXT
-    - anac_e: TEXT
-    - inas_esc: TEXT
-    - niv_ed: INTEGER
-    - ic_asalud: TEXT
+    - ic_rezedu: INT
+    - anac_e: INT
+    - inas_esc: INT
+    - niv_ed: INT
+    - ic_asalud: INT
     - ic_segsoc: Integer
     - ss_dir: Integer
-    - pea: INTEGER
-    - par: INTEGER
-    - jef_ss: INTEGER
-    - cony_ss: INTEGER
-    - hijo_ss: INTEGER
-    - s_salud: TEXT
-    - pam: INTEGER
-    - ic_cv: INTEGER
-    - icv_hac: INTEGER
-    - ic_sbv: INTEGER
-    - isb_combus: INTEGER
+    - pea: INT
+    - par: INT
+    - jef_ss: INT
+    - cony_ss: INT
+    - hijo_ss: INT
+    - s_salud: INT
+    - pam: INT
+    - ic_cv: INT
+    - icv_hac: INT
+    - ic_sbv: INT
+    - isb_combus: INT
     - ic_ali: Integer
-    - id_men: INTEGER
-    - tot_iaad: TEXT
+    - id_men: INT
+    - tot_iaad: INT
     - tot_iamen: Integer
-    - ins_ali: INTEGER
-    - plb_m: INTEGER
-    - plb: INTEGER
+    - ins_ali: INT
+    - plb_m: INT
+    - plb: Integer
     - ictpc: FLOAT
-    - i_privacion: INTEGER
-    - pobreza: INTEGER
-    - pobreza_e: INTEGER
-    - pobreza_m: INTEGER
-    - vul_car: INTEGER
-    - vul_ing: INTEGER
-    - no_pobv: INTEGER
-    - carencias: INTEGER
-    - carencias3: INTEGER
+    - i_privacion: INT
+    - pobreza: INT
+    - pobreza_e: INT
+    - pobreza_m: INT
+    - vul_car: INT
+    - vul_ing: INT
+    - no_pobv: INT
+    - carencias: INT
+    - carencias3: Integer
     - cuadrantes: FLOAT
     - prof_b1: FLOAT
     - prof_bm1: FLOAT
@@ -277,6 +278,7 @@ coneval_estados:
     - data_date: TEXT
   RAW:
   - proyecto
+  - factor
   - folioviv
   - foliohog
   - numren

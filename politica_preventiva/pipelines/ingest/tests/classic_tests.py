@@ -60,7 +60,7 @@ def header_test(path, task, common_path, suffix, new=True):
             types = type_guess(row_set.sample, strict=True)
             types = ['TEXT' if str(x) == 'String' else str(x) for x in types]
             types = ['FLOAT' if str(x) == 'Decimal' else str(x) for x in types]
-            types = ['INT' if str(x) == 'Boolean' else str(x) for x in types]
+            types = ['INT' if str(x) == 'Bool' else str(x) for x in types]
         except:
             logger.debug('Remember ingest data file must be \n' +\
                 '\t\t\t\t\t must be delimited by pipes "|"'.format(task))
@@ -70,8 +70,8 @@ def header_test(path, task, common_path, suffix, new=True):
     initial_schema = first_line[:]
     initial_schema.append("actualizacion_sedesol")
     initial_schema.append("data_date")
-    types.append('String')
     types.append("TIMESTAMP")
+    types.append('TEXT')
 
     initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
 
