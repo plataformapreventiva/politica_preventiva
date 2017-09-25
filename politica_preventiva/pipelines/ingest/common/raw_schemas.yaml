@@ -520,6 +520,19 @@ cuenta_publica_trimestral:
   - monto_aprobado
   - monto_modificado
   - monto_pagado
+declaratoria:
+  LUIGI:
+    INDEX: cve_mun 
+    SCHEMA:
+    - nom_mun: TEXT
+    - nom_ent: TEXT
+    - cve_mun: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - nom_mun
+  - nom_ent
+  - clave_inegi
 defunciones_fetales:
   LUIGI:
     INDEX: mun_regis

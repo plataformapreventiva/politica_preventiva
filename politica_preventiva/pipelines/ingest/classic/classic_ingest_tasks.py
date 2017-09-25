@@ -554,3 +554,14 @@ class coneval_estados(DockerTask):
 
         return " ".join(command_list)
 
+class declaratoria(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['sh', self.classic_task_scripts +
+                        'declaratoria.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
+
