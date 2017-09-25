@@ -139,8 +139,11 @@ class ClassicIngestDates(luigi.WrapperTask):
                     '\n will try to download the data of the\n following periods:{0}'.\
                     format(self.dates))
 
-        skip = [x.strip() for x in configuration.get_config().get(self.pipeline_task,
+        try:
+            skip = [x.strip() for x in configuration.get_config().get(self.pipeline_task,
                                                      'skip').split(',')]
+        except:
+            skip = []
         lista = []
         for x in self.dates:
             if x not in skip:
