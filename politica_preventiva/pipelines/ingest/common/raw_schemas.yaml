@@ -1,3 +1,19 @@
+pub:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - anio: TEXT
+    - nu_mes_pago: TEXT
+    - cve_ent: TEXT
+    - cve_muni: TEXT
+    - cve_padron: TEXT
+    - promedio_importe: FLOAT
+    - n_beneficiarios: INT
+    - suma_importe: FLOAT
+    - type: TEXT
+    - nivel: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
 asm:
   LUIGI:
     INDEX: modalidad_pp
