@@ -35,6 +35,5 @@ class IngestPipeline(luigi.WrapperTask):
 
         logger.info('Luigi is running the Ingest Pipeline on the date: {0}'.format(
                     self.current_date))
-        return ClassicIngest(current_date=self.current_date)
+        yield ClassicIngest(current_date=self.current_date)
         # yield GeomIngest()
-        # yield PUBIngest()
