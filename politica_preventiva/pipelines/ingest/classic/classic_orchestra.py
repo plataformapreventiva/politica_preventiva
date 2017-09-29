@@ -123,7 +123,7 @@ class ClassicIngestDates(luigi.WrapperTask):
             logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
                 format(pipeline=self.pipeline_task, hdates=dates))
         try:
-            # if the pipeline_Task 
+            # if the pipeline_Task
             configuration.get_config().get(self.pipeline_task,
                     'start_date')
             return dates
@@ -159,7 +159,7 @@ class UpdateLineage(luigi.Task):
 
     """ This Task updates the Neo4j lineage database.
 
-        TODO() 
+        TODO()
         - Column nodes should be unique - Implement it in cypher!
         - Improve tags (tipo & subtipo) in the dictionary. Likely
             create a list rather than a single column. Define static tags.
@@ -223,7 +223,7 @@ class UpdateLineage(luigi.Task):
             graph.schema.create_uniqueness_constraint('Year', 'year')
         except:
             pass
- 
+
         # Define Nodes
         table = Node('Table', value=self.pipeline_task)
         years = self.data_date.split('-')[0]
@@ -468,7 +468,7 @@ class UpdateDB(postgres.CopyToTable):
 
         if isinstance(self.columns[0], six.string_types):
             column_names = self.columns
- 
+
         elif len(self.columns[0]) == 2:
             # Create columns for csv upload
             column_names = [c[0] for c in self.columns]
@@ -594,19 +594,27 @@ class Concatenation(luigi.Task):
 
     def requires(self):
         extra = extras(self.pipeline_task)
-        for extra_p in extra:
-            yield Preprocess(pipeline_task=self.pipeline_task,
-                             current_date=self.current_date,
-                             extra=extra_p, data_date=self.data_date,
-                             suffix=self.suffix)
+
+        if extra[0] == 'spark':
+            return AddEmrStep(pipeline_task=self.pipeline_task,
+                              current_date=self.current_date,
+                              data_date=self.data_date,
+                              suffix=self.suffix)
+
+        else:
+            for extra_p in extra:
+                yield Preprocess(pipeline_task=self.pipeline_task,
+                                 current_date=self.current_date,
+                                 extra=extra_p, data_date=self.data_date,
+                                 suffix=self.suffix)
 
     def run(self):
 
-        result_filepath =  self.pipeline_task + "/concatenation/" + \
+        result_filepath = self.pipeline_task + "/concatenation/" + \
                            self.data_date + "/" + self.pipeline_task + '.csv'
         # folder to concatenate
         folder_to_concatenate = self.pipeline_task + "/preprocess/" +\
-                                self.data_date + "/"
+                self.data_date + "/"
         # function for appending all .csv files in folder_to_concatenate
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate,
                                    result_filepath, '.csv')
@@ -618,6 +626,36 @@ class Concatenation(luigi.Task):
         return S3Target(path=self.raw_bucket + self.pipeline_task +
                         "/concatenation/" + self.data_date + "/" +
                         self.pipeline_task + '.csv')
+
+
+class AddEmrStep(luigi.Task):
+
+    """ Add Emr Step Task
+        This task adds steps for the EMR cluster.
+        Substitute of [Preprocess & Ingestion] when the source data is big enough
+        to need spark as engine.
+        TODO() This task has not yet been implemented
+
+        Note
+        ---------
+        Steps should be uploaded in S3 as .py scripts
+
+        Returns
+        --------
+        This task generate s3/pipeline/raw  ingestion files
+    """
+
+    current_date = luigi.DateParameter()
+    pipeline_task = luigi.Parameter()
+    data_date = luigi.Parameter()
+    suffix = luigi.Parameter()
+
+    raw_bucket = luigi.Parameter('DEFAULT')
+
+    def output(self):
+        file_path = self.raw_bucket + 'pub/processing/' +\
+                "pub_{0}_t.csv".format(self.data_date)
+        return S3Target(file_path)
 
 
 class Preprocess(luigi.Task):
@@ -652,7 +690,7 @@ class Preprocess(luigi.Task):
         key = self.pipeline_task + "/raw/" + self.data_date +\
             "-" + self.suffix + "-" + \
             self.pipeline_task + extra_h + ".csv"
-        
+ 
         out_key = "etl/" + self.pipeline_task + "/preprocess/" + \
                   self.data_date + "/" +   self.data_date + "--" + \
                                         self.pipeline_task + extra_h + ".csv"
