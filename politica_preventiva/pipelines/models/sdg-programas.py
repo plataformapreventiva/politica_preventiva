@@ -71,25 +71,42 @@ if __name__ == "__main__":
     # Read BAse Programas
     bucket = 'dpa-plataforma-preventiva'
     s3_file = 'utils/programas_federales_detalle.csv'
-    programas = s3_to_pandas(Bucket=bucket, Key=s3_file, sep=',', bototype=True)
+    programas = s3_to_pandas(Bucket=bucket, Key=s3_file, sep=',', python_3=True)
     # clean programas nombre and objetivo
     programas['nombre_objetivo'] = programas.apply(lambda x: '{}. {}'.format(x['nombre_programa'],
                                                                               x['OBJ_GRAL_PROG_1']), axis=1)
     programas['nombre_objetivo'] = programas['nombre_objetivo'].map(clean_and_lower)
 
-    # Read palabras clave
-    query = """select * from clean.riesgo_recomendacion"""
+    # Read palabras
+    query = """select * from clean.relacion_sdg_programas"""
     con = connect_to_db()
     palabras_df = pd.read_sql(query, con)
 
     matches = (programas.groupby('cve_programa').apply(lambda x: return_matches(x))).reset_index()
     matches = matches.groupby('id_palabra')['cve_programa'].apply(to_sql_array)
-
     cur = con.cursor()
     for d in range(len(matches)):
-        QUERY=(""" UPDATE clean.riesgo_recomendacion
-                    SET programas_ids= '{programas}'
-                   WHERE id={id} """
-                   .format(programas=matches.iloc[d],
-                           id=matches.index[d]))
+        QUERY=(""" UPDATE clean.relacion_sdg_programas
+                    SET programas_sociales= '{programas}'
+                    WHERE id={id} """
+                .format(programas=matches.iloc[d],
+                        id=matches.index[d]))
+
         cur.execute(QUERY)
+
+#    # Read palabras clave
+#    query = """select * from clean.riesgo_recomendacion"""
+#    con = connect_to_db()
+#    palabras_df = pd.read_sql(query, con)
+#
+#    matches = (programas.groupby('cve_programa').apply(lambda x: return_matches(x))).reset_index()
+#    matches = matches.groupby('id_palabra')['cve_programa'].apply(to_sql_array)
+#
+#    cur = con.cursor()
+#    for d in range(len(matches)):
+#        QUERY=(""" UPDATE clean.riesgo_recomendacion
+#                    SET programas_ids= '{programas}'
+#                   WHERE id={id} """
+#                   .format(programas=matches.iloc[d],
+#                           id=matches.index[d]))
+#        cur.execute(QUERY)

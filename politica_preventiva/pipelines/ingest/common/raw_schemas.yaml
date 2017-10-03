@@ -348,6 +348,105 @@ coneval_estados:
   - int_vulcar
   - int_caren
   - ict
+coneval_municipios_2010:
+  LUIGI:
+    INDEX: clave_municipio
+    SCHEMA:
+    - clave_entidad: TEXT
+    - entidad_federativa: TEXT
+    - clave_municipio: TEXT
+    - municipio: TEXT
+    - poblacion: TEXT
+    - pobreza_p: FLOAT
+    - pobreza_n: FLOAT
+    - pobreza_carencias: FLOAT
+    - pobreza_intensidad: FLOAT
+    - p_extrema_p: FLOAT
+    - p_extrema_n: FLOAT
+    - p_extrema_carencias: FLOAT
+    - p_extrema_intensidad: FLOAT
+    - p_moderada_p: FLOAT
+    - p_moderada_n: FLOAT
+    - p_moderada_carencias: FLOAT
+    - p_moderada_intensidad: FLOAT
+    - v_carenciasocial_p: FLOAT
+    - v_carenciasocial_n: FLOAT
+    - v_carenciasocial_c: FLOAT
+    - v_ingreso_p: FLOAT
+    - v_ingreso_n: FLOAT
+    - nopobresynovulnerables_p: FLOAT
+    - nopobresynovulnerables_n: FLOAT
+    - rezagoeducativo_p: FLOAT
+    - rezagoeducativo_n: FLOAT
+    - c_serviciossalud_p: FLOAT
+    - c_serviciossalud_n: FLOAT
+    - c_seguridadsocial_p: FLOAT
+    - c_seguridadsocial_n: FLOAT
+    - c_calidadyespaciosvivienda_p: FLOAT
+    - c_calidadyespaciosvivienda_n: FLOAT
+    - c_serviciosvivienda_p: FLOAT
+    - c_serviciosvivienda_n: FLOAT
+    - c_alimentacion_p: FLOAT
+    - c_aalimentacion_n: FLOAT
+    - almenosunacarenciasocial_p: FLOAT
+    - almenosunacarenciasocial_n: FLOAT
+    - tresomascarenciassociales_p: FLOAT
+    - tresomascarenciassociales_n: FLOAT
+    - ingresoinflineadebienestar_p: FLOAT
+    - ingresoinflineadebienestar_n: FLOAT
+    - ingresoinflineadebienestarmin_p: FLOAT
+    - ingresoinflineadebienestarmin_n: FLOAT
+    - coeficientedegini: TEXT
+    - razon_ingreso_pextynopobreynovul: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - clavedeentidad
+  - entidadfederativa
+  - clavedemunicipio
+  - municipio
+  - poblacion
+  - pobreza_porcentaje
+  - pobreza_personas
+  - pobreza_carencias
+  - pobreza_intensidad
+  - pobrezaextrema_porcentaje
+  - pobrezaextrema_personas
+  - pobrezaextrema_carencias
+  - pobrezaextrema_intensidad
+  - pobrezamoderada_porcentaje
+  - pobrezamoderada_personas
+  - pobrezamoderada_carencias
+  - pobrezamoderada_intensidad
+  - vulnerablesporcarenciasocial_porcentaje
+  - vulnerablesporcarenciasocial_personas
+  - vulnerablesporcarenciasocial_carencias
+  - vulnerablesporingreso_porcentaje
+  - vulnerablesporingreso_personas
+  - nopobresynovulnerables_porcentaje
+  - nopobresynovulnerables_personas
+  - rezagoeducativo_porcentaje
+  - rezagoeducativo_personas
+  - carenciaporaccesoalosserviciosdesalud_porcentaje
+  - carenciaporaccesoalosserviciosdesalud_personas
+  - carenciaporaccesoalaseguridadsocial_porcentaje
+  - carenciaporaccesoalaseguridadsocial_personas
+  - carenciaporcalidadyespaciosdelavivienda_porcentaje
+  - carenciaporcalidadyespaciosdelavivienda_personas
+  - carenciaporaccesoalosserviciosbasicosenlavivienda_porcentaje
+  - carenciaporaccesoalosserviciosbasicosenlavivienda_personas
+  - carenciaporaccesoalaalimentacion_porcentaje
+  - carenciaporaccesoalaalimentacion_personas
+  - poblacionconalmenosunacarenciasocial_porcentaje
+  - poblacionconalmenosunacarenciasocial_personas
+  - poblacioncontresomascarenciassociales_porcentaje
+  - poblacioncontresomascarenciassociales_personas
+  - poblacionconingresoinferioralalineadebienestar_porcentaje
+  - poblacionconingresoinferioralalineadebienestar_personas
+  - poblacionconingresoinferioralalineadebienestarminimo_porcentaje
+  - poblacionconingresoinferioralalineadebienestarminimo_personas
+  - coeficientedegini
+  - razondelingresoentrelapoblacionpobreextremaylapoblacionnopobreynovulnerable1
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
