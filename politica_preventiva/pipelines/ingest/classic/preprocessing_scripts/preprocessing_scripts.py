@@ -177,6 +177,21 @@ def indesol_prep(data_date, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
+#def coneval_municipios_2010_prep(data_date, s3_file, extra_h, out_key):
+#    """
+#    Preprocessing function casting coneval municipios
+#    """
+#    bucket = 'dpa-plataforma-preventiva'
+#    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+#
+#    if df is not None:
+#        df = df.convert_objects(convert_numeric=True)
+#        df = df.where((pd.notnull(df)), None)
+#        df = pputils.replace_missing_with_none(df)
+#        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+#    return True
+
+
 def no_preprocess_method(data_date, s3_file, extra_h, out_key):
    bucket = 'dpa-plataforma-preventiva'
    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)

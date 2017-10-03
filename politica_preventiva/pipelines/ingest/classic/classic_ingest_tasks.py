@@ -554,6 +554,18 @@ class coneval_estados(DockerTask):
 
         return " ".join(command_list)
 
+
+class coneval_municipios_2010(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['python', self.classic_task_scripts +
+                        'coneval_municipios_2010.py',
+                        '--local_path', self.local_path + self.pipeline_task,
+                        '--local_ingest_file', self.local_ingest_file]
+        return " ".join(command_list)
+
+
 class declaratoria(DockerTask):
     @property
     def cmd(self):
