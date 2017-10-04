@@ -82,7 +82,6 @@ celerybeat-schedule
 
 # dotenv
 .env
-emr-config.yaml
 # virtualenv
 venv/
 ENV/
