@@ -71,14 +71,14 @@ class CreateSemanticDB(postgres.PostgresQuery):
                                           self.current_date)
         return dates
 
-class temp():
+class temp(luigi.Task):
 	year_month = luigi.Parameter()
 	sql_scripts = luigi.Parameter('EtlPipeline')
 	database = os.environ.get("PGDATABASE_COMPRANET")
 	user = os.environ.get("POSTGRES_USER_COMPRANET")
 	password = os.environ.get("POSTGRES_PASSWORD_COMPRANET")
 	host = os.environ.get("PGHOST_COMPRANET")
-
+    
     def requires(self):
         return CreateCleanDB(self.year_month)
 
