@@ -2,12 +2,10 @@ from __future__ import print_function
 import argparse
 import re
 import datetime
-import sys
 from pyspark.sql import SQLContext
 from pyspark import SparkContext
 from pyspark.sql import functions as sf
-from pyspark.sql.functions import unix_timestamp, dayofmonth, date_format, datediff, to_date, lit, col, udf, count, avg, sum
-from pyspark.sql.types import DoubleType
+from pyspark.sql.functions import to_date, lit
 from functools import reduce
 from itertools import product
 
@@ -23,29 +21,35 @@ def clean_column_names(x):
     x = x.strip()
     x = x.lower()
     x = re.sub('\\x00', '', x)
-    x = re.sub('ubuntu','', x)
-    x = re.sub('\\x80\\x03','', x)
+    x = re.sub('ubuntu', '', x)
+    x = re.sub('\\x80\\x03', '', x)
     x = x.strip()
     return x
 
 
 def read_pub(spark, year, input_path, output_path):
-    df = spark.read.csv(input_path + "pub_{0}.tar.gz".format(year), sep="|",header=True, encoding="latin1")
+    df = spark.read.csv(input_path + "pub_{0}.tar.gz".format(year),
+                        sep="|", header=True, encoding="latin1")
     df.registerTempTable('table')
     cleaner = lambda x: clean_column_names(x)
     oldColumns = list(df.schema.names)
     newColumns = list(map(cleaner, oldColumns))
     newColumns[0] = "cd_dependencia"
-    df = reduce(lambda df, idx: df.withColumnRenamed(oldColumns[idx], newColumns[idx]), range(len(oldColumns)), df)
+    df = reduce(lambda df, idx: df.withColumnRenamed(oldColumns[idx],
+                                                     newColumns[idx]),
+                range(len(oldColumns)), df)
     return df
 
 
 def clean_pub(spark, df):
     # clean age
     df = spark.sql("""
-                  SELECT *, TO_DATE(CAST(UNIX_TIMESTAMP(FH_NACIMIENTO, 'yyyyMMdd')
+                  SELECT *,
+                   TO_DATE(CAST(UNIX_TIMESTAMP(FH_NACIMIENTO, 'yyyyMMdd')
                   AS TIMESTAMP)) AS birthdate FROM table""")
-    df = df.withColumn("age", (sf.datediff(to_date(lit(datetime.date.today())), sf.col("birthdate")))/365)
+    df = df.withColumn("age",
+                       (sf.datediff(to_date(lit(datetime.date.today())),
+                                    sf.col("birthdate")))/365)
     # create age categories
     categoria = sf.when(sf.col("age") >= 60, "Adulto Mayor").when((sf.col("age") <= 14) &
       (sf.col("age") >= 0), "Infante").when((sf.col("age") > 14) & (sf.col("age") < 60),
@@ -63,7 +67,7 @@ def clean_pub(spark, df):
 def pub_agrupaciones(spark, df, output_path, year, agg_dict):
     """
     """
-    agrupaciones = [x for x in agg_dict.keys() if agg_dict[x]==True]
+    agrupaciones = [x for x in agg_dict.keys() if agg_dict[x] == True]
     if len(agrupaciones) > 0:
         agrupaciones = ", " + ",".join(agrupaciones)
     else:
@@ -91,7 +95,8 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                     cd_programa,
                     {padron} AS cd_padron,
                     count(distinct new_id) as n_beneficiarios,
-                    cast('total' as varchar(20)) as type,
+                    cast('' as bigint) as suma_importe,
+                    cast('total' as varchar(20)) as tipo,
                     cast('{nivel}' as varchar(20)) as nivel,
                     cast('{grupo}' as varchar(20)) as grupo
                     from pub
@@ -103,7 +108,7 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                        padron=selects['cd_padron'],
                        nivel=nivel,
                        grupo=grupo,
-                       groupbys = agrupaciones,
+                       groupbys=agrupaciones,
                        wheres=wheres))
     nivel_total = spark.sql(query_total)
     # Tipo: sexo
@@ -113,7 +118,8 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                     cd_programa,
                     {padron} AS cd_padron,
                     count(distinct new_id) as n_beneficiarios,
-                    cd_sexo as type,
+                    cast('' as bigint) as suma_importe,
+                    cd_sexo as tipo,
                     cast('{nivel}' as varchar(20)) as nivel,
                     cast('{grupo}' as varchar(20)) as grupo
                     from pub
@@ -126,7 +132,7 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                        padron=selects['cd_padron'],
                        nivel=nivel,
                        grupo=grupo,
-                       groupbys = agrupaciones,
+                       groupbys=agrupaciones,
                        wheres=wheres))
     nivel_sexo = spark.sql(query_sexo)
     # Tipo: categorias de edad
@@ -136,7 +142,8 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                     cd_programa,
                     {padron} AS cd_padron,
                     count(distinct new_id) as n_beneficiarios,
-                    categoria_edad as type,
+                    cast('' as bigint) as suma_importe,
+                    categoria_edad as tipo,
                     cast('{nivel}' as varchar(20)) as nivel,
                     cast('{grupo}' as varchar(20)) as grupo
                     from pub
@@ -149,30 +156,37 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                        padron=selects['cd_padron'],
                        nivel=nivel,
                        grupo=grupo,
-                       groupbys = agrupaciones,
+                       groupbys=agrupaciones,
                        wheres=wheres))
     nivel_edad = spark.sql(query_edad)
     nivel = nivel_total.unionAll(nivel_sexo.unionAll(nivel_edad))
-    nivel.write.csv(output_path + "/{0}".format(year),
-                                            sep='|', header=True, mode='append')
+    nivel.write.csv(output_path + "/{0}--pub".format(year),
+                    sep='|', header=True, mode='append')
     return True
 
 
 if __name__ == "__main__":
-    ## PARAMETROS
+    # PARAMETROS
     input_path = "s3n://pub-raw/"
-    output_path = 's3n://dpa-plataforma-preventiva/etl/pub/preprocess/'
-    sc  = SparkContext.getOrCreate()
+    sc = SparkContext.getOrCreate()
     spark = SQLContext(sc)
 
-    for year in range(2013,2017):
+    for year in range(2013, 2017):
+        output_path = 's3n://dpa-plataforma-preventiva/etl/pub/preprocess/{}'.format(year)
         print(year)
         df = read_pub(spark, year, input_path, output_path)
         df = clean_pub(spark, df)
         # Generate levels of aggregation
         niveles = ['cve_ent', 'cve_muni', 'cd_padron']
-        niveles_dicts = [{niveles[0]:i, niveles[1]:j, niveles[2]:k} for i, j, k in product([True,False],[True,False],[True,False])]
-        niveles_dicts = [xi for xi in niveles_dicts if not (xi['cve_ent']==False and xi['cve_muni']==True)]
+        niveles_dicts = [{niveles[0]:i, niveles[1]:j, niveles[2]:k}
+                         for i, j, k in product([True, False],
+                                                [True, False],
+                                                [True, False])]
+
+        niveles_dicts = [xi for xi in niveles_dicts
+                         if not (xi['cve_ent'] == False and
+                                 xi['cve_muni'] == True)]
+
         # Loop through all aggregations
         for agg_dict in niveles_dicts:
             print(agg_dict)
