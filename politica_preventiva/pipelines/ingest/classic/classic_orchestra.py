@@ -28,7 +28,7 @@ from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
     preprocessing_scripts.preprocessing_scripts import *
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, \
-    extras, dates_list, get_extra_str, s3_to_pandas
+    extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.ingest.tests import classic_tests
 
@@ -67,11 +67,11 @@ class ClassicIngest(luigi.WrapperTask):
 
     def requires(self):
         logger.info('Running the following pipelines: {0}'.\
-                format(self.pipelines))
+                    format(self.pipelines))
         # loop through pipeline tasks
         return [ClassicIngestDates(current_date=self.current_date,
                                    pipeline_task=pipeline)
-        for pipeline in self.pipelines]
+                for pipeline in self.pipelines]
 
 
 class ClassicIngestDates(luigi.WrapperTask):
@@ -96,63 +96,19 @@ class ClassicIngestDates(luigi.WrapperTask):
 
     @property
     def dates(self):
-        periodicity = configuration.get_config().get(self.pipeline_task,
-                                                     'periodicity')
-        if periodicity == 'None':
-            dates = 'na'
-            self.suffix = 'fixed'
-            return [dates]
-
-        elif self.historical in ['True', 'T', '1', 'TRUE']:
-            logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
-                format(self.pipeline_task))
-
-            dates, self.suffix = dates_list(self.pipeline_task,
-                                            self.current_date,
-                                            periodicity)
-            logger.debug('Pipeline task {pipeline} has historic dates {hdates}'.\
-                format(pipeline=self.pipeline_task, hdates=dates))
-        else:
-            logger.info('Preparing to get current data for'+ \
-                     ' the pipeline_task: {0}'.format(self.pipeline_task))
-
-            dates, self.suffix = dates_list(self.pipeline_task,
-                                            self.current_date,
-                                            periodicity)
-            dates = dates[-2:]
-            logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
-                format(pipeline=self.pipeline_task, hdates=dates))
-        try:
-            # if the pipeline_Task
-            configuration.get_config().get(self.pipeline_task,
-                    'start_date')
-            return dates
-
-        except:
-            logger.info('Start date is not defined for the pipeline {0}'.format(
-                                                                  self.pipeline_task)+\
-                    'Luigi will get only the information of the last period')
-            return [dates[-1]]
+        dates, self.suffix = final_dates(self.historical, self.pipeline_task,
+                                         self.current_date)
+        return dates
 
     def requires(self):
-        logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
+        logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task) +\
                     '\n will try to download the data of the\n following periods:{0}'.\
                     format(self.dates))
-
-        try:
-            skip = [x.strip() for x in configuration.get_config().get(self.pipeline_task,
-                                                     'skip').split(',')]
-        except:
-            skip = []
-        lista = []
-        for x in self.dates:
-            if x not in skip:
-                lista.append(x)
 
         return [UpdateLineage(current_date=self.current_date,
                               pipeline_task=self.pipeline_task,
                               data_date=str(data_date), suffix=self.suffix)
-                for data_date in lista]
+                for data_date in self.dates]
 
 
 class UpdateLineage(luigi.Task):
@@ -654,7 +610,7 @@ class AddEmrStep(luigi.Task):
 
     def output(self):
         file_path = self.raw_bucket + 'pub/processing/' +\
-                "pub_{0}_t.csv".format(self.data_date)
+                "pub_{0}_t.csv/_SUCCESS".format(self.data_date)
         return S3Target(file_path)
 
 

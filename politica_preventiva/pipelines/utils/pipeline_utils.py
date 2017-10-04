@@ -229,6 +229,61 @@ def dates_list(pipeline, end_date, periodicity):
     except(NoOptionError):
         return [end_date]
 
+def final_dates(historical, pipeline_task, current_date):
+    periodicity = configuration.get_config().get(pipeline_task,
+                                                 'periodicity')
+    if periodicity == 'None':
+        dates = 'na'
+        suffix = 'fixed'
+        return (dates, suffix) 
+
+    elif historical in ['True', 'T', '1', 'TRUE']:
+        logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
+                    format(pipeline_task))
+        dates, suffix = dates_list(pipeline_task,
+                                        current_date,
+                                        periodicity)
+        logger.debug('Pipeline task {pipeline} has historic dates {hdates}'.\
+                     format(pipeline=pipeline_task, hdates=dates))
+    else:
+        logger.info('Preparing to get current data for'+ \
+                    ' the pipeline_task: {0}'.format(pipeline_task))
+        dates, suffix = dates_list(pipeline_task,
+                                        current_date,
+                                        periodicity)
+        dates = dates[-2:]
+        logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
+                     format(pipeline=pipeline_task, hdates=dates))
+    try:
+        # if the pipeline_Task has start_date
+        configuration.get_config().get(pipeline_task,
+                                       'start_date')
+        try:
+            skip = [x.strip() for x in configuration.get_config().get(self.pipeline_task,
+                                                                      'skip').split(',')]
+        except:
+            skip = []
+        lista = []
+        for x in dates:
+            if x not in skip:
+                 lista.append(x)
+        return (lista, suffix)
+
+    except:
+        logger.info('Start date is not defined for the pipeline {0}'.format(
+            pipeline_task)+\
+            'Luigi will get only the information of the last period')
+        try:
+            skip = [x.strip() for x in configuration.get_config().get(pipeline_task,
+                                                                      'skip').split(',')]
+        except:
+            skip = []
+        lista = []
+        for x in dates:
+            if x not in skip:
+                 lista.append(x)
+        return ([lista[-1]], suffix) 
+
 
 def extras(pipeline):
     # pdb.set_trace()
