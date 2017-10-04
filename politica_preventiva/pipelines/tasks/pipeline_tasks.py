@@ -5,6 +5,7 @@ import logging
 import subprocess
 import yaml
 import os
+import pdb
 
 from politica_preventiva.pipelines.utils import emr_tasks
 from luigi import configuration
@@ -25,7 +26,7 @@ with open("pipelines/ingest/common/emr-config.yaml", "r") as file:
 config_emr = config.get("emr")
 
 
-class DockerTask(luigi.Task):
+class GDockerTask(luigi.Task):
 
     """
     Task Abstraction to Dockerize tasks
@@ -60,6 +61,7 @@ class EmrTask(luigi.Task):
     Abstract EMR Luigi Task
     """
 	# Load EMR Configuration
+
     emr_loader = emr_tasks.EMRLoader(
         aws_access_key=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
@@ -75,6 +77,13 @@ class EmrTask(luigi.Task):
         script_bucket_name=config_emr.get("script_bucket_name"),
         key=config_emr.get("key"),
         key_value=config_emr.get("key_value"))
+    emr_client = emr_loader.boto_client("emr")
+
+class AddStep(EmrTask):
+    current_date = luigi.DateParameter()
+
+    def requires(self):
+        return InitializeCluster(self.current_date)
 
 class InitializeCluster(EmrTask):
     """
@@ -82,19 +91,24 @@ class InitializeCluster(EmrTask):
     This Task writes an output token to the location designated by the
     created. The Task will fail if the cluster cannot be initialized.
     """
+
     current_date = luigi.DateParameter()
-    pipeline_task = luigi.Parameter()
-    data_date = luigi.Parameter()
+    common_path = luigi.Parameter('DEFAULT')
 
-
-    def requires(self):
+    def run(self):
         """
         Create the EMR cluster
         """
-        pdb.set_trace()
+        cluster_id = self.common_path + "emr_id.txt" 
+        # Launch Cluster
+        self.emr_loader.launch_cluster()
+        # Create Client
+        self.emr_loader.boto_client("emr")
+        file = open(cluster_id,'w')
+        file.write(self.emr_loader.job_flow_id)
+        file.close()
 
-        emr_response = emr_loader.launch_cluster()
-        emr_client = emr_loader.boto_client("emr")
-        return emr_client
-
+    def output(self):
+        cluster_id = self.common_path + "emr_id.txt"
+        return luigi.LocalTarget(cluster_id)
 
