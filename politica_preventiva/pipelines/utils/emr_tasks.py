@@ -165,7 +165,6 @@ class EMRLoader(object):
 
     def add_pipeline_step(self, job_flow_id, step_name, script_bucket_name,
                           script_name, parameter='', value=''):
-
         response = self.boto_client("emr").add_job_flow_steps(
             JobFlowId=job_flow_id,
             Steps=[

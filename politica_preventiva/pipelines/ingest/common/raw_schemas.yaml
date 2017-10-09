@@ -1,3 +1,18 @@
+pub:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - anio: TEXT
+    - cve_ent: VARCHAR(5)
+    - cve_muni: VARCHAR(5)
+    - cve_programa: VARCHAR(5)
+    - cve_padron: VARCHAR(5)
+    - n_beneficiarios: INT
+    - type: TEXT
+    - nivel: TEXT
+    - grupo: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
 asm:
   LUIGI:
     INDEX: modalidad_pp

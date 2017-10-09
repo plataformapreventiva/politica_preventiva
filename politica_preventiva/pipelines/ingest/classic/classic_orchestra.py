@@ -104,10 +104,15 @@ class ClassicIngestDates(luigi.WrapperTask):
 
     @property
     def dates(self):
+<<<<<<< HEAD
 
         dates, self.suffix = final_dates(self.historical, self.pipeline_task,
                                          self.current_date)
 
+=======
+        dates, self.suffix = final_dates(self.historical, self.pipeline_task,
+                                         self.current_date)
+>>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
         return dates
 
     def requires(self):
@@ -410,7 +415,7 @@ class UpdateDB(postgres.CopyToTable):
                     elif line == header:
                         pass
                     else:
-                        line = re.sub("na|nan|N/E|^\-$", '', line)
+                        #line = re.sub("\|na\||\|na|na\||\|nan\||\|nan|nan\||N/E|^\-$", '', line)
                         line = line.strip('\n').split('|')
                         line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
                         line.append(str(self.data_date) + '-' + self.suffix)
@@ -642,10 +647,17 @@ class AddEmrStep(EmrTask):
         ClusterId = F.read().replace('\n','')
         self.emr_loader.add_pipeline_step(ClusterId, self.pipeline_task,
                                      'dpa-plataforma-preventiva/utils/spark',
+<<<<<<< HEAD
                                      self.pipeline_task + '.py', '--year', self.data_date)
 
     def output(self):
         file_path = self.raw_bucket + 'pub/preprocess/' +\
+=======
+                                     self.pipeline_task + '.py')
+
+    def output(self):
+        file_path = self.raw_bucket + 'pub/raw/' +\
+>>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
                 "{0}/_SUCCESS".format(self.data_date)
         return S3Target(file_path)
 

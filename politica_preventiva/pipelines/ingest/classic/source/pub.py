@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import argparse
@@ -6,6 +7,12 @@ import re
 import datetime
 import os
 
+=======
+from __future__ import print_function
+import argparse
+import re
+import datetime
+>>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
 from pyspark.sql import SQLContext
 from pyspark import SparkContext
 from pyspark.sql import functions as sf
@@ -13,9 +20,9 @@ from pyspark.sql.functions import to_date, lit
 from functools import reduce
 from itertools import product
 
-
 os.environ["SPARK_HOME"] = "/usr/local/Cellar/apache-spark/1.5.1/"
 os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
+
 
 def trim(string):
     try:

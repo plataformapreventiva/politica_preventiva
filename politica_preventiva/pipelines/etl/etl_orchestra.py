@@ -65,6 +65,7 @@ class CreateSemanticDB(postgres.PostgresQuery):
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     historical = luigi.Parameter('DEFAULT')
 
+
     @property
     def dates(self):
         dates, self.suffix =  final_dates(self.historical, self.pipeline_task, 
