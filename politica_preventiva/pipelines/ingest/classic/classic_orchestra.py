@@ -104,15 +104,10 @@ class ClassicIngestDates(luigi.WrapperTask):
 
     @property
     def dates(self):
-<<<<<<< HEAD
 
         dates, self.suffix = final_dates(self.historical, self.pipeline_task,
                                          self.current_date)
 
-=======
-        dates, self.suffix = final_dates(self.historical, self.pipeline_task,
-                                         self.current_date)
->>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
         return dates
 
     def requires(self):
@@ -647,17 +642,10 @@ class AddEmrStep(EmrTask):
         ClusterId = F.read().replace('\n','')
         self.emr_loader.add_pipeline_step(ClusterId, self.pipeline_task,
                                      'dpa-plataforma-preventiva/utils/spark',
-<<<<<<< HEAD
                                      self.pipeline_task + '.py', '--year', self.data_date)
 
     def output(self):
         file_path = self.raw_bucket + 'pub/preprocess/' +\
-=======
-                                     self.pipeline_task + '.py')
-
-    def output(self):
-        file_path = self.raw_bucket + 'pub/raw/' +\
->>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
                 "{0}/_SUCCESS".format(self.data_date)
         return S3Target(file_path)
 
