@@ -104,8 +104,15 @@ class ClassicIngestDates(luigi.WrapperTask):
 
     @property
     def dates(self):
+<<<<<<< HEAD
+
         dates, self.suffix = final_dates(self.historical, self.pipeline_task,
                                          self.current_date)
+
+=======
+        dates, self.suffix = final_dates(self.historical, self.pipeline_task,
+                                         self.current_date)
+>>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
         return dates
 
     def requires(self):
@@ -412,19 +419,19 @@ class UpdateDB(postgres.CopyToTable):
                         line = line.strip('\n').split('|')
                         line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
                         line.append(str(self.data_date) + '-' + self.suffix)
-                        yield  [x if x != '' else None for x in line]
+                        yield [x if x != '' else None for x in line]
 
         else:
-            # TODO() remove this step, checkout for concatenation and header removal.
+            # TODO() remove this step, checkout for
+            # concatenation and header removal.
             data = pd.read_csv(self.input().path, sep="|", encoding="utf-8",
                                dtype=str, error_bad_lines=False, header=None)
-            data.drop_duplicates(keep='first',inplace=True)
+            data.drop_duplicates(keep='first', inplace=True)
             data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
             data = data.where((pd.notnull(data)), None)
             data = data.iloc[1:]
-            data[len(data.columns)]  = self.actualizacion
-            data[len(data.columns)]  = str(self.data_date) + "-" + \
-                                self.suffix
+            data[len(data.columns)] = self.actualizacion
+            data[len(data.columns)] = str(self.data_date) + "-" + self.suffix
             return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
@@ -531,8 +538,10 @@ class UpdateDB(postgres.CopyToTable):
                            "/concatenation/" + self.data_date + "/")
 
     def output(self):
-        return postgres.PostgresTarget(host=self.host, database=self.database,
-                                       user=self.user, password=self.password,
+        return postgres.PostgresTarget(host=self.host,
+                                       database=self.database,
+                                       user=self.user,
+                                       password=self.password,
                                        table=self.table,
                                        update_id=self.update_id)
 
@@ -638,10 +647,17 @@ class AddEmrStep(EmrTask):
         ClusterId = F.read().replace('\n','')
         self.emr_loader.add_pipeline_step(ClusterId, self.pipeline_task,
                                      'dpa-plataforma-preventiva/utils/spark',
+<<<<<<< HEAD
+                                     self.pipeline_task + '.py', '--year', self.data_date)
+
+    def output(self):
+        file_path = self.raw_bucket + 'pub/preprocess/' +\
+=======
                                      self.pipeline_task + '.py')
 
     def output(self):
         file_path = self.raw_bucket + 'pub/raw/' +\
+>>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
                 "{0}/_SUCCESS".format(self.data_date)
         return S3Target(file_path)
 
@@ -678,10 +694,9 @@ class Preprocess(luigi.Task):
         key = self.pipeline_task + "/raw/" + self.data_date +\
             "-" + self.suffix + "-" + \
             self.pipeline_task + extra_h + ".csv"
- 
-        out_key = "etl/" + self.pipeline_task + "/preprocess/" + \
-                  self.data_date + "/" +   self.data_date + "--" + \
-                                        self.pipeline_task + extra_h + ".csv"
+        out_key = "etl/" + self.pipeline_task + "/preprocess/" +\
+                self.data_date + "/" + self.data_date + "--" +\
+                self.pipeline_task + extra_h + ".csv"
         try:
             preprocess_tasks = eval(self.pipeline_task + '_prep')
             preprocess_tasks(data_date=self.data_date, s3_file=key,
@@ -694,8 +709,9 @@ class Preprocess(luigi.Task):
     def output(self):
         extra_h = get_extra_str(self.extra)
         return S3Target(path=self.raw_bucket + self.pipeline_task +
-                        "/preprocess/" + self.data_date + "/" + self.data_date +
-                         "--" + self.pipeline_task + extra_h + ".csv")
+                        "/preprocess/" + self.data_date + "/" +
+                        self.data_date + "--" +
+                        self.pipeline_task + extra_h + ".csv")
 
 
 class LocalToS3(luigi.Task):
@@ -727,7 +743,8 @@ class LocalToS3(luigi.Task):
         task = RawHeaderTest(pipeline_task=self.pipeline_task,
                              data_date=self.data_date,
                              local_ingest_file=local_ingest_file,
-                             extra=self.extra, suffix=self.suffix)
+                             extra=self.extra,
+                             suffix=self.suffix)
         return task
 
     def run(self):
@@ -738,7 +755,8 @@ class LocalToS3(luigi.Task):
             extra_h + ".csv"
 
         try:
-            self.client.put(local_ingest_file, self.output().path)
+            self.client.put(local_ingest_file,
+                            self.output().path)
         except:
             logger.debug('The raw file of the pipeline {0}'.format(self.pipeline_task) +\
             ' is kinda big, Luigi will try to upload it in chunks')
@@ -785,8 +803,11 @@ class RawHeaderTest(luigi.Task):
 
     def run(self):
 
-        classic_tests.header_test(self.input().path, self.pipeline_task,
-                                  self.common_path, self.suffix, self.new)
+        classic_tests.header_test(self.input().path,
+                                  self.pipeline_task,
+                                  self.common_path,
+                                  self.suffix,
+                                  self.new)
 
     def output(self):
         done = self.local_ingest_file + ".done"

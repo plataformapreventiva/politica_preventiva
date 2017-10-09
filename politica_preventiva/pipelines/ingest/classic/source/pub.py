@@ -1,13 +1,27 @@
+<<<<<<< HEAD
+# -*- coding: utf-8 -*-
+from __future__ import print_function
+import argparse
+# import boto3
+import re
+import datetime
+import os
+
+=======
 from __future__ import print_function
 import argparse
 import re
 import datetime
+>>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
 from pyspark.sql import SQLContext
 from pyspark import SparkContext
 from pyspark.sql import functions as sf
 from pyspark.sql.functions import to_date, lit
 from functools import reduce
 from itertools import product
+
+os.environ["SPARK_HOME"] = "/usr/local/Cellar/apache-spark/1.5.1/"
+os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
 
 
 def trim(string):
@@ -95,7 +109,7 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                     cd_programa,
                     {padron} AS cd_padron,
                     count(distinct new_id) as n_beneficiarios,
-                    cast('' as bigint) as suma_importe,
+                    cast('' as FLOAT) as suma_importe,
                     cast('total' as varchar(20)) as tipo,
                     cast('{nivel}' as varchar(20)) as nivel,
                     cast('{grupo}' as varchar(20)) as grupo
@@ -118,7 +132,7 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                     cd_programa,
                     {padron} AS cd_padron,
                     count(distinct new_id) as n_beneficiarios,
-                    cast('' as bigint) as suma_importe,
+                    cast('' as FLOAT) as suma_importe,
                     cd_sexo as tipo,
                     cast('{nivel}' as varchar(20)) as nivel,
                     cast('{grupo}' as varchar(20)) as grupo
@@ -142,7 +156,7 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                     cd_programa,
                     {padron} AS cd_padron,
                     count(distinct new_id) as n_beneficiarios,
-                    cast('' as bigint) as suma_importe,
+                    cast('' as FLOAT) as suma_importe,
                     categoria_edad as tipo,
                     cast('{nivel}' as varchar(20)) as nivel,
                     cast('{grupo}' as varchar(20)) as grupo
@@ -160,35 +174,42 @@ def pub_agrupaciones(spark, df, output_path, year, agg_dict):
                        wheres=wheres))
     nivel_edad = spark.sql(query_edad)
     nivel = nivel_total.unionAll(nivel_sexo.unionAll(nivel_edad))
-    nivel.write.csv(output_path + "/{0}--pub".format(year),
-                    sep='|', header=True, mode='append')
+    nivel.write.csv(output_path, sep='|', header=True, mode='append')
     return True
 
 
 if __name__ == "__main__":
-    # PARAMETROS
     input_path = "s3n://pub-raw/"
     sc = SparkContext.getOrCreate()
     spark = SQLContext(sc)
+    parser = argparse.ArgumentParser(description="S3 file combiner")
+    parser.add_argument("--year", help="year", default = "2014") 
+    args = parser.parse_args()
+    year = args.year
+    print(year)
+    output_path = 's3n://dpa-plataforma-preventiva/etl/pub/preprocess/{}'.format(year)
+    print(output_path)
+    df = read_pub(spark, year, input_path, output_path)
+    df = clean_pub(spark, df)
+    # Generate levels of aggregation
+    niveles = ['cve_ent', 'cve_muni', 'cd_padron']
+    niveles_dicts = [{niveles[0]:i, niveles[1]:j, niveles[2]:k} 
+			for i, j, k in product([True, False],
+						[True, False],
+						[True, False])]
 
-    for year in range(2013, 2017):
-        output_path = 's3n://dpa-plataforma-preventiva/etl/pub/preprocess/{}'.format(year)
-        print(year)
-        df = read_pub(spark, year, input_path, output_path)
-        df = clean_pub(spark, df)
-        # Generate levels of aggregation
-        niveles = ['cve_ent', 'cve_muni', 'cd_padron']
-        niveles_dicts = [{niveles[0]:i, niveles[1]:j, niveles[2]:k}
-                         for i, j, k in product([True, False],
-                                                [True, False],
-                                                [True, False])]
+    niveles_dicts = [xi for xi in niveles_dicts
+            if not (xi['cve_ent'] == False and
+                xi['cve_muni'] == True)]
 
-        niveles_dicts = [xi for xi in niveles_dicts
-                         if not (xi['cve_ent'] == False and
-                                 xi['cve_muni'] == True)]
+    #loop through all aggregations
+    exito = []
+    for agg_dict in niveles_dicts:
+        print(agg_dict)
+        exito.append(pub_agrupaciones(spark, df, output_path, year, agg_dict))
 
-        # Loop through all aggregations
-        for agg_dict in niveles_dicts:
-            print(agg_dict)
-            pub_agrupaciones(spark, df, output_path, year, agg_dict)
-
+    # if(all(exito)):
+    #    f = open("exitoso.txt","w+")
+    #    f.write("exito")
+    #    s3 = boto3.resource('s3')
+    #    s3.Object(output_path, 'exitoso.txt').put(Body=open('exitoso.txt', 'rb'))
