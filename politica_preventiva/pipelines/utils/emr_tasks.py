@@ -164,7 +164,7 @@ class EMRLoader(object):
         return response
 
     def add_pipeline_step(self, job_flow_id, step_name, script_bucket_name,
-                          script_name):
+                          script_name, parameter='', value=''):
         response = self.boto_client("emr").add_job_flow_steps(
             JobFlowId=job_flow_id,
             Steps=[
@@ -177,6 +177,15 @@ class EMRLoader(object):
                                  '/home/hadoop/']
                     }
                 },
+                #{
+                #    'Name': 'install python packages',
+                #    'ActionOnFailure': 'CANCEL_AND_WAIT',
+                #    'HadoopJarStep': {
+                #        'Jar': 'command-runner.jar',
+                #        'Args': ['sudo','pip','install','boto3',
+                #                '/home/hadoop']
+                #    }
+                #},
                 {
                     'Name': step_name,
                     'ActionOnFailure': 'CANCEL_AND_WAIT',
@@ -190,7 +199,10 @@ class EMRLoader(object):
                                  'spark.yarn.executor.memoryOverhead=1000',
                                  '--conf', 'spark.executor.memory=9g',
                                  '--conf', 'spark.executor.cores=7',
-                                 '/home/hadoop/' + script_name]
+                                 '--conf', 'spark.yarn.appMasterEnv.PYSPARK_PYTHON=python3',
+                                 '--conf', 'spark.executorEnv.PYSPARK_PYTHON=python3',
+                                 '/home/hadoop/' + script_name, 
+                                 parameter, value]
                     }
                 }
             ])

@@ -349,54 +349,54 @@ coneval_estados:
   - ict
 coneval_municipios_2010:
   LUIGI:
-    INDEX: clave_municipio
+    INDEX: null
     SCHEMA:
-    - clave_entidad: TEXT
-    - entidad_federativa: TEXT
-    - clave_municipio: TEXT
+    - clavedeentidad: Integer
+    - entidadfederativa: TEXT
+    - clavedemunicipio: Integer
     - municipio: TEXT
-    - poblacion: TEXT
-    - pobreza_p: FLOAT
-    - pobreza_n: FLOAT
+    - poblacion: Integer
+    - pobreza_porcentaje: FLOAT
+    - pobreza_personas: Integer
     - pobreza_carencias: FLOAT
     - pobreza_intensidad: FLOAT
-    - p_extrema_p: FLOAT
-    - p_extrema_n: FLOAT
-    - p_extrema_carencias: FLOAT
-    - p_extrema_intensidad: FLOAT
-    - p_moderada_p: FLOAT
-    - p_moderada_n: FLOAT
-    - p_moderada_carencias: FLOAT
-    - p_moderada_intensidad: FLOAT
-    - v_carenciasocial_p: FLOAT
-    - v_carenciasocial_n: FLOAT
-    - v_carenciasocial_c: FLOAT
-    - v_ingreso_p: FLOAT
-    - v_ingreso_n: FLOAT
-    - nopobresynovulnerables_p: FLOAT
-    - nopobresynovulnerables_n: FLOAT
-    - rezagoeducativo_p: FLOAT
-    - rezagoeducativo_n: FLOAT
-    - c_serviciossalud_p: FLOAT
-    - c_serviciossalud_n: FLOAT
-    - c_seguridadsocial_p: FLOAT
-    - c_seguridadsocial_n: FLOAT
-    - c_calidadyespaciosvivienda_p: FLOAT
-    - c_calidadyespaciosvivienda_n: FLOAT
-    - c_serviciosvivienda_p: FLOAT
-    - c_serviciosvivienda_n: FLOAT
-    - c_alimentacion_p: FLOAT
-    - c_aalimentacion_n: FLOAT
-    - almenosunacarenciasocial_p: FLOAT
-    - almenosunacarenciasocial_n: FLOAT
-    - tresomascarenciassociales_p: FLOAT
-    - tresomascarenciassociales_n: FLOAT
-    - ingresoinflineadebienestar_p: FLOAT
-    - ingresoinflineadebienestar_n: FLOAT
-    - ingresoinflineadebienestarmin_p: FLOAT
-    - ingresoinflineadebienestarmin_n: FLOAT
+    - pobrezaextrema_porcentaje: FLOAT
+    - pobrezaextrema_personas: Integer
+    - pobrezaextrema_carencias: FLOAT
+    - pobrezaextrema_intensidad: FLOAT
+    - pobrezamoderada_porcentaje: FLOAT
+    - pobrezamoderada_personas: Integer
+    - pobrezamoderada_carencias: FLOAT
+    - pobrezamoderada_intensidad: FLOAT
+    - vulnerablesporcarenciasocial_porcentaje: FLOAT
+    - vulnerablesporcarenciasocial_personas: Integer
+    - vulnerablesporcarenciasocial_carencias: FLOAT
+    - vulnerablesporingreso_porcentaje: FLOAT
+    - vulnerablesporingreso_personas: Integer
+    - nopobresynovulnerables_porcentaje: FLOAT
+    - nopobresynovulnerables_personas: Integer
+    - rezagoeducativo_porcentaje: FLOAT
+    - rezagoeducativo_personas: Integer
+    - carenciaporaccesoalosserviciosdesalud_porcentaje: FLOAT
+    - carenciaporaccesoalosserviciosdesalud_personas: Integer
+    - carenciaporaccesoalaseguridadsocial_porcentaje: FLOAT
+    - carenciaporaccesoalaseguridadsocial_personas: Integer
+    - carenciaporcalidadyespaciosdelavivienda_porcentaje: FLOAT
+    - carenciaporcalidadyespaciosdelavivienda_personas: Integer
+    - carenciaporaccesoalosserviciosbasicosenlavivienda_porcentaje: FLOAT
+    - carenciaporaccesoalosserviciosbasicosenlavivienda_personas: Integer
+    - carenciaporaccesoalaalimentacion_porcentaje: FLOAT
+    - carenciaporaccesoalaalimentacion_personas: Integer
+    - poblacionconalmenosunacarenciasocial_porcentaje: FLOAT
+    - poblacionconalmenosunacarenciasocial_personas: Integer
+    - poblacioncontresomascarenciassociales_porcentaje: FLOAT
+    - poblacioncontresomascarenciassociales_personas: Integer
+    - poblacionconingresoinferioralalineadebienestar_porcentaje: FLOAT
+    - poblacionconingresoinferioralalineadebienestar_personas: Integer
+    - poblacionconingresoinferioralalineadebienestarminimo_porcentaje: FLOAT
+    - poblacionconingresoinferioralalineadebienestarminimo_personas: Integer
     - coeficientedegini: TEXT
-    - razon_ingreso_pextynopobreynovul: TEXT
+    - razondelingresoentrelapoblacionpobreextremaylapoblacionnopobreynovulnerable1: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
@@ -636,7 +636,7 @@ cuenta_publica_trimestral:
   - monto_pagado
 declaratoria:
   LUIGI:
-    INDEX: cve_mun 
+    INDEX: cve_mun
     SCHEMA:
     - nom_mun: TEXT
     - nom_ent: TEXT
@@ -1668,6 +1668,22 @@ precios_granos:
   - mes
   - anio
   - central
+pub:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - anio: TEXT
+    - cve_ent: VARCHAR(5)
+    - cve_muni: TEXT
+    - cve_programa: VARCHAR(5)
+    - cve_padron: VARCHAR(5)
+    - n_beneficiarios: INT
+    - suma_importe: FLOAT
+    - tipo: TEXT
+    - nivel: TEXT
+    - grupo: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
 sagarpa:
   LUIGI:
     INDEX: null

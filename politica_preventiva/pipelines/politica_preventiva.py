@@ -22,8 +22,8 @@ from dotenv import load_dotenv,find_dotenv
 
 from politica_preventiva.pipelines.ingest.ingest_orchestra import\
     IngestPipeline
-from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
-#from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
+# from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
+# from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list
 
 logging_conf = configuration.get_config().get("core", "logging_conf_file")

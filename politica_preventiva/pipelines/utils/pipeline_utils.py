@@ -259,7 +259,7 @@ def final_dates(historical, pipeline_task, current_date):
         configuration.get_config().get(pipeline_task,
                                        'start_date')
         try:
-            skip = [x.strip() for x in configuration.get_config().get(self.pipeline_task,
+            skip = [x.strip() for x in configuration.get_config().get(pipeline_task,
                                                                       'skip').split(',')]
         except:
             skip = []
@@ -273,18 +273,6 @@ def final_dates(historical, pipeline_task, current_date):
         logger.info('Start date is not defined for the pipeline {0}'.format(
             pipeline_task)+\
             'Luigi will get only the information of the last period')
-        try:
-            skip = [x.strip() for x in configuration.get_config().get(pipeline_task,
-                                                                      'skip').split(',')]
-        except:
-            skip = []
-        lista = []
-        for x in dates:
-            if x not in skip:
-                 lista.append(x)
-        return ([lista[-1]], suffix) 
-
-
 def extras(pipeline):
     # pdb.set_trace()
     try:
