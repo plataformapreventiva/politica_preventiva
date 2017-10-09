@@ -351,52 +351,52 @@ coneval_municipios_2010:
   LUIGI:
     INDEX: null
     SCHEMA:
-    - clavedeentidad: Integer
-    - entidadfederativa: TEXT
-    - clavedemunicipio: Integer
+    - ent: Integer
+    - entidad: TEXT
+    - cve_muni: Integer
     - municipio: TEXT
-    - poblacion: Integer
+    - pob_tot: Integer
     - pobreza_porcentaje: FLOAT
-    - pobreza_personas: Integer
+    - pobreza_num: Integer
     - pobreza_carencias: FLOAT
-    - pobreza_intensidad: FLOAT
-    - pobrezaextrema_porcentaje: FLOAT
-    - pobrezaextrema_personas: Integer
-    - pobrezaextrema_carencias: FLOAT
-    - pobrezaextrema_intensidad: FLOAT
-    - pobrezamoderada_porcentaje: FLOAT
-    - pobrezamoderada_personas: Integer
-    - pobrezamoderada_carencias: FLOAT
-    - pobrezamoderada_intensidad: FLOAT
-    - vulnerablesporcarenciasocial_porcentaje: FLOAT
-    - vulnerablesporcarenciasocial_personas: Integer
-    - vulnerablesporcarenciasocial_carencias: FLOAT
-    - vulnerablesporingreso_porcentaje: FLOAT
-    - vulnerablesporingreso_personas: Integer
-    - nopobresynovulnerables_porcentaje: FLOAT
-    - nopobresynovulnerables_personas: Integer
-    - rezagoeducativo_porcentaje: FLOAT
-    - rezagoeducativo_personas: Integer
-    - carenciaporaccesoalosserviciosdesalud_porcentaje: FLOAT
-    - carenciaporaccesoalosserviciosdesalud_personas: Integer
-    - carenciaporaccesoalaseguridadsocial_porcentaje: FLOAT
-    - carenciaporaccesoalaseguridadsocial_personas: Integer
-    - carenciaporcalidadyespaciosdelavivienda_porcentaje: FLOAT
-    - carenciaporcalidadyespaciosdelavivienda_personas: Integer
-    - carenciaporaccesoalosserviciosbasicosenlavivienda_porcentaje: FLOAT
-    - carenciaporaccesoalosserviciosbasicosenlavivienda_personas: Integer
-    - carenciaporaccesoalaalimentacion_porcentaje: FLOAT
-    - carenciaporaccesoalaalimentacion_personas: Integer
-    - poblacionconalmenosunacarenciasocial_porcentaje: FLOAT
-    - poblacionconalmenosunacarenciasocial_personas: Integer
-    - poblacioncontresomascarenciassociales_porcentaje: FLOAT
-    - poblacioncontresomascarenciassociales_personas: Integer
-    - poblacionconingresoinferioralalineadebienestar_porcentaje: FLOAT
-    - poblacionconingresoinferioralalineadebienestar_personas: Integer
-    - poblacionconingresoinferioralalineadebienestarminimo_porcentaje: FLOAT
-    - poblacionconingresoinferioralalineadebienestarminimo_personas: Integer
-    - coeficientedegini: TEXT
-    - razondelingresoentrelapoblacionpobreextremaylapoblacionnopobreynovulnerable1: TEXT
+    - int_pob: FLOAT
+    - pobreza_e_porcentaje: FLOAT
+    - pobreza_e_num: Integer
+    - pobreza_e_carencias: FLOAT
+    - int_pobe: FLOAT
+    - pobreza_m_porcentaje: FLOAT
+    - pobreza_m_num: Integer
+    - pobreza_m_carencias: FLOAT
+    - int_pobm: FLOAT
+    - vul_car_porcentaje: FLOAT
+    - vul_car_num: Integer
+    - vul_car_carencias: FLOAT
+    - vul_ing_porcentaje: FLOAT
+    - vul_ing_num: Integer
+    - no_pobv_porcentaje: FLOAT
+    - no_pobv_num: Integer
+    - ic_rezedu_porcentaje: FLOAT
+    - ic_rezedu_num: Integer
+    - ic_asalud_porcentaje: FLOAT
+    - ic_asalud_num: Integer
+    - ic_segsoc_porcentaje: FLOAT
+    - ic_segsoc_num: Integer
+    - ic_cv_porcentaje: FLOAT
+    - ic_cv_num: Integer
+    - ic_sbv_porcentaje: FLOAT
+    - ic_sbv_num: Integer
+    - ic_ali_porcentaje: FLOAT
+    - ic_ali_num: Integer
+    - carencias_porcentaje: FLOAT
+    - carencias_num: Integer
+    - carencias3_porcentaje: FLOAT
+    - carencias3_num: Integer
+    - prof_b1_porcentaje: FLOAT
+    - prof_b1_num: Integer
+    - prof_bm1_porcentaje: FLOAT
+    - prof_bm1_num: Integer
+    - gini: TEXT
+    - ingreso_pobrezae_entre_nopobreynovulnerable: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
