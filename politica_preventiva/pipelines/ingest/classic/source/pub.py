@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import argparse
@@ -6,13 +5,6 @@ import argparse
 import re
 import datetime
 import os
-
-=======
-from __future__ import print_function
-import argparse
-import re
-import datetime
->>>>>>> 776e9ea414aabce1b75841118dda579be0afc057
 from pyspark.sql import SQLContext
 from pyspark import SparkContext
 from pyspark.sql import functions as sf
