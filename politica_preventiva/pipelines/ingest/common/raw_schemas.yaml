@@ -1,18 +1,3 @@
-pub:
-  LUIGI:
-    INDEX: cve_muni
-    SCHEMA:
-    - anio: TEXT
-    - cve_ent: VARCHAR(5)
-    - cve_muni: VARCHAR(5)
-    - cve_programa: VARCHAR(5)
-    - cve_padron: VARCHAR(5)
-    - n_beneficiarios: INT
-    - type: TEXT
-    - nivel: TEXT
-    - grupo: TEXT
-    - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
 asm:
   LUIGI:
     INDEX: modalidad_pp
@@ -349,52 +334,52 @@ coneval_estados:
   - ict
 coneval_municipios_2010:
   LUIGI:
-    INDEX: null
+    INDEX: ent
     SCHEMA:
-    - ent: Integer
+    - ent: TEXT
     - entidad: TEXT
-    - cve_muni: Integer
+    - cve_muni: TEXT
     - municipio: TEXT
-    - pob_tot: Integer
+    - pob_tot: FLOAT
     - pobreza_porcentaje: FLOAT
-    - pobreza_num: Integer
+    - pobreza_num: FLOAT
     - pobreza_carencias: FLOAT
     - int_pob: FLOAT
     - pobreza_e_porcentaje: FLOAT
-    - pobreza_e_num: Integer
+    - pobreza_e_num: FLOAT
     - pobreza_e_carencias: FLOAT
     - int_pobe: FLOAT
     - pobreza_m_porcentaje: FLOAT
-    - pobreza_m_num: Integer
+    - pobreza_m_num: FLOAT
     - pobreza_m_carencias: FLOAT
     - int_pobm: FLOAT
     - vul_car_porcentaje: FLOAT
-    - vul_car_num: Integer
+    - vul_car_num: FLOAT
     - vul_car_carencias: FLOAT
     - vul_ing_porcentaje: FLOAT
-    - vul_ing_num: Integer
+    - vul_ing_num: FLOAT
     - no_pobv_porcentaje: FLOAT
-    - no_pobv_num: Integer
+    - no_pobv_num: FLOAT
     - ic_rezedu_porcentaje: FLOAT
-    - ic_rezedu_num: Integer
+    - ic_rezedu_num: FLOAT
     - ic_asalud_porcentaje: FLOAT
-    - ic_asalud_num: Integer
+    - ic_asalud_num: FLOAT
     - ic_segsoc_porcentaje: FLOAT
-    - ic_segsoc_num: Integer
+    - ic_segsoc_num: FLOAT
     - ic_cv_porcentaje: FLOAT
-    - ic_cv_num: Integer
+    - ic_cv_num: FLOAT
     - ic_sbv_porcentaje: FLOAT
-    - ic_sbv_num: Integer
+    - ic_sbv_num: FLOAT
     - ic_ali_porcentaje: FLOAT
-    - ic_ali_num: Integer
+    - ic_ali_num: FLOAT
     - carencias_porcentaje: FLOAT
-    - carencias_num: Integer
+    - carencias_num: FLOAT
     - carencias3_porcentaje: FLOAT
-    - carencias3_num: Integer
+    - carencias3_num: FLOAT
     - prof_b1_porcentaje: FLOAT
-    - prof_b1_num: Integer
+    - prof_b1_num: FLOAT
     - prof_bm1_porcentaje: FLOAT
-    - prof_bm1_num: Integer
+    - prof_bm1_num: FLOAT
     - gini: TEXT
     - ingreso_pobrezae_entre_nopobreynovulnerable: TEXT
     - actualizacion_sedesol: TIMESTAMP
