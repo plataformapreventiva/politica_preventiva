@@ -123,8 +123,8 @@ def _list_all_objects_with_size(s3, bucket, folder):
 def initiate_concatenation(s3, bucket, result_filename):
     # performing the concatenation in S3 requires creating a multi-part upload
     # and then referencing the S3 files we wish to concatenate as "parts" of that upload
-    #resp = s3.create_multipart_upload(Bucket=bucket, Key=result_filename)
-    resp = s3.MultipartUpload(Bucket=bucket, Key=result_filename)
+    resp = s3.create_multipart_upload(Bucket=bucket, Key=result_filename)
+    # resp = s3.MultipartUpload(Bucket=bucket, Key=result_filename)
     logging.warning("Initiated concatenation attempt for {}, and got response: {}".format(result_filename, resp))
     return resp['UploadId']
 
@@ -197,9 +197,9 @@ def complete_concatenation(s3, bucket, result_filename, upload_id, parts_mapping
         logging.warning("Aborted concatenation for file {}, with upload id #{} due to empty parts mapping".format(result_filename, upload_id))
 
     else:
-        #resp = s3.complete_multipart_upload(Bucket=bucket, Key=result_filename, 
-        #       UploadId=upload_id, MultipartUpload={'Parts': parts_mapping})
-        resp = s3.multipart_upload.complete( MultipartUpload={'Parts': parts_mapping})
+        resp = s3.complete_multipart_upload(Bucket=bucket, Key=result_filename, 
+               UploadId=upload_id, MultipartUpload={'Parts': parts_mapping})
+        #resp = s3.multipart_upload.complete( MultipartUpload={'Parts': parts_mapping})
         logging.warning("Finished concatenation for file {}, with upload id #{}, and parts mapping: {}".format(result_filename, upload_id, parts_mapping))
 
 

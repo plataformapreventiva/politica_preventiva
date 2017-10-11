@@ -22,8 +22,8 @@ from dotenv import load_dotenv,find_dotenv
 
 from politica_preventiva.pipelines.ingest.ingest_orchestra import\
     IngestPipeline
-#from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
-#from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
+# from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
+# from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list
 
 logging_conf = configuration.get_config().get("core", "logging_conf_file")
@@ -58,7 +58,7 @@ class RunPipelines(luigi.WrapperTask):
     def requires(self):
 
         return IngestPipeline(current_date=self.current_date)
-        #return ETLPipeline(self.current_date)
+        # return ETLPipeline(self.current_date)
         #return ModelPipeline(self.current_date)
 
 if __name__ == "__main__":
