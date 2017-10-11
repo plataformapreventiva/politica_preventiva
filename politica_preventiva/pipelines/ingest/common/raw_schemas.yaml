@@ -1,18 +1,3 @@
-pub:
-  LUIGI:
-    INDEX: cve_muni
-    SCHEMA:
-    - anio: TEXT
-    - cve_ent: VARCHAR(5)
-    - cve_muni: VARCHAR(5)
-    - cve_programa: VARCHAR(5)
-    - cve_padron: VARCHAR(5)
-    - n_beneficiarios: INT
-    - type: TEXT
-    - nivel: TEXT
-    - grupo: TEXT
-    - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
 asm:
   LUIGI:
     INDEX: modalidad_pp
@@ -349,54 +334,54 @@ coneval_estados:
   - ict
 coneval_municipios_2010:
   LUIGI:
-    INDEX: null
+    INDEX: ent
     SCHEMA:
-    - clavedeentidad: Integer
-    - entidadfederativa: TEXT
-    - clavedemunicipio: Integer
+    - ent: TEXT
+    - entidad: TEXT
+    - cve_muni: TEXT
     - municipio: TEXT
-    - poblacion: Integer
+    - pob_tot: FLOAT
     - pobreza_porcentaje: FLOAT
-    - pobreza_personas: Integer
+    - pobreza_num: FLOAT
     - pobreza_carencias: FLOAT
-    - pobreza_intensidad: FLOAT
-    - pobrezaextrema_porcentaje: FLOAT
-    - pobrezaextrema_personas: Integer
-    - pobrezaextrema_carencias: FLOAT
-    - pobrezaextrema_intensidad: FLOAT
-    - pobrezamoderada_porcentaje: FLOAT
-    - pobrezamoderada_personas: Integer
-    - pobrezamoderada_carencias: FLOAT
-    - pobrezamoderada_intensidad: FLOAT
-    - vulnerablesporcarenciasocial_porcentaje: FLOAT
-    - vulnerablesporcarenciasocial_personas: Integer
-    - vulnerablesporcarenciasocial_carencias: FLOAT
-    - vulnerablesporingreso_porcentaje: FLOAT
-    - vulnerablesporingreso_personas: Integer
-    - nopobresynovulnerables_porcentaje: FLOAT
-    - nopobresynovulnerables_personas: Integer
-    - rezagoeducativo_porcentaje: FLOAT
-    - rezagoeducativo_personas: Integer
-    - carenciaporaccesoalosserviciosdesalud_porcentaje: FLOAT
-    - carenciaporaccesoalosserviciosdesalud_personas: Integer
-    - carenciaporaccesoalaseguridadsocial_porcentaje: FLOAT
-    - carenciaporaccesoalaseguridadsocial_personas: Integer
-    - carenciaporcalidadyespaciosdelavivienda_porcentaje: FLOAT
-    - carenciaporcalidadyespaciosdelavivienda_personas: Integer
-    - carenciaporaccesoalosserviciosbasicosenlavivienda_porcentaje: FLOAT
-    - carenciaporaccesoalosserviciosbasicosenlavivienda_personas: Integer
-    - carenciaporaccesoalaalimentacion_porcentaje: FLOAT
-    - carenciaporaccesoalaalimentacion_personas: Integer
-    - poblacionconalmenosunacarenciasocial_porcentaje: FLOAT
-    - poblacionconalmenosunacarenciasocial_personas: Integer
-    - poblacioncontresomascarenciassociales_porcentaje: FLOAT
-    - poblacioncontresomascarenciassociales_personas: Integer
-    - poblacionconingresoinferioralalineadebienestar_porcentaje: FLOAT
-    - poblacionconingresoinferioralalineadebienestar_personas: Integer
-    - poblacionconingresoinferioralalineadebienestarminimo_porcentaje: FLOAT
-    - poblacionconingresoinferioralalineadebienestarminimo_personas: Integer
-    - coeficientedegini: TEXT
-    - razondelingresoentrelapoblacionpobreextremaylapoblacionnopobreynovulnerable1: TEXT
+    - int_pob: FLOAT
+    - pobreza_e_porcentaje: FLOAT
+    - pobreza_e_num: FLOAT
+    - pobreza_e_carencias: FLOAT
+    - int_pobe: FLOAT
+    - pobreza_m_porcentaje: FLOAT
+    - pobreza_m_num: FLOAT
+    - pobreza_m_carencias: FLOAT
+    - int_pobm: FLOAT
+    - vul_car_porcentaje: FLOAT
+    - vul_car_num: FLOAT
+    - vul_car_carencias: FLOAT
+    - vul_ing_porcentaje: FLOAT
+    - vul_ing_num: FLOAT
+    - no_pobv_porcentaje: FLOAT
+    - no_pobv_num: FLOAT
+    - ic_rezedu_porcentaje: FLOAT
+    - ic_rezedu_num: FLOAT
+    - ic_asalud_porcentaje: FLOAT
+    - ic_asalud_num: FLOAT
+    - ic_segsoc_porcentaje: FLOAT
+    - ic_segsoc_num: FLOAT
+    - ic_cv_porcentaje: FLOAT
+    - ic_cv_num: FLOAT
+    - ic_sbv_porcentaje: FLOAT
+    - ic_sbv_num: FLOAT
+    - ic_ali_porcentaje: FLOAT
+    - ic_ali_num: FLOAT
+    - carencias_porcentaje: FLOAT
+    - carencias_num: FLOAT
+    - carencias3_porcentaje: FLOAT
+    - carencias3_num: FLOAT
+    - prof_b1_porcentaje: FLOAT
+    - prof_b1_num: FLOAT
+    - prof_bm1_porcentaje: FLOAT
+    - prof_bm1_num: FLOAT
+    - gini: TEXT
+    - ingreso_pobrezae_entre_nopobreynovulnerable: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
