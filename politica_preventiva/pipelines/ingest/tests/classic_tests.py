@@ -155,5 +155,4 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
         raise Exception("Dictionary of task {0} is not defined,\
          see {1} ".format(pipeline_task, path))
 
-
     return dictionary
