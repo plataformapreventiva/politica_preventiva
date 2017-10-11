@@ -37,4 +37,3 @@ class IngestPipeline(luigi.WrapperTask):
                     self.current_date))
         return ClassicIngest(current_date=self.current_date)
         # yield GeomIngest()
-        # yield PUBIngest()

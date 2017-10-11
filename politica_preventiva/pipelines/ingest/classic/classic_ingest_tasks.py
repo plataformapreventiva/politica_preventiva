@@ -87,7 +87,7 @@ class DockerTask(SourceIngestTask):
                     ' {0}'.format(self.pipeline_task))
 
         cmd_docker = '''
-         docker run  --rm  -v $PWD:/politica_preventiva\
+         docker run -it --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/data\
            politica_preventiva/task/docker-task {0} > /dev/null
          '''.format(self.cmd)
@@ -549,6 +549,29 @@ class coneval_estados(DockerTask):
 
         command_list = ['sh', self.classic_task_scripts +
                         'coneval_estados.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
+
+
+class coneval_municipios_2010(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['python', self.classic_task_scripts +
+                        'coneval_municipios_2010.py',
+                        '--local_path', self.local_path + self.pipeline_task,
+                        '--local_ingest_file', self.local_ingest_file]
+        return " ".join(command_list)
+
+
+class declaratoria(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['sh', self.classic_task_scripts +
+                        'declaratoria.sh', self.data_date,
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
 

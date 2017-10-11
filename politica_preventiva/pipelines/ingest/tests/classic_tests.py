@@ -60,6 +60,7 @@ def header_test(path, task, common_path, suffix, new=True):
             types = type_guess(row_set.sample, strict=True)
             types = ['TEXT' if str(x) == 'String' else str(x) for x in types]
             types = ['FLOAT' if str(x) == 'Decimal' else str(x) for x in types]
+            types = ['INT' if str(x) == 'Bool' else str(x) for x in types]
         except:
             logger.debug('Remember ingest data file must be \n' +\
                 '\t\t\t\t\t must be delimited by pipes "|"'.format(task))
@@ -68,12 +69,12 @@ def header_test(path, task, common_path, suffix, new=True):
     first_line = [remove_extra_chars(x)  for x in first_lines]
     initial_schema = first_line[:]
     initial_schema.append("actualizacion_sedesol")
+    initial_schema.append("data_date")
+    types.append("TIMESTAMP")
+    types.append('TEXT')
 
-    types.append('String')
-    initial_schema.append("TIMESTAMP")
-    
-    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)] 
-   
+    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
+
     try:
         schema_check =  header_d[task]['LUIGI']['SCHEMA'][1]
     except:
@@ -110,7 +111,7 @@ def header_test(path, task, common_path, suffix, new=True):
             sys.exit()
 
     with open(common_path + 'raw_schemas.yaml', 'w') as file:
-        yaml.dump(header_d, file, default_flow_style=False, 
+        yaml.dump(header_d, file, default_flow_style=False,
                 Dumper=noalias_dumper)
         # if str2bool(new):
         #    sys.exit('\n After updating the raw_schemas.yaml with the column types' +\
@@ -122,7 +123,7 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
         data_date, suffix):
     """
     This task updates the dictionary of the pipeline_task in raw
-    and creates the legacy neo4j nodes 
+    and creates the legacy neo4j nodes
 
     # TODO() Check if the data has other date date
     # TODO() Add Neo4j legacy task
@@ -130,28 +131,28 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
 
     try:
         dictionary = pd.read_csv(path, sep="|")
+        # If your column 'nombre' has at least one null your task fails..
         assert dictionary["nombre"].isnull().\
-                value_counts().index[0]!=True, "error"
+                value_counts().index[0]!=True, "Your dictionary is not complete."
+        dictionary['actualizacion_sedesol'] = current_date
+        dictionary['data_date'] = data_date + '-' + suffix
+        dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
 
     except:
         task_schema = header_d[pipeline_task]["LUIGI"]["SCHEMA"]
-        dictionary = pd.DataFrame([task_schema[i].keys() for i 
+        dictionary = pd.DataFrame([task_schema[i].keys() for i
             in range(len(task_schema))],columns=["id"])
         dic_header.pop(0)
+        # parse raw_schemas.yaml to convert to data frame
         dictionary = dictionary.reindex(columns=[*dictionary.\
                 columns.tolist(), *dic_header], fill_value=None)
-        dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
+        # Update actualizacion
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
+        dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
         logger.critical("Dictionary of task {task} is not defined,\
             see {path}".format(task=pipeline_task, path=path))
         raise Exception("Dictionary of task {0} is not defined,\
          see {1} ".format(pipeline_task, path))
 
-
-    # Update actualizacion
-    dictionary['actualizacion_sedesol'] = current_date
-    dictionary['data_date'] = data_date + '-' + suffix
-    
-    dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
     return dictionary

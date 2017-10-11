@@ -28,9 +28,12 @@ from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
     preprocessing_scripts.preprocessing_scripts import *
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, \
-    extras, dates_list, get_extra_str, s3_to_pandas
+    extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.ingest.tests import classic_tests
+from politica_preventiva.pipelines.tasks.pipeline_tasks import *
+from politica_preventiva.pipelines.utils import emr_tasks
+
 
 # Load Postgres Schemas
 with open('./pipelines/ingest/common/raw_schemas.yaml', 'r') as file:
@@ -42,6 +45,11 @@ conf = configuration.get_config()
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 PLACES_API_KEY = os.environ.get('PLACES_API_KEY')
+
+# EMR
+with open("pipelines/ingest/common/emr-config.yaml", "r") as file:
+        config = yaml.load(file)
+        config_emr = config.get("emr")
 
 # logger
 logging_conf = configuration.get_config().get("core", "logging_conf_file")
@@ -67,11 +75,11 @@ class ClassicIngest(luigi.WrapperTask):
 
     def requires(self):
         logger.info('Running the following pipelines: {0}'.\
-                format(self.pipelines))
+                    format(self.pipelines))
         # loop through pipeline tasks
         return [ClassicIngestDates(current_date=self.current_date,
                                    pipeline_task=pipeline)
-        for pipeline in self.pipelines]
+                for pipeline in self.pipelines]
 
 
 class ClassicIngestDates(luigi.WrapperTask):
@@ -96,46 +104,14 @@ class ClassicIngestDates(luigi.WrapperTask):
 
     @property
     def dates(self):
-        periodicity = configuration.get_config().get(self.pipeline_task,
-                                                     'periodicity')
-        if periodicity == 'None':
-            dates = 'na'
-            self.suffix = 'fixed'
-            return [dates]
 
-        elif self.historical in ['True', 'T', '1', 'TRUE']:
-            logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
-                format(self.pipeline_task))
+        dates, self.suffix = final_dates(self.historical, self.pipeline_task,
+                                         self.current_date)
 
-            dates, self.suffix = dates_list(self.pipeline_task,
-                                            self.current_date,
-                                            periodicity)
-            logger.debug('Pipeline task {pipeline} has historic dates {hdates}'.\
-                format(pipeline=self.pipeline_task, hdates=dates))
-        else:
-            logger.info('Preparing to get current data for'+ \
-                     ' the pipeline_task: {0}'.format(self.pipeline_task))
-
-            dates, self.suffix = dates_list(self.pipeline_task,
-                                            self.current_date,
-                                            periodicity)
-            dates = dates[-2:]
-            logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
-                format(pipeline=self.pipeline_task, hdates=dates))
-        try:
-            # if the pipeline_Task 
-            configuration.get_config().get(self.pipeline_task,
-                    'start_date')
-            return dates
-
-        except:
-            logger.info('Start date is not defined for the pipeline {0}'.format(
-                                                                  self.pipeline_task)+\
-                    'Luigi will get only the information of the last period')
-            return [dates[-1]]
+        return dates
 
     def requires(self):
-        logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task)+\
+        logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task) +\
                     '\n will try to download the data of the\n following periods:{0}'.\
                     format(self.dates))
 
@@ -149,7 +125,7 @@ class UpdateLineage(luigi.Task):
 
     """ This Task updates the Neo4j lineage database.
 
-        TODO() 
+        TODO()
         - Column nodes should be unique - Implement it in cypher!
         - Improve tags (tipo & subtipo) in the dictionary. Likely
             create a list rather than a single column. Define static tags.
@@ -213,7 +189,7 @@ class UpdateLineage(luigi.Task):
             graph.schema.create_uniqueness_constraint('Year', 'year')
         except:
             pass
- 
+
         # Define Nodes
         table = Node('Table', value=self.pipeline_task)
         years = self.data_date.split('-')[0]
@@ -332,7 +308,6 @@ class UpdateDictionary(postgres.CopyToTable):
                                              self.actualizacion,
                                              self.data_date,
                                              self.suffix)
-
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
@@ -435,23 +410,23 @@ class UpdateDB(postgres.CopyToTable):
                     elif line == header:
                         pass
                     else:
-                        line = re.sub("na|nan|N/E|^\-$", '', line)
+                        #line = re.sub("\|na\||\|na|na\||\|nan\||\|nan|nan\||N/E|^\-$", '', line)
                         line = line.strip('\n').split('|')
                         line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
                         line.append(str(self.data_date) + '-' + self.suffix)
-                        yield  [x if x != '' else None for x in line]
+                        yield [x if x != '' else None for x in line]
 
         else:
-            # TODO() remove this step, checkout for concatenation and header removal.
+            # TODO() remove this step, checkout for
+            # concatenation and header removal.
             data = pd.read_csv(self.input().path, sep="|", encoding="utf-8",
                                dtype=str, error_bad_lines=False, header=None)
-            data.drop_duplicates(keep='first',inplace=True)
+            data.drop_duplicates(keep='first', inplace=True)
             data = data.replace('nan|N/E|^\-$', np.nan, regex=True)
             data = data.where((pd.notnull(data)), None)
             data = data.iloc[1:]
-            data[len(data.columns)]  = self.actualizacion
-            data[len(data.columns)]  = str(self.data_date) + "-" + \
-                                self.suffix
+            data[len(data.columns)] = self.actualizacion
+            data[len(data.columns)] = str(self.data_date) + "-" + self.suffix
             return [tuple(x) for x in data.to_records(index=False)]
 
     def copy(self, cursor, file):
@@ -459,7 +434,7 @@ class UpdateDB(postgres.CopyToTable):
 
         if isinstance(self.columns[0], six.string_types):
             column_names = self.columns
- 
+
         elif len(self.columns[0]) == 2:
             # Create columns for csv upload
             column_names = [c[0] for c in self.columns]
@@ -558,8 +533,10 @@ class UpdateDB(postgres.CopyToTable):
                            "/concatenation/" + self.data_date + "/")
 
     def output(self):
-        return postgres.PostgresTarget(host=self.host, database=self.database,
-                                       user=self.user, password=self.password,
+        return postgres.PostgresTarget(host=self.host,
+                                       database=self.database,
+                                       user=self.user,
+                                       password=self.password,
                                        table=self.table,
                                        update_id=self.update_id)
 
@@ -585,19 +562,28 @@ class Concatenation(luigi.Task):
 
     def requires(self):
         extra = extras(self.pipeline_task)
-        for extra_p in extra:
-            yield Preprocess(pipeline_task=self.pipeline_task,
-                             current_date=self.current_date,
-                             extra=extra_p, data_date=self.data_date,
-                             suffix=self.suffix)
+
+        if extra[0] == 'spark':
+
+            return AddEmrStep(pipeline_task=self.pipeline_task,
+                              current_date=self.current_date,
+                              data_date=self.data_date,
+                              suffix=self.suffix)
+
+        else:
+            for extra_p in extra:
+                return Preprocess(pipeline_task=self.pipeline_task,
+                                 current_date=self.current_date,
+                                 extra=extra_p, data_date=self.data_date,
+                                 suffix=self.suffix)
 
     def run(self):
 
-        result_filepath =  self.pipeline_task + "/concatenation/" + \
+        result_filepath = self.pipeline_task + "/concatenation/" + \
                            self.data_date + "/" + self.pipeline_task + '.csv'
         # folder to concatenate
         folder_to_concatenate = self.pipeline_task + "/preprocess/" +\
-                                self.data_date + "/"
+                self.data_date + "/"
         # function for appending all .csv files in folder_to_concatenate
         s3_utils.run_concatenation(self.raw_bucket, folder_to_concatenate,
                                    result_filepath, '.csv')
@@ -609,6 +595,59 @@ class Concatenation(luigi.Task):
         return S3Target(path=self.raw_bucket + self.pipeline_task +
                         "/concatenation/" + self.data_date + "/" +
                         self.pipeline_task + '.csv')
+
+
+class AddEmrStep(EmrTask):
+
+    """ Add Emr Step Task
+        This task adds steps for the EMR cluster.
+        Substitute of [Preprocess & Ingestion] when the source data is big enough
+        to need spark as engine.
+        TODO() This task has not yet been implemented
+
+        Note
+        ---------
+        Steps should be uploaded in S3 as .py scripts
+
+        Returns
+        --------
+        This task generate s3/pipeline/raw  ingestion files
+    """
+
+    current_date = luigi.DateParameter()
+    pipeline_task = luigi.Parameter()
+    data_date = luigi.Parameter()
+    suffix = luigi.Parameter()
+
+    spark_bucket = luigi.Parameter('DEFAULT')
+    raw_bucket = luigi.Parameter('DEFAULT')
+
+    classic_task_scripts = luigi.Parameter('DEFAULT')
+    client = S3Client(aws_access_key_id, aws_secret_access_key)
+
+    def requires(self):
+        # Copy file to s3
+        ingest_script = self.classic_task_scripts + self.pipeline_task +\
+                       ".py"
+        ingest_script_output = self.spark_bucket +\
+                       self.pipeline_task + '.py'
+        self.client.put(ingest_script, ingest_script_output)
+
+        # Check that cluster is running
+        return InitializeCluster(self.current_date) 
+
+    def run(self):
+        # TODO() Replae cluster id query to a general.
+        F = open(self.input().path,'r') 
+        ClusterId = F.read().replace('\n','')
+        self.emr_loader.add_pipeline_step(ClusterId, self.pipeline_task,
+                                     'dpa-plataforma-preventiva/utils/spark',
+                                     self.pipeline_task + '.py', '--year', self.data_date)
+
+    def output(self):
+        file_path = self.raw_bucket + 'pub/preprocess/' +\
+                "{0}/_SUCCESS".format(self.data_date)
+        return S3Target(file_path)
 
 
 class Preprocess(luigi.Task):
@@ -643,10 +682,9 @@ class Preprocess(luigi.Task):
         key = self.pipeline_task + "/raw/" + self.data_date +\
             "-" + self.suffix + "-" + \
             self.pipeline_task + extra_h + ".csv"
-        
-        out_key = "etl/" + self.pipeline_task + "/preprocess/" + \
-                  self.data_date + "/" +   self.data_date + "--" + \
-                                        self.pipeline_task + extra_h + ".csv"
+        out_key = "etl/" + self.pipeline_task + "/preprocess/" +\
+                self.data_date + "/" + self.data_date + "--" +\
+                self.pipeline_task + extra_h + ".csv"
         try:
             preprocess_tasks = eval(self.pipeline_task + '_prep')
             preprocess_tasks(data_date=self.data_date, s3_file=key,
@@ -659,8 +697,9 @@ class Preprocess(luigi.Task):
     def output(self):
         extra_h = get_extra_str(self.extra)
         return S3Target(path=self.raw_bucket + self.pipeline_task +
-                        "/preprocess/" + self.data_date + "/" + self.data_date +
-                         "--" + self.pipeline_task + extra_h + ".csv")
+                        "/preprocess/" + self.data_date + "/" +
+                        self.data_date + "--" +
+                        self.pipeline_task + extra_h + ".csv")
 
 
 class LocalToS3(luigi.Task):
@@ -692,7 +731,8 @@ class LocalToS3(luigi.Task):
         task = RawHeaderTest(pipeline_task=self.pipeline_task,
                              data_date=self.data_date,
                              local_ingest_file=local_ingest_file,
-                             extra=self.extra, suffix=self.suffix)
+                             extra=self.extra,
+                             suffix=self.suffix)
         return task
 
     def run(self):
@@ -703,7 +743,8 @@ class LocalToS3(luigi.Task):
             extra_h + ".csv"
 
         try:
-            self.client.put(local_ingest_file, self.output().path)
+            self.client.put(local_ingest_file,
+                            self.output().path)
         except:
             logger.debug('The raw file of the pipeline {0}'.format(self.pipeline_task) +\
             ' is kinda big, Luigi will try to upload it in chunks')
@@ -750,8 +791,11 @@ class RawHeaderTest(luigi.Task):
 
     def run(self):
 
-        classic_tests.header_test(self.input().path, self.pipeline_task,
-                                  self.common_path, self.suffix, self.new)
+        classic_tests.header_test(self.input().path,
+                                  self.pipeline_task,
+                                  self.common_path,
+                                  self.suffix,
+                                  self.new)
 
     def output(self):
         done = self.local_ingest_file + ".done"

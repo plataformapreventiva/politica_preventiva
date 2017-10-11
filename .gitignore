@@ -82,7 +82,6 @@ celerybeat-schedule
 
 # dotenv
 .env
-emr-config.yaml
 # virtualenv
 venv/
 ENV/
@@ -153,3 +152,6 @@ site/
 **/.RData
 **/.Rproj.user
 .Rproj.user
+
+# Diccionarios
+!*/politica_preventiva/pipelines/ingest/common/dictionaries/
