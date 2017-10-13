@@ -19,8 +19,9 @@ from bs4 import BeautifulSoup
 from ftplib import FTP
 import requests
 import pdb
+import argparse
 
-def ingest_segob_snim(output):
+def ingest_segob_snim(output, data_date, tipo):
 
     estados = list(range(1, 33))
     full_data = []
@@ -57,7 +58,7 @@ def ingest_segob_snim(output):
         "30":  "212",
         "31":  "106",
         "32":  "58"}
-    
+       
     for estado in estados:
         for municipio in list(range(1, 1+int(dict_edos[str(estado)]))):
             cookies = {
@@ -80,12 +81,13 @@ def ingest_segob_snim(output):
                 'edo': '{0}'.format(str(estado)),
                 'mun': '{0}'.format(str(municipio)),
                 'tipo': 'm',
-                'reporte': 'dg2010'
+                'reporte': 'dg{0}'.format(data_date)
             }
-
             try:
                 response = requests.post(
-                    'http://www.snim.rami.gob.mx/tbl_poblacion.php', headers=headers, cookies=cookies, data=data)
+                    'http://www.snim.rami.gob.mx/tbl_{0}.php'.format(tipo),
+                    headers=headers, cookies=cookies, data=data)
+
             except:
                 pass
 
@@ -108,14 +110,18 @@ def ingest_segob_snim(output):
     file.to_csv(output, sep='|', encoding="utf-8", index=False)
 
 if __name__ == '__main__':
-    import argparse
     parser = argparse.ArgumentParser(description='Download SEGOB data for municipalities')
 
-    parser.add_argument('--output', type=str, default='segob',
+    parser.add_argument('--data_date', type=str,
+        help = 'Data date of data')
+    parser.add_argument('--output', type=str,
         help = 'Name of output file')
-
+    parser.add_argument('--extra', type=str, default='poblacion')
+    
     args = parser.parse_args()
+    data_date = args.output
     output = args.output
-
-    ingest_segob_snim(output)
+    extra = args.output
+    
+    ingest_segob_snim(output,data_date,tipo=extra)
 

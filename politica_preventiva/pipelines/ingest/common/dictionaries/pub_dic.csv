@@ -1,0 +1,12 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+anio|Año de pago del beneficio.|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|NA|2016-a
+cve_ent|Clave de entidad|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|NA|2016-a
+cve_muni|Clave de municipio|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|NA|2016-a
+cve_programa|Clave de programa social|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|NA|2016-a
+cve_padron|Clave de padrón|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|NA|2016-a
+n_beneficiarios|Número de beneficiarios|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|NA|2016-a
+type|Tipo de agregación.|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|Hombre, Mujer, Infante, Adulto, Adulto Mayor, Total|2016-a
+nivel|Nivel de agregación|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|Municipal, Estatal, Nacional|2016-a
+grupo|Grupo de agregación|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2012-2016|2017-10-04 00:04:39.930048|Programa, Padrón|2016-a
+actualizacion_sedesol|Fecha de actualización en Sedesol|Sedesol|http://pub.sedesol.gob.mx/spp/|""|NA|""|2017-10-04 00:04:39.930048|NA|2016-a
+data_date|Año.|Sedesol|http://pub.sedesol.gob.mx/spp/|NA|NA|NA|2017-10-04 00:04:39.930048|NA|2016-a

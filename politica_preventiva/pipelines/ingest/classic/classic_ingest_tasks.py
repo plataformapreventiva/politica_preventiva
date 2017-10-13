@@ -1,32 +1,23 @@
 # coding: utf-8
-
-import ast
-import boto3
-import datetime
 import luigi
+import logging
 import os
 import pdb
-import psycopg2
-import random
-import re
-import sqlalchemy
-import tempfile
 import subprocess
 
 from contextlib import contextmanager
-from dotenv import load_dotenv,find_dotenv
+from dotenv import load_dotenv, find_dotenv
 from itertools import product
 from luigi import configuration
 from luigi import six, task
 from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
-import numpy as np
 from os.path import join, dirname
 import pandas as pd
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.preprocessing_scripts.preprocessing_scripts import *
-from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extras, historical_dates, latest_dates, get_extra_str
+from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extras, get_extra_str
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string, download_dir
 from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas
 from politica_preventiva.pipelines.utils import s3_utils
@@ -36,52 +27,95 @@ conf = configuration.get_config()
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-PLACES_API_KEY =  os.environ.get('PLACES_API_KEY')
+PLACES_API_KEY = os.environ.get('PLACES_API_KEY')
 
+# Logger
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
 
 #######################
 # Abstract Tasks
 #########
 
+
 class SourceIngestTask(luigi.Task):
-    year_month = luigi.Parameter()
+
+    data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
-    docker_ingest_file = luigi.Parameter()
     classic_task_scripts = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')
     extra = luigi.Parameter()
+
+    def requires(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        logger.info('Luigi is trying to run the source script' +
+                    ' of the pipeline_task {0}'.format(self.pipeline_task))
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
 
 
+class DockerTask(SourceIngestTask):
+
+    """
+    Task Abstraction to Dockerize source ingest tasks
+    it uses the image python-task
+       see more in pipeline/task/python-task/Dockerfile
+
+    Note:
+    - politica_preventiva_storeshould already exists
+    - Remember to use local_ingest_file instead of local_ingest_file
+    - It can run python and bash scripts.
+
+    Use:
+    Define the @property def cmd(self):
+        python **/**.py
+        bash **/**.sh
+
+    See ipc_ciudades or cuenta_publica_anual for reference
+    # TODO() This task will eventually replace SourceIngestTask
+    # Check if pdb can be used for debugin purposes
+    """
+
+    def run(self):
+
+        logger.info('Luigi is using the dockerized version of the task' +
+                    ' {0}'.format(self.pipeline_task))
+
+        cmd_docker = '''
+         docker run -it --rm  -v $PWD:/politica_preventiva\
+                -v politica_preventiva_store:/data\
+           politica_preventiva/task/docker-task {0} > /dev/null
+         '''.format(self.cmd)
+
+        out = subprocess.call(cmd_docker, shell=True)
+        logger.info(out)
 
 #######################
 # Classic Ingest Tasks
 #######
 
-class denue(SourceIngestTask):
 
-    def run(self):
+class denue(DockerTask):
 
-        if not os.path.exists(self.local_path + self.pipeline_task):
-            os.makedirs(self.local_path + self.pipeline_task)
+    @property
+    def cmd(self):
 
-        command_list = ['sudo ', self.classic_task_scripts +\
-                'denue.sh', self.local_path + \
-                '/' + self.pipeline_task, self.local_ingest_file]
-        cmd = " ".join(command_list)
+        command_list = ['sh', self.classic_task_scripts +
+                        'denue.sh', self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
 
-        return subprocess.call(cmd, shell=True)
-
-
+        return " ".join(command_list)
 
 
 class pub(luigi.Task):
 
     client = luigi.s3.S3Client()
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
     type_script = luigi.Parameter('sh')
@@ -90,14 +124,15 @@ class pub(luigi.Task):
     raw_bucket = luigi.Parameter('DEFAULT')
 
     def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
 
         obj = luigi.s3.get_object(Bucket='dpa-compranet',
-                Key='etl/'+ self.pipeline_task + \
-                "/output/" + self.pipeline_task + ".csv")
+                                  Key='etl/' + self.pipeline_task +
+                                  "/output/" + self.pipeline_task + ".csv")
 
-        output_db = pd.read_csv(obj['Body'],sep="|",
-                error_bad_lines = False, dtype=str, encoding="utf-8")
-
+        # output_db = pd.read_csv(obj['Body'],sep="|",
+        #        error_bad_lines = False, dtype=str, encoding="utf-8")
 
         return subprocess.call(cmd, shell=True)
 
@@ -105,30 +140,30 @@ class pub(luigi.Task):
 
         return luigi.LocalTarget(self.local_ingest_file)
 
-class cuenta_publica_trimestral(SourceIngestTask):
 
-    def run(self):
-        if not os.path.exists(self.local_path + self.pipeline_task):
-            os.makedirs(self.local_path + self.pipeline_task)
- 
-        command_list = ['sudo sh', self.classic_task_scripts +\
-                'cuenta_publica_trimestral.sh', self.local_path + \
-                '/' + self.pipeline_task, self.local_ingest_file]
-        cmd = " ".join(command_list)
+class cuenta_publica_trimestral(DockerTask):
+    @property
+    def cmd(self):
 
-        return subprocess.call(cmd, shell=True)
+        command_list = ['sh', self.classic_task_scripts +
+                        'cuenta_publica_trimestral.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
 
 
-class cuenta_publica_anual(SourceIngestTask):
+class cuenta_publica_anual(DockerTask):
 
-    def run(self):
+    @property
+    def cmd(self):
+        # year = self.data_date.split("-")[0]
+        command_list = ['sh', self.classic_task_scripts +
+                        'cuenta_publica_anual.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
 
-        command_list = ['sudo sh', self.classic_task_scripts +\
-                'cuenta_publica_anual.sh', self.local_path + \
-                '/' + self.pipeline_task, self.local_ingest_file]
-        cmd = " ".join(command_list)
-
-        return subprocess.call(cmd, shell=True)
+        return " ".join(command_list)
 
 
 class sagarpa(SourceIngestTask):
@@ -137,11 +172,11 @@ class sagarpa(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        #extra_cmd = self.extra.split('--')
-        #cultivo = extra_cmd[0]
+        # extra_cmd = self.extra.split('--')
+        # cultivo = extra_cmd[0]
 
         command_list = ['python', self.classic_task_scripts + "sagarpa.py",
-                        '--start', self.year_month, '--cult', self.extra,
+                        '--start', self.data_date, '--cult', self.extra,
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
@@ -153,47 +188,40 @@ class sagarpa_cierre(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        #extra_cmd = self.extra.split('--')
-        #estado = self.extra_cmd[0]
+        # extra_cmd = self.extra.split('--')
+        # estado = self.extra_cmd[0]
 
         command_list = ['python', self.classic_task_scripts + "sagarpa.py",
-                        '--start', self.year_month, '--estado', self.extra,
+                        '--start', self.data_date, '--estado', self.extra,
                         '--cierre', 'True', '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
         return subprocess.call([cmd], shell=True)
 
+
 class ipc_ciudades(SourceIngestTask):
 
-    def run(self):
-        if not os.path.exists(self.local_path + self.pipeline_task):
-            os.makedirs(self.local_path + self.pipeline_task)
-
+    @property
+    def cmd(self):
         cmd = '''
-        sudo docker run --rm  -v $PWD:/politica_preventiva\
-                -v politica_preventiva_store:/politica_preventiva/data\
-            politica_preventiva/python-task python {0}inpc.py\
+            python {0}ipc.py\
             --year {1} --output {2}
-        '''.format(self.classic_task_scripts, self.year_month,
-                self.docker_ingest_file)
-
-        print("***********************************")
-        print(os.getcwd())
-        print(cmd)
-        return subprocess.call(cmd, shell=True)
+        '''.format(self.classic_task_scripts, self.data_date,
+                   self.local_ingest_file)
+        return cmd
 
 
-class segob(SourceIngestTask):
+class segob_snim(DockerTask):
 
-    def run(self):
-        if not os.path.exists(self.local_path + self.pipeline_task):
-            os.makedirs(self.local_path + self.pipeline_task)
-
-        command_list = ['python', self.classic_task_scripts + "segob.py",
-        '--output', self.local_ingest_file]
-        cmd = " ".join(command_list)
-        print(cmd)
-        return subprocess.call([cmd], shell=True)
+    @property
+    def cmd(self):
+        extra_cmd = self.extra.split('--')
+        extra_cmd = extra_cmd[0]
+        command_list = ['python', self.classic_task_scripts +
+                        "segob_snim.py", '--data_date', self.data_date,
+                        '--output', self.local_ingest_file, "--extra",
+                        extra_cmd]
+        return " ".join(command_list)
 
 
 class precios_granos(SourceIngestTask):
@@ -210,7 +238,7 @@ class precios_granos(SourceIngestTask):
             end_cmd = ""
 
         command_list = ['python', self.classic_task_scripts + "economia.py",
-                        '--start', self.year_month, end_cmd,
+                        '--start', self.data_date, end_cmd,
                         '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
@@ -227,19 +255,12 @@ class precios_frutos(SourceIngestTask):
         extra_cmd = self.extra.split('--')
         mercado = extra_cmd[0]
 
-        if end_date:
-            end_cmd = " ".join(['--end', end_date])
-        else:
-            end_cmd = ""
-
-
-        command_list = ['python', self.classic_task_scripts +\
-                "economia_frutos.py", '--mercado', mercado, end_cmd, '--output', 
-                self.local_ingest_file, self.year_month]
+        command_list = ['python', self.classic_task_scripts +
+                        "economia_frutos.py", '--start', self.data_date,
+                        '--mercado', mercado, '--output',
+                        self.local_ingest_file]
         cmd = " ".join(command_list)
-
         print(cmd)
-
         return subprocess.call([cmd], shell=True)
 
 
@@ -254,7 +275,7 @@ class distance_to_services(luigi.Task):
     """
 
     client = luigi.s3.S3Client()
-    year_month = luigi.Parameter()
+    data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
     local_ingest_file = luigi.Parameter()
 
@@ -263,7 +284,6 @@ class distance_to_services(luigi.Task):
     raw_bucket = luigi.Parameter('DEFAULT')
 
     extra = luigi.Parameter()
-
 
     def run(self):
 
@@ -274,28 +294,33 @@ class distance_to_services(luigi.Task):
         cur = conn.cursor()
         cur.execute("""SELECT cve_muni, latitud, \
                 longitud FROM geoms.municipios""")
-        rows = pd.DataFrame(cur.fetchall(),columns=["cve_muni","lat","long"])
-        rows=rows[:5]
+        rows = pd.DataFrame(cur.fetchall(),
+                            columns=["cve_muni", "lat", "long"])
+        rows = rows[:5]
 
         # ["Hospital","doctor","bus_station","airport","bank", \
         # "gas_station","university","subway_station","police"]
-        for keyword in ["Hospital","bank","university","police"]:
+        for keyword in ["Hospital", "bank", "university", "police"]:
             print("looking for nearest {0}".format(keyword))
-            vector_dic = rows.apply(lambda x: info_to_google_services(x["lat"],
-                x["long"],keyword),axis=1)
+            vector_dic = rows.apply(lambda x: 
+                                    info_to_google_services(x["lat"],
+                                                            x["long"],
+                                                            keyword),
+                                    axis=1)
             rows[['driving_dist_{0}'.format(keyword),
-            'driving_time_{0}'.format(keyword),
-            'formatted_address_{0}'.format(keyword),
-            'local_phone_number_{0}'.format(keyword),
-            'name_{0}'.format(keyword),
-            'walking_dist_{0}'.format(keyword),
-            'walking_time_{0}'.format(keyword),
-            'website_{0}'.format(keyword)]] = pd.DataFrame(list(vector_dic))
+                  'driving_time_{0}'.format(keyword),
+                  'formatted_address_{0}'.format(keyword),
+                  'local_phone_number_{0}'.format(keyword),
+                  'name_{0}'.format(keyword),
+                  'walking_dist_{0}'.format(keyword),
+                  'walking_time_{0}'.format(keyword),
+                  'website_{0}'.format(keyword)]] = pd.DataFrame(list(vector_dic))
 
-        return rows.to_csv(self.output().path,index=False,sep="|")
+        return rows.to_csv(self.output().path, index=False, sep="|")
 
     def output(self):
         return luigi.LocalTarget(self.local_ingest_file)
+
 
 class cenapred(SourceIngestTask):
     """
@@ -322,9 +347,9 @@ class cajeros_banxico(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['python', self.classic_task_scripts +\
-                "cajeros_banxico.py",
-                '--output', self.local_ingest_file]
+        command_list = ['python', self.classic_task_scripts +
+                        "cajeros_banxico.py",
+                        '--output', self.local_ingest_file]
         cmd = " ".join(command_list)
         print(cmd)
 
@@ -340,7 +365,7 @@ class indesol(SourceIngestTask):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['sudo sh', self.classic_task_scripts + "indesol.sh",
+        command_list = ['sh', self.classic_task_scripts + "indesol.sh",
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
 
@@ -357,8 +382,8 @@ class donatarias_sat(SourceIngestTask):
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
-        command_list = ['sudo sh', self.classic_task_scripts + "donatarias_sat.sh",
-                        self.year_month,
+        command_list = ['sh', self.classic_task_scripts + "donatarias_sat.sh",
+                        self.data_date,
                         self.local_path + self.pipeline_task,
                         self.local_ingest_file]
 
@@ -366,16 +391,189 @@ class donatarias_sat(SourceIngestTask):
 
         return subprocess.call([cmd], shell=True)
 
+
 class cuaps_sedesol(SourceIngestTask):
+    """
+    Task que descarga el diccionario de programas CUAPS 
+    desarrollado por SEDESOL
+    """
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['python', self.classic_task_scripts +
+                        "cuaps_sedesol.py",
+                        '--start', self.data_date,
+                        '--output', self.local_ingest_file]
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)
+
+
+class mir(SourceIngestTask):
+    """
+    Task que descarga la matriz de indicadores para resultados
+    """
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts + "mir.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+class msd(SourceIngestTask):
 
     def run(self):
         if not os.path.exists(self.local_path + self.pipeline_task):
             os.makedirs(self.local_path + self.pipeline_task)
 
-        command_list = ['python', self.classic_task_scripts + "cuaps_sedesol.py",
-                        '--start', self.year_month,
-                        '--output', self.local_ingest_file]
+        command_list = ['sh', self.classic_task_scripts + "msd.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
         cmd = " ".join(command_list)
-        print(cmd)
+
         return subprocess.call([cmd], shell=True)
+
+
+class evals(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts + "evals.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+class asm(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts + "asm.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+class finanzas_publicas_estatales(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts +
+                        "finanzas_publicas_estatales.sh",
+                        self.data_date, self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+class finanzas_publicas_municipales(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts +
+                        "finanzas_publicas_municipales.sh",
+                        self.data_date, self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+class iter_2010(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts + "iter_2010.sh",
+                        self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+class defunciones_generales(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts +
+                        "defunciones_generales.sh",
+                        self.data_date, self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+class defunciones_fetales(SourceIngestTask):
+
+    def run(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        command_list = ['sh', self.classic_task_scripts +
+                        "defunciones_fetales.sh",
+                        self.data_date, self.local_path + self.pipeline_task,
+                        self.local_ingest_file]
+        cmd = " ".join(command_list)
+
+        return subprocess.call([cmd], shell=True)
+
+
+class coneval_estados(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['sh', self.classic_task_scripts +
+                        'coneval_estados.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
+
+
+class coneval_municipios_2010(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['python', self.classic_task_scripts +
+                        'coneval_municipios_2010.py',
+                        '--local_path', self.local_path + self.pipeline_task,
+                        '--local_ingest_file', self.local_ingest_file]
+        return " ".join(command_list)
+
+
+class declaratoria(DockerTask):
+    @property
+    def cmd(self):
+
+        command_list = ['sh', self.classic_task_scripts +
+                        'declaratoria.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
 

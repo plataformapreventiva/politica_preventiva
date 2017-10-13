@@ -1,0 +1,54 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+ent_regis|entidad de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+mun_regis|municipio de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+ent_resid|entidad de residencia habitual de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+mun_resid|municipio de residencia habitual de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+loc_rh|localidad de residencia habitual de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+tloc_resid|tamaño de localidad de residencia habitual de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Clasificación de las localidades de acuerdo al número de personas que las habitan |2012-a
+ent_ocurr|entidad de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLF15.dbf |2012-a
+mun_ocurr|municipio de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLF15.dbf |2012-a
+loc_ocurr|localidad de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLF15.dbf |2012-a
+tloc_ocurr|tamaño de localidad de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Clasificación de las localidades de acuerdo al número de personas que las habitan en donde ocurrió el hecho vital.|2012-a
+causa_def|causa de la defunción (CIE)|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Para conocer el valor y la etiqueta relacionar con catálogo CATMINFE.dbf |2012-a
+sex_prod|sexo del feto o producto|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+eda_prod|edad gestacional|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Tiempo transcurrido entre el primer día del último periodo menstrual de la madre y la fecha de ocurrencia de la extrac- ción o expulsión del feto o producto; se expresa en días o semanas cumplidas. |2012-a
+pes_prod|peso del feto o producto|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+de_un_emba|clase de embarazo|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Indica si el embarazo terminó en un parto simple o múltiple. |2012-a
+atn_pren|condición de atención prenatal|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Especifica si la madre recibió o no asistencia médica durante el embarazo. |2012-a
+emba_fue|tipo de embarazo|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|"Especifica si el curso del embarazo fue normal| o si por el contrario se trató de un embarazo complicado. "|2012-a
+ocu_part|condición de ocurrencia de la muerte fetal|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Especifica en qué momento ocurrió la muerte fetal.|2012-a
+dia_regis|día de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Día en que se inscribe el hecho vital en la institución correspondiente. |2012-a
+mes_regis|mes de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+anio_regis|año de registro|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+dia_ocurr|día de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+mes_ocurr|mes de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+anio_ocur|año de ocurrencia|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+sitio_ocur|sitio de ocurrencia de la expulsión o extracción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+certific|persona que certificó la defunción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+atencion|persona que atendió el parto|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+tip_abor|tipo de aborto|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+pro_expu|procedimiento de expulsión o extracción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+nac_vivo|hijos nacidos vivos|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+nac_muer|hijos nacidos muertos|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+derecho|afiliación a los servicios de salud|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+eda_madr|edad de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Tiempo transcurrido entre la fecha de nacimiento de la persona y la del momento en que ocurre o se registra el hecho vital. |2012-a
+edo_civil|estado conyugal de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+ocu_madr|ocupación de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+esc_madr|nivel de escolaridad de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+horas|hora de defunción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+minutos|minuto de defunción|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+cond_mad|condición de sobrevivencia de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+dia_cert|día de certificación|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+mes_cert|mes de certificación|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+anio_cert|año de certificación|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+violencia|condición de violencia familiar|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+par_agre|parentesco del agresor|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Para conocer el valor y la etiqueta relacionar con catálogo PARENTESCO.dbf|2012-a
+lengua_ind|condición de haba lengua indígena|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+cond_act|condición de actividad económica de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+nacionalid|nacionalidad de la madre|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+paren_info|parentesco del informante|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Para conocer el valor y la etiqueta relacionar con catálogo PARENTESCO.dbf Condición de relación: Paren_info con clave |2012-a
+consultas|total de consultas médicas recibidas|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710||2012-a
+edo_piel|estado de la piel|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|etiqueta|2012-a
+dis_re_oax|distritos de registro de Oaxaca|INEGI|http://www.beta.inegi.org.mx/proyectos/registros/vitales/mortalidad/|salud|infantil|anual|2017-08-31 22:54:20.887710|Para conocer el valor y la etiqueta relacionar con catálogo CATEMLF15.dbf |2012-a
+actualizacion_sedesol|actualización sedesol||||||2017-08-31 22:54:20.887710||2012-a
+data_date|fecha del dato||||||2017-08-31 22:54:20.887710||2012-a

@@ -16,6 +16,7 @@ This module contains utilities for PostGres
 
 import os
 import psycopg2
+from sqlalchemy import create_engine
 from dotenv import load_dotenv,find_dotenv
 from dotenv import load_dotenv,find_dotenv
 load_dotenv(find_dotenv())
@@ -40,3 +41,21 @@ def connect_to_db():
                             port=5432)
     conn.autocommit = True
     return conn
+
+from sqlalchemy import create_engine
+from sqlalchemy.pool import NullPool
+
+
+def get_engine():
+    """
+    Get SQLalchemy engine using credentials.
+    """
+
+    url = 'postgresql://{user}:{passwd}@{host}:{port}/{db}'.format(
+                                                            user=os.environ.get("POSTGRES_USER"),
+                                                            passwd=os.environ.get("POSTGRES_PASSWORD"),
+                                                            host=os.environ.get("PGHOST"),
+                                                            port=5432,
+                                                            db=os.environ.get("PGDATABASE"))
+    engine = create_engine(url, echo='debug')
+    return engine

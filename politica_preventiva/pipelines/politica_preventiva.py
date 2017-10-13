@@ -2,14 +2,16 @@
 # If you Run as: luigid & PYTHONPATH='.' python politica_preventiva.py
 # RunPipelines --workers 3
 
-import os
 import ast
+import boto3
 import datetime
 import logging
-import boto3
 import luigi
 import luigi.s3
 import multiprocessing
+import os
+import pdb
+
 from dotenv import load_dotenv
 from os.path import join, dirname
 from luigi.s3 import S3Target, S3Client
@@ -20,14 +22,13 @@ from dotenv import load_dotenv,find_dotenv
 
 from politica_preventiva.pipelines.ingest.ingest_orchestra import\
     IngestPipeline
-#from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
-#from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
+# from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
+# from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
+from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list
 
-from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
-    extra_parameters, historical_dates
-import pdb
-
-logger = logging.getLogger("dpa-sedesol.plataforma_preventiva")
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
@@ -49,15 +50,16 @@ class RunPipelines(luigi.WrapperTask):
     """
     Main Wrapper Task of pipelines 
     """
-
-    current_date = luigi.DateParameter(default=datetime.date(2014, 7, 30))
-    # current_date = datetime.date.today()
+    current_date = datetime.date.today()
+    # current_date = luigi.DateParameter(default=datetime.date(2017, 8, 12))
+    logger.info('Luigi is running the pipeline on the date: {0}'.format(
+        current_date))
 
     def requires(self):
 
-        yield IngestPipeline(current_date=self.current_date)
-        #yield ETLPipeline(self.current_date)
-        #yield ModelPipeline(self.current_date)
+        return IngestPipeline(current_date=self.current_date)
+        # return ETLPipeline(self.current_date)
+        #return ModelPipeline(self.current_date)
 
 if __name__ == "__main__":
     luigi.run()
