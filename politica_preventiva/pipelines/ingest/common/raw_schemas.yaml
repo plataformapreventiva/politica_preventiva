@@ -3,12 +3,13 @@ pub:
     INDEX: cve_muni
     SCHEMA:
     - anio: TEXT
-    - cve_ent: VARCHAR(5)
-    - cve_muni: VARCHAR(5)
-    - cve_programa: VARCHAR(5)
-    - cve_padron: VARCHAR(5)
+    - cve_ent: TEXT
+    - cve_muni: TEXT
+    - cve_programa: TEXT
+    - cve_padron: TEXT
     - n_beneficiarios: INT
-    - type: TEXT
+    - suma_importe: FLOAT
+    - tipo: TEXT
     - nivel: TEXT
     - grupo: TEXT
     - actualizacion_sedesol: TIMESTAMP
