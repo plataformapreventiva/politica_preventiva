@@ -17,7 +17,7 @@ logger = logging.getLogger("dpa-sedesol")
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-PLACES_API_KEY = os.environ.get('PLACES_API_KEY')  
+PLACES_API_KEY = os.environ.get('PLACES_API_KEY')
 
 # EMR config
 
@@ -25,8 +25,36 @@ with open("pipelines/ingest/common/emr-config.yaml", "r") as file:
     config = yaml.load(file)
 config_emr = config.get("emr")
 
+class RTask(luigi.Task):
 
-class GDockerTask(luigi.Task):
+    """
+    Task Abstraction to Dockerize tasks
+
+    Note:
+
+    Use:
+    Define the @property def cmd(self):
+        python **/**.py
+        bash **/**.sh
+
+    """
+
+    def run(self):
+
+        logger.info('Luigi is using the dockerized version of the task' +
+                    ' {0}'.format(self.pipeline_task))
+
+        cmd_docker = '''
+            docker run -it --rm  -v $PWD:/politica_preventiva\
+            -v politica_preventiva_store:/data\
+            politica_preventiva/task/r-task {0} > /dev/null
+         '''.format(self.cmd)
+
+        out = subprocess.call(cmd_docker, shell=True)
+        logger.info(out)
+
+
+class DockerTask(luigi.Task):
 
     """
     Task Abstraction to Dockerize tasks
@@ -60,8 +88,8 @@ class EmrTask(luigi.Task):
     """
     Abstract EMR Luigi Task
     """
-	# Load EMR Configuration
 
+    # Load EMR Configuratio
     emr_loader = emr_tasks.EMRLoader(
         aws_access_key=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
