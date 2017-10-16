@@ -34,6 +34,7 @@ def precios_frutos_prep(data_date, s3_file, extra_h, out_key):
         df = pputils.gather(df, 'semana', 'precio', columns)
         df['semana'] = df['semana'].map(lambda x: x.replace('sem_', ''))
         df = df[df['semana'] != 'prom_mes']
+        df.loc[df.precio == '--', 'precio'] = None
         df["precio"].replace("--", None, inplace=True)
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
@@ -135,6 +136,7 @@ def ipc_ciudades_prep(data_date, s3_file, extra_h, out_key):
     Preprocessing function for inpc: reads df from s3, parses dates
     and uploads to s3.
     """
+
     bucket = 'dpa-plataforma-preventiva'
     df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
 
@@ -176,6 +178,25 @@ def indesol_prep(data_date, s3_file, extra_h, out_key):
 
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
+
+def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
+    """
+    Preprocessing function for sagarpa: reads df from s3, completes missing values,
+    turns wide-format df to a long-format df, and uploads to s3
+    """
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+
+
+    if df is not None:
+        if len(df.columns) < 19:
+            # Add missing columns and reorder
+            cols = ['AñoAgricola', 'CveEstado', 'Estado','CveDDR','DDR','CveCader','Cader','CveMpio','Municipio','CveCultivo','Cultivo','CveVariedad','Variedad','CveUnidad','UnidadMedida','CveCiclo','Ciclo','CveModa','Modalidad','Sembrada','Cosechada','Siniestrada','Produccion','Rendimiento','Pmr','Valor']
+            df = df.reindex(columns = cols)
+
+        df['estado'] = pputils.complete_missing_values(df['estado'])
+        df['distrito'] = pputils.complete_missing_values(df['distrito'])
+
 
 def coneval_municipios_2010_prep(data_date, s3_file, extra_h, out_key):
     """
