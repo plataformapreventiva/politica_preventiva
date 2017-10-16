@@ -96,7 +96,6 @@ def pub_agrupaciones(spark, output_path, agg_dict, tipo):
         grupo = 'padron'
     else:
         grupo = 'programa'
-
     if tipo == 'total':
         select_tipo = "cast('total' as varchar(20))"
     elif tipo == 'sexo':
@@ -166,6 +165,13 @@ if __name__ == "__main__":
     exito = []
     for agg_dict in niveles_dicts:
         print(agg_dict)
+        exito.append(pub_agrupaciones(spark, df, output_path, year, agg_dict))
+
+    # if(all(exito)):
+    #    f = open("exitoso.txt","w+")
+    #    f.write("exito")
+    #    s3 = boto3.resource('s3')
+    #    s3.Object(output_path, 'exitoso.txt').put(Body=open('exitoso.txt', 'rb'))
         for tipo in tipos:
           print('\t' + tipo)
           exito.append(pub_agrupaciones(spark, output_path, agg_dict, tipo))

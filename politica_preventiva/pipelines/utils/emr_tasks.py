@@ -23,6 +23,7 @@ logging_conf = configuration.get_config().get("core", "logging_conf_file")
 logging.config.fileConfig(logging_conf)
 logger = logging.getLogger("dpa-sedesol")
 
+
 class EMRLoader(object):
 
     # Interval to wait between polls to EMR cluster in seconds
@@ -168,6 +169,15 @@ class EMRLoader(object):
                         'Args': ['sudo','pip','install','boto3']
                     }
                 },
+                #{
+                #    'Name': 'install python packages',
+                #    'ActionOnFailure': 'CANCEL_AND_WAIT',
+                #    'HadoopJarStep': {
+                #        'Jar': 'command-runner.jar',
+                #        'Args': ['sudo','pip','install','boto3',
+                #                '/home/hadoop']
+                #    }
+                #},
                 {
                     'Name': step_name,
                     'ActionOnFailure': 'CANCEL_AND_WAIT',
@@ -194,7 +204,6 @@ class EMRLoader(object):
     def shutdown_emr_cluster(self, job_flow_id):
         self.self.boto_client("emr").terminate_job_flow(job_flow_id)
         return self._poll_until_cluster_shutdown(job_flow_id)
-
 
     def get_job_flow_id(self):
         """

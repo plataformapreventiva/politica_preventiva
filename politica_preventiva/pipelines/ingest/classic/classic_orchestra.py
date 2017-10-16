@@ -645,7 +645,6 @@ class AddEmrStep(EmrTask):
         self.emr_loader.shutdown_emr_cluster(ClusterId)
         if not status:
             logger.critical('Pub EMR Step did not finish.')
-        
 
     def output(self):
         file_path = self.raw_bucket + 'pub/preprocess/' +\
