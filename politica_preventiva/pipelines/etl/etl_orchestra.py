@@ -18,7 +18,7 @@ from luigi.contrib.postgres import PostgresTarget, PostgresQuery
 
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string,\
         download_dir
-from politica_preventiva.tasks.pipeline_tasks import DockerTask, RTask
+from politica_preventiva.tasks.pipeline_task import DockerTask, RTask
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
@@ -49,12 +49,11 @@ class ETLPipeline(luigi.WrapperTask):
     def requires(self):
         logger.info('Running the following pipelines: {0}'.format(self.pipelines))
         # loop through pipeline tasks and data dates
-
         set_pipelines = [(pipeline_task, final_dates(self.historical,
                                                      pipeline_task,
-                                                     self.current_date)) for
-                pipeline_task in self.pipelines]
-
+                                                     self.current_date)) for 
+                         pipeline_task in self.pipelines]
+ 
         return [UpdateCleanDB(current_date=self.current_date,
                               pipeline_task=pipeline[0],
                               data_date=dates,
@@ -140,7 +139,7 @@ class UpdateTidyDB(RTask):
     def cmd(self):
         command_list = ['Rscript', self.tidy_scripts +\
                         self.pipeline_task + '.R',
-                        '--data_date', self.data_date
+                        '--data_date', self.data_date,
                         '--database', self.database,
                         '--user', self.user,
                         '--password', self.password,
