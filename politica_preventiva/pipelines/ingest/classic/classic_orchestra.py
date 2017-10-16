@@ -104,7 +104,6 @@ class ClassicIngestDates(luigi.WrapperTask):
 
     @property
     def dates(self):
-
         dates, self.suffix = final_dates(self.historical, self.pipeline_task,
                                          self.current_date)
 
@@ -114,7 +113,6 @@ class ClassicIngestDates(luigi.WrapperTask):
         logger.info('For this pipeline_task {0} Luigi '.format(self.pipeline_task) +\
                     '\n will try to download the data of the\n following periods:{0}'.\
                     format(self.dates))
-
         return [UpdateLineage(current_date=self.current_date,
                               pipeline_task=self.pipeline_task,
                               data_date=str(data_date), suffix=self.suffix)
@@ -154,7 +152,6 @@ class UpdateLineage(luigi.Task):
     historical = luigi.Parameter('DEFAULT')
 
     def requires(self):
-
         return UpdateDictionary(current_date=self.current_date,
                          pipeline_task=self.pipeline_task,
                          data_date=self.data_date,
@@ -644,9 +641,14 @@ class AddEmrStep(EmrTask):
                                      'dpa-plataforma-preventiva/utils/spark',
                                      self.pipeline_task + '.py', '--year', self.data_date)
 
+        status = self.emr_loader.get_final_status(ClusterId, 'pub')
+        self.emr_loader.shutdown_emr_cluster(ClusterId)
+        if not status:
+            logger.critical('Pub EMR Step did not finish.')
+
     def output(self):
         file_path = self.raw_bucket + 'pub/preprocess/' +\
-                "{0}/_SUCCESS".format(self.data_date)
+                "{0}/exitoso.txt".format(self.data_date)
         return S3Target(file_path)
 
 

@@ -2,12 +2,12 @@ emr:
   region_name: us-west-2
   cluster_name: ppreventiva_cluster
   instance_count: 2
-  master_instance_type: c3.4xlarge #c1.medium 
-  slave_instance_type:  c3.4xlarge 
+  master_instance_type: c3.4xlarge
+  slave_instance_type:  c3.4xlarge
   key_name: proyecto_sdv
   subnet_id: subnet-68dfb130
   log_uri: s3://spark-sedesol/logs/emr-logs/ 
-  software_version: emr-5.2.0 # Change emr version
+  software_version: emr-5.8.0 # Change emr version
   script_bucket_name: # This is used for quick cluster setup
   key: pub
   key_value: pub_sedesol

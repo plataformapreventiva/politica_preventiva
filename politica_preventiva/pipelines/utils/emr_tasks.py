@@ -8,10 +8,20 @@ This module contains utilities for AWS-EMR handling
 import abc
 import boto3
 import botocore
+import luigi
+import logging
+import pdb
+import logging
 import time
-import logging
 import yaml
-import logging
+
+from luigi import configuration
+
+
+# logger
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
 
 
 class EMRLoader(object):
@@ -19,7 +29,9 @@ class EMRLoader(object):
     # Interval to wait between polls to EMR cluster in seconds
     CLUSTER_OPERATION_RESULTS_POLLING_SECONDS = 10
     # Timeout for EMR creation and ramp up in seconds
-    CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS = 60 * 30
+    CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS = 1440 * 60
+    # request rate backoff duration
+    CLUSTER_BACKOFF_DURATION_SECONDS = 80
 
     def __init__(self, aws_access_key, aws_secret_access_key, region_name,
                  cluster_name, instance_count, master_instance_type,
@@ -81,7 +93,7 @@ class EMRLoader(object):
                     #}
                 ],
 
-                'KeepJobFlowAliveWhenNoSteps': True,
+                'KeepJobFlowAliveWhenNoSteps': False,
                 'TerminationProtected': False,
                 'Ec2KeyName': self.key_name,
                 'Ec2SubnetId': self.subnet_id
@@ -135,34 +147,6 @@ class EMRLoader(object):
         return True  # self._poll_until_cluster_ready(job_flow_id)
 
 
-    def add_step(self, job_flow_id, master_dns):
-        response = self.boto_client("emr").add_job_flow_steps(
-            JobFlowId=job_flow_id,
-            Steps=[
-                {
-                    'Name': 'setup - copy files',
-                    'ActionOnFailure': 'CANCEL_AND_WAIT',
-                    'HadoopJarStep': {
-                        'Jar': 'command-runner.jar',
-                        'Args': ['aws', 's3', 'cp',
-                                 's3n://{script_bucket_name}/pyspark_quick_setup.sh'.format(
-                                     script_bucket_name=self.script_bucket_name),
-                                 '/home/hadoop/']
-                    }
-                },
-                {
-                    'Name': 'setup pyspark with conda',
-                    'ActionOnFailure': 'CANCEL_AND_WAIT',
-                    'HadoopJarStep': {
-                        'Jar': 'command-runner.jar',
-                        'Args': ['sudo', 'bash',
-                                 '/home/hadoop/pyspark_quick_setup.sh', master_dns]
-                    }
-                }
-            ]
-        )
-        return response
-
     def add_pipeline_step(self, job_flow_id, step_name, script_bucket_name,
                           script_name, parameter='', value=''):
         response = self.boto_client("emr").add_job_flow_steps(
@@ -175,6 +159,14 @@ class EMRLoader(object):
                         'Jar': 'command-runner.jar',
                         'Args': ['aws', 's3', 'cp', 's3://{0}/{1}'.format(script_bucket_name, script_name),
                                  '/home/hadoop/']
+                    }
+                },
+                {
+                    'Name': 'install python packages',
+                    'ActionOnFailure': 'CANCEL_AND_WAIT',
+                    'HadoopJarStep': {
+                        'Jar': 'command-runner.jar',
+                        'Args': ['sudo','pip','install','boto3']
                     }
                 },
                 #{
@@ -192,13 +184,15 @@ class EMRLoader(object):
                     'HadoopJarStep': {
                         'Jar': 'command-runner.jar',
                         'Args': ['spark-submit', '--conf',
-                                 'spark.memory.fraction=0.95',
-                                 '--conf', 'spark.memory.storageFraction=0.1',
-                                 '--conf', 'spark.executor.instances=4',
-                                 '--conf',
-                                 'spark.yarn.executor.memoryOverhead=1000',
-                                 '--conf', 'spark.executor.memory=9g',
-                                 '--conf', 'spark.executor.cores=7',
+                                 'spark.memory.fraction=0.8',
+                                 '--conf', 'spark.executor.instances=9',
+                                 '--conf', 'spark.yarn.executor.memoryOverhead=1024',
+                                 '--conf', 'spark.yarn.driver.memoryOverhead=1024',
+                                 '--conf', 'spark.executor.memory=3g',
+                                 '--conf', 'spark.driver.memory=3g',
+                                 '--conf', 'spark.driver.cores=4',
+                                 '--conf', 'spark.executor.cores=4',
+                                 '--conf', 'spark.default.parallelism=72',
                                  '--conf', 'spark.yarn.appMasterEnv.PYSPARK_PYTHON=python3',
                                  '--conf', 'spark.executorEnv.PYSPARK_PYTHON=python3',
                                  '/home/hadoop/' + script_name, 
@@ -216,6 +210,8 @@ class EMRLoader(object):
         Get the id of the clusters WAITING for work
         """
         self.self.boto_client("emr").list_clusters(cluster_states=['WAITING']).clusters[0].id
+
+
     def _poll_until_cluster_ready(self, job_flow_id):
         start_time = time.time()
         is_cluster_ready = False
@@ -239,9 +235,40 @@ class EMRLoader(object):
                 logger.debug('Cluster state: %s' % state)
                 time.sleep(EMRLoader.CLUSTER_OPERATION_RESULTS_POLLING_SECONDS)
         if not is_cluster_ready:
-            # TODO shutdown cluster
+            #TODO shutdown cluster
             raise RuntimeError('Timed out waiting for EMR cluster to be active')
         return job_flow_id
+
+
+    def get_final_status(self, job_flow_id, Name):
+        start_time = time.time()
+        is_job_finished = False
+
+        while (not is_job_finished) and (
+            time.time() - start_time < EMRLoader.CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS):
+
+            try:
+                lista = self.boto_client("emr").list_steps(ClusterId=job_flow_id)
+                lista_name = [x for x in lista['Steps'] if x['Name'] == Name][-1]
+                state = lista_name['Status']['State']
+                print(state)
+                if (state == u'TERMINATED') or (state == u'COMPLETED'):
+                    is_job_finished = True
+                    return True
+                elif (state == u'FAILED') or (state == u'CANCELLED'):
+                    logger.error('Step stopped running with FAILED or CANCELLED status.')
+                    is_job_finished = True
+            except:
+                logger.debug("""AWS: (ThrottlingException) Maximum send rate exceeded when calling
+                    the ListSteps operation (reached max retries: 4): Rate exceeded""")
+                try:
+                    print("WAITING")
+                    time.sleep(EMRLoader.CLUSTER_BACKOFF_DURATION_SECONDS)
+                except:
+                    print("Waiting exception.")
+
+        return False
+
 
     def _poll_until_cluster_shutdown(self, job_flow_id):
         start_time = time.time()

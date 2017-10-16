@@ -155,3 +155,4 @@ site/
 
 # Diccionarios
 !*/politica_preventiva/pipelines/ingest/common/dictionaries/
+politica_preventiva/pipelines/etl/tidy/tidy_coneval_estados.R

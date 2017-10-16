@@ -59,7 +59,7 @@ class SourceIngestTask(luigi.Task):
         return luigi.LocalTarget(self.local_ingest_file)
 
 
-class DockerTask(SourceIngestTask):
+class TDockerTask(SourceIngestTask):
 
     """
     Task Abstraction to Dockerize source ingest tasks
@@ -100,7 +100,7 @@ class DockerTask(SourceIngestTask):
 #######
 
 
-class denue(DockerTask):
+class denue(TDockerTask):
 
     @property
     def cmd(self):
@@ -141,7 +141,7 @@ class pub(luigi.Task):
         return luigi.LocalTarget(self.local_ingest_file)
 
 
-class cuenta_publica_trimestral(DockerTask):
+class cuenta_publica_trimestral(TDockerTask):
     @property
     def cmd(self):
 
@@ -153,7 +153,7 @@ class cuenta_publica_trimestral(DockerTask):
         return " ".join(command_list)
 
 
-class cuenta_publica_anual(DockerTask):
+class cuenta_publica_anual(TDockerTask):
 
     @property
     def cmd(self):
@@ -211,7 +211,7 @@ class ipc_ciudades(SourceIngestTask):
         return cmd
 
 
-class segob_snim(DockerTask):
+class segob_snim(TDockerTask):
 
     @property
     def cmd(self):
@@ -543,7 +543,7 @@ class defunciones_fetales(SourceIngestTask):
         return subprocess.call([cmd], shell=True)
 
 
-class coneval_estados(DockerTask):
+class coneval_estados(TDockerTask):
     @property
     def cmd(self):
 
@@ -555,7 +555,7 @@ class coneval_estados(DockerTask):
         return " ".join(command_list)
 
 
-class coneval_municipios_2010(DockerTask):
+class coneval_municipios_2010(TDockerTask):
     @property
     def cmd(self):
 
@@ -566,7 +566,7 @@ class coneval_municipios_2010(DockerTask):
         return " ".join(command_list)
 
 
-class declaratoria(DockerTask):
+class declaratoria(TDockerTask):
     @property
     def cmd(self):
 
