@@ -254,6 +254,7 @@ def final_dates(historical, pipeline_task, current_date):
         dates = dates[-2:]
         logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
                      format(pipeline=pipeline_task, hdates=dates))
+
     try:
         # if the pipeline_Task has start_date
         configuration.get_config().get(pipeline_task,
@@ -269,10 +270,12 @@ def final_dates(historical, pipeline_task, current_date):
                  lista.append(x)
         return (lista, suffix)
 
+
     except:
         logger.info('Start date is not defined for the pipeline {0}'.format(
             pipeline_task)+\
             'Luigi will get only the information of the last period')
+
 def extras(pipeline):
     # pdb.set_trace()
     try:
