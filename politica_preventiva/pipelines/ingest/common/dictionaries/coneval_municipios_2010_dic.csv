@@ -1,4 +1,6 @@
 id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+ent|Identificador de la entidad federativa|CONEVAL|http://www.coneval.org.mx/Informes/Pobreza/Pobreza_municipal/Anexo_estadistico/Concentrado.zip|Vulnerabilidades|Pobreza|2000-2010|2017-10-10 23:21:04.080831||n-fixed
+entidad|Nombre entidad federativa|CONEVAL|http://www.coneval.org.mx/Informes/Pobreza/Pobreza_municipal/Anexo_estadistico/Concentrado.zip|Vulnerabilidades|Pobreza|2000-2010|2017-10-10 23:21:04.080831||n-fixed
 cve_muni|Identificador del municipio|CONEVAL|http://www.coneval.org.mx/Informes/Pobreza/Pobreza_municipal/Anexo_estadistico/Concentrado.zip|Vulnerabilidades|Pobreza|2000-2010|2017-10-10 23:21:04.080831||n-fixed
 municipio|Nombre del municipio|CONEVAL|http://www.coneval.org.mx/Informes/Pobreza/Pobreza_municipal/Anexo_estadistico/Concentrado.zip|Vulnerabilidades|Pobreza|2000-2010|2017-10-10 23:21:04.080831||n-fixed
 pob_tot|Población total|CONEVAL|http://www.coneval.org.mx/Informes/Pobreza/Pobreza_municipal/Anexo_estadistico/Concentrado.zip|Vulnerabilidades|Pobreza|2000-2010|2017-10-10 23:21:04.080831||n-fixed
