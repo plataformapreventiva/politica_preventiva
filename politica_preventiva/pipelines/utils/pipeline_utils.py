@@ -233,7 +233,7 @@ def final_dates(historical, pipeline_task, current_date):
     periodicity = configuration.get_config().get(pipeline_task,
                                                  'periodicity')
     if periodicity == 'None':
-        dates = 'na'
+        dates = ['na']
         suffix = 'fixed'
         return (dates, suffix) 
 
