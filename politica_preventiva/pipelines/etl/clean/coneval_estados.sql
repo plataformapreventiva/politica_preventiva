@@ -1,5 +1,5 @@
 
-drop table clean.coneval_estados cascade;
+drop table if exists clean.coneval_estados cascade;
 
 create table clean.coneval_estados as (
 select  proyecto,
