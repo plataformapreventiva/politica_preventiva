@@ -5,7 +5,7 @@ MAINTAINER rsanchezavalos <r.sanchezavalos@gmail.com>
 ENV REFRESHED_AT 2017-01-06
 
 ## Actualizamos
-RUN apt-get clean &&  apt-get update &&  apt-get upgrade
+RUN apt-get -y clean &&  apt-get -y update &&  apt-get -y upgrade
 
 RUN \
     apt-get -y -qq update; apt-get upgrade -y -qq; \

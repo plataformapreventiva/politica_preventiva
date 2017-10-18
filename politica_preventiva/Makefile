@@ -1,6 +1,6 @@
 SHELL := /bin/bash 
 PROJECT_NAME:=$(shell cat ../.project-name)
-DATA_DIRECTORY:=$(CURDIR)/../data
+DATA_DIRECTORY:=/data
 IMAGES = docker-task 
 
 run:
