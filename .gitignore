@@ -6,6 +6,7 @@ __pycache__/
 # Other User Temporal files
 *_temp
 *.temp
+*1
 
 # C extensions
 *.so
