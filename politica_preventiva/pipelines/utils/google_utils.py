@@ -1,6 +1,7 @@
 # coding: utf-8
 # Run as: luigid & PYTHONPATH='.' python pipeline.py  RunPipelines --workers 3
 # pip install GoogleMaps  
+
 import os
 from os.path import join, dirname
 from datetime import datetime
