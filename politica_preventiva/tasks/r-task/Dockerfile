@@ -7,6 +7,15 @@ ENV PROJECT_NAME politica_preventiva
 ADD . /${PROJECT_NAME}/
 WORKDIR /${PROJECT_NAME}
 
-RUN mkdir /${PROJECT_NAME}/data
+RUN apt-get -y clean &&  apt-get -y update &&  apt-get -y upgrade
 
-CMD [ "Rscript", "/politica_preventiva/script.R" ]
+
+RUN \
+    apt-get -y -qq update; apt-get upgrade -y -qq; \
+    apt-get install --no-install-recommends -y  curl 
+
+RUN apt-get update \
+    && apt-get install -y libblas-dev liblapack-dev gfortran \
+                       libpq-dev postgresql postgresql-contrib
+RUN ["Rscript", "requirements.R"]
+

@@ -1,4 +1,4 @@
-FROM python:3.5-onbuild
+FROM python:3.6-slim
 
 ADD requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt

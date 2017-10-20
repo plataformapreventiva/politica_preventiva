@@ -27,11 +27,11 @@ from py2neo import Graph, Node, Relationship
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
     preprocessing_scripts.preprocessing_scripts import *
-from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, \
+from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_list, \
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.ingest.tests import classic_tests
-from politica_preventiva.pipelines.tasks.pipeline_tasks import *
+from politica_preventiva.tasks.pipeline_task import *
 from politica_preventiva.pipelines.utils import emr_tasks
 
 

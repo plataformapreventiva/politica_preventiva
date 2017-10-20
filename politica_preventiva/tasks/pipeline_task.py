@@ -40,7 +40,6 @@ class RTask(luigi.Task):
     """
 
     def run(self):
-
         logger.info('Luigi is using the dockerized version of the task' +
                     ' {0}'.format(self.pipeline_task))
 
@@ -51,6 +50,7 @@ class RTask(luigi.Task):
          '''.format(self.cmd)
 
         out = subprocess.call(cmd_docker, shell=True)
+        pdb.set_trace()
         logger.info(out)
 
 

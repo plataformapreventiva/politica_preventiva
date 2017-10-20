@@ -1,9 +1,0 @@
-optparse
-RPostgreSQL
-tidyverse
-dbplyr
-dplyr
-stringr
-lubridate
-devtools
-
