@@ -77,6 +77,7 @@ class ClassicIngest(luigi.WrapperTask):
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
         # loop through pipeline tasks
+
         return [ClassicIngestDates(current_date=self.current_date,
                                    pipeline_task=pipeline)
                 for pipeline in self.pipelines]
@@ -153,9 +154,9 @@ class UpdateLineage(luigi.Task):
 
     def requires(self):
         return UpdateDictionary(current_date=self.current_date,
-                         pipeline_task=self.pipeline_task,
-                         data_date=self.data_date,
-                         suffix=self.suffix)
+                                pipeline_task=self.pipeline_task,
+                                data_date=self.data_date,
+                                suffix=self.suffix)
 
     def run(self):
 
@@ -163,11 +164,13 @@ class UpdateLineage(luigi.Task):
             format(self.pipeline_task))
 
         # Reading from pipeline dictionary
-        path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
-        nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
-        actualizacion_sedesol = nodes.actualizacion_sedesol[0] 
-        nodes = nodes[nodes.id !='actualizacion_sedesol']
-        nodes = nodes[nodes.id !='data_date']
+        path = self.common_path + "dictionaries/"+self.pipeline_task +\
+                "_dic.csv"
+        nodes = pd.read_csv(path, sep='|', na_values='None',
+                            keep_default_na=False)
+        # actualizacion_sedesol = nodes.actualizacion_sedesol[0]
+        nodes = nodes[nodes.id != 'actualizacion_sedesol']
+        nodes = nodes[nodes.id != 'data_date']
         logging.info("Connecting to Neo4j DB {0} ")
 
         try:
@@ -197,40 +200,44 @@ class UpdateLineage(luigi.Task):
         except:
             fraction = ''
 
-        Year = Node('Year', year=years)
-        Fraction = Node('Fraction', value=str(years+'-'+fraction+'-'+self.suffix))
-        relation = Relationship(Fraction, 'for_fraction', Year)
-        graph.merge(Fraction)
-        graph.merge(relation)
+        try:
+            # TODO() Clean this try/except or create luigi.neo4j.task
+            Year = Node('Year', year=years)
+            Fraction = Node('Fraction', value=str(years+'-'+fraction+'-'+self.suffix))
+            relation = Relationship(Fraction, 'for_fraction', Year)
+            graph.merge(Fraction)
+            graph.merge(relation)
 
-        for index, row in nodes.iterrows():
+            for index, row in nodes.iterrows():
 
-            # Create column relations
-            column = Node('Column', nombre_clave=row['id'], nombre=row['nombre'])
-            graph.merge(column)
-            from_table = Relationship(column, 'from_table', table,
-                                    pipeline=self.pipeline_task)
-            graph.merge(from_table)
+                # Create column relations
+                column = Node('Column', nombre_clave=row['id'], nombre=row['nombre'])
+                graph.merge(column)
+                from_table = Relationship(column, 'from_table', table,
+                                        pipeline=self.pipeline_task)
+                graph.merge(from_table)
 
-            if row['tipo'] != '':
-                tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
-                relation = Relationship(column, 'with_tag', tag)
-                graph.merge(relation)
-            else:
-                pass
+                if row['tipo'] != '':
+                    tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
+                    relation = Relationship(column, 'with_tag', tag)
+                    graph.merge(relation)
+                else:
+                    pass
 
-        # Save current date
-        current_date = row['actualizacion_sedesol']
+            # Save current date
+            current_date = row['actualizacion_sedesol']
 
-        # Create Tag relations
-        relation = Relationship(table, 'for_year', Fraction,
-                                updated=current_date)
-        graph.merge(relation)
+            # Create Tag relations
+            relation = Relationship(table, 'for_year', Fraction,
+                                    updated=current_date)
+            graph.merge(relation)
 
-        done = self.common_path + 'neo4j/' + self.pipeline_task+\
-                   self.data_date + '-'+self.suffix + '.done'
-        Path(done).touch()
+            done = self.common_path + 'neo4j/' + self.pipeline_task+\
+                       self.data_date + '-'+self.suffix + '.done'
+            Path(done).touch()
 
+        except:
+            pass
     def output(self):
         done = self.common_path + 'neo4j/' + self.pipeline_task+\
                 self.data_date +'-'+self.suffix + '.done'
@@ -288,13 +295,12 @@ class UpdateDictionary(postgres.CopyToTable):
             return ast.literal_eval(temp)
         except Exception as e:
             logging.exception("The Dictionary schema abstraction is undefined"+\
-                    " please define it in. common/raw_schemas.yaml")
-
+                              " please define it in. common/raw_schemas.yaml")
 
     def rows(self):
         logging.info("Trying to update the dictionary for"+\
-                    " the pipeline_task {0} ".format(self.pipeline_task +\
-                    "data_date {0}".format(self.data_date)))
+                     " the pipeline_task {0} ".format(self.pipeline_task +\
+                     "data_date {0}".format(self.data_date)))
 
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
@@ -308,7 +314,7 @@ class UpdateDictionary(postgres.CopyToTable):
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
-        return UpdateDB(current_date=self.current_date,
+        return UpdateRawDB(current_date=self.current_date,
                     pipeline_task=self.pipeline_task,
                     actualizacion=self.actualizacion,
                     data_date=self.data_date, suffix=self.suffix)
@@ -320,7 +326,7 @@ class UpdateDictionary(postgres.CopyToTable):
                                        update_id=self.update_id)
 
 
-class UpdateDB(postgres.CopyToTable):
+class UpdateRawDB(postgres.CopyToTable):
 
     """ Updates Postgres DataBase with new ingested data.
 
