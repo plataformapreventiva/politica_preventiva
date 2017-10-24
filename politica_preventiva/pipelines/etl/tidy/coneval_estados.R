@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 library(optparse)
-library(RPostgreSQL)
 library(tidyverse)
 library(dbplyr)
-library(dplyr)
+library(DBI)
+library(RPostgreSQL)
 source("pipelines/etl/tools/tidy_tools.R") 
 
 option_list = list(
@@ -52,18 +52,23 @@ if(length(opt) > 1){
     POSTGRES_PASSWORD <- opt$password
     POSTGRES_USER <- opt$user
     PGHOST <- opt$host
-    PGPORT <- 5432
+    PGPORT <- "5432"
   }
 
-  drv <- dbDriver("PostgreSQL")
-  con <- dbConnect(drv, dbname = PGDATABASE,
-                   host = PGHOST, port = PGPORT,
-                   user = POSTGRES_USER, password = POSTGRES_PASSWORD)
+  con <- dbConnect(RPostgres::Postgres(),
+    host = PGHOST,
+    port = PGPORT,
+    dbname = PGDATABASE,
+    user = POSTGRES_USER,
+    password = POSTGRES_PASSWORD
+  )
+
   dbListTables(con)
+  
   coneval_ent <- tbl(con, sql("select cve_ent, data_date, pobreza, pobreza_e, pobreza_m, factor,
                               vul_car, vul_ing, no_pobv, ic_rezedu, ic_asalud, ic_segsoc, 
                               ic_cv, ic_sbv, ic_ali, carencias, carencias3, plb, plb_m, actualizacion_sedesol
-                              from raw.coneval_estados"))
+                              from clean.coneval_estados"))
 
   key <- "variable"
   value <- "valor"

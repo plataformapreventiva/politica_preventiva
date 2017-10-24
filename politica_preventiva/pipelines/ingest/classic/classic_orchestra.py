@@ -291,13 +291,12 @@ class UpdateDictionary(postgres.CopyToTable):
             return ast.literal_eval(temp)
         except Exception as e:
             logging.exception("The Dictionary schema abstraction is undefined"+\
-                    " please define it in. common/raw_schemas.yaml")
-
+                              " please define it in. common/raw_schemas.yaml")
 
     def rows(self):
         logging.info("Trying to update the dictionary for"+\
-                    " the pipeline_task {0} ".format(self.pipeline_task +\
-                    "data_date {0}".format(self.data_date)))
+                     " the pipeline_task {0} ".format(self.pipeline_task +\
+                     "data_date {0}".format(self.data_date)))
 
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
@@ -311,7 +310,7 @@ class UpdateDictionary(postgres.CopyToTable):
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
-        return UpdateDB(current_date=self.current_date,
+        return UpdateRawDB(current_date=self.current_date,
                     pipeline_task=self.pipeline_task,
                     actualizacion=self.actualizacion,
                     data_date=self.data_date, suffix=self.suffix)
@@ -323,7 +322,7 @@ class UpdateDictionary(postgres.CopyToTable):
                                        update_id=self.update_id)
 
 
-class UpdateDB(postgres.CopyToTable):
+class UpdateRawDB(postgres.CopyToTable):
 
     """ Updates Postgres DataBase with new ingested data.
 

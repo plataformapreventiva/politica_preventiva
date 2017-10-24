@@ -18,7 +18,10 @@ from luigi.contrib.postgres import PostgresTarget, PostgresQuery
 
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string,\
         download_dir
+
+from politica_preventiva.pipelines.utils.pg_tools import PGWrangler
 from politica_preventiva.tasks.pipeline_task import DockerTask, RTask
+from politica_preventiva.pipelines.ingest.classic.classic_orchestra import UpdateLineage
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
@@ -52,74 +55,14 @@ class ETLPipeline(luigi.WrapperTask):
         # loop through pipeline tasks and data dates
         set_pipelines = [(pipeline_task, final_dates(self.historical,
                                                      pipeline_task,
-                                                     self.current_date)) for 
+                                                     self.current_date)) for
                          pipeline_task in self.pipelines]
 
-        return [UpdateCleanDB(current_date=self.current_date,
-                              pipeline_task=pipeline[0],
-                              data_date=dates,
-                              suffix=pipeline[1][1])
+        return [UpdateTidyDB(current_date=self.current_date,
+                             pipeline_task=pipeline[0],
+                             data_date=dates,
+                             suffix=pipeline[1][1])
                 for pipeline in set_pipelines for dates in pipeline[1][0]]
-
-
-class UpdateCleanDB(postgres.PostgresQuery):
-    """
-    This Task runs the Clean script in clean folder for
-    the pipeline_task, if it doesn't exists then it only updates
-    with the last raw table
-    """
-
-
-    current_date = luigi.DateParameter()
-    pipeline_task = luigi.Parameter()
-    client = S3Client()
-    data_date = luigi.Parameter()
-    suffix = luigi.Parameter()
-
-    clean_scripts = luigi.Parameter()
-    # RDS
-    database = os.environ.get("PGDATABASE")
-    user = os.environ.get("POSTGRES_USER")
-    password = os.environ.get("POSTGRES_PASSWORD")
-    host = os.environ.get("PGHOST")
-
-    @property
-    def update_id(self):
-        return str(self.pipeline_task) + str(self.data_date) +\
-               str(self.suffix) + '_clean'
-
-    @property
-    def table(self):
-        return "clean." + self.pipeline_task
-
-    @property
-    def query(self):
-        # Read sql command
-        path = self.clean_scripts + self.pipeline_task + '.sql'
-
-        try:
-            sqlfile = open(path, 'r')
-            query = sqlfile.read()
-
-        except:
-            query = """DROP TABLE IF EXISTS {0};
-            CREATE TABLE {0} AS (SELECT * FROM
-            raw.{1};""".format(self.table, self.pipeline_task)
-        return query
-
-    def requires(self):
-        return UpdateTidyDB(current_date=self.current_date,
-                            pipeline_task=self.pipeline_task,
-                            data_date=self.data_date,
-                            suffix=self.suffix)
-
-    def output(self):
-        return PostgresTarget(host=self.host,
-                              database=self.database,
-                              user=self.user,
-                              password=self.password,
-                              table=self.table,
-                              update_id=self.update_id)
 
 
 class UpdateTidyDB(RTask):
@@ -163,13 +106,18 @@ class UpdateTidyDB(RTask):
 
     @property
     def update_id(self):
-        print(self.cmd)
         return str(self.pipeline_task) + '_' + str(self.data_date) +\
                 str(self.suffix) + '_tidy'
 
     @property
     def table(self):
         return "tidy." + self.pipeline_task
+
+    def requires(self):
+        return UpdateCleanDB(current_date=self.current_date,
+                             pipeline_task=self.pipeline_task,
+                             data_date=self.data_date,
+                             suffix=self.suffix)
 
     def output(self):
         return PostgresTarget(host=self.host,
@@ -179,3 +127,61 @@ class UpdateTidyDB(RTask):
                               table=self.table,
                               update_id=self.update_id)
 
+
+class UpdateCleanDB(postgres.PostgresQuery):
+    """
+    This Task runs the Clean script in clean folder for
+    the pipeline_task, if it doesn't exists then it only updates
+    with the last raw table
+    """
+
+    current_date = luigi.DateParameter()
+    pipeline_task = luigi.Parameter()
+    client = S3Client()
+    data_date = luigi.Parameter()
+    suffix = luigi.Parameter()
+
+    clean_scripts = luigi.Parameter()
+    # RDS
+    database = os.environ.get("PGDATABASE")
+    user = os.environ.get("POSTGRES_USER")
+    password = os.environ.get("POSTGRES_PASSWORD")
+    host = os.environ.get("PGHOST")
+
+    @property
+    def update_id(self):
+        return str(self.pipeline_task) + str(self.data_date) +\
+               str(self.suffix) + '_clean'
+
+    @property
+    def table(self):
+        return "clean." + self.pipeline_task
+
+    @property
+    def query(self):
+        # Read sql command
+        path = self.clean_scripts + self.pipeline_task + '.sql'
+
+        try:
+            sqlfile = open(path, 'r')
+            query = sqlfile.read()
+
+        except:
+            query = """DROP TABLE IF EXISTS {0};
+            CREATE TABLE {0} AS (SELECT * FROM
+            raw.{1};""".format(self.table, self.pipeline_task)
+        return query
+
+    def requires(self):
+        return UpdateLineage(current_date=self.current_date,
+                             pipeline_task=self.pipeline_task,
+                             data_date=self.data_date,
+                             suffix=self.suffix)
+
+    def output(self):
+        return PostgresTarget(host=self.host,
+                              database=self.database,
+                              user=self.user,
+                              password=self.password,
+                              table=self.table,
+                              update_id=self.update_id)
