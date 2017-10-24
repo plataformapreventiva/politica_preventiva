@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import ast
+import boto3
 import luigi
 import logging
 import os
@@ -410,10 +411,11 @@ class UpdateRawDB(postgres.CopyToTable):
                         check = False
                         header = line
                         pass
+                    # Skip header line
                     elif line == header:
                         pass
                     else:
-                        #line = re.sub("\|na\||\|na|na\||\|nan\||\|nan|nan\||N/E|^\-$", '', line)
+                        re.sub("\|na\||\|nan\||\|N/E\||\|-\|", '||', line)
                         line = line.strip('\n').split('|')
                         line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
                         line.append(str(self.data_date) + '-' + self.suffix)

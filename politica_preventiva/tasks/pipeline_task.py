@@ -38,15 +38,14 @@ class RTask(luigi.Task):
         bash **/**.sh
 
     """
+    cmd = ''
 
     def run(self):
-        logger.info('Luigi is using the dockerized version of the task' +
-                    ' {0}'.format(self.pipeline_task))
 
         cmd_docker = '''
             docker run -it --rm  -v $PWD:/politica_preventiva\
             -v politica_preventiva_store:/data\
-            politica_preventiva/task/r-task {0} > /dev/null
+            politica_preventiva/task/r-task {0}
          '''.format(self.cmd)
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
