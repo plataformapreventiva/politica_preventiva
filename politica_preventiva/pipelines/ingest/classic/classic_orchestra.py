@@ -200,40 +200,44 @@ class UpdateLineage(luigi.Task):
         except:
             fraction = ''
 
-        Year = Node('Year', year=years)
-        Fraction = Node('Fraction', value=str(years+'-'+fraction+'-'+self.suffix))
-        relation = Relationship(Fraction, 'for_fraction', Year)
-        graph.merge(Fraction)
-        graph.merge(relation)
+        try:
+            # TODO() Clean this try/except or create luigi.neo4j.task
+            Year = Node('Year', year=years)
+            Fraction = Node('Fraction', value=str(years+'-'+fraction+'-'+self.suffix))
+            relation = Relationship(Fraction, 'for_fraction', Year)
+            graph.merge(Fraction)
+            graph.merge(relation)
 
-        for index, row in nodes.iterrows():
+            for index, row in nodes.iterrows():
 
-            # Create column relations
-            column = Node('Column', nombre_clave=row['id'], nombre=row['nombre'])
-            graph.merge(column)
-            from_table = Relationship(column, 'from_table', table,
-                                    pipeline=self.pipeline_task)
-            graph.merge(from_table)
+                # Create column relations
+                column = Node('Column', nombre_clave=row['id'], nombre=row['nombre'])
+                graph.merge(column)
+                from_table = Relationship(column, 'from_table', table,
+                                        pipeline=self.pipeline_task)
+                graph.merge(from_table)
 
-            if row['tipo'] != '':
-                tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
-                relation = Relationship(column, 'with_tag', tag)
-                graph.merge(relation)
-            else:
-                pass
+                if row['tipo'] != '':
+                    tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
+                    relation = Relationship(column, 'with_tag', tag)
+                    graph.merge(relation)
+                else:
+                    pass
 
-        # Save current date
-        current_date = row['actualizacion_sedesol']
+            # Save current date
+            current_date = row['actualizacion_sedesol']
 
-        # Create Tag relations
-        relation = Relationship(table, 'for_year', Fraction,
-                                updated=current_date)
-        graph.merge(relation)
+            # Create Tag relations
+            relation = Relationship(table, 'for_year', Fraction,
+                                    updated=current_date)
+            graph.merge(relation)
 
-        done = self.common_path + 'neo4j/' + self.pipeline_task+\
-                   self.data_date + '-'+self.suffix + '.done'
-        Path(done).touch()
+            done = self.common_path + 'neo4j/' + self.pipeline_task+\
+                       self.data_date + '-'+self.suffix + '.done'
+            Path(done).touch()
 
+        except:
+            pass
     def output(self):
         done = self.common_path + 'neo4j/' + self.pipeline_task+\
                 self.data_date +'-'+self.suffix + '.done'

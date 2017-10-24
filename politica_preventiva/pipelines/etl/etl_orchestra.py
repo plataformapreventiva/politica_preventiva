@@ -100,7 +100,8 @@ class UpdateTidyDB(RTask):
                         '--database', self.database,
                         '--user', self.user,
                         '--password', self.password,
-                        '--host', self.host]
+                        '--host', self.host,
+                        '--pipeline', self.pipeline_task]
         cmd = " ".join(command_list)
         return cmd
 
