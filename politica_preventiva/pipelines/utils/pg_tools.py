@@ -7,10 +7,13 @@ import os
 import subprocess
 import luigi
 import luigi.target
+
+from dotenv import load_dotenv, find_dotenv
 from luigi import configuration
 
+load_dotenv(find_dotenv())
 
-def create_engine(dbitems=None, path_to_default_profile='../default_profile'):
+def create_engine():
     """
     Creates a self.engine to a postgres database
     :param dict dbitems: dictionary of database access items
@@ -18,20 +21,10 @@ def create_engine(dbitems=None, path_to_default_profile='../default_profile'):
     :returns: (engine to database, database items)
     :rtype: (sqlalchemy engine, dict)
     """
-    # Read database parameters from default_profile
-    if not dbitems:
-        # Assumes default_profile to be of the format:
-        # export PGUSER=some_user
-        # export PGHOST=some_host
-        dbitems = {}
-        with open('../default_profile') as f:
-            for line in f.readlines():
-                item = line.split(" ")[1].split("=")
-                dbitems[item[0]] = item[1].strip()
     engine = sqlalchemy.create_engine('postgresql+psycopg2://%s:%s@%s/%s' % (
-        dbitems['PGUSER'], dbitems['PGPASSWORD'],
-        dbitems['PGHOST'], dbitems['PGDATABASE']))
-    return (engine, dbitems)
+        os.environ.get('POSTGRES_USER'), os.environ.get('POSTGRES_PASSWORD'),
+        os.environ.get('PGHOST'), os.environ.get('PGDATABASE')))
+    return engine
 
 
 class PGWrangler(object):
@@ -46,12 +39,8 @@ class PGWrangler(object):
         :param str path_to_default_profile: path to the default database config
         """
 
-        (engine, dbitems) = create_engine(dbitems, path_to_default_profile)
-        self.engine = engine
+        self.engine = create_engine()
 
-        self.pg_env = os.environ.copy()
-        for key in dbitems:
-            self.pg_env[key] = dbitems[key]
 
     def shell(self, cmd):
         """

@@ -77,6 +77,7 @@ class ClassicIngest(luigi.WrapperTask):
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
         # loop through pipeline tasks
+
         return [ClassicIngestDates(current_date=self.current_date,
                                    pipeline_task=pipeline)
                 for pipeline in self.pipelines]
@@ -153,9 +154,9 @@ class UpdateLineage(luigi.Task):
 
     def requires(self):
         return UpdateDictionary(current_date=self.current_date,
-                         pipeline_task=self.pipeline_task,
-                         data_date=self.data_date,
-                         suffix=self.suffix)
+                                pipeline_task=self.pipeline_task,
+                                data_date=self.data_date,
+                                suffix=self.suffix)
 
     def run(self):
 
@@ -163,11 +164,13 @@ class UpdateLineage(luigi.Task):
             format(self.pipeline_task))
 
         # Reading from pipeline dictionary
-        path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
-        nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
-        actualizacion_sedesol = nodes.actualizacion_sedesol[0] 
-        nodes = nodes[nodes.id !='actualizacion_sedesol']
-        nodes = nodes[nodes.id !='data_date']
+        path = self.common_path + "dictionaries/"+self.pipeline_task +\
+                "_dic.csv"
+        nodes = pd.read_csv(path, sep='|', na_values='None',
+                            keep_default_na=False)
+        # actualizacion_sedesol = nodes.actualizacion_sedesol[0]
+        nodes = nodes[nodes.id != 'actualizacion_sedesol']
+        nodes = nodes[nodes.id != 'data_date']
         logging.info("Connecting to Neo4j DB {0} ")
 
         try:
@@ -288,13 +291,12 @@ class UpdateDictionary(postgres.CopyToTable):
             return ast.literal_eval(temp)
         except Exception as e:
             logging.exception("The Dictionary schema abstraction is undefined"+\
-                    " please define it in. common/raw_schemas.yaml")
-
+                              " please define it in. common/raw_schemas.yaml")
 
     def rows(self):
         logging.info("Trying to update the dictionary for"+\
-                    " the pipeline_task {0} ".format(self.pipeline_task +\
-                    "data_date {0}".format(self.data_date)))
+                     " the pipeline_task {0} ".format(self.pipeline_task +\
+                     "data_date {0}".format(self.data_date)))
 
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
@@ -308,7 +310,7 @@ class UpdateDictionary(postgres.CopyToTable):
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
-        return UpdateDB(current_date=self.current_date,
+        return UpdateRawDB(current_date=self.current_date,
                     pipeline_task=self.pipeline_task,
                     actualizacion=self.actualizacion,
                     data_date=self.data_date, suffix=self.suffix)
@@ -320,7 +322,7 @@ class UpdateDictionary(postgres.CopyToTable):
                                        update_id=self.update_id)
 
 
-class UpdateDB(postgres.CopyToTable):
+class UpdateRawDB(postgres.CopyToTable):
 
     """ Updates Postgres DataBase with new ingested data.
 

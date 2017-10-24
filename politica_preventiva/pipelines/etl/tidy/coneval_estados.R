@@ -1,19 +1,19 @@
 #!/usr/bin/env Rscript
 library(optparse)
-library(RPostgreSQL)
 library(tidyverse)
 library(dbplyr)
-library(dplyr)
+library(DBI)
+library(RPostgreSQL)
 source("pipelines/etl/tools/tidy_tools.R") 
 
 option_list = list(
-  make_option(c("--datadate"), type="character", default="2016-a", 
+  make_option(c("--datadate"), type="character", default="", 
               help="data date", metavar="character"),
   make_option(c("--database"), type="character", default="", 
               help="database name", metavar="character"),
   make_option(c("--user"), type="character", default="",
               help="database user", metavar="character"),
-  make_option(c("--password"), type="character", default="2016-a",
+  make_option(c("--password"), type="character", default="",
               help="password for datbase user", metavar="character"),
   make_option(c("--host"), type="character", default="",
               help="database host name", metavar="character")
@@ -26,8 +26,9 @@ opt <- tryCatch(
           parse_args(opt_parser);
         },
         error=function(cond) {
-            message("Error:")
+            message("Error: Provide database connection arguments appropriately.")
             message(cond)
+            print_help(opt_parser)
             return(NA)
         },
         warning=function(cond) {
@@ -36,14 +37,14 @@ opt <- tryCatch(
             return(NULL)
         },
         finally={
-            message("Arguments succesfully parsed.")
+            message("Finished attempting to parse arguments.")
         }
     )  
 
-if(!is.na(opt) & !is.null(opt)){
+if(length(opt) > 1){
 
-  if (is.null(opt$database) | is.null(opt$user) | 
-      is.null(opt$password) | is.null(opt$host) ){
+  if (opt$database=="" | opt$user=="" | 
+      opt$password=="" | opt$host=="" ){
     print_help(opt_parser)
     stop("Database connection arguments are not supplied.n", call.=FALSE)
   }else{
@@ -51,29 +52,33 @@ if(!is.na(opt) & !is.null(opt)){
     POSTGRES_PASSWORD <- opt$password
     POSTGRES_USER <- opt$user
     PGHOST <- opt$host
-    PGPORT <- 5432
+    PGPORT <- "5432"
   }
 
-  drv <- dbDriver("PostgreSQL")
-  con <- dbConnect(drv, dbname = PGDATABASE,
-                   host = PGHOST, port = PGPORT,
-                   user = POSTGRES_USER, password = POSTGRES_PASSWORD)
+  con <- dbConnect(RPostgres::Postgres(),
+    host = PGHOST,
+    port = PGPORT,
+    dbname = PGDATABASE,
+    user = POSTGRES_USER,
+    password = POSTGRES_PASSWORD
+  )
 
   dbListTables(con)
+  
   coneval_ent <- tbl(con, sql("select cve_ent, data_date, pobreza, pobreza_e, pobreza_m, factor,
                               vul_car, vul_ing, no_pobv, ic_rezedu, ic_asalud, ic_segsoc, 
-                              ic_cv, ic_sbv, ic_ali, carencias, carencias3, plb, plb_m 
-                              from raw.coneval_estados"))
+                              ic_cv, ic_sbv, ic_ali, carencias, carencias3, plb, plb_m, actualizacion_sedesol
+                              from clean.coneval_estados"))
 
   key <- "variable"
   value <- "valor"
-  not_gathered <- c("cve_ent", "data_date", "factor")
+  not_gathered <- c("cve_ent", "data_date", "factor", "actualizacion_sedesol")
 
-  coneval_larga <- gather_db(coneval_ent, key, value, not_gathered) 
+  coneval_larga <- gather_db(coneval_ent, key, value, not_gathered)
 
   base <- coneval_larga %>% 
-    group_by(cve_ent, data_date, variable) %>%
-    summarise(num = sum(factor*valor))
+    group_by(cve_ent, data_date, variable, actualizacion_sedesol) %>%
+    summarise(nominal = sum(factor*valor))
 
   pob <- coneval_larga %>%
     select(cve_ent,data_date,factor) %>%
@@ -83,10 +88,16 @@ if(!is.na(opt) & !is.null(opt)){
   base <- base %>%
     left_join(pob, by = c("cve_ent", "data_date")) %>%
     mutate(pob_tot = 1.0*pob_tot) %>%
-    mutate(porcentaje = num/pob_tot) %>%
-    compute() 
+    mutate(porcentaje = nominal/pob_tot) 
 
-  base <- base %>% collect()
+  key2 <- "tipo"
+  value2 <- "valor"
+  not_gathered2 <- c("cve_ent", "data_date", "variable", "pob_tot", "actualizacion_sedesol")
+
+  coneval_final <- gather_db(base, key2, value2, not_gathered2) %>%
+    compute()
+
+  base <- coneval_final %>% collect()
 
   dbWriteTable(conn = con, c("tidy", "coneval_estados"), value = base,
                overwrite=TRUE, row.names=FALSE)
