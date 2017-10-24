@@ -32,9 +32,11 @@ def coneval_municipios_to_csv(url, local_path, local_ingest_file):
 if __name__ == '__main__':
     # Get Arguments from bash.
     parser = argparse.ArgumentParser(description= 'Download CONEVAL municipios')
-    parser.add_argument('--local_path', type=str, help = 'Local path')
-    parser.add_argument('--local_ingest_file', type=str, help = 'Local ingest file')
+    parser.add_argument('--data_date', type=int, help='Data date')
+    parser.add_argument('--local_path', type=str, help='Local path')
+    parser.add_argument('--local_ingest_file', type=str, help='Local ingest file')
     args = parser.parse_args()
     url = 'http://www.coneval.org.mx/Informes/Pobreza/Pobreza_municipal/Anexo_estadistico/Concentrado.zip'
-    coneval_municipios_to_csv(url, args.local_path, args.local_ingest_file)
+    if args.data_date == 2010:
+        coneval_municipios_to_csv(url, args.local_path, args.local_ingest_file)
 

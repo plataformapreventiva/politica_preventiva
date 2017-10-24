@@ -199,7 +199,7 @@ def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
         df['distrito'] = pputils.complete_missing_values(df['distrito'])
 
 
-def coneval_municipios_2010_prep(data_date, s3_file, extra_h, out_key):
+def coneval_municipios_prep(data_date, s3_file, extra_h, out_key):
     """
     Preprocessing function casting coneval municipios
    """

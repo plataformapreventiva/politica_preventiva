@@ -520,12 +520,12 @@ class coneval_estados(TDockerTask):
         return " ".join(command_list)
 
 
-class coneval_municipios_2010(TDockerTask):
+class coneval_municipios(TDockerTask):
     @property
     def cmd(self):
-
         command_list = ['python', self.classic_task_scripts +
-                        'coneval_municipios_2010.py',
+                        'coneval_municipios.py',
+                        '--data_date', self.data_date,
                         '--local_path', self.local_path + self.pipeline_task,
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
