@@ -554,7 +554,6 @@ class insp(TDockerTask):
                         'insp.sh', year, month,
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
-        pdb.set_trace()
 
         return " ".join(command_list)
 
