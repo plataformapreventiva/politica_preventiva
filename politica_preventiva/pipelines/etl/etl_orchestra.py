@@ -41,7 +41,7 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 class ETLPipeline(luigi.WrapperTask):
 
     current_date = luigi.DateParameter()
-    pipelines = parse_cfg_list(conf.get("ClassicIngest", "pipelines"))
+    pipelines = luigi.parameter.ListParameter()
     client = S3Client()
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
@@ -54,7 +54,7 @@ class ETLPipeline(luigi.WrapperTask):
                                                      pipeline_task,
                                                      self.current_date)) for 
                          pipeline_task in self.pipelines]
- 
+
         return [UpdateCleanDB(current_date=self.current_date,
                               pipeline_task=pipeline[0],
                               data_date=dates,
@@ -63,6 +63,12 @@ class ETLPipeline(luigi.WrapperTask):
 
 
 class UpdateCleanDB(postgres.PostgresQuery):
+    """
+    This Task runs the Clean script in clean folder for
+    the pipeline_task, if it doesn't exists then it only updates
+    with the last raw table
+    """
+
 
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
@@ -90,8 +96,15 @@ class UpdateCleanDB(postgres.PostgresQuery):
     def query(self):
         # Read sql command
         path = self.clean_scripts + self.pipeline_task + '.sql'
-        sqlfile = open(path, 'r')
-        query = sqlfile.read()
+
+        try:
+            sqlfile = open(path, 'r')
+            query = sqlfile.read()
+
+        except:
+            query = """DROP TABLE IF EXISTS {0};
+            CREATE TABLE {0} AS (SELECT * FROM
+            raw.{1};""".format(self.table, self.pipeline_task)
         return query
 
     def requires(self):
@@ -111,6 +124,9 @@ class UpdateCleanDB(postgres.PostgresQuery):
 
 class UpdateTidyDB(RTask):
     """
+    This Task runs the tidy script in tidy folder for
+    the pipeline_task, if it doesn't exists then it runs
+    the no_tidy.R script from the same folder.
     """
 
     current_date = luigi.DateParameter()
@@ -128,14 +144,20 @@ class UpdateTidyDB(RTask):
 
     @property
     def cmd(self):
-        command_list = ['Rscript', self.tidy_scripts +\
-                        self.pipeline_task + '.R',
+        tidy_file = self.tidy_scripts +\
+                self.pipeline_task + '.R'
+
+        if os.path.isfile(tidy_file):
+            pass
+        else:
+            tidy_file = self.tidy_scripts + 'no_tidy.R'
+
+        command_list = ['Rscript', tidy_file,
                         '--data_date', self.data_date,
                         '--database', self.database,
                         '--user', self.user,
                         '--password', self.password,
                         '--host', self.host]
- 
         cmd = " ".join(command_list)
         return cmd
 
@@ -143,7 +165,7 @@ class UpdateTidyDB(RTask):
     def update_id(self):
         print(self.cmd)
         return str(self.pipeline_task) + '_' + str(self.data_date) +\
-               str(self.suffix) + '_tidy'
+                str(self.suffix) + '_tidy'
 
     @property
     def table(self):

@@ -77,6 +77,7 @@ class ClassicIngest(luigi.WrapperTask):
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
         # loop through pipeline tasks
+
         return [ClassicIngestDates(current_date=self.current_date,
                                    pipeline_task=pipeline)
                 for pipeline in self.pipelines]
