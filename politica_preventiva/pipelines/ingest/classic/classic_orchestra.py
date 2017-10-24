@@ -154,9 +154,9 @@ class UpdateLineage(luigi.Task):
 
     def requires(self):
         return UpdateDictionary(current_date=self.current_date,
-                         pipeline_task=self.pipeline_task,
-                         data_date=self.data_date,
-                         suffix=self.suffix)
+                                pipeline_task=self.pipeline_task,
+                                data_date=self.data_date,
+                                suffix=self.suffix)
 
     def run(self):
 
@@ -164,11 +164,13 @@ class UpdateLineage(luigi.Task):
             format(self.pipeline_task))
 
         # Reading from pipeline dictionary
-        path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
-        nodes = pd.read_csv(path, sep='|', na_values='None', keep_default_na=False)
-        actualizacion_sedesol = nodes.actualizacion_sedesol[0] 
-        nodes = nodes[nodes.id !='actualizacion_sedesol']
-        nodes = nodes[nodes.id !='data_date']
+        path = self.common_path + "dictionaries/"+self.pipeline_task +\
+                "_dic.csv"
+        nodes = pd.read_csv(path, sep='|', na_values='None',
+                            keep_default_na=False)
+        # actualizacion_sedesol = nodes.actualizacion_sedesol[0]
+        nodes = nodes[nodes.id != 'actualizacion_sedesol']
+        nodes = nodes[nodes.id != 'data_date']
         logging.info("Connecting to Neo4j DB {0} ")
 
         try:
