@@ -44,7 +44,7 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 class ETLPipeline(luigi.WrapperTask):
 
     current_date = luigi.DateParameter()
-    pipelines = luigi.parameter.ListParameter()
+    pipelines = luigi.Parameter()
     client = S3Client()
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
@@ -56,7 +56,7 @@ class ETLPipeline(luigi.WrapperTask):
         set_pipelines = [(pipeline_task, final_dates(self.historical,
                                                      pipeline_task,
                                                      self.current_date)) for
-                         pipeline_task in self.pipelines]
+                         pipeline_task in [self.pipelines]]
 
         return [UpdateTidyDB(current_date=self.current_date,
                              pipeline_task=pipeline[0],
@@ -99,7 +99,7 @@ class UpdateTidyDB(RTask):
                         '--data_date', self.data_date,
                         '--database', self.database,
                         '--user', self.user,
-                        '--password', self.password,
+                        '--password', "'{}'".format(self.password),
                         '--host', self.host,
                         '--pipeline', self.pipeline_task]
         cmd = " ".join(command_list)
