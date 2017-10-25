@@ -788,7 +788,272 @@ defunciones_generales:
     - grupo: TEXT
     - lista1: TEXT
     - gr_lismex: TEXT
-    - vio_fami: null
+    - vio_fami: TEXT
+    - area_ur: TEXT
+    - edad_agru: TEXT
+    - complicaro: TEXT
+    - dia_cert: TEXT
+    - mes_cert: TEXT
+    - anio_cert: TEXT
+    - maternas: TEXT
+    - lengua: TEXT
+    - cond_act: TEXT
+    - par_agre: TEXT
+    - ent_ocules: TEXT
+    - mun_ocules: TEXT
+    - loc_ocules: TEXT
+    - razon_m: TEXT
+    - dis_re_oax: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - ent_regis
+  - mun_regis
+  - ent_resid
+  - mun_resid
+  - tloc_resid
+  - loc_resid
+  - ent_ocurr
+  - mun_ocurr
+  - tloc_ocurr
+  - loc_ocurr
+  - causa_def
+  - lista_mex
+  - sexo
+  - edad
+  - dia_ocurr
+  - mes_ocurr
+  - anio_ocur
+  - dia_regis
+  - mes_regis
+  - anio_regis
+  - dia_nacim
+  - mes_nacim
+  - anio_nacim
+  - ocupacion
+  - escolarida
+  - edo_civil
+  - presunto
+  - ocurr_trab
+  - lugar_ocur
+  - necropsia
+  - asist_medi
+  - sitio_ocur
+  - cond_cert
+  - nacionalid
+  - derechohab
+  - embarazo
+  - rel_emba
+  - horas
+  - minutos
+  - capitulo
+  - grupo
+  - lista1
+  - gr_lismex
+  - vio_fami
+  - area_ur
+  - edad_agru
+  - complicaro
+  - dia_cert
+  - mes_cert
+  - anio_cert
+  - maternas
+  - lengua
+  - cond_act
+  - par_agre
+  - ent_ocules
+  - mun_ocules
+  - loc_ocules
+  - razon_m
+  - dis_re_oax
+denue:
+  LUIGI:
+    INDEX: d_llave
+    SCHEMA:
+    - d_llave: text
+    - nom_est: text
+    - raz_soc: text
+    - cve_scian: text
+    - desc_scian: text
+    - estr_poc: text
+    - tipovial: text
+    - nomvial: text
+    - tiporef1: text
+    - nomref1: text
+    - tiporef2: text
+    - nomref2: text
+    - tiporef3: text
+    - nomref3: text
+    - numextnum: text
+    - numextalf: text
+    - edif_nom: text
+    - edif_piso: text
+    - numintnum: text
+    - numintalf: text
+    - tipoasen: text
+    - nomasen: text
+    - tipo_cori: text
+    - cor_indust: text
+    - local: text
+    - cp: text
+    - cve_ent: text
+    - nom_ent: text
+    - cve_mun: text
+    - nom_mun: text
+    - cve_loc: text
+    - nom_loc: text
+    - cve_ageb: text
+    - manzana: text
+    - tel_1: text
+    - dir_elec_1: text
+    - sitio_web: text
+    - tipo_est: text
+    - coord_y: text
+    - coord_x: text
+    - fecha_alta: text
+    - actualizacion_sedesol: timestamp
+    - data_date: TEXT
+dictionary:
+  LUIGI:
+    SCHEMA:
+    - id: TEXT
+    - nombre: TEXT
+    - fuente: TEXT
+    - url: TEXT
+    - tipo: TEXT
+    - subtipo: TEXT
+    - periodo: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - metadata: TEXT
+    - data_date: TEXT
+donatarias_sat:
+  LUIGI:
+    INDEX: rfc
+    SCHEMA:
+    - year: TEXT
+    - admin_local_juridica: TEXT
+    - act_o_fin_autorizado: TEXT
+    - rfc: TEXT
+    - denom_o_razon_social: TEXT
+    - domicilio_fiscal: TEXT
+    - oficio_de_autorizacion: TEXT
+    - fecha_de_oficio: TEXT
+    - obj_social_autorizado: TEXT
+    - representante_legal: TEXT
+    - numeros_telefonicos: TEXT
+    - e_mail: TEXT
+    - domicilio_establecimiento: TEXT
+    - numero_telefonico: TEXT
+    - acreditamiento: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+evals:
+  LUIGI:
+    INDEX: modalidad_pp
+    SCHEMA:
+    - ciclo_pae: TEXT
+    - id_evaluacion: TEXT
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - modalidad_pp: TEXT
+    - desc_pp: TEXT
+    - tipo_evaluacion: TEXT
+    - evaluador: TEXT
+    - costos: TEXT
+    - ciclo_conclusion: TEXT
+    - url_evaluacion: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - ciclo_pae
+  - id_evaluacion
+  - id_ramo
+  - desc_ramo
+  - modalidad_pp
+  - desc_pp
+  - tipo_evaluacion
+  - evaluador
+  - costos
+  - ciclo_conclusion
+  - url_evaluacion
+finanzas_publicas_estatales:
+  LUIGI:
+    INDEX: id_entidad
+    SCHEMA:
+    - producto: TEXT
+    - cobertura: TEXT
+    - anio: INT
+    - id_entidad: VARCHAR
+    - tema: VARCHAR
+    - categoria: TEXT
+    - descripcion: TEXT
+    - cifra: BIGINT
+    - desc_estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - "\uFEFFproducto"
+  - cobertura
+  - anio
+  - id_entidad
+  - tema
+  - categoria
+  - descripcion
+  - cifra
+  - desc_estatus
+finanzas_publicas_municipales:
+  LUIGI:
+    INDEX: id_municipio
+    SCHEMA:
+    - producto: TEXT
+    - cobertura: TEXT
+    - anio: INT
+    - id_entidad: VARCHAR
+    - id_municipio: VARCHAR
+    - tema: VARCHAR
+    - categoria: TEXT
+    - descripcion_categoria: TEXT
+    - valor: BIGINT
+    - estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: VARCHAR
+  RAW:
+  - "\uFEFFproducto"
+  - cobertura
+  - anio
+  - id_entidad
+  - id_municipio
+  - tema
+  - categoria
+  - descripcion_categoria
+  - valor
+  - estatus
+indesol:
+  LUIGI:
+    INDEX: cluni
+    SCHEMA:
+    - cluni: TEXT
+    - razon_social: TEXT
+    - figura_juridica: TEXT
+    - rfc: TEXT
+    - estatus: TEXT
+    - estatus_de_sancion: TEXT
+    - representantes_legales: TEXT
+    - estatus_de_la_representacion: TEXT
+    - fecha_de_constitucion: TEXT
+    - fecha_de_inscripcion: TEXT
+    - correo: TEXT
+    - telefono: TEXT
+    - entidad_federativa_domicilio: TEXT
+    - municipio: TEXT
+    - asentamiento_colonia: TEXT
+    - vialidad_calle: TEXT
+    - numero_exterior: TEXT
+    - numero_interior: TEXT
+    - cp: TEXT
+    - redes: TEXT
+    - actividad: INT
+    - edo_actividad: TEXT
+    - informes: JSONB
+    - actualizacion_sedesol: TIMESTAMP
 insp:
   LUIGI:
     INDEX: clavegenerico
@@ -830,3 +1095,682 @@ insp:
   - cantidad
   - unidad
   - estatus
+ipc_ciudades:
+  LUIGI:
+    INDEX: fecha
+    SCHEMA:
+    - fecha: TEXT
+    - indice: TEXT
+    - alim_bt: FLOAT
+    - alim: FLOAT
+    - alim_pantc: FLOAT
+    - alim_car: FLOAT
+    - alim_pescm: FLOAT
+    - alim_lech: FLOAT
+    - alim_aceig: FLOAT
+    - alim_fruth: FLOAT
+    - alim_azucf: FLOAT
+    - alim_otr: FLOAT
+    - alim_alcht: FLOAT
+    - ropa: FLOAT
+    - viv: FLOAT
+    - mueb: FLOAT
+    - salu: FLOAT
+    - transp: FLOAT
+    - edu: FLOAT
+    - otro: FLOAT
+    - cmae_1: FLOAT
+    - cmae_2: FLOAT
+    - cmae_2_1: FLOAT
+    - scian_1: FLOAT
+    - scian_2: FLOAT
+    - scian_3: FLOAT
+    - ciudad: TEXT
+    - month: INT
+    - year: INT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - fecha
+  - indice
+  - alim_bt
+  - alim
+  - alim_pantc
+  - alim_car
+  - alim_pescm
+  - alim_lech
+  - alim_aceig
+  - alim_fruth
+  - alim_azucf
+  - alim_otr
+  - alim_alcht
+  - ropa
+  - viv
+  - mueb
+  - salu
+  - transp
+  - edu
+  - otro
+  - cmae_1
+  - cmae_2
+  - cmae_2.1
+  - scian_1
+  - scian_2
+  - scian_3
+  - ciudad
+iter_2010:
+  LUIGI:
+    INDEX: mun
+    SCHEMA:
+    - entidad: VARCHAR
+    - nom_ent: VARCHAR
+    - mun: VARCHAR
+    - nom_mun: VARCHAR
+    - loc: VARCHAR
+    - nom_loc: VARCHAR
+    - longitud: DECIMAL
+    - latitud: DECIMAL
+    - altitud: DECIMAL
+    - pobtot: NUMERIC
+    - pobmas: VARCHAR
+    - pobfem: VARCHAR
+    - p_0a2: VARCHAR
+    - p_0a2_m: VARCHAR
+    - p_0a2_f: VARCHAR
+    - p_3ymas: VARCHAR
+    - p_3ymas_m: VARCHAR
+    - p_3ymas_f: VARCHAR
+    - p_5ymas: VARCHAR
+    - p_5ymas_m: VARCHAR
+    - p_5ymas_f: VARCHAR
+    - p_12ymas: VARCHAR
+    - p_12ymas_m: VARCHAR
+    - p_12ymas_f: VARCHAR
+    - p_15ymas: VARCHAR
+    - p_15ymas_m: VARCHAR
+    - p_15ymas_f: VARCHAR
+    - p_18ymas: VARCHAR
+    - p_18ymas_m: VARCHAR
+    - p_18ymas_f: VARCHAR
+    - p_3a5: VARCHAR
+    - p_3a5_m: VARCHAR
+    - p_3a5_f: VARCHAR
+    - p_6a11: VARCHAR
+    - p_6a11_m: VARCHAR
+    - p_6a11_f: VARCHAR
+    - p_8a14: VARCHAR
+    - p_8a14_m: VARCHAR
+    - p_8a14_f: VARCHAR
+    - p_12a14: VARCHAR
+    - p_12a14_m: VARCHAR
+    - p_12a14_f: VARCHAR
+    - p_15a17: VARCHAR
+    - p_15a17_m: VARCHAR
+    - p_15a17_f: VARCHAR
+    - p_18a24: VARCHAR
+    - p_18a24_m: VARCHAR
+    - p_18a24_f: VARCHAR
+    - p_15a49_f: VARCHAR
+    - p_60ymas: VARCHAR
+    - p_60ymas_m: VARCHAR
+    - p_60ymas_f: VARCHAR
+    - rel_h_m: VARCHAR
+    - pob0_14: VARCHAR
+    - pob15_64: VARCHAR
+    - pob65_mas: VARCHAR
+    - prom_hnv: VARCHAR
+    - pnacent: VARCHAR
+    - pnacent_m: VARCHAR
+    - pnacent_f: VARCHAR
+    - pnacoe: VARCHAR
+    - pnacoe_m: VARCHAR
+    - pnacoe_f: VARCHAR
+    - pres2005: VARCHAR
+    - pres2005_m: VARCHAR
+    - pres2005_f: VARCHAR
+    - presoe05: VARCHAR
+    - presoe05_m: VARCHAR
+    - presoe05_f: VARCHAR
+    - p3ym_hli: VARCHAR
+    - p3ym_hli_m: VARCHAR
+    - p3ym_hli_f: VARCHAR
+    - p3hlinhe: VARCHAR
+    - p3hlinhe_m: VARCHAR
+    - p3hlinhe_f: VARCHAR
+    - p3hli_he: VARCHAR
+    - p3hli_he_m: VARCHAR
+    - p3hli_he_f: VARCHAR
+    - p5_hli: VARCHAR
+    - p5_hli_nhe: VARCHAR
+    - p5_hli_he: VARCHAR
+    - phog_ind: VARCHAR
+    - pcon_lim: VARCHAR
+    - pclim_mot: VARCHAR
+    - pclim_vis: VARCHAR
+    - pclim_leng: VARCHAR
+    - pclim_aud: VARCHAR
+    - pclim_mot2: VARCHAR
+    - pclim_men: VARCHAR
+    - pclim_men2: VARCHAR
+    - psin_lim: VARCHAR
+    - p3a5_noa: VARCHAR
+    - p3a5_noa_m: VARCHAR
+    - p3a5_noa_f: VARCHAR
+    - p6a11_noa: VARCHAR
+    - p6a11_noam: VARCHAR
+    - p6a11_noaf: VARCHAR
+    - p12a14noa: VARCHAR
+    - p12a14noam: VARCHAR
+    - p12a14noaf: VARCHAR
+    - p15a17a: VARCHAR
+    - p15a17a_m: VARCHAR
+    - p15a17a_f: VARCHAR
+    - p18a24a: VARCHAR
+    - p18a24a_m: VARCHAR
+    - p18a24a_f: VARCHAR
+    - p8a14an: VARCHAR
+    - p8a14an_m: VARCHAR
+    - p8a14an_f: VARCHAR
+    - p15ym_an: VARCHAR
+    - p15ym_an_m: VARCHAR
+    - p15ym_an_f: VARCHAR
+    - p15ym_se: VARCHAR
+    - p15ym_se_m: VARCHAR
+    - p15ym_se_f: VARCHAR
+    - p15pri_in: VARCHAR
+    - p15pri_inm: VARCHAR
+    - p15pri_inf: VARCHAR
+    - p15pri_co: VARCHAR
+    - p15pri_com: VARCHAR
+    - p15pri_cof: VARCHAR
+    - p15sec_in: VARCHAR
+    - p15sec_inm: VARCHAR
+    - p15sec_inf: VARCHAR
+    - p15sec_co: VARCHAR
+    - p15sec_com: VARCHAR
+    - p15sec_cof: VARCHAR
+    - p18ym_pb: VARCHAR
+    - p18ym_pb_m: VARCHAR
+    - p18ym_pb_f: VARCHAR
+    - graproes: VARCHAR
+    - graproes_m: VARCHAR
+    - graproes_f: VARCHAR
+    - pea: VARCHAR
+    - pea_m: VARCHAR
+    - pea_f: VARCHAR
+    - pe_inac: VARCHAR
+    - pe_inac_m: VARCHAR
+    - pe_inac_f: VARCHAR
+    - pocupada: VARCHAR
+    - pocupada_m: VARCHAR
+    - pocupada_f: VARCHAR
+    - pdesocup: VARCHAR
+    - pdesocup_m: VARCHAR
+    - pdesocup_f: VARCHAR
+    - psinder: VARCHAR
+    - pder_ss: VARCHAR
+    - pder_imss: VARCHAR
+    - pder_iste: VARCHAR
+    - pder_istee: VARCHAR
+    - pder_segp: VARCHAR
+    - p12ym_solt: VARCHAR
+    - p12ym_casa: VARCHAR
+    - p12ym_sepa: VARCHAR
+    - pcatolica: VARCHAR
+    - pncatolica: VARCHAR
+    - potras_rel: VARCHAR
+    - psin_relig: VARCHAR
+    - tothog: VARCHAR
+    - hogjef_m: VARCHAR
+    - hogjef_f: VARCHAR
+    - pobhog: VARCHAR
+    - phogjef_m: VARCHAR
+    - phogjef_f: VARCHAR
+    - vivtot: NUMERIC
+    - tvivhab: NUMERIC
+    - tvivpar: VARCHAR
+    - vivpar_hab: VARCHAR
+    - tvivparhab: VARCHAR
+    - vivpar_des: VARCHAR
+    - vivpar_ut: VARCHAR
+    - ocupvivpar: VARCHAR
+    - prom_ocup: VARCHAR
+    - pro_ocup_c: VARCHAR
+    - vph_pisodt: VARCHAR
+    - vph_pisoti: VARCHAR
+    - vph_1dor: VARCHAR
+    - vph_2ymasd: VARCHAR
+    - vph_1cuart: VARCHAR
+    - vph_2cuart: VARCHAR
+    - vph_3ymasc: VARCHAR
+    - vph_c_elec: VARCHAR
+    - vph_s_elec: VARCHAR
+    - vph_aguadv: VARCHAR
+    - vph_aguafv: VARCHAR
+    - vph_excsa: VARCHAR
+    - vph_drenaj: VARCHAR
+    - vph_nodren: VARCHAR
+    - vph_c_serv: VARCHAR
+    - vph_snbien: VARCHAR
+    - vph_radio: VARCHAR
+    - vph_tv: VARCHAR
+    - vph_refri: VARCHAR
+    - vph_lavad: VARCHAR
+    - vph_autom: VARCHAR
+    - vph_pc: VARCHAR
+    - vph_telef: VARCHAR
+    - vph_cel: VARCHAR
+    - vph_inter: VARCHAR
+    - tam_loc: NUMERIC
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad
+  - nom_ent
+  - mun
+  - nom_mun
+  - loc
+  - nom_loc
+  - longitud
+  - latitud
+  - altitud
+  - pobtot
+  - pobmas
+  - pobfem
+  - p_0a2
+  - p_0a2_m
+  - p_0a2_f
+  - p_3ymas
+  - p_3ymas_m
+  - p_3ymas_f
+  - p_5ymas
+  - p_5ymas_m
+  - p_5ymas_f
+  - p_12ymas
+  - p_12ymas_m
+  - p_12ymas_f
+  - p_15ymas
+  - p_15ymas_m
+  - p_15ymas_f
+  - p_18ymas
+  - p_18ymas_m
+  - p_18ymas_f
+  - p_3a5
+  - p_3a5_m
+  - p_3a5_f
+  - p_6a11
+  - p_6a11_m
+  - p_6a11_f
+  - p_8a14
+  - p_8a14_m
+  - p_8a14_f
+  - p_12a14
+  - p_12a14_m
+  - p_12a14_f
+  - p_15a17
+  - p_15a17_m
+  - p_15a17_f
+  - p_18a24
+  - p_18a24_m
+  - p_18a24_f
+  - p_15a49_f
+  - p_60ymas
+  - p_60ymas_m
+  - p_60ymas_f
+  - rel_h_m
+  - pob0_14
+  - pob15_64
+  - pob65_mas
+  - prom_hnv
+  - pnacent
+  - pnacent_m
+  - pnacent_f
+  - pnacoe
+  - pnacoe_m
+  - pnacoe_f
+  - pres2005
+  - pres2005_m
+  - pres2005_f
+  - presoe05
+  - presoe05_m
+  - presoe05_f
+  - p3ym_hli
+  - p3ym_hli_m
+  - p3ym_hli_f
+  - p3hlinhe
+  - p3hlinhe_m
+  - p3hlinhe_f
+  - p3hli_he
+  - p3hli_he_m
+  - p3hli_he_f
+  - p5_hli
+  - p5_hli_nhe
+  - p5_hli_he
+  - phog_ind
+  - pcon_lim
+  - pclim_mot
+  - pclim_vis
+  - pclim_leng
+  - pclim_aud
+  - pclim_mot2
+  - pclim_men
+  - pclim_men2
+  - psin_lim
+  - p3a5_noa
+  - p3a5_noa_m
+  - p3a5_noa_f
+  - p6a11_noa
+  - p6a11_noam
+  - p6a11_noaf
+  - p12a14noa
+  - p12a14noam
+  - p12a14noaf
+  - p15a17a
+  - p15a17a_m
+  - p15a17a_f
+  - p18a24a
+  - p18a24a_m
+  - p18a24a_f
+  - p8a14an
+  - p8a14an_m
+  - p8a14an_f
+  - p15ym_an
+  - p15ym_an_m
+  - p15ym_an_f
+  - p15ym_se
+  - p15ym_se_m
+  - p15ym_se_f
+  - p15pri_in
+  - p15pri_inm
+  - p15pri_inf
+  - p15pri_co
+  - p15pri_com
+  - p15pri_cof
+  - p15sec_in
+  - p15sec_inm
+  - p15sec_inf
+  - p15sec_co
+  - p15sec_com
+  - p15sec_cof
+  - p18ym_pb
+  - p18ym_pb_m
+  - p18ym_pb_f
+  - graproes
+  - graproes_m
+  - graproes_f
+  - pea
+  - pea_m
+  - pea_f
+  - pe_inac
+  - pe_inac_m
+  - pe_inac_f
+  - pocupada
+  - pocupada_m
+  - pocupada_f
+  - pdesocup
+  - pdesocup_m
+  - pdesocup_f
+  - psinder
+  - pder_ss
+  - pder_imss
+  - pder_iste
+  - pder_istee
+  - pder_segp
+  - p12ym_solt
+  - p12ym_casa
+  - p12ym_sepa
+  - pcatolica
+  - pncatolica
+  - potras_rel
+  - psin_relig
+  - tothog
+  - hogjef_m
+  - hogjef_f
+  - pobhog
+  - phogjef_m
+  - phogjef_f
+  - vivtot
+  - tvivhab
+  - tvivpar
+  - vivpar_hab
+  - tvivparhab
+  - vivpar_des
+  - vivpar_ut
+  - ocupvivpar
+  - prom_ocup
+  - pro_ocup_c
+  - vph_pisodt
+  - vph_pisoti
+  - vph_1dor
+  - vph_2ymasd
+  - vph_1cuart
+  - vph_2cuart
+  - vph_3ymasc
+  - vph_c_elec
+  - vph_s_elec
+  - vph_aguadv
+  - vph_aguafv
+  - vph_excsa
+  - vph_drenaj
+  - vph_nodren
+  - vph_c_serv
+  - vph_snbien
+  - vph_radio
+  - vph_tv
+  - vph_refri
+  - vph_lavad
+  - vph_autom
+  - vph_pc
+  - vph_telef
+  - vph_cel
+  - vph_inter
+  - tam_loc
+mir:
+  LUIGI:
+    INDEX: clave
+    SCHEMA:
+    - dependencia: TEXT
+    - modalidad: TEXT
+    - cve_programa: TEXT
+    - nombre_programa: TEXT
+    - r1_1: boolean
+    - r2_1: boolean
+    - r2_2: boolean
+    - r2_3: boolean
+    - r2_4: boolean
+    - r2_5: boolean
+    - r2_6: boolean
+    - r2_7: boolean
+    - r3_1: boolean
+    - r3_2: boolean
+    - r3_3: boolean
+    - r3_4: boolean
+    - r3_5: boolean
+    - r3_6: boolean
+    - r3_7: boolean
+    - r3_8: boolean
+    - califtotal: FLOAT
+    - califdesing: FLOAT
+    - califindicadores: FLOAT
+    - semaforizacionct: TEXT
+    - semaforizacioncd: TEXT
+    - semaforizacionci: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+  RAW:
+  - dependencia
+  - modalidad
+  - clave
+  - programa
+  - r1.1
+  - r2.1
+  - r2.2
+  - r2.3
+  - r2.4
+  - r2.5
+  - r2.6
+  - r2.7
+  - r3.1
+  - r3.2
+  - r3.3
+  - r3.4
+  - r3.5
+  - r3.6
+  - r3.7
+  - r3.8
+  - calificaciontotalct
+  - calificaciondisenocd
+  - calificacionindicadoresci
+  - semaforizacionct
+  - semaforizacioncd
+  - semaforizacionci
+msd:
+  LUIGI:
+    INDEX: modalidad_pp
+    SCHEMA:
+    - ciclo: TEXT
+    - id_ramo: TEXT
+    - desc_ramo: TEXT
+    - clasf_ramo_desc: TEXT
+    - modalidad_pp: TEXT
+    - desc_pp: TEXT
+    - pef_cuant: TEXT
+    - pef_cual: TEXT
+    - mir_cuant: TEXT
+    - mir_cual: TEXT
+    - eval_cuant: TEXT
+    - eval_cual: TEXT
+    - asm_cuant: TEXT
+    - asm_cual: TEXT
+    - beneficiarios_cuant: TEXT
+    - beneficiarios_cual: TEXT
+    - msd_cuant: TEXT
+    - msd_cual: TEXT
+    - tipo_evaluacion: TEXT
+    - estimacion: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ciclo
+  - id_ramo
+  - desc_ramo
+  - clasf_ramo_desc
+  - modalidad_pp
+  - desc_pp
+  - pef_cuant
+  - pef_cual
+  - mir_cuant
+  - mir_cual
+  - eval_cuant
+  - eval_cual
+  - asm_cuant
+  - asm_cual
+  - beneficiarios_cuant
+  - beneficiarios_cual
+  - msd_cuant
+  - msd_cual
+  - tipo_evaluacion
+  - estimacion
+precios_granos:
+  LUIGI:
+    INDEX: producto
+    SCHEMA:
+    - producto: TEXT
+    - origen: TEXT
+    - mes: INT
+    - anio: INT
+    - central: INT
+    - semana: INT
+    - precio: DOUBLE PRECISION
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - producto
+  - origen
+  - sem_1
+  - sem_2
+  - sem_3
+  - sem_4
+  - sem_5
+  - prom_mes
+  - mes
+  - anio
+  - central
+pub:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - anio: TEXT
+    - cve_ent: VARCHAR(5)
+    - cve_muni: TEXT
+    - cve_programa: VARCHAR(5)
+    - cve_padron: VARCHAR(5)
+    - n_beneficiarios: INT
+    - suma_importe: FLOAT
+    - tipo: TEXT
+    - nivel: TEXT
+    - grupo: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+sagarpa:
+  LUIGI:
+    INDEX: null
+    SCHEMA:
+    - estado
+    - distrito
+    - municipio
+    - sup_sembrada
+    - sup_cosech
+    - sup_siniest
+    - produccion
+    - rendim
+    - mes
+    - anio
+    - moda_hidr
+    - ciclo
+    - cultivo
+    - actualizacion_sedesol
+  RAW:
+  - estado
+  - distrito
+  - municipio
+  - sup_sembrada
+  - sup_cosech
+  - sup_siniest
+  - produccion
+  - rendim
+  - mes
+  - anio
+  - moda_hidr
+  - ciclo
+  - cultivo
+segob:
+  LUIGI:
+    INDEX: null
+    SCHEMA:
+    - desuperficiequerepresentaconrespectoalestado
+    - altitud
+    - cabeceramunicipal
+    - clasificaciondelmunicipioseguntamanodelocalidades
+    - coordenadasgeograficasdelacabeceramunicipal
+    - hombres
+    - latitud
+    - longitud
+    - mujeres
+    - numerodelocalidadesdelmunicipio
+    - poblaciondelacabeceramunicipal
+    - superficiedelmunicipioenkm2
+    - cve_muni
+    - actualizacion_sedesol
+  RAW:
+  - desuperficiequerepresentaconrespectoalestado
+  - altitud
+  - cabeceramunicipal
+  - clasificaciondelmunicipioseguntamanodelocalidades
+  - coordenadasgeograficasdelacabeceramunicipal
+  - hombres
+  - latitud
+  - longitud
+  - mujeres
+  - numerodelocalidadesdelmunicipio
+  - poblaciondelacabeceramunicipal
+  - superficiedelmunicipioenkm2
+  - cve_muni
