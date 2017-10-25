@@ -17,5 +17,10 @@ RUN \
 RUN apt-get update \
     && apt-get install -y libblas-dev liblapack-dev gfortran \
                        libpq-dev postgresql postgresql-contrib
-RUN ["Rscript", "requirements.R"]
 
+RUN Rscript -e 'install.packages("devtools")'\
+    && Rscript -e 'devtools::install_github("RcppCore/Rcpp")'\
+    && Rscript -e 'devtools::install_github("rstats-db/DBI")'\
+    && Rscript -e 'devtools::install_github("rstats-db/RPostgres")'
+
+RUN ["Rscript", "requirements.R"]

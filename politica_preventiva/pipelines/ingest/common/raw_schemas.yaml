@@ -789,3 +789,44 @@ defunciones_generales:
     - lista1: TEXT
     - gr_lismex: TEXT
     - vio_fami: null
+insp:
+  LUIGI:
+    INDEX: clavegenerico
+    SCHEMA:
+    - ano: Integer
+    - mes: Integer
+    - fecha_pub_dof: TEXT
+    - claveciudad: Integer
+    - nombreciudad: TEXT
+    - division: TEXT
+    - grupo: TEXT
+    - clase: TEXT
+    - subclase: TEXT
+    - clavegenerico: Integer
+    - generico: TEXT
+    - consecutivo: Integer
+    - especificacion: TEXT
+    - preciopromedio: FLOAT
+    - cantidad: INT
+    - unidad: TEXT
+    - estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ano
+  - mes
+  - fecha_pub_dof
+  - claveciudad
+  - nombreciudad
+  - division
+  - grupo
+  - clase
+  - subclase
+  - clavegenerico
+  - generico
+  - consecutivo
+  - especificacion
+  - preciopromedio
+  - cantidad
+  - unidad
+  - estatus
