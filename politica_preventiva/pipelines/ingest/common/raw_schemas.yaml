@@ -1054,6 +1054,47 @@ indesol:
     - edo_actividad: TEXT
     - informes: JSONB
     - actualizacion_sedesol: TIMESTAMP
+insp:
+  LUIGI:
+    INDEX: clavegenerico
+    SCHEMA:
+    - ano: Integer
+    - mes: Integer
+    - fecha_pub_dof: TEXT
+    - claveciudad: Integer
+    - nombreciudad: TEXT
+    - division: TEXT
+    - grupo: TEXT
+    - clase: TEXT
+    - subclase: TEXT
+    - clavegenerico: Integer
+    - generico: TEXT
+    - consecutivo: Integer
+    - especificacion: TEXT
+    - preciopromedio: FLOAT
+    - cantidad: TEXT
+    - unidad: TEXT
+    - estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ano
+  - mes
+  - fecha_pub_dof
+  - claveciudad
+  - nombreciudad
+  - division
+  - grupo
+  - clase
+  - subclase
+  - clavegenerico
+  - generico
+  - consecutivo
+  - especificacion
+  - preciopromedio
+  - cantidad
+  - unidad
+  - estatus
 ipc_ciudades:
   LUIGI:
     INDEX: fecha

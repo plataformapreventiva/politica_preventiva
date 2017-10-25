@@ -24,8 +24,8 @@ from politica_preventiva.pipelines.ingest.ingest_orchestra import\
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import\
         parse_cfg_list
-from politica_preventiva.pipelines.semantic.semantic_orchestra import\
-        SemanticPipeline
+#from politica_preventiva.pipelines.semantic.semantic_orchestra import\
+#        SemanticPipeline
 
 # from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
 logging_conf = configuration.get_config().get("core", "logging_conf_file")
@@ -59,8 +59,8 @@ class RunPipelines(luigi.WrapperTask):
 
     def requires(self):
 
-        # return IngestPipeline(current_date=current_date=self.current_date)
-        return ETLPipeline(current_date=self.current_date)
+        return IngestPipeline(current_date=self.current_date)
+        # return ETLPipeline(current_date=self.current_date)
         # return SemanticPipeline(current_date=self.current_date)
         # return ModelPipeline(current_date=self.current_date)
 
