@@ -20,7 +20,7 @@ from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string,\
         download_dir
 
 from politica_preventiva.pipelines.utils.pg_tools import PGWrangler
-from politica_preventiva.tasks.pipeline_task import DockerTask, RTask
+from politica_preventiva.tasks.pipeline_task import DockerTask, PgRTask
 from politica_preventiva.pipelines.ingest.classic.classic_orchestra import UpdateLineage
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
@@ -44,7 +44,7 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 class ETLPipeline(luigi.WrapperTask):
 
     current_date = luigi.DateParameter()
-    pipelines = luigi.Parameter()
+    pipelines = luigi.parameter.ListParameter()
     client = S3Client()
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
@@ -56,8 +56,7 @@ class ETLPipeline(luigi.WrapperTask):
         set_pipelines = [(pipeline_task, final_dates(self.historical,
                                                      pipeline_task,
                                                      self.current_date)) for
-                         pipeline_task in [self.pipelines]]
-
+                         pipeline_task in self.pipelines]
         return [UpdateTidyDB(current_date=self.current_date,
                              pipeline_task=pipeline[0],
                              data_date=dates,
@@ -65,7 +64,7 @@ class ETLPipeline(luigi.WrapperTask):
                 for pipeline in set_pipelines for dates in pipeline[1][0]]
 
 
-class UpdateTidyDB(RTask):
+class UpdateTidyDB(PgRTask):
     """
     This Task runs the tidy script in tidy folder for
     the pipeline_task, if it doesn't exists then it runs
