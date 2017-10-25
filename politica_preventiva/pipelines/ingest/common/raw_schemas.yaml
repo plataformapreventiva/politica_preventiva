@@ -807,7 +807,7 @@ insp:
     - consecutivo: Integer
     - especificacion: TEXT
     - preciopromedio: FLOAT
-    - cantidad: INT
+    - cantidad: TEXT
     - unidad: TEXT
     - estatus: TEXT
     - actualizacion_sedesol: TIMESTAMP
