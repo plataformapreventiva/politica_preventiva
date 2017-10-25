@@ -60,8 +60,8 @@ class RunPipelines(luigi.WrapperTask):
     def requires(self):
 
         # return IngestPipeline(current_date=current_date=self.current_date)
-        # return ETLPipeline(current_date=self.current_date)
-        return SemanticPipeline(current_date=self.current_date)
+        return ETLPipeline(current_date=self.current_date)
+        # return SemanticPipeline(current_date=self.current_date)
         # return ModelPipeline(current_date=self.current_date)
 
 
