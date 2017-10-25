@@ -53,5 +53,6 @@ tail -n +6 $local_path/aux.txt > $local_path/aux2.txt
 csvformat -e 'latin1' -D '|' $local_path/aux2.txt > $local_path/aux3.txt
 ex -sc '%s/|"|/|/g|x' $local_path/aux3.txt
 ex -sc '%s/"//g|x' $local_path/aux3.txt
+ex -sc '%s/|"|/|/g|x' $local_path/aux3.txt
 cat $local_path/aux3.txt > $local_ingest_file
 rm $local_path/aux.txt; rm $local_path/aux2.txt; rm $local_path/aux3.txt
