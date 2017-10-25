@@ -44,13 +44,14 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 class ETLPipeline(luigi.WrapperTask):
 
     current_date = luigi.DateParameter()
-    pipelines = luigi.Parameter()
+    pipelines = luigi.parameter.ListParameter()
     client = S3Client()
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     historical = luigi.Parameter('DEFAULT')
 
     def requires(self):
+        pdb.set_trace()
         logger.info('Running the following pipelines: {0}'.format(self.pipelines))
         # loop through pipeline tasks and data dates
         set_pipelines = [(pipeline_task, final_dates(self.historical,
