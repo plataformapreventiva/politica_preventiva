@@ -25,10 +25,10 @@ with open("pipelines/ingest/common/emr-config.yaml", "r") as file:
     config = yaml.load(file)
 config_emr = config.get("emr")
 
-class RTask(luigi.Task):
+class PgRTask(luigi.Task):
 
     """
-    Task Abstraction to Dockerize tasks
+    Task Abstraction to Dockerize Postgres R tasks
 
     Note:
 
@@ -38,10 +38,13 @@ class RTask(luigi.Task):
         bash **/**.sh
 
     """
+    cmd = ''
+
+    @property
+    def autocommit(self):
+        return False
 
     def run(self):
-        logger.info('Luigi is using the dockerized version of the task' +
-                    ' {0}'.format(self.pipeline_task))
 
         cmd_docker = '''
             docker run -it --rm  -v $PWD:/politica_preventiva\
@@ -50,6 +53,15 @@ class RTask(luigi.Task):
          '''.format(self.cmd)
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
+
+        # Update marker table
+        connection = self.output().connect()
+        connection.autocommit = self.autocommit
+        self.output().touch(connection)
+        # commit and close connection
+        connection.commit()
+        connection.close()
+
 
 
 class DockerTask(luigi.Task):

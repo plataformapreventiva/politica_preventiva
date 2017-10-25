@@ -332,7 +332,7 @@ coneval_estados:
   - int_vulcar
   - int_caren
   - ict
-coneval_municipios_2010:
+coneval_municipios:
   LUIGI:
     INDEX: ent
     SCHEMA:
