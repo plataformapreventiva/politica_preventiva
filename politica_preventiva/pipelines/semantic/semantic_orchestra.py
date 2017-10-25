@@ -19,7 +19,7 @@ from luigi.contrib.postgres import PostgresTarget, PostgresQuery
 
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string,\
         download_dir
-from politica_preventiva.tasks.pipeline_task import DockerTask, RTask
+from politica_preventiva.tasks.pipeline_task import DockerTask
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
