@@ -542,3 +542,18 @@ class declaratoria(TDockerTask):
 
         return " ".join(command_list)
 
+class insp(TDockerTask):
+
+    @property
+    def cmd(self):
+
+        year = self.data_date[0:4]
+        month = self.data_date[5:8]
+        month = month.zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'insp.sh', year, month,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
+

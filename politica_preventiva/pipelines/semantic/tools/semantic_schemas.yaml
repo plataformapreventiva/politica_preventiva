@@ -1,6 +1,6 @@
 coneval:
 - coneval_estados
-- coneval_municipios_2010
+- coneval_municipios
 cuenta_publica:
 - cuenta_publica_anual
 - cuenta_publica_trimestral
