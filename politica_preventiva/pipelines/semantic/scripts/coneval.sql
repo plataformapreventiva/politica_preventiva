@@ -14,11 +14,11 @@ all_coneval AS (
 	SELECT cve_ent AS clave,
 	   variable,
 	   tipo,
-	   'estatal' as nivel,
+	   'estatal' AS nivel,
 	   valor,
 	   pob_tot,
 	   data_date,
-	   substring(data_date, 1,4)::int,
+	   substring(data_date, 1,4)::int AS anio,
 	   actualizacion_sedesol
 	FROM tidy.coneval_estados
 	UNION
@@ -26,7 +26,7 @@ all_coneval AS (
 	   	cve_muni AS clave,
 	   	variable,
 	   	tipo,
-		'municipal' as nivel,
+		'municipal' AS nivel,
 	   	valor,
 	   	pob_tot,
 	   	data_date,
