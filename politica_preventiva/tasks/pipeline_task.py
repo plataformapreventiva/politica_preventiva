@@ -49,7 +49,7 @@ class PgRTask(luigi.Task):
         cmd_docker = '''
             docker run -it --rm  -v $PWD:/politica_preventiva\
             -v politica_preventiva_store:/data\
-            politica_preventiva/task/r-task {0}
+            politica_preventiva/task/r-task {0} > /dev/null
          '''.format(self.cmd)
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
