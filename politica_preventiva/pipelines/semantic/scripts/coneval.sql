@@ -5,24 +5,33 @@
 
 drop table if exists semantic.coneval cascade;
 
-create table semantic.coneval as (
-    select cve_ent,
-	   '' as cve_muni,
+CREATE TABLE semantic.coneval AS (
+  WITH dicc AS (
+	SELECT id, nombre, fuente
+	FROM raw.coneval_estados_dic
+	GROUP BY 1,2,3),
+  all_coneval AS (
+	SELECT cve_ent,
+	   '' AS cve_muni,
 	   variable,
 	   tipo,
 	   valor,
 	   pob_tot,
 	   data_date,
 	   actualizacion_sedesol
-    from tidy.coneval_estados
-    union
-    select ent as cve_ent,
-	   cve_muni,
-	   variable,
-	   tipo,
-	   valor,
-	   pob_tot,
-	   data_date,
-	   actualizacion_sedesol
-    from tidy.coneval_municipios
+	FROM tidy.coneval_estados
+	UNION
+	SELECT ent AS cve_ent,
+	   	cve_muni,
+	   	variable,
+	   	tipo,
+	   	valor,
+	   	pob_tot,
+	   	data_date,
+	   	actualizacion_sedesol
+	FROM tidy.coneval_municipios)
+SELECT * 
+FROM all_coneval
+LEFT JOIN dicc
+ON dicc.id = all_coneval.variable
 );
