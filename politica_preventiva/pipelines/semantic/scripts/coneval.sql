@@ -26,14 +26,18 @@ all_coneval AS (
 	   	cve_muni AS clave,
 	   	variable,
 	   	tipo,
-		'municipal' AS nivel,
+	   	'municipal' AS nivel,
 	   	valor,
 	   	pob_tot,
 	   	data_date,
-	   	substring(data_date, 1,4)::int,
+	   	substring(data_date, 1,4)::int AS anio,
 	   	actualizacion_sedesol
 	FROM tidy.coneval_municipios)
-SELECT * 
+SELECT *, 
+	CASE WHEN nivel = 'estatal' 
+		THEN 'Estimaciones del CONEVAL con base en ENIGH ' || anio
+	ELSE 'Censo de Población y Vivienda 2010, INEGI'
+	END AS metadata
 FROM all_coneval
 LEFT JOIN dicc
 ON dicc.id = all_coneval.variable
