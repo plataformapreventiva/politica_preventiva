@@ -11,11 +11,10 @@ WITH dicc AS (
 	FROM raw.coneval_estados_dic
 	GROUP BY 1,2,3),
 all_coneval AS (
-	SELECT cve_ent,
-	   '' AS cve_muni,
+	SELECT cve_ent AS clave,
 	   variable,
 	   tipo,
-	   'estatal' AS nivel,
+	   'estatal' as nivel,
 	   valor,
 	   pob_tot,
 	   data_date,
@@ -23,11 +22,11 @@ all_coneval AS (
 	   actualizacion_sedesol
 	FROM tidy.coneval_estados
 	UNION
-	SELECT ent AS cve_ent,
-	   	cve_muni,
+	SELECT 
+	   	cve_muni AS clave,
 	   	variable,
 	   	tipo,
-	   	'municipal' AS nivel,
+		'municipal' as nivel,
 	   	valor,
 	   	pob_tot,
 	   	data_date,
