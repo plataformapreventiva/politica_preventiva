@@ -173,7 +173,6 @@ class UpdateLineage(luigi.Task):
         nodes = nodes[nodes.id != 'actualizacion_sedesol']
         nodes = nodes[nodes.id != 'data_date']
         logging.info("Connecting to Neo4j DB {0} ")
-
         try:
             graph = Graph("http://localhost:7474/db/data/")
         except Exception as e:
@@ -190,7 +189,6 @@ class UpdateLineage(luigi.Task):
             graph.schema.create_uniqueness_constraint('Year', 'year')
         except:
             pass
-
         # Define Nodes
         table = Node('Table', value=self.pipeline_task)
         years = self.data_date.split('-')[0]
@@ -210,21 +208,24 @@ class UpdateLineage(luigi.Task):
             graph.merge(relation)
 
             for index, row in nodes.iterrows():
+                try:
+                    # Create column relations
+                    column = Node('Column', nombre_clave=row['id'], nombre=row['nombre'])
+                    graph.merge(column)
+                    from_table = Relationship(column, 'from_table', table,
+                                            pipeline=self.pipeline_task)
+                    graph.merge(from_table)
 
-                # Create column relations
-                column = Node('Column', nombre_clave=row['id'], nombre=row['nombre'])
-                graph.merge(column)
-                from_table = Relationship(column, 'from_table', table,
-                                        pipeline=self.pipeline_task)
-                graph.merge(from_table)
-
-                if row['tipo'] != '':
-                    tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
-                    relation = Relationship(column, 'with_tag', tag)
-                    graph.merge(relation)
-                else:
+                    if row['tipo'] != '':
+                        try:
+                            tag = Node('Tag', tipo=row['tipo'], subtipo=row['subtipo'])
+                            relation = Relationship(column, 'with_tag', tag)
+                            graph.merge(relation)
+                        except:
+                            pdb.set_trace()
+                except:
                     pass
-
+                    # logger.debug('Your variabel ´ç'.format(row['tipo']))
             # Save current date
             current_date = row['actualizacion_sedesol']
 
@@ -239,6 +240,7 @@ class UpdateLineage(luigi.Task):
 
         except:
             pass
+
     def output(self):
         done = self.common_path + 'neo4j/' + self.pipeline_task+\
                 self.data_date +'-'+self.suffix + '.done'
@@ -639,11 +641,12 @@ class AddEmrStep(EmrTask):
         self.client.put(ingest_script, ingest_script_output)
 
         # Check that cluster is running
-        return InitializeCluster(self.current_date) 
+        id_name = self.pipeline_task + '_' + self.data_date
+        return InitializeCluster(id_name=id_name)
 
     def run(self):
         # TODO() Replae cluster id query to a general.
-        F = open(self.input().path,'r') 
+        F = open(self.input().path,'r')
         ClusterId = F.read().replace('\n','')
         self.emr_loader.add_pipeline_step(ClusterId, self.pipeline_task,
                                      'dpa-plataforma-preventiva/utils/spark',
