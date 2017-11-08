@@ -38,7 +38,6 @@ class PgRTask(luigi.Task):
         bash **/**.sh
 
     """
-    cmd = ''
 
     @property
     def autocommit(self):

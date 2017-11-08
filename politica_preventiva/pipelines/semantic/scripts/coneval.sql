@@ -27,7 +27,7 @@ all_coneval AS (
 	   	variable,
 	   	tipo,
 	   	'municipal' AS nivel,
-	   	valor,
+	   	case when tipo = 'porcentaje' then valor/100 else valor end as valor,
 	   	pob_tot,
 	   	data_date,
 	   	substring(data_date, 1,4)::int AS anio,
