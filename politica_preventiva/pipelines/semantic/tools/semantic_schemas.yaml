@@ -4,3 +4,5 @@ coneval:
 cuenta_publica:
 - cuenta_publica_anual
 - cuenta_publica_trimestral
+pub_agregados:
+- pub
