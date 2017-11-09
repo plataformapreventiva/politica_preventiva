@@ -85,7 +85,6 @@ class TDockerTask(SourceIngestTask):
                 -v politica_preventiva_store:/data\
            politica_preventiva/task/docker-task {0} > /dev/null
          '''.format(self.cmd)
-
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
 
@@ -546,10 +545,8 @@ class insp(TDockerTask):
 
     @property
     def cmd(self):
-
-        year = self.data_date[0:4]
-        month = self.data_date[5:8]
-        month = month.zfill(2)
+        year = self.data_date.split("-")[0]
+        month = self.data_date.split("-")[1].zfill(2)
         command_list = ['sh', self.classic_task_scripts +
                         'insp.sh', year, month,
                         self.local_path +
@@ -557,3 +554,36 @@ class insp(TDockerTask):
 
         return " ".join(command_list)
 
+class comedores(TDockerTask):
+    @property
+    def cmd(self):
+        # year = self.data_date.split("-")[0]
+        # month = self.data_date.split("-")[1].zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'comedores.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)
+
+
+class estancias(TDockerTask):
+    @property
+    def cmd(self):
+        # year = self.data_date.split("-")[0]
+        # month = self.data_date.split("-")[1].zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'estancias.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)
+
+class lecherias(TDockerTask):
+    @property
+    def cmd(self):
+        # year = self.data_date.split("-")[0]
+        # month = self.data_date.split("-")[1].zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'lecherias.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)

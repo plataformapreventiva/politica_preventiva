@@ -215,6 +215,151 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+comedores:
+  LUIGI:
+    INDEX: id_com
+    SCHEMA:
+    - x: FLOAT
+    - y: FLOAT
+    - cve_ent: Integer
+    - nom_ent: TEXT
+    - nom_reg: TEXT
+    - cve_munc: Integer
+    - nom_mun: TEXT
+    - cve_locc: Integer
+    - nom_loc: TEXT
+    - nom_com: TEXT
+    - dir_com: TEXT
+    - cve_ageb: TEXT
+    - zap: TEXT
+    - id_com: TEXT
+    - estrategia: TEXT
+    - fec_solcom: TEXT
+    - fec_inscom: TEXT
+    - fec_capcoc: TEXT
+    - fec_iniope: TEXT
+    - mod_capa: TEXT
+    - tipo_cocin: TEXT
+    - cuot_recup: FLOAT
+    - dias_servi: Integer
+    - vocal_sexo: TEXT
+    - vocal_nom: TEXT
+    - vocal_dom: TEXT
+    - vocal_tel: TEXT
+    - pp_tot: Integer
+    - pp_muj: Integer
+    - pp_hom: Integer
+    - ninas_0_11: Integer
+    - ninos_0_11: Integer
+    - est_m12_19: Integer
+    - est_h12_19: Integer
+    - muj_emb: Integer
+    - muj_lac: Integer
+    - muj_60ymas: Integer
+    - hom_60ymas: Integer
+    - muj_disc: Integer
+    - hom_disc: Integer
+    - muj_migra: Integer
+    - hom_migra: Integer
+    - muj_sinemp: Integer
+    - hom_sinemp: Integer
+    - muj_coneme: INT
+    - hom_coneme: INT
+    - muj_cocvol: Integer
+    - hom_cocvol: Integer
+    - tot_cocvol: Integer
+    - cr_nom: TEXT
+    - cr_sexo: TEXT
+    - cr_edad: TEXT
+    - cr_domicil: TEXT
+    - cr_tel: TEXT
+    - cm_nom: TEXT
+    - cm_sexo: TEXT
+    - cm_edad: TEXT
+    - cm_domicil: TEXT
+    - cm_tel: TEXT
+    - prom_nom: TEXT
+    - prom_sexo: TEXT
+    - prom_edad: TEXT
+    - prom_domic: TEXT
+    - prom_tel: TEXT
+    - latitud: FLOAT
+    - longitud: FLOAT
+    - x_coord: FLOAT
+    - y_coord: FLOAT
+    - status: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - x
+  - y
+  - cve_ent
+  - nom_ent
+  - nom_reg
+  - cve_munc
+  - nom_mun
+  - cve_locc
+  - nom_loc
+  - nom_com
+  - dir_com
+  - cve_ageb
+  - zap
+  - id_com
+  - estrategia
+  - fec_solcom
+  - fec_inscom
+  - fec_capcoc
+  - fec_iniope
+  - mod_capa
+  - tipo_cocin
+  - cuot_recup
+  - dias_servi
+  - vocal_sexo
+  - vocal_nom
+  - vocal_dom
+  - vocal_tel
+  - pp_tot
+  - pp_muj
+  - pp_hom
+  - ninas_0_11
+  - ninos_0_11
+  - est_m12_19
+  - est_h12_19
+  - muj_emb
+  - muj_lac
+  - muj_60ymas
+  - hom_60ymas
+  - muj_disc
+  - hom_disc
+  - muj_migra
+  - hom_migra
+  - muj_sinemp
+  - hom_sinemp
+  - muj_coneme
+  - hom_coneme
+  - muj_cocvol
+  - hom_cocvol
+  - tot_cocvol
+  - cr_nom
+  - cr_sexo
+  - cr_edad
+  - cr_domicil
+  - cr_tel
+  - cm_nom
+  - cm_sexo
+  - cm_edad
+  - cm_domicil
+  - cm_tel
+  - prom_nom
+  - prom_sexo
+  - prom_edad
+  - prom_domic
+  - prom_tel
+  - latitud
+  - longitud
+  - x_coord
+  - y_coord
+  - status
 coneval_estados:
   LUIGI:
     INDEX: folioviv
@@ -946,6 +1091,63 @@ donatarias_sat:
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
     - actualizacion_sedesol: TIMESTAMP
+estancias:
+  LUIGI:
+    INDEX: id_est
+    SCHEMA:
+    - x: FLOAT
+    - y: FLOAT
+    - id_est: Integer
+    - cve_ent: Integer
+    - cve_munc: Integer
+    - cve_locc: Integer
+    - nom_ent: TEXT
+    - nom_mun: TEXT
+    - nom_loc: TEXT
+    - nom_est: TEXT
+    - nom_resp: TEXT
+    - dir: TEXT
+    - col: TEXT
+    - cp: Integer
+    - calle1: TEXT
+    - calle2: TEXT
+    - calle3: TEXT
+    - cap_est: Integer
+    - ninos_ap: Integer
+    - ninas_ap: Integer
+    - nninos: Integer
+    - madres: Integer
+    - padres: Integer
+    - status: TEXT
+    - geo: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - x
+  - y
+  - id_est
+  - cve_ent
+  - cve_munc
+  - cve_locc
+  - nom_ent
+  - nom_mun
+  - nom_loc
+  - nom_est
+  - nom_resp
+  - dir
+  - col
+  - cp
+  - calle1
+  - calle2
+  - calle3
+  - cap_est
+  - ninos_ap
+  - ninas_ap
+  - nninos
+  - madres
+  - padres
+  - status
+  - geo
 evals:
   LUIGI:
     INDEX: modalidad_pp
@@ -1564,6 +1766,129 @@ iter_2010:
   - vph_cel
   - vph_inter
   - tam_loc
+lecherias:
+  LUIGI:
+    INDEX: cve_locc
+    SCHEMA:
+    - x: FLOAT
+    - y: FLOAT
+    - cve_leche: BIGINT
+    - cve_ent: Integer
+    - cve_munc: Integer
+    - cve_locc: Integer
+    - nom_ent: TEXT
+    - abre_ent: TEXT
+    - nom_mun: TEXT
+    - nom_loc: TEXT
+    - locurb: TEXT
+    - pas: TEXT
+    - calle: TEXT
+    - colonia: TEXT
+    - refncia: TEXT
+    - familias: Integer
+    - beneficiar: Integer
+    - nin0a12: Integer
+    - gestlac: Integer
+    - enfcrodis: Integer
+    - adul60_: Integer
+    - ben13a15: Integer
+    - muj45a59: Integer
+    - ml_tventa: Integer
+    - inioper: Date
+    - leche: TEXT
+    - ncontr: Integer
+    - contrato: TEXT
+    - nloca: Integer
+    - local: TEXT
+    - turno: TEXT
+    - tmatini: TEXT
+    - tmatfin: TEXT
+    - tvesini: TEXT
+    - tvesfin: TEXT
+    - litros: Integer
+    - ml_tlech: Integer
+    - tipo: TEXT
+    - habitantes: Integer
+    - mujeres: Integer
+    - hombres: Integer
+    - ageb: Integer
+    - cpostal: Integer
+    - promotor: TEXT
+    - superviso: TEXT
+    - concesio: TEXT
+    - dnruta: TEXT
+    - dsecuencia: Integer
+    - dkms: FLOAT
+    - dtiempo: Integer
+    - dsubsidia: Integer
+    - dfrisia: Integer
+    - dinstitu: Integer
+    - dsemides: Integer
+    - dfresa: Integer
+    - dvainilla: Integer
+    - dchocolate: Integer
+    - ltsbenmes: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - x
+  - y
+  - cve_leche
+  - cve_ent
+  - cve_munc
+  - cve_locc
+  - nom_ent
+  - abre_ent
+  - nom_mun
+  - nom_loc
+  - locurb
+  - pas
+  - calle
+  - colonia
+  - refncia
+  - familias
+  - beneficiar
+  - nin0a12
+  - gestlac
+  - enfcrodis
+  - adul60_
+  - ben13a15
+  - muj45a59
+  - ml_tventa
+  - inioper
+  - leche
+  - ncontr
+  - contrato
+  - nloca
+  - local
+  - turno
+  - tmatini
+  - tmatfin
+  - tvesini
+  - tvesfin
+  - litros
+  - ml_tlech
+  - tipo
+  - habitantes
+  - mujeres
+  - hombres
+  - ageb
+  - cpostal
+  - promotor
+  - superviso
+  - concesio
+  - dnruta
+  - dsecuencia
+  - dkms
+  - dtiempo
+  - dsubsidia
+  - dfrisia
+  - dinstitu
+  - dsemides
+  - dfresa
+  - dvainilla
+  - dchocolate
+  - ltsbenmes
 mir:
   LUIGI:
     INDEX: clave
