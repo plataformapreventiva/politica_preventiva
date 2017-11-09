@@ -79,7 +79,7 @@ if(length(opt) > 1){
     group_by(cve_ent, data_date, variable, actualizacion_sedesol) %>%
     summarise(nominal = sum(factor*valor))
 
-  pob <- coneval_larga %>%
+  pob <- coneval_ent %>%
     select(cve_ent,data_date,factor) %>%
     group_by(cve_ent,data_date) %>%
     summarise(pob_tot = sum(factor))
