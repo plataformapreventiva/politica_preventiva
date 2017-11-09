@@ -13,9 +13,7 @@ from pyspark.sql.functions import to_date, lit
 from functools import reduce
 from itertools import product
 
-os.environ["SPARK_HOME"] = "/usr/local/Cellar/apache-spark/1.5.1/"
 os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
-
 
 def trim(string):
     try:
@@ -165,13 +163,6 @@ if __name__ == "__main__":
     exito = []
     for agg_dict in niveles_dicts:
         print(agg_dict)
-        exito.append(pub_agrupaciones(spark, df, output_path, year, agg_dict))
-
-    # if(all(exito)):
-    #    f = open("exitoso.txt","w+")
-    #    f.write("exito")
-    #    s3 = boto3.resource('s3')
-    #    s3.Object(output_path, 'exitoso.txt').put(Body=open('exitoso.txt', 'rb'))
         for tipo in tipos:
           print('\t' + tipo)
           exito.append(pub_agrupaciones(spark, output_path, agg_dict, tipo))

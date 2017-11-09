@@ -38,7 +38,6 @@ class PgRTask(luigi.Task):
         bash **/**.sh
 
     """
-    cmd = ''
 
     @property
     def autocommit(self):
@@ -117,10 +116,10 @@ class EmrTask(luigi.Task):
     emr_client = emr_loader.boto_client("emr")
 
 class AddStep(EmrTask):
-    current_date = luigi.DateParameter()
+    id_name = luigi.Parameter()
 
     def requires(self):
-        return InitializeCluster(self.current_date)
+        return InitializeCluster(self.id_name)
 
 class InitializeCluster(EmrTask):
     """
@@ -129,14 +128,14 @@ class InitializeCluster(EmrTask):
     created. The Task will fail if the cluster cannot be initialized.
     """
 
-    current_date = luigi.DateParameter()
     common_path = luigi.Parameter('DEFAULT')
+    id_name = luigi.Parameter()
 
     def run(self):
         """
         Create the EMR cluster
         """
-        cluster_id = self.common_path + "emr_id.txt" 
+        cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt" 
         # Launch Cluster
         self.emr_loader.launch_cluster()
         # Create Client
@@ -146,6 +145,6 @@ class InitializeCluster(EmrTask):
         file.close()
 
     def output(self):
-        cluster_id = self.common_path + "emr_id.txt"
+        cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt"
         return luigi.LocalTarget(cluster_id)
 
