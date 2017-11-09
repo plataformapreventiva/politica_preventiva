@@ -166,7 +166,7 @@ class EMRLoader(object):
                     'ActionOnFailure': 'CANCEL_AND_WAIT',
                     'HadoopJarStep': {
                         'Jar': 'command-runner.jar',
-                        'Args': ['sudo','pip','install','boto3']
+                        'Args': ['sudo','pip','install','boto3','pandas']
                     }
                 },
                 #{
@@ -183,16 +183,16 @@ class EMRLoader(object):
                     'ActionOnFailure': 'CANCEL_AND_WAIT',
                     'HadoopJarStep': {
                         'Jar': 'command-runner.jar',
-                        'Args': ['spark-submit', '--conf',
-                                 'spark.memory.fraction=0.8',
-                                 '--conf', 'spark.executor.instances=9',
+                        'Args': ['spark-submit', 
+                                 '--conf', 'spark.executor.instances=6', 
+                                 '--conf', 'spark.memory.fraction=0.8',
+                                 '--conf', 'spark.memory.storageFraction=0.3',
                                  '--conf', 'spark.yarn.executor.memoryOverhead=1024',
-                                 '--conf', 'spark.yarn.driver.memoryOverhead=1024',
-                                 '--conf', 'spark.executor.memory=3g',
-                                 '--conf', 'spark.driver.memory=3g',
-                                 '--conf', 'spark.driver.cores=4',
-                                 '--conf', 'spark.executor.cores=4',
-                                 '--conf', 'spark.default.parallelism=72',
+                                 '--conf', 'spark.yarn.driver.memoryOverhead=512',
+                                 '--conf', 'spark.executor.memory=9g',
+                                 '--conf', 'spark.driver.memory=2g',
+                                 '--conf', 'spark.driver.cores=1',
+                                 '--conf', 'spark.executor.cores=7',
                                  '--conf', 'spark.yarn.appMasterEnv.PYSPARK_PYTHON=python3',
                                  '--conf', 'spark.executorEnv.PYSPARK_PYTHON=python3',
                                  '/home/hadoop/' + script_name, 
@@ -202,14 +202,14 @@ class EMRLoader(object):
             ])
 
     def shutdown_emr_cluster(self, job_flow_id):
-        self.self.boto_client("emr").terminate_job_flow(job_flow_id)
+        self.boto_client("emr").terminate_job_flow(job_flow_id)
         return self._poll_until_cluster_shutdown(job_flow_id)
 
     def get_job_flow_id(self):
         """
         Get the id of the clusters WAITING for work
         """
-        self.self.boto_client("emr").list_clusters(cluster_states=['WAITING']).clusters[0].id
+        self.boto_client("emr").list_clusters(cluster_states=['WAITING']).clusters[0].id
 
 
     def _poll_until_cluster_ready(self, job_flow_id):

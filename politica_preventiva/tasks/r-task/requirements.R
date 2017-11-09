@@ -1,4 +1,3 @@
-
 # Install 
 
 ipak <- function(pkg){
@@ -9,10 +8,6 @@ ipak <- function(pkg){
 }
 
 
-packages <- c('optparse','RPostgreSQL', 'tidyverse', 'dbplyr', 'dplyr', 'stringr', 'lubridate', 'devtools')
+packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'lubridate')
 
 ipak(packages)
-
-devtools::install_github("RcppCore/Rcpp")
-devtools::install_github("rstats-db/DBI")
-devtools::install_github("rstats-db/RPostgres")
