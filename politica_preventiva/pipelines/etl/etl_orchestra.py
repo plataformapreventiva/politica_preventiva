@@ -169,7 +169,8 @@ class UpdateCleanDB(postgres.PostgresQuery):
         except:
             query = """DROP TABLE IF EXISTS {0};
             CREATE TABLE {0} AS (SELECT * FROM
-            raw.{1};""".format(self.table, self.pipeline_task)
+                                 raw.{1});""".format(self.table,
+                                                     self.pipeline_task)
         return query
 
     def requires(self):
