@@ -1,0 +1,72 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+x||SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+y||SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+cve_ent|CLAVE DE LA ENTIDAD FEDERATIVA|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+nom_ent|NOMBRE DE LA ENTIDAD FEDERATIVA|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+nom_reg|NOMBRE DE REGIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+cve_munc|CLAVE DEL MUNICIPIO |SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+nom_mun|NOMBRE DEL MUNICIPIO|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+cve_locc|CLAVE DE LA LOCALIDAD|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+nom_loc|NOMBRE DE LA LOCALIDAD|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+nom_com|NOMBRE DISTINTIVO DEL COMEDOR|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+dir_com|DIRECCIÓN DEL COMEDOR (CALLE Y NÚMERO, COLONIA-BARRIO-COMUNIDAD)|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+cve_ageb|CLAVE AGEB (4 DÍGITOS)|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+zap|ZAP SÍ/NO|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+id_com|FOLIO DEL COMEDOR (ESTADO-CONSECUTIVO) (EE--CCCC)|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+estrategia|ESTRATEGIA|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+fec_solcom|FECHA DE SOLICITUD DEL COMEDOR|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+fec_inscom|FECHA DE INSTALACIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+fec_capcoc|FECHA DE CAPACITACIÓN DE COCINERAS|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+fec_iniope|FECHA DE INICIO DE OPERACIÓN |SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+mod_capa|MODELO DE CAPACITACIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+tipo_cocin|TIPO DE COCINA|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+cuot_recup|CUOTA DE RECUPERACIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+dias_servi|NÚMERO DE DÍAS DE SERVICIO A LA SEMANA|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+vocal_sexo|SEXO DEL VOCAL DE LA COMISIÓN DE ALIMENTACIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+vocal_nom|NOMBRE DEL VOCAL DE LA COMISIÓN DE ALIMENTACIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+vocal_dom|DOMICILIO DEL VOCAL DE LA COMISIÓN DE ALIMENTACIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+vocal_tel|TELÉFONO (10 DÍGITOS) DEL VOCAL DE LA COMISIÓN DE ALIMENTACIÓN |SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+pp_tot|TOTAL DE PERSONAS CON PRIORIDAD DE ATENCIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+pp_muj|MUJERES CON PRIORIDAD DE ATENCIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+pp_hom|HOMBRES CON PRIORIDAD DE ATENCIÓN|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+ninas_0_11|NIÑAS DE 0 A 11 AÑOS|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+ninos_0_11|NIÑOS DE 0 A 11 AÑOS|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+est_m12_19|MUJERES ESTUDIANTES ADOLESCENTES DE 12 A 19 AÑOS |SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+est_h12_19|HOMBRES ESTUDIANTES ADOLESCENTES DE 12 A 19 AÑOS |SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+muj_emb|MUJERES EMBARAZADAS|SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+muj_lac|MUJERES LACTANDO |SEDESOL - Programa de Comedores Comunitarios|https://www.gob.mx/sedesol/acciones-y-programas/comedores-comunitarios||||2017-11-07 12:07:26.472054||2017-6-m
+muj_60ymas|MUJERES ADULTAS MAYORES DE 60 AÑOS Y MÁS|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+hom_60ymas|HOMBRES ADULTOS MAYORES DE 60 AÑOS Y MÁS|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+muj_disc|MUJERES DISCAPACITADAS|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+hom_disc|HOMBRES DISCAPACITADOS|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+muj_migra|MUJERES MIGRANTES|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+hom_migra|HOMBRES MIGRANTES|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+muj_sinemp|MUJERES SIN EMPLEO/INGRESOS|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+hom_sinemp|HOMBRES SIN EMPLEO/INGRESOS|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+muj_coneme|MUJERES EN CONTINGENCIA O EMERGENCIA|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+hom_coneme|HOMBRES EN CONTINGENCIA O EMERGENCIA|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+muj_cocvol|MUJERES COCINERAS/VOLUNTARIAS|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+hom_cocvol|HOMBRES COCINEROS/VOLUNTARIOS|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+tot_cocvol|TOTAL DE COCINERAS (OS)/VOLUNTARIAS (OS)|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cr_nom|NOMBRE DEL COORDINADOR REGIONAL |SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cr_sexo|SEXO DEL COORDINADOR REGIONAL|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cr_edad|EDAD DEL COORDINADOR REGIONAL|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cr_domicil|DOMICILIO DEL COORDINADOR REGIONAL|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cr_tel|TELÉFONO DEL COORDINADOR REGIONAL (10 DÍGITOS)|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cm_nom|NOMBRE DEL COORDINADOR  MUNICIPAL|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cm_sexo|SEXO DEL COORDINADOR  MUNICIPAL|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cm_edad|EDAD DEL COORDINADOR  MUNICIPAL|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cm_domicil|DOMICILIO DEL COORDINADOR  MUNICIPAL|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+cm_tel|TELÉFONO DEL COORDINADOR  MUNICIPAL (10 DÍGITOS)|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+prom_nom|NOMBRE DEL PROMOTOR|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+prom_sexo|SEXO DEL PROMOTOR|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+prom_edad|EDAD DEL PROMOTOR|SEDESOL - Programa de Comedores Comunitarios|||||2017-11-07 12:07:26.472054||2017-6-m
+prom_domic|DOMICILIO DEL PROMOTOR||||||2017-11-07 12:07:26.472054||2017-6-m
+prom_tel|TELÉFONO DEL PROMOTOR (10 DÍGITOS)||||||2017-11-07 12:07:26.472054||2017-6-m
+latitud|Latitud||||||2017-11-07 12:07:26.472054||2017-6-m
+longitud|Longitud||||||2017-11-07 12:07:26.472054||2017-6-m
+x_coord|||||||2017-11-07 12:07:26.472054||2017-6-m
+y_coord|||||||2017-11-07 12:07:26.472054||2017-6-m
+status|||||||2017-11-07 12:07:26.472054||2017-6-m
+actualizacion_sedesol|||||||2017-11-07 12:07:26.472054||2017-6-m
+data_date|||||||2017-11-07 12:07:26.472054||2017-6-m

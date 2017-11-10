@@ -803,7 +803,6 @@ class RawHeaderTest(luigi.Task):
                            extra=self.extra)
 
     def run(self):
-
         classic_tests.header_test(self.input().path,
                                   self.pipeline_task,
                                   self.common_path,
