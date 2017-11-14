@@ -354,3 +354,18 @@ def cve_loc_construct(cve_ent, cve_mun, cve_loc):
     except:
         cve_locc = ""
     return pd.Series({'cve_ent': cve_ent, 'cve_mun': cve_mun, 'cve_locc': cve_locc})
+
+
+def find_extension(path, pipeline_task):
+    '''
+    Function that finds file extension given a path and a name
+    '''
+    for file in os.listdir(path):
+        if file.startswith(pipeline_task):
+            extension = os.path.join(file).split('.')[1]
+            if extension == 'sh':
+                return ('sh', extension)
+            elif extension == 'py':
+                return ('python', extension)
+            else:
+                raise('Unknown file extension')

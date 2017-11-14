@@ -13,7 +13,7 @@ import pandas as pd
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.preprocessing_scripts.preprocessing_scripts import *
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import\
-        parse_cfg_list, get_extra_str, s3_to_pandas
+        parse_cfg_list, get_extra_str, s3_to_pandas, find_extension
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string
 
 conf = configuration.get_config()
@@ -553,6 +553,25 @@ class insp(TDockerTask):
                         self.pipeline_task, self.local_ingest_file]
 
         return " ".join(command_list)
+
+
+class general_ingest(TDockerTask):
+    """
+    This general ingest tasks looks for a script in 
+    classic_task_scripts with the pipeline task name.
+    """
+    @property
+    def cmd(self):
+        extension = find_extension(self.classic_task_scripts,
+                                   self.pipeline_task + '.')
+        command_list = [extension[0],
+                        self.classic_task_scripts +
+                        self.pipeline_task + '.' +
+                        extension[1],
+                        self.data_date,
+                        self.local_path +
+                        self.pipeline_task,
+                        self.local_ingest_file]
 
 class comedores(TDockerTask):
     @property

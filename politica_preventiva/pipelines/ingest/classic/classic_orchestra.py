@@ -833,7 +833,12 @@ class LocalIngest(luigi.Task):
 
     def requires(self):
 
-        classic_tasks = eval(self.pipeline_task)
+        try:
+            classic_tasks = eval(self.pipeline_task)
+        except:
+            classic_tasks =  general_ingest
+            # logger.info('General Ingest')
+
         task = classic_tasks(data_date=self.data_date,
                              pipeline_task=self.pipeline_task,
                              local_ingest_file=self.local_ingest_file,
