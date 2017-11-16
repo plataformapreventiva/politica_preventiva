@@ -25,35 +25,32 @@ def check_server(host, port):
 @click.option('--port', help='Puerto donde está escuchando el luigi-master', default=8082)
 @click.option('--luigi_cfg', help='Path al archivo de configuración de Luigi', type=click.Path())
 @click.option('--workers', help='Número de workers en paralelo', type=click.INT, default=1)
-#@click.option('--level', help='', default=2, type=click.INT)
-#@click.option('--sleep', help='', default=2, type=click.INT)
-
-
-def main(server, port, luigi_cfg,workers):
+@click.option('--level', help='', default='ETLPipeline')
+@click.option('--server', help='', default='0.0.0.0')
+def main(server, port, luigi_cfg, workers, level):
     """
-    Ejecuta el pipeline 
+    Ejecuta el pipeline
     """
 
     luigi_args = [
 
                   '--scheduler-host', str(server),
                   '--scheduler-port', str(port),
-                    'RunPipelines',
-                  # '--level', str(level), 
+                  'RunPipelines',
+                  # '--level', str(level),
                   # '--sleep', str(sleep),
-                    '--workers', str(workers),
-                    '--no-lock'
+                  '--workers', str(workers),
+                  '--no-lock',
+                  '--level', str(level)
                  ]
 
-    ## Ejecuta luigi con el local scheduler si no hay servidor
+    # Ejecuta luigi con el local scheduler si no hay servidor
     if not check_server(server, port):
         luigi_args.append('--local-scheduler')
 
     luigi.run(luigi_args)
 
+
 if __name__ == '__main__':
     main()
-
-
-
 
