@@ -2,8 +2,7 @@
 # If you Run as: luigid & PYTHONPATH='.' python politica_preventiva.py
 # RunPipelines --workers 3
 
-import ast
-import boto3
+import argparse
 import datetime
 import logging
 import luigi
@@ -53,17 +52,17 @@ class RunPipelines(luigi.WrapperTask):
     Main Wrapper Task of pipelines
     """
     current_date = datetime.date.today()
+    level = luigi.Parameter()
     # current_date = luigi.DateParameter(default=datetime.date(2017, 8, 12))
     logger.info('Luigi is running the pipeline on the date: {0}'.format(
         current_date))
 
+
     def requires(self):
-
-        # return IngestPipeline(current_date=self.current_date)
-        # return ETLPipeline(current_date=self.current_date)
-        return SemanticPipeline(current_date=self.current_date)
-        # return ModelPipeline(current_date=self.current_date)
-
+        # This requirement runs one of the following tasks:
+        # IngestPipeline, EtlPipeline, SemanticPipeline, ModelPipeline
+        Pipeline = eval(self.level)
+        return Pipeline(current_date=self.current_date)
 
 if __name__ == "__main__":
     luigi.run()

@@ -4,7 +4,7 @@ DATA_DIRECTORY:=/data
 IMAGES = docker-task r-task
 
 run:
-	@LUIGI_CONFIG_PATH=./pipelines/luigi.cfg  $(PROJECT_NAME) --server 0.0.0.0 --port 8082 --workers $(WORKERS)
+	@LUIGI_CONFIG_PATH=./pipelines/ingest/tasks_parameters.cfg  $(PROJECT_NAME) --server 0.0.0.0 --port 8082 --workers $(WORKERS) --level=$(level)
 
 setup: .built .built-local-storage
 
