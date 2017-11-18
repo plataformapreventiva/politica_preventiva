@@ -222,7 +222,8 @@ class UpdateLineage(luigi.Task):
                             relation = Relationship(column, 'with_tag', tag)
                             graph.merge(relation)
                         except:
-                            pdb.set_trace()
+                            pass
+                            # pdb.set_trace()
                 except:
                     pass
                     # logger.debug('Your variabel ´ç'.format(row['tipo']))
@@ -417,11 +418,16 @@ class UpdateRawDB(postgres.CopyToTable):
                     elif line == header:
                         pass
                     else:
-                        re.sub("^na\||\|na$\||\|na\||\|nan\||\|N/E\||\|-\|", '||', line)
-                        line = line.strip('\n').split('|')
-                        line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
-                        line.append(str(self.data_date) + '-' + self.suffix)
-                        yield [x if x != '' else None for x in line]
+                        line = re.sub("^na\||\|na$\||\|na\||\|nan\||\|N/E\||\|-\||\|\s+\|", '||', line)
+                        line = re.sub("\|\s+\|", '||', line)
+
+                        if re.findall("^[\||\s]+$", line) != []:
+                            pass
+                        else:
+                            line = line.strip('\n').split('|')
+                            line.append(self.actualizacion.strftime("%Y-%m-%d %H:%M:%S"))
+                            line.append(str(self.data_date) + '-' + self.suffix)
+                            yield [x if x != '' else None for x in line]
 
         else:
             # TODO() remove this step, checkout for
