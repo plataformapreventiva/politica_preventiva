@@ -14,7 +14,8 @@
 PROJECT_NAME:=$(shell cat .project-name)
 PROJECT_VERSION:=$(shell cat .project-version)
 PROJECT_USER:=$(shell cat .project-user)
-WORKERS=11
+w=11
+p=ETLPipeline
 
 ## Python Version
 VERSION_PYTHON:=$(shell cat .python-version)
@@ -144,7 +145,7 @@ S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 ########################################
 
 run:       ##@proyecto Ejecuta el pipeline de datos
-	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(WORKERS)
+	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(w) level=$(p)
 
 setup: install task_build##@proyecto Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
 
