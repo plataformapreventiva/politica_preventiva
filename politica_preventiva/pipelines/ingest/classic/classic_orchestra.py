@@ -557,7 +557,6 @@ class LocalIngest(luigi.Task):
     extra = luigi.Parameter()
 
     def requires(self):
-        pdb.set_trace()
         try:
             classic_tasks = eval(self.pipeline_task)
         except:
