@@ -57,7 +57,6 @@ class RunPipelines(luigi.WrapperTask):
     logger.info('Luigi is running the pipeline on the date: {0}'.format(
         current_date))
 
-
     def requires(self):
         # This requirement runs one of the following tasks:
         # IngestPipeline, EtlPipeline, SemanticPipeline, ModelPipeline
