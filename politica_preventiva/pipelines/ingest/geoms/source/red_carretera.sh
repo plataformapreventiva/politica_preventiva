@@ -2,7 +2,7 @@
 
 ###############
 # Geom
-# Red de carreteras INEGI
+# Red carretera INEGI
 ###############
 
 echo "Red de Carreteras INEGI"
@@ -33,7 +33,7 @@ unzip -o -d $local_path/red_carreteras $local_path/red_carreteras.zip
 
 if [ $year = '2014' ]
 then
-    mv $local_path/producto/informaciвn\ espacial/ $local_path/data
+    mv $local_path/red_carreteras/producto/informaciвn\ espacial/ $local_path/data
     cd $local_path/data
     rename -v s/Red_Vial/red_vial/ Red_Vial.*
     cd -
