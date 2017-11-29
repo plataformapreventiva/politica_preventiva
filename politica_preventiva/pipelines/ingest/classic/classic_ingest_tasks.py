@@ -5,22 +5,16 @@ import os
 import pdb
 import subprocess
 
-from contextlib import contextmanager
 from dotenv import load_dotenv, find_dotenv
 from itertools import product
 from luigi import configuration
-from luigi import six, task
-from luigi.contrib import postgres
-from luigi.s3 import S3Target, S3Client
-from os.path import join, dirname
 import pandas as pd
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.preprocessing_scripts.preprocessing_scripts import *
-from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list, extras, get_extra_str
-from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string, download_dir
-from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas
-from politica_preventiva.pipelines.utils import s3_utils
+from politica_preventiva.pipelines.ingest.tools.ingest_utils import\
+        parse_cfg_list, get_extra_str, s3_to_pandas, find_extension
+from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string
 
 conf = configuration.get_config()
 
@@ -91,7 +85,6 @@ class TDockerTask(SourceIngestTask):
                 -v politica_preventiva_store:/data\
            politica_preventiva/task/docker-task {0} > /dev/null
          '''.format(self.cmd)
-
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
 
@@ -110,35 +103,6 @@ class denue(TDockerTask):
                         self.pipeline_task, self.local_ingest_file]
 
         return " ".join(command_list)
-
-
-class pub(luigi.Task):
-
-    client = luigi.s3.S3Client()
-    data_date = luigi.Parameter()
-    pipeline_task = luigi.Parameter()
-    local_ingest_file = luigi.Parameter()
-    type_script = luigi.Parameter('sh')
-    classic_task_scripts = luigi.Parameter('ClassicIngest')
-    local_path = luigi.Parameter('DEFAULT')
-    raw_bucket = luigi.Parameter('DEFAULT')
-
-    def run(self):
-        if not os.path.exists(self.local_path + self.pipeline_task):
-            os.makedirs(self.local_path + self.pipeline_task)
-
-        obj = luigi.s3.get_object(Bucket='dpa-compranet',
-                                  Key='etl/' + self.pipeline_task +
-                                  "/output/" + self.pipeline_task + ".csv")
-
-        # output_db = pd.read_csv(obj['Body'],sep="|",
-        #        error_bad_lines = False, dtype=str, encoding="utf-8")
-
-        return subprocess.call(cmd, shell=True)
-
-    def output(self):
-
-        return luigi.LocalTarget(self.local_ingest_file)
 
 
 class cuenta_publica_trimestral(TDockerTask):
@@ -555,12 +519,12 @@ class coneval_estados(TDockerTask):
         return " ".join(command_list)
 
 
-class coneval_municipios_2010(TDockerTask):
+class coneval_municipios(TDockerTask):
     @property
     def cmd(self):
-
         command_list = ['python', self.classic_task_scripts +
-                        'coneval_municipios_2010.py',
+                        'coneval_municipios.py',
+                        '--data_date', self.data_date,
                         '--local_path', self.local_path + self.pipeline_task,
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
@@ -577,3 +541,68 @@ class declaratoria(TDockerTask):
 
         return " ".join(command_list)
 
+class insp(TDockerTask):
+
+    @property
+    def cmd(self):
+        year = self.data_date.split("-")[0]
+        month = self.data_date.split("-")[1].zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'insp.sh', year, month,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
+
+
+class general_ingest(TDockerTask):
+    """
+    This general ingest tasks looks for a script in 
+    classic_task_scripts with the pipeline task name.
+    """
+    @property
+    def cmd(self):
+        extension = find_extension(self.classic_task_scripts,
+                                   self.pipeline_task + '.')
+        command_list = [extension[0],
+                        self.classic_task_scripts +
+                        self.pipeline_task + '.' +
+                        extension[1],
+                        self.data_date,
+                        self.local_path +
+                        self.pipeline_task,
+                        self.local_ingest_file]
+
+class comedores(TDockerTask):
+    @property
+    def cmd(self):
+        # year = self.data_date.split("-")[0]
+        # month = self.data_date.split("-")[1].zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'comedores.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)
+
+
+class estancias(TDockerTask):
+    @property
+    def cmd(self):
+        # year = self.data_date.split("-")[0]
+        # month = self.data_date.split("-")[1].zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'estancias.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)
+
+class lecherias(TDockerTask):
+    @property
+    def cmd(self):
+        # year = self.data_date.split("-")[0]
+        # month = self.data_date.split("-")[1].zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'lecherias.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)
