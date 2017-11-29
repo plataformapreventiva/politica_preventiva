@@ -728,6 +728,7 @@ cuenta_publica_trimestral:
     - monto_modificado: FLOAT
     - monto_pagado: FLOAT
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
   - ciclo
   - id_ramo
