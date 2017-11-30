@@ -44,6 +44,6 @@ else
     mv $local_path/red_nacional_de_caminos_2015/conjunto_de_datos $local_path/data
 fi
 
-ogr2ogr -f "CSV" -t_srs EPSG:4326 $local_ingest_file $local_path/data/red_vial.shp -lco GEOMETRY=AS_WKT
+ogr2ogr -f "CSV" -t_srs EPSG:4326 $local_ingest_file $local_path/data/red_vial.shp -lco GEOMETRY=AS_WKT > $3
 #rm -r $local_path/data
 find $local_path -type f -not -name "red_vial*" -print0 | xargs -0 rm --
