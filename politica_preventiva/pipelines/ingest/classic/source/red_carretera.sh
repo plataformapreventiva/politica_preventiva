@@ -45,8 +45,7 @@ elif [ $year = '2015' ]
 then
     mv $local_path/temporal/red_nacional_de_caminos_2015/conjunto_de_datos $local_path/temp
 fi
-cd $local_path
 ogr2ogr -t_srs EPSG:4326 -f CSV /vsistdout/ $local_path/temp/red_vial.shp -lco GEOMETRY=AS_WKT | csvformat -D "|" > $local_ingest_file
-#ogr2ogr -f "CSV" -t_srs EPSG:4326 $local_ingest_file $local_path/data/red_vial.shp -lco GEOMETRY=AS_WKT > $local_ingest_file
-sudo rm -r $local_path/temp $local_path/temporal $local_path/red_carretera.zip
+#ogr2ogr -f "CSV" -t_srs EPSG:4326 $local_ingest_file $local_path/data/red_vial.shp -lco GEOMETRY=AS_WKT
+rm -r $local_path/temp $local_path/temporal $local_path/red_carretera.zip
 #find $local_path -type f -not -name "*red_carretera.csv" -print0 | xargs -0 rm --
