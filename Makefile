@@ -147,7 +147,7 @@ S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 run:       ##@project Run pipeline: make run w=10 p=(IngestPipeline|EtlPipeline|SemanticPipeline) 
 	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(w) level=$(p)
 
-setup: install task_build##@project Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
+setup: task_build install##@project Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
 
 task_build:
 	$(MAKE) --directory=$(PROJECT_NAME) setup
