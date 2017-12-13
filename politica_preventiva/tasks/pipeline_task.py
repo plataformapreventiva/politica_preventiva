@@ -61,6 +61,33 @@ class PgRTask(luigi.Task):
         connection.commit()
         connection.close()
 
+class RTask(luigi.Task):
+
+    """
+    Task Abstraction to Dockerize tasks
+
+    Note:
+
+    Use:
+    Define the @property def cmd(self):
+        R **/**.py
+
+    """
+
+    def run(self):
+
+        logger.info('Luigi is using the dockerized version of the Rtask' +
+                    ' {0}'.format(self.pipeline_task))
+
+        cmd_docker = '''
+         docker run -it --rm  -v $PWD:/politica_preventiva\
+                -v politica_preventiva_store:/data\
+           politica_preventiva/task/r-task {0} > /dev/null
+         '''.format(self.cmd)
+
+        out = subprocess.call(cmd_docker, shell=True)
+        logger.info(out)
+
 
 
 class DockerTask(luigi.Task):
@@ -74,7 +101,6 @@ class DockerTask(luigi.Task):
     Define the @property def cmd(self):
         python **/**.py
         bash **/**.sh
-
     """
 
     def run(self):

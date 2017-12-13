@@ -16,6 +16,8 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import\
         parse_cfg_list, get_extra_str, s3_to_pandas, find_extension
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string
 
+from politica_preventiva.tasks.pipeline_task import DockerTask, RTask
+
 conf = configuration.get_config()
 
 # AWS
@@ -34,6 +36,26 @@ logger = logging.getLogger("dpa-sedesol")
 
 
 class SourceIngestTask(luigi.Task):
+
+    data_date = luigi.Parameter()
+    pipeline_task = luigi.Parameter()
+    local_ingest_file = luigi.Parameter()
+    classic_task_scripts = luigi.Parameter('DEFAULT')
+    local_path = luigi.Parameter('DEFAULT')
+    extra = luigi.Parameter()
+
+    def requires(self):
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        logger.info('Luigi is trying to run the source script' +
+                    ' of the pipeline_task {0}'.format(self.pipeline_task))
+
+    def output(self):
+        return luigi.LocalTarget(self.local_ingest_file)
+
+
+class IngestRTask(RTask):
 
     data_date = luigi.Parameter()
     pipeline_task = luigi.Parameter()
@@ -87,6 +109,26 @@ class TDockerTask(SourceIngestTask):
          '''.format(self.cmd)
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
+
+
+class general_ingest(TDockerTask):
+    """
+    This general ingest tasks looks for a script in 
+    classic_task_scripts with the pipeline task name.
+    """
+    @property
+    def cmd(self):
+        extension = find_extension(self.classic_task_scripts,
+                                   self.pipeline_task + '.')
+        command_list = [extension[0],
+                        self.classic_task_scripts +
+                        self.pipeline_task + '.' +
+                        extension[1],
+                        self.data_date,
+                        self.local_path +
+                        self.pipeline_task,
+                        self.local_ingest_file]
+
 
 #######################
 # Classic Ingest Tasks
@@ -555,24 +597,6 @@ class insp(TDockerTask):
         return " ".join(command_list)
 
 
-class general_ingest(TDockerTask):
-    """
-    This general ingest tasks looks for a script in 
-    classic_task_scripts with the pipeline task name.
-    """
-    @property
-    def cmd(self):
-        extension = find_extension(self.classic_task_scripts,
-                                   self.pipeline_task + '.')
-        command_list = [extension[0],
-                        self.classic_task_scripts +
-                        self.pipeline_task + '.' +
-                        extension[1],
-                        self.data_date,
-                        self.local_path +
-                        self.pipeline_task,
-                        self.local_ingest_file]
-
 class comedores(TDockerTask):
     @property
     def cmd(self):
@@ -606,3 +630,13 @@ class lecherias(TDockerTask):
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
+
+class sequia(IngestRTask):
+    @property
+    def cmd(self):
+        command_list = ['Rscript', self.classic_task_scripts +
+                        'sequia.R', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)
+

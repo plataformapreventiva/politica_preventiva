@@ -142,6 +142,9 @@ def current_quarter(dt):
     """
     return int((dt.month  - 1) / 3 + 1)
 
+def current_bimonth(dt):
+
+    return ( dt.month - 1 ) * 2 + int((dt.day  - 1) / 15 + 1)
 
 def year_fraction(periods, start_date, end_year, suffix):
     """
@@ -205,9 +208,14 @@ def dates_list(pipeline, end_date, periodicity):
             p = (1, 2, 3, 4)
             dates = year_fraction(p, start_date, end_year, suffix)
 
+        elif periodicity in ["bimonthly", 'bim']:
+            suffix = 'bm-' + str(current_bimonth(end_date))
+            start_date = look_for_end_date(pipeline, end_date)
+            p = range(1,24)
+            dates = year_fraction(p, start_date, end_year, suffix)
+
         elif periodicity in ["monthly", 'm']:
             suffix = 'm-' + str(end_date.month)
-            end_date = end_date.strftime('%Y')
             start_date = look_for_end_date(pipeline, end_date)
             p = list(range(1, 13))
             dates = year_fraction(p, start_date, end_year, suffix)

@@ -8,6 +8,7 @@ ipak <- function(pkg){
 }
 
 
-packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'lubridate')
+packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'lubridate',
+	      'readxl')
 
 ipak(packages)

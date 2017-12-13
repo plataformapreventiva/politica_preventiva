@@ -2100,3 +2100,36 @@ segob:
   - poblaciondelacabeceramunicipal
   - superficiedelmunicipioenkm2
   - cve_muni
+sequia:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - cve_muni: TEXT
+    - cve_ent: Integer
+    - cve_mun: Integer
+    - pob_2005: TEXT
+    - pob_2010: TEXT
+    - nombre_mun: TEXT
+    - entidad: TEXT
+    - org_cuenca: TEXT
+    - clv_oc: TEXT
+    - con_cuenca: TEXT
+    - cve_conc: Integer
+    - fecha: TIMESTAMP
+    - declaratoria: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cve_concatenada
+  - cve_ent
+  - cve_mun
+  - pob_2005
+  - pob2010
+  - nombre_mun
+  - entidad
+  - org_cuenca
+  - clv_oc
+  - con_cuenca
+  - cve_conc
+  - fecha
+  - declaratoria
