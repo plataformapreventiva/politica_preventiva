@@ -3,6 +3,11 @@ import luigi
 import logging
 import os
 import yaml
+import ast
+import tempfile
+import boto3
+import re
+import psycopg2
 
 from dotenv import find_dotenv
 from itertools import product
@@ -212,7 +217,7 @@ class UpdateRawDB(postgres.CopyToTable):
         return True
 
     def run(self):
-
+ 
         if not (self.table and self.columns):
             raise Exception("table and columns need to be specified")
         connection = self.output().connect()
