@@ -2038,7 +2038,7 @@ pub:
     - data_date: TEXT
 red_carretera:
   LUIGI:
-    INDEX: null
+    INDEX: id_red
     SCHEMA:
     - wkt: TEXT
     - id_red: Integer

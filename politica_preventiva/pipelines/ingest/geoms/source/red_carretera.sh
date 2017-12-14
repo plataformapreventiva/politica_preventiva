@@ -8,8 +8,12 @@
 echo "Red de Carreteras INEGI"
 
 year=$1
+year='2014'
 local_path=$2
+local_path=/data/prueba
 local_ingest_file=$3
+local_ingest_file=/data/prueba/$year-a-red_carretera.csv
+mkdir /data/prueba
 
 # Downloads
 if [ $year = '2016' ]
@@ -45,8 +49,7 @@ elif [ $year = '2015' ]
 then
     mv $local_path/temporal/red_nacional_de_caminos_2015/conjunto_de_datos $local_path/temp
 fi
-cd $local_path/red_carretera
-ogr2ogr -t_srs EPSG:4326 -f CSV /vsistdout/ ./temp/red_vial.shp -lco GEOMETRY=AS_WKT | csvformat -D "|" > $local_ingest_file
+ogr2ogr -t_srs EPSG:4326 -f CSV /vsistdout/ $local_path/temp/red_vial.shp -lco GEOMETRY=AS_WKT | csvformat -D "|" > $local_ingest_file
 #ogr2ogr -f "CSV" -t_srs EPSG:4326 $local_ingest_file $local_path/data/red_vial.shp -lco GEOMETRY=AS_WKT > $local_ingest_file
-sudo rm -r ./temp ./temporal ./red_carretera.zip
+sudo rm -r $local_path/temp $local_path/temporal $local_path/red_carretera.zip
 #find $local_path -type f -not -name "*red_carretera.csv" -print0 | xargs -0 rm --
