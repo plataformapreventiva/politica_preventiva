@@ -526,12 +526,12 @@ coneval_municipios:
     - carencias3_porcentaje: FLOAT
     - carencias3_num: FLOAT
     - carencias3_carencias: FLOAT
-    - prof_b1_porcentaje: FLOAT
-    - prof_b1_num: FLOAT
-    - prof_b1_carencias: FLOAT
-    - prof_bm1_porcentaje: FLOAT
-    - prof_bm1_num: FLOAT
-    - prof_bm1_carencias: FLOAT
+    - plb_porcentaje: FLOAT
+    - plb_num: FLOAT
+    - plb_carencias: FLOAT
+    - plb_m_porcentaje: FLOAT
+    - plb_m_num: FLOAT
+    - plb_m_carencias: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
