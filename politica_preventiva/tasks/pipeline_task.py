@@ -25,10 +25,10 @@ with open("pipelines/ingest/common/emr-config.yaml", "r") as file:
     config = yaml.load(file)
 config_emr = config.get("emr")
 
-class RTask(luigi.Task):
+class PgRTask(luigi.Task):
 
     """
-    Task Abstraction to Dockerize tasks
+    Task Abstraction to Dockerize Postgres R tasks
 
     Note:
 
@@ -39,19 +39,55 @@ class RTask(luigi.Task):
 
     """
 
-    def run(self):
+    @property
+    def autocommit(self):
+        return False
 
-        logger.info('Luigi is using the dockerized version of the task' +
-                    ' {0}'.format(self.pipeline_task))
+    def run(self):
 
         cmd_docker = '''
             docker run -it --rm  -v $PWD:/politica_preventiva\
             -v politica_preventiva_store:/data\
             politica_preventiva/task/r-task {0} > /dev/null
          '''.format(self.cmd)
+        out = subprocess.call(cmd_docker, shell=True)
+        logger.info(out)
+
+        # Update marker table
+        connection = self.output().connect()
+        connection.autocommit = self.autocommit
+        self.output().touch(connection)
+        # commit and close connection
+        connection.commit()
+        connection.close()
+
+class RTask(luigi.Task):
+
+    """
+    Task Abstraction to Dockerize tasks
+
+    Note:
+
+    Use:
+    Define the @property def cmd(self):
+        R **/**.py
+
+    """
+
+    def run(self):
+
+        logger.info('Luigi is using the dockerized version of the Rtask' +
+                    ' {0}'.format(self.pipeline_task))
+
+        cmd_docker = '''
+         docker run -it --rm  -v $PWD:/politica_preventiva\
+                -v politica_preventiva_store:/data\
+           politica_preventiva/task/r-task {0} > /dev/null
+         '''.format(self.cmd)
 
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
+
 
 
 class DockerTask(luigi.Task):
@@ -65,7 +101,6 @@ class DockerTask(luigi.Task):
     Define the @property def cmd(self):
         python **/**.py
         bash **/**.sh
-
     """
 
     def run(self):
@@ -107,10 +142,10 @@ class EmrTask(luigi.Task):
     emr_client = emr_loader.boto_client("emr")
 
 class AddStep(EmrTask):
-    current_date = luigi.DateParameter()
+    id_name = luigi.Parameter()
 
     def requires(self):
-        return InitializeCluster(self.current_date)
+        return InitializeCluster(self.id_name)
 
 class InitializeCluster(EmrTask):
     """
@@ -119,14 +154,14 @@ class InitializeCluster(EmrTask):
     created. The Task will fail if the cluster cannot be initialized.
     """
 
-    current_date = luigi.DateParameter()
     common_path = luigi.Parameter('DEFAULT')
+    id_name = luigi.Parameter()
 
     def run(self):
         """
         Create the EMR cluster
         """
-        cluster_id = self.common_path + "emr_id.txt" 
+        cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt" 
         # Launch Cluster
         self.emr_loader.launch_cluster()
         # Create Client
@@ -136,6 +171,6 @@ class InitializeCluster(EmrTask):
         file.close()
 
     def output(self):
-        cluster_id = self.common_path + "emr_id.txt"
+        cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt"
         return luigi.LocalTarget(cluster_id)
 
