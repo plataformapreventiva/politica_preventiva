@@ -360,6 +360,21 @@ comedores:
   - x_coord
   - y_coord
   - status
+conagua_estaciones:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - estacion: TEXT
+    - latitud: FLOAT
+    - longitud: FLOAT
+    - nombre: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estacion
+  - latitud
+  - longitud
+  - nombre
 coneval_estados:
   LUIGI:
     INDEX: folioviv
