@@ -13,3 +13,4 @@ setuptools
 csvkit
 requests
 #sqlite3
+lxml
