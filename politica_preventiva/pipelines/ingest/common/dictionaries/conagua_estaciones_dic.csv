@@ -1,0 +1,7 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+estacion|Código de estación climatológica|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018|2018-01-03 22:39:36.182221||2018-a
+latitud|Latitud de estación climatológica|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018|2018-01-03 22:39:36.182221||2018-a
+longitud|Longitud de estación climatógica|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018|2018-01-03 22:39:36.182221||2018-a
+nombre|Nombre de la estación climatológica|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018|2018-01-03 22:39:36.182221||2018-a
+actualizacion_sedesol|Fecha de actualización de datos en Sedesol|SEDESOL||||2018|2018-01-03 22:39:36.182221||2018-a
+data_date|Año|SEDESOL||||2018|2018-01-03 22:39:36.182221||2018-a
