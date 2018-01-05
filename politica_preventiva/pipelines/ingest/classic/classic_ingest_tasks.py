@@ -647,3 +647,13 @@ class conagua_temperaturas(TDockerTask):
                         '--local_path', self.local_path + self.pipeline_task,
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
+
+class conagua_precipitacion(TDockerTask):
+    @property
+    def cmd(self):
+        command_list = ['python', self.classic_task_scripts +
+                        'conagua_precipitacion.py',
+                        '--data_date', self.data_date,
+                        '--local_path', self.local_path + self.pipeline_task,
+                        '--local_ingest_file', self.local_ingest_file]
+        return " ".join(command_list)
