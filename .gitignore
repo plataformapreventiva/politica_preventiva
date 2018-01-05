@@ -6,6 +6,7 @@ __pycache__/
 # Other User Temporal files
 *_temp
 *.temp
+*1
 
 # C extensions
 *.so
@@ -155,3 +156,6 @@ site/
 
 # Diccionarios
 !*/politica_preventiva/pipelines/ingest/common/dictionaries/
+
+# neo4j
+politica_preventiva/pipelines/ingest/common/neo4j/

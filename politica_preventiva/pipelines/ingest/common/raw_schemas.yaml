@@ -1,19 +1,3 @@
-pub:
-  LUIGI:
-    INDEX: cve_muni
-    SCHEMA:
-    - anio: TEXT
-    - cve_ent: TEXT
-    - cve_muni: TEXT
-    - cve_programa: TEXT
-    - cve_padron: TEXT
-    - n_beneficiarios: INT
-    - suma_importe: FLOAT
-    - tipo: TEXT
-    - nivel: TEXT
-    - grupo: TEXT
-    - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
 asm:
   LUIGI:
     INDEX: modalidad_pp
@@ -231,6 +215,185 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+comedores:
+  LUIGI:
+    INDEX: id_com
+    SCHEMA:
+    - x: FLOAT
+    - y: FLOAT
+    - cve_ent: Integer
+    - nom_ent: TEXT
+    - nom_reg: TEXT
+    - cve_munc: Integer
+    - nom_mun: TEXT
+    - cve_locc: Integer
+    - nom_loc: TEXT
+    - nom_com: TEXT
+    - dir_com: TEXT
+    - cve_ageb: TEXT
+    - zap: TEXT
+    - id_com: TEXT
+    - estrategia: TEXT
+    - fec_solcom: TEXT
+    - fec_inscom: TEXT
+    - fec_capcoc: TEXT
+    - fec_iniope: TEXT
+    - mod_capa: TEXT
+    - tipo_cocin: TEXT
+    - cuot_recup: FLOAT
+    - dias_servi: Integer
+    - vocal_sexo: TEXT
+    - vocal_nom: TEXT
+    - vocal_dom: TEXT
+    - vocal_tel: TEXT
+    - pp_tot: Integer
+    - pp_muj: Integer
+    - pp_hom: Integer
+    - ninas_0_11: Integer
+    - ninos_0_11: Integer
+    - est_m12_19: Integer
+    - est_h12_19: Integer
+    - muj_emb: Integer
+    - muj_lac: Integer
+    - muj_60ymas: Integer
+    - hom_60ymas: Integer
+    - muj_disc: Integer
+    - hom_disc: Integer
+    - muj_migra: Integer
+    - hom_migra: Integer
+    - muj_sinemp: Integer
+    - hom_sinemp: Integer
+    - muj_coneme: INT
+    - hom_coneme: INT
+    - muj_cocvol: Integer
+    - hom_cocvol: Integer
+    - tot_cocvol: Integer
+    - cr_nom: TEXT
+    - cr_sexo: TEXT
+    - cr_edad: TEXT
+    - cr_domicil: TEXT
+    - cr_tel: TEXT
+    - cm_nom: TEXT
+    - cm_sexo: TEXT
+    - cm_edad: TEXT
+    - cm_domicil: TEXT
+    - cm_tel: TEXT
+    - prom_nom: TEXT
+    - prom_sexo: TEXT
+    - prom_edad: TEXT
+    - prom_domic: TEXT
+    - prom_tel: TEXT
+    - latitud: FLOAT
+    - longitud: FLOAT
+    - x_coord: FLOAT
+    - y_coord: FLOAT
+    - status: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - x
+  - y
+  - cve_ent
+  - nom_ent
+  - nom_reg
+  - cve_munc
+  - nom_mun
+  - cve_locc
+  - nom_loc
+  - nom_com
+  - dir_com
+  - cve_ageb
+  - zap
+  - id_com
+  - estrategia
+  - fec_solcom
+  - fec_inscom
+  - fec_capcoc
+  - fec_iniope
+  - mod_capa
+  - tipo_cocin
+  - cuot_recup
+  - dias_servi
+  - vocal_sexo
+  - vocal_nom
+  - vocal_dom
+  - vocal_tel
+  - pp_tot
+  - pp_muj
+  - pp_hom
+  - ninas_0_11
+  - ninos_0_11
+  - est_m12_19
+  - est_h12_19
+  - muj_emb
+  - muj_lac
+  - muj_60ymas
+  - hom_60ymas
+  - muj_disc
+  - hom_disc
+  - muj_migra
+  - hom_migra
+  - muj_sinemp
+  - hom_sinemp
+  - muj_coneme
+  - hom_coneme
+  - muj_cocvol
+  - hom_cocvol
+  - tot_cocvol
+  - cr_nom
+  - cr_sexo
+  - cr_edad
+  - cr_domicil
+  - cr_tel
+  - cm_nom
+  - cm_sexo
+  - cm_edad
+  - cm_domicil
+  - cm_tel
+  - prom_nom
+  - prom_sexo
+  - prom_edad
+  - prom_domic
+  - prom_tel
+  - latitud
+  - longitud
+  - x_coord
+  - y_coord
+  - status
+conagua_estaciones:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - estacion: TEXT
+    - latitud: FLOAT
+    - longitud: FLOAT
+    - nombre: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estacion
+  - latitud
+  - longitud
+  - nombre
+conagua_temperaturas:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - estacion: TEXT
+    - tmedia: FLOAT
+    - tmax: FLOAT
+    - tmin: FLOAT
+    - tobs: FLOAT
+    - fecha: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estacion
+  - tmedia
+  - tmax
+  - tmin
+  - tobs
+  - fecha
 coneval_estados:
   LUIGI:
     INDEX: folioviv
@@ -348,9 +511,9 @@ coneval_estados:
   - int_vulcar
   - int_caren
   - ict
-coneval_municipios_2010:
+coneval_municipios:
   LUIGI:
-    INDEX: ent
+    INDEX: cve_muni
     SCHEMA:
     - ent: TEXT
     - entidad: TEXT
@@ -360,15 +523,12 @@ coneval_municipios_2010:
     - pobreza_porcentaje: FLOAT
     - pobreza_num: FLOAT
     - pobreza_carencias: FLOAT
-    - int_pob: FLOAT
     - pobreza_e_porcentaje: FLOAT
     - pobreza_e_num: FLOAT
     - pobreza_e_carencias: FLOAT
-    - int_pobe: FLOAT
     - pobreza_m_porcentaje: FLOAT
     - pobreza_m_num: FLOAT
     - pobreza_m_carencias: FLOAT
-    - int_pobm: FLOAT
     - vul_car_porcentaje: FLOAT
     - vul_car_num: FLOAT
     - vul_car_carencias: FLOAT
@@ -378,26 +538,34 @@ coneval_municipios_2010:
     - no_pobv_num: FLOAT
     - ic_rezedu_porcentaje: FLOAT
     - ic_rezedu_num: FLOAT
+    - ic_rezedu_carencias: FLOAT
     - ic_asalud_porcentaje: FLOAT
     - ic_asalud_num: FLOAT
+    - ic_asalud_carencias: FLOAT
     - ic_segsoc_porcentaje: FLOAT
     - ic_segsoc_num: FLOAT
+    - ic_segsoc_carencias: FLOAT
     - ic_cv_porcentaje: FLOAT
     - ic_cv_num: FLOAT
+    - ic_cv_carencias: FLOAT
     - ic_sbv_porcentaje: FLOAT
     - ic_sbv_num: FLOAT
+    - ic_sbv_carencias: FLOAT
     - ic_ali_porcentaje: FLOAT
     - ic_ali_num: FLOAT
+    - ic_ali_carencias: FLOAT
     - carencias_porcentaje: FLOAT
     - carencias_num: FLOAT
+    - carencias_carencias: FLOAT
     - carencias3_porcentaje: FLOAT
     - carencias3_num: FLOAT
-    - prof_b1_porcentaje: FLOAT
-    - prof_b1_num: FLOAT
-    - prof_bm1_porcentaje: FLOAT
-    - prof_bm1_num: FLOAT
-    - gini: TEXT
-    - ingreso_pobrezae_entre_nopobreynovulnerable: TEXT
+    - carencias3_carencias: FLOAT
+    - plb_porcentaje: FLOAT
+    - plb_num: FLOAT
+    - plb_carencias: FLOAT
+    - plb_m_porcentaje: FLOAT
+    - plb_m_num: FLOAT
+    - plb_m_carencias: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
@@ -408,45 +576,50 @@ coneval_municipios_2010:
   - poblacion
   - pobreza_porcentaje
   - pobreza_personas
-  - pobreza_carencias
-  - pobreza_intensidad
+  - pobreza_carenciaspromedio
   - pobrezaextrema_porcentaje
   - pobrezaextrema_personas
-  - pobrezaextrema_carencias
-  - pobrezaextrema_intensidad
+  - pobrezaextrema_carenciaspromedio
   - pobrezamoderada_porcentaje
   - pobrezamoderada_personas
-  - pobrezamoderada_carencias
-  - pobrezamoderada_intensidad
+  - pobrezamoderada_carenciaspromedio
   - vulnerablesporcarenciasocial_porcentaje
   - vulnerablesporcarenciasocial_personas
-  - vulnerablesporcarenciasocial_carencias
+  - vulnerablesporcarenciasocial_carenciaspromedio
   - vulnerablesporingreso_porcentaje
   - vulnerablesporingreso_personas
   - nopobresynovulnerables_porcentaje
   - nopobresynovulnerables_personas
   - rezagoeducativo_porcentaje
   - rezagoeducativo_personas
+  - rezagoeducativo_carenciaspromedio
   - carenciaporaccesoalosserviciosdesalud_porcentaje
   - carenciaporaccesoalosserviciosdesalud_personas
+  - carenciaporaccesoalosserviciosdesalud_carenciaspromedio
   - carenciaporaccesoalaseguridadsocial_porcentaje
   - carenciaporaccesoalaseguridadsocial_personas
+  - carenciaporaccesoalaseguridadsocial_carenciaspromedio
   - carenciaporcalidadyespaciosdelavivienda_porcentaje
   - carenciaporcalidadyespaciosdelavivienda_personas
+  - carenciaporcalidadyespaciosdelavivienda_carenciaspromedio
   - carenciaporaccesoalosserviciosbasicosenlavivienda_porcentaje
   - carenciaporaccesoalosserviciosbasicosenlavivienda_personas
+  - carenciaporaccesoalosserviciosbasicosenlavivienda_carenciaspromedio
   - carenciaporaccesoalaalimentacion_porcentaje
   - carenciaporaccesoalaalimentacion_personas
+  - carenciaporaccesoalaalimentacion_carenciaspromedio
   - poblacionconalmenosunacarenciasocial_porcentaje
   - poblacionconalmenosunacarenciasocial_personas
+  - poblacionconalmenosunacarenciasocial_carenciaspromedio
   - poblacioncontresomascarenciassociales_porcentaje
   - poblacioncontresomascarenciassociales_personas
+  - poblacioncontresomascarenciassociales_carenciaspromedio
   - poblacionconingresoinferioralalineadebienestar_porcentaje
   - poblacionconingresoinferioralalineadebienestar_personas
+  - poblacionconingresoinferioralalineadebienestar_carenciaspromedio
   - poblacionconingresoinferioralalineadebienestarminimo_porcentaje
   - poblacionconingresoinferioralalineadebienestarminimo_personas
-  - coeficientedegini
-  - razondelingresoentrelapoblacionpobreextremaylapoblacionnopobreynovulnerable1
+  - poblacionconingresoinferioralalineadebienestarminimo_carenciaspromedio
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
@@ -599,6 +772,7 @@ cuenta_publica_trimestral:
     - monto_modificado: FLOAT
     - monto_pagado: FLOAT
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
   - ciclo
   - id_ramo
@@ -962,6 +1136,63 @@ donatarias_sat:
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
     - actualizacion_sedesol: TIMESTAMP
+estancias:
+  LUIGI:
+    INDEX: id_est
+    SCHEMA:
+    - x: FLOAT
+    - y: FLOAT
+    - id_est: Integer
+    - cve_ent: Integer
+    - cve_munc: Integer
+    - cve_locc: Integer
+    - nom_ent: TEXT
+    - nom_mun: TEXT
+    - nom_loc: TEXT
+    - nom_est: TEXT
+    - nom_resp: TEXT
+    - dir: TEXT
+    - col: TEXT
+    - cp: Integer
+    - calle1: TEXT
+    - calle2: TEXT
+    - calle3: TEXT
+    - cap_est: Integer
+    - ninos_ap: Integer
+    - ninas_ap: Integer
+    - nninos: Integer
+    - madres: Integer
+    - padres: Integer
+    - status: TEXT
+    - geo: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - x
+  - y
+  - id_est
+  - cve_ent
+  - cve_munc
+  - cve_locc
+  - nom_ent
+  - nom_mun
+  - nom_loc
+  - nom_est
+  - nom_resp
+  - dir
+  - col
+  - cp
+  - calle1
+  - calle2
+  - calle3
+  - cap_est
+  - ninos_ap
+  - ninas_ap
+  - nninos
+  - madres
+  - padres
+  - status
+  - geo
 evals:
   LUIGI:
     INDEX: modalidad_pp
@@ -1070,6 +1301,47 @@ indesol:
     - edo_actividad: TEXT
     - informes: JSONB
     - actualizacion_sedesol: TIMESTAMP
+insp:
+  LUIGI:
+    INDEX: clavegenerico
+    SCHEMA:
+    - ano: Integer
+    - mes: Integer
+    - fecha_pub_dof: TEXT
+    - claveciudad: Integer
+    - nombreciudad: TEXT
+    - division: TEXT
+    - grupo: TEXT
+    - clase: TEXT
+    - subclase: TEXT
+    - clavegenerico: Integer
+    - generico: TEXT
+    - consecutivo: Integer
+    - especificacion: TEXT
+    - preciopromedio: FLOAT
+    - cantidad: TEXT
+    - unidad: TEXT
+    - estatus: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ano
+  - mes
+  - fecha_pub_dof
+  - claveciudad
+  - nombreciudad
+  - division
+  - grupo
+  - clase
+  - subclase
+  - clavegenerico
+  - generico
+  - consecutivo
+  - especificacion
+  - preciopromedio
+  - cantidad
+  - unidad
+  - estatus
 ipc_ciudades:
   LUIGI:
     INDEX: fecha
@@ -1539,6 +1811,129 @@ iter_2010:
   - vph_cel
   - vph_inter
   - tam_loc
+lecherias:
+  LUIGI:
+    INDEX: cve_locc
+    SCHEMA:
+    - x: FLOAT
+    - y: FLOAT
+    - cve_leche: BIGINT
+    - cve_ent: Integer
+    - cve_munc: Integer
+    - cve_locc: Integer
+    - nom_ent: TEXT
+    - abre_ent: TEXT
+    - nom_mun: TEXT
+    - nom_loc: TEXT
+    - locurb: TEXT
+    - pas: TEXT
+    - calle: TEXT
+    - colonia: TEXT
+    - refncia: TEXT
+    - familias: Integer
+    - beneficiar: Integer
+    - nin0a12: Integer
+    - gestlac: Integer
+    - enfcrodis: Integer
+    - adul60_: Integer
+    - ben13a15: Integer
+    - muj45a59: Integer
+    - ml_tventa: Integer
+    - inioper: Date
+    - leche: TEXT
+    - ncontr: Integer
+    - contrato: TEXT
+    - nloca: Integer
+    - local: TEXT
+    - turno: TEXT
+    - tmatini: TEXT
+    - tmatfin: TEXT
+    - tvesini: TEXT
+    - tvesfin: TEXT
+    - litros: Integer
+    - ml_tlech: Integer
+    - tipo: TEXT
+    - habitantes: Integer
+    - mujeres: Integer
+    - hombres: Integer
+    - ageb: Integer
+    - cpostal: Integer
+    - promotor: TEXT
+    - superviso: TEXT
+    - concesio: TEXT
+    - dnruta: TEXT
+    - dsecuencia: Integer
+    - dkms: FLOAT
+    - dtiempo: Integer
+    - dsubsidia: Integer
+    - dfrisia: Integer
+    - dinstitu: Integer
+    - dsemides: Integer
+    - dfresa: Integer
+    - dvainilla: Integer
+    - dchocolate: Integer
+    - ltsbenmes: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - x
+  - y
+  - cve_leche
+  - cve_ent
+  - cve_munc
+  - cve_locc
+  - nom_ent
+  - abre_ent
+  - nom_mun
+  - nom_loc
+  - locurb
+  - pas
+  - calle
+  - colonia
+  - refncia
+  - familias
+  - beneficiar
+  - nin0a12
+  - gestlac
+  - enfcrodis
+  - adul60_
+  - ben13a15
+  - muj45a59
+  - ml_tventa
+  - inioper
+  - leche
+  - ncontr
+  - contrato
+  - nloca
+  - local
+  - turno
+  - tmatini
+  - tmatfin
+  - tvesini
+  - tvesfin
+  - litros
+  - ml_tlech
+  - tipo
+  - habitantes
+  - mujeres
+  - hombres
+  - ageb
+  - cpostal
+  - promotor
+  - superviso
+  - concesio
+  - dnruta
+  - dsecuencia
+  - dkms
+  - dtiempo
+  - dsubsidia
+  - dfrisia
+  - dinstitu
+  - dsemides
+  - dfresa
+  - dvainilla
+  - dchocolate
+  - ltsbenmes
 mir:
   LUIGI:
     INDEX: clave
@@ -1749,3 +2144,36 @@ segob:
   - poblaciondelacabeceramunicipal
   - superficiedelmunicipioenkm2
   - cve_muni
+sequia:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - cve_muni: TEXT
+    - cve_ent: Integer
+    - cve_mun: Integer
+    - pob_2005: TEXT
+    - pob_2010: TEXT
+    - nombre_mun: TEXT
+    - entidad: TEXT
+    - org_cuenca: TEXT
+    - clv_oc: TEXT
+    - con_cuenca: TEXT
+    - cve_conc: Integer
+    - fecha: TIMESTAMP
+    - declaratoria: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cve_concatenada
+  - cve_ent
+  - cve_mun
+  - pob_2005
+  - pob2010
+  - nombre_mun
+  - entidad
+  - org_cuenca
+  - clv_oc
+  - con_cuenca
+  - cve_conc
+  - fecha
+  - declaratoria

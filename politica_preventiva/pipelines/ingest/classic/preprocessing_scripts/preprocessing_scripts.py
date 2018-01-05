@@ -4,15 +4,16 @@
 """
 	Preprocessing Functions
 """
-import boto3
 import logging
 import pdb
 
 from luigi import configuration
 import pandas as pd
-from io import StringIO
-import politica_preventiva.pipelines.utils.preprocessing_utils as pputils
-from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files, delete_s3_file
+import politica_preventiva.pipelines.ingest.tools.preprocessing_utils as\
+        pputils
+from luigi import task
+from politica_preventiva.pipelines.ingest.tools.ingest_utils import\
+        s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files, delete_s3_file
 
 # logger
 logging_conf = configuration.get_config().get("core", "logging_conf_file")
@@ -198,7 +199,7 @@ def sagarpa_cierre_prep(year_month, s3_file, extra_h, out_key):
         df['distrito'] = pputils.complete_missing_values(df['distrito'])
 
 
-def coneval_municipios_2010_prep(data_date, s3_file, extra_h, out_key):
+def coneval_municipios_prep(data_date, s3_file, extra_h, out_key):
     """
     Preprocessing function casting coneval municipios
    """

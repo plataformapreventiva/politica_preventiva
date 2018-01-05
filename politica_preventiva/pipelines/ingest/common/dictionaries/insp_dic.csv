@@ -1,0 +1,20 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+ano|Año correspondiente al cálculo del INSP.|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+mes|Mes correspondiente al cálculo del INSP.|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+fecha_pub_dof|Fecha de publicación|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+claveciudad|Clave de ciudad|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913|La información por ciudad es únicamente informativa.|2016-8-m
+nombreciudad|Nombre de ciudad|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+division|División|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+grupo|Grupo|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+clase|Clase|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+subclase|Subclase|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+clavegenerico|Clave de producto|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+generico|Nombre genérico|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+consecutivo|Clave consecutiva|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+especificacion|Especificación del producto|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+preciopromedio|Precio promedio|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913|Los precios promedio de los productos se calculan con la media aritmética de los precios observados en las semanas o quincenas de todo el mes para una presentación en particular y las unidades de medida observadas se convierten a unidades estandarizadas de comparación (kilogramos litros paquetes) y el precio promedio utilizado corresponde a esta nueva medida.|2016-8-m
+cantidad|Cantidad|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+unidad|Unidad|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+estatus|Estatus para INSP|INEGI|http://www3.inegi.org.mx/sistemas/inp/preciospromedio/|Capacidades|Seguridad alimentaria|2011-2017|2017-10-25 04:33:53.088913||2016-8-m
+actualizacion_sedesol|Fecha de actualización de datos de Sedesol|Sedesol|Sedesol|Sedesol|Sedesol|Sedesol|2017-10-25 04:33:53.088913||2016-8-m
+data_date|Mes al que corresponden los datos|Sedesol|Sedesol|Sedesol|Sedesol|Sedesol|2017-10-25 04:33:53.088913||2016-8-m

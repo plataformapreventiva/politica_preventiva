@@ -14,7 +14,8 @@
 PROJECT_NAME:=$(shell cat .project-name)
 PROJECT_VERSION:=$(shell cat .project-version)
 PROJECT_USER:=$(shell cat .project-user)
-WORKERS=11
+w=11
+p=ETLPipeline
 
 ## Python Version
 VERSION_PYTHON:=$(shell cat .python-version)
@@ -140,19 +141,19 @@ S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 
 
 ########################################
-##      Tareas del Proyecto           ##
+##         Project Tasks              ##
 ########################################
 
-run:       ##@proyecto Ejecuta el pipeline de datos
-	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(WORKERS)
+run:       ##@project Run pipeline: make run w=10 p=(IngestPipeline|ETLPipeline|SemanticPipeline) 
+	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(w) level=$(p)
 
-setup: install task_build##@proyecto Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
+setup: task_build install##@project Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
 
 task_build:
 	$(MAKE) --directory=$(PROJECT_NAME) setup
 
 
-remove: uninstall  ##@proyecto Destruye la imágenes del pipeline y desinstala el pipeline del PYTHONPATH
+remove: uninstall  ##@project Destruye la imágenes del pipeline y desinstala el pipeline del PYTHONPATH
 	$(MAKE) --directory=$(PROJECT_NAME) clean
 
 

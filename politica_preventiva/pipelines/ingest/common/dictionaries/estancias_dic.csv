@@ -1,0 +1,28 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+x|Longitud|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+y|Latitud|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+id_est|Identificador único|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+cve_ent|Clave estatal|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+cve_munc|Clave municipal|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+cve_locc|Clave de localidad|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+nom_ent|Nombre entidad|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+nom_mun|Nombre municipio|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+nom_loc|Nombre localidad|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+nom_est|Nombre estancia|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+nom_resp|Nombre del responsable|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+dir|Dirección de la estancia|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+col|Colonia|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+cp|Código Postal|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+calle1|Calle 1|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+calle2|Calle 2|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+calle3|Calle posterior a la estancia|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+cap_est|Capacidad de la estancia|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+ninos_ap|Niños inscriptos con apoyo|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+ninas_ap|Niñas inscritas con apoyo|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+nninos|Número de niños inscriptos|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+madres|Madres|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+padres|Padres|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+status|Si la estancia se encuentra georreferenciada|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+geo|georreferenciación|SEDESOL + Programa de Estancias Infantiles para Apoyar a Madres Trabajadoras||Capacidades|Social|2017.0|2017-11-06 14:26:54.164664||2017-6-m
+actualizacion_sedesol|Actualización Sedesol|SEDESOL|||||2017-11-06 14:26:54.164664||2017-6-m
+data_date|Data Date|SEDESOL|||||2017-11-06 14:26:54.164664||2017-6-m
