@@ -1,0 +1,9 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+estacion|Código de estación climatológica.|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 00:58:23.951011||2017-1-m
+tmedia|Media de la temperatura en el día.|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 00:58:23.951011||2017-1-m
+tmax|Temperatura máxima del día.|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 00:58:23.951011||2017-1-m
+tmin|Temperatura mínima del día.|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 00:58:23.951011||2017-1-m
+tobs|Tempertatura observada en la fecha especificada.|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 00:58:23.951011||2017-1-m
+fecha|Fecha de observación de la temperatura en el estación climatológica correspondiente.|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 00:58:23.951011||2017-1-m
+actualizacion_sedesol|Fecha de actualización de datos en Sedesol|SEDESOL|||||2018-01-05 00:58:23.951011||2017-1-m
+data_date|Año|SEDESOL|||||2018-01-05 00:58:23.951011||2017-1-m

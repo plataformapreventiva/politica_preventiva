@@ -375,6 +375,25 @@ conagua_estaciones:
   - latitud
   - longitud
   - nombre
+conagua_temperaturas:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - estacion: TEXT
+    - tmedia: FLOAT
+    - tmax: FLOAT
+    - tmin: FLOAT
+    - tobs: FLOAT
+    - fecha: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estacion
+  - tmedia
+  - tmax
+  - tmin
+  - tobs
+  - fecha
 coneval_estados:
   LUIGI:
     INDEX: folioviv

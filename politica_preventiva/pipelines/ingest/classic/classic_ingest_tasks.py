@@ -102,12 +102,7 @@ class TDockerTask(SourceIngestTask):
         logger.info('Luigi is using the dockerized version of the task' +
                     ' {0}'.format(self.pipeline_task))
 
-        cmd_docker = '''
-         docker run -it --rm  
-                -v $PWD:/politica_preventiva  
-                -v politica_preventiva_store:/data  
-                politica_preventiva/task/docker-task {0} > /dev/null
-         '''.format(self.cmd)
+        cmd_docker = 'docker run -it --rm  -v $PWD:/politica_preventiva -v politica_preventiva_store:/data politica_preventiva/task/docker-task {0} > /dev/null'.format(self.cmd)
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
 
@@ -643,3 +638,12 @@ class sequia(IngestRTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
+class conagua_temperaturas(TDockerTask):
+    @property
+    def cmd(self):
+        command_list = ['python', self.classic_task_scripts +
+                        'conagua_temperaturas.py',
+                        '--data_date', self.data_date,
+                        '--local_path', self.local_path + self.pipeline_task,
+                        '--local_ingest_file', self.local_ingest_file]
+        return " ".join(command_list)
