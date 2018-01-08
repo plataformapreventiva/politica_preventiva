@@ -119,11 +119,8 @@ class general_ingest(TDockerTask):
         command_list = [extension[0],
                         self.classic_task_scripts +
                         self.pipeline_task + '.' + extension[1],
-                        '-data_date', 
                         self.data_date,
-                        '-local_path', 
                         self.local_path + self.pipeline_task,
-                        '-local_ingest_file',
                         self.local_ingest_file]
         return " ".join(command_list)
 
