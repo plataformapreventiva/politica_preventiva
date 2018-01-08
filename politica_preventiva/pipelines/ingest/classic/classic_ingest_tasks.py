@@ -103,9 +103,9 @@ class TDockerTask(SourceIngestTask):
                     ' {0}'.format(self.pipeline_task))
 
         cmd_docker = '''
-         docker run -it --rm  
-                -v $PWD:/politica_preventiva  
-                -v politica_preventiva_store:/data  
+         docker run -it --rm \
+                -v $PWD:/politica_preventiva \
+                -v politica_preventiva_store:/data \
                 politica_preventiva/task/docker-task {0} > /dev/null
          '''.format(self.cmd)
         out = subprocess.call(cmd_docker, shell=True)
@@ -124,11 +124,8 @@ class general_ingest(TDockerTask):
         command_list = [extension[0],
                         self.classic_task_scripts +
                         self.pipeline_task + '.' + extension[1],
-                        '-data_date', 
                         self.data_date,
-                        '-local_path', 
                         self.local_path + self.pipeline_task,
-                        '-local_ingest_file',
                         self.local_ingest_file]
         return " ".join(command_list)
 
