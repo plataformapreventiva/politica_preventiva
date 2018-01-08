@@ -1254,6 +1254,26 @@ finanzas_publicas_municipales:
   - descripcion_categoria
   - valor
   - estatus
+geoms_estados:
+  LUIGI:
+    INDEX: null
+    SCHEMA:
+    - wkt: TEXT
+    - cve_ent: Integer
+    - nom_ent: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - cve_ent
+  - nom_ent
+geoms_municipios:
+  LUIGI:
+    INDEX: null
+    SCHEMA:
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW: []
 indesol:
   LUIGI:
     INDEX: cluni
