@@ -1,0 +1,6 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+estacion|Código de estación climatológica.|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 23:25:43.299083||2017-1-m
+fecha|Fecha de observación de precipitación en el estación climatológica correspondiente.|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 23:25:43.299083||2017-1-m
+prec|Precipitación acumulada en 24 horas (mm)|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx|Amenazas|Climatológico|2018.0|2018-01-05 23:25:43.299083||2017-1-m
+actualizacion_sedesol|Fecha de actualización de datos en Sedesol|SEDESOL|||||2018-01-05 23:25:43.299083||2017-1-m
+data_date|Año-mes correspondiente a los datos|SEDESOL|||||2018-01-05 23:25:43.299083||2017-1-m
