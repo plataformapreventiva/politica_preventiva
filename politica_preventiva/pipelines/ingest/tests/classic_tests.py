@@ -12,7 +12,7 @@ from datetime import datetime
 import pandas as pd
 from messytables import CSVTableSet, type_guess, \
           types_processor, headers_guess, headers_processor, \
-          offset_processor, any_tableset, ReadError
+          offset_processor, any_tableset
 
 
 from politica_preventiva.pipelines.utils.string_cleaner_utils import remove_extra_chars
@@ -61,31 +61,19 @@ def header_test(path, task, common_path, suffix, new=True):
             types = ['TEXT' if str(x) == 'String' else str(x) for x in types]
             types = ['FLOAT' if str(x) == 'Decimal' else str(x) for x in types]
             types = ['INT' if str(x) == 'Bool' else str(x) for x in types]
-
-            # Definir primeras lineas
-            first_line = [remove_extra_chars(x)  for x in first_lines]
-            initial_schema = first_line[:]
-            initial_schema.append("actualizacion_sedesol")
-            initial_schema.append("data_date")
-            types.append("TIMESTAMP")
-            types.append('TEXT')
-            initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
-
-        except ReadError as e:
-            # Si el error fue por el tamaño del field
-            with open(path, 'rb') as reopen:
-                first_lines = str(next(reopen))
-                first_lines = re.sub("^b\'|\\\\n\'$",'',first_lines).split("|")
-                first_line = [remove_extra_chars(x)  for x in first_lines]
-                types = ['TEXT'] * len(first_line)
-                types.append("TIMESTAMP")
-                types.append('TEXT') 
-
         except:
-            # Otro error aún no reconocido
             logger.debug('Remember ingest data file must be \n' +\
                 '\t\t\t\t\t must be delimited by pipes "|"'.format(task))
             sys.exit('\n Error: failed parsing ingest data file.')
+
+    first_line = [remove_extra_chars(x)  for x in first_lines]
+    initial_schema = first_line[:]
+    initial_schema.append("actualizacion_sedesol")
+    initial_schema.append("data_date")
+    types.append("TIMESTAMP")
+    types.append('TEXT')
+
+    initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
 
     try:
         schema_check =  header_d[task]['LUIGI']['SCHEMA'][1]
@@ -168,5 +156,3 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
          see {1} ".format(pipeline_task, path))
 
     return dictionary
-
-
