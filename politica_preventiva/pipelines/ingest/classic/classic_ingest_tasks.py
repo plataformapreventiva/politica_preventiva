@@ -121,6 +121,8 @@ class general_ingest(TDockerTask):
                         self.pipeline_task + '.' + extension[1],
                         self.data_date,
                         self.local_path + self.pipeline_task,
+                        self.data_date,
+                        self.local_path + self.pipeline_task,
                         self.local_ingest_file]
         return " ".join(command_list)
 
