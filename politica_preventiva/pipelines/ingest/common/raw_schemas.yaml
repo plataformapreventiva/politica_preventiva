@@ -375,6 +375,19 @@ conagua_estaciones:
   - latitud
   - longitud
   - nombre
+conagua_precipitacion:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - estacion: TEXT
+    - fecha: TEXT
+    - prec: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estacion
+  - fecha
+  - prec
 conagua_temperaturas:
   LUIGI:
     INDEX: estacion
@@ -1273,6 +1286,34 @@ finanzas_publicas_municipales:
   - descripcion_categoria
   - valor
   - estatus
+geoms_estados:
+  LUIGI:
+    INDEX: cve_ent
+    SCHEMA:
+    - wkt: geometry
+    - cve_ent: TEXT
+    - nom_ent: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - cve_ent
+  - nom_ent
+geoms_municipios:
+  LUIGI:
+    INDEX: cve_mun
+    SCHEMA:
+    - wkt: geometry
+    - cve_ent: TEXT
+    - cve_mun: TEXT
+    - nom_mun: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - cve_ent
+  - cve_mun
+  - nom_mun
 indesol:
   LUIGI:
     INDEX: cluni
