@@ -375,5 +375,7 @@ def find_extension(path, pipeline_task):
                 return ('sh', extension)
             elif extension == 'py':
                 return ('python', extension)
+            elif extension == 'R' or extension == 'r':
+                return('Rscript', extension)
             else:
                 raise('Unknown file extension')

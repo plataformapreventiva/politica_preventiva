@@ -2218,3 +2218,30 @@ sequia:
   - cve_conc
   - fecha
   - declaratoria
+maiz_precios:
+  LUIGI:
+    INDEX: fecha
+    SCHEMA:
+    - fecha: TEXT
+    - origen: TEXT
+    - destino: TEXT
+    - precio_min: FLOAT
+    - precio_max: FLOAT
+    - precio_frec: FLOAT
+    - obs: TEXT
+    - anio: Integer
+    - mes: Integer
+    - semana: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - fecha
+  - origen
+  - destino
+  - precio_min
+  - precio_max
+  - precio_frec
+  - obs
+  - anio
+  - mes
+  - semana
