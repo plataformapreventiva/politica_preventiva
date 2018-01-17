@@ -2036,11 +2036,11 @@ pub:
     - grupo: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
-red_carretera:
+geoms_red_carretera:
   LUIGI:
-    INDEX: id_red
+    INDEX: nombre
     SCHEMA:
-    - wkt: TEXT
+    - wkt: GEOMETRY
     - id_red: Integer
     - tipo_vial: TEXT
     - nombre: TEXT
@@ -2061,7 +2061,7 @@ red_carretera:
     - union_fin: Integer
     - longitud: FLOAT
     - ancho: FLOAT
-    - fecha_act: Date(%Y-%m-%d %H:%M:%S)
+    - fecha_act: Date
     - calirepr: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
