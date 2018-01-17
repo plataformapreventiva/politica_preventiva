@@ -143,6 +143,7 @@ class UpdateRawDB(postgres.CopyToTable):
                         pass
                     else:
                         line = re.sub("^na\||\|N/A\||\|na$\||\|na\||\|nan\||\|N/E\||\|-\||\|\s+\|", '||', line)
+                        line = re.sub("^na\||\|N/A\||\|na$\||\|na\||\|nan\||\|N/E\||\|-\||\|\s+\|", '||', line)
                         line = re.sub("\|\s+\|", '||', line)
 
                         if re.findall("^[\||\s]+$", line) != []:

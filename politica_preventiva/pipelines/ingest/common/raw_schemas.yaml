@@ -2036,7 +2036,7 @@ pub:
     - grupo: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
-geoms_red_carretera:
+red_carretera:
   LUIGI:
     INDEX: nombre
     SCHEMA:

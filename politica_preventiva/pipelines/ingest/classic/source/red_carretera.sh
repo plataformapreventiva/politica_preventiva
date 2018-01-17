@@ -18,9 +18,13 @@ then
 elif [ $year = '2015' ]
 then
     url="http://internet.contenidos.inegi.org.mx/contenidos/Productos/prod_serv/contenidos/espanol/bvinegi/productos/geografia/caminos/2015/702825209575_s.zip"
+elif [ $year = '2017' ]
+then
+    url="http://internet.contenidos.inegi.org.mx/contenidos/Productos/prod_serv/contenidos/espanol/bvinegi/productos/geografia/caminos/2017/889463171836_s.zip"
+
 elif [ $year = '2014' ]
 then
-    url="http://internet.contenidos.inegi.org.mx/contenidos/Productos/prod_serv/contenidos/espanol/bvinegi/productos/geografia/caminos/702825278724.zip"
+    url="http://internet.contenidos.inegi.org.mx/contenidos/Productos/prod_serv/contenidos/espanol/bvinegi/productos/geografia/caminos/702825278724_s.zip"
 else
     echo 'url not defined for the selected year'
     exit 1
@@ -42,10 +46,14 @@ elif [ $year = '2016' ]
 then
     mkdir $local_path/temp
     unzip -o -d $local_path/temp/ $local_path/temporal/conjunto_de_datos/red_nacional_de_caminos_2016.zip
-    ogr2ogr -t_srs EPSG:4326 -f CSV /vsistdout/ $local_path/temp/red_vial.shp -lco GEOMETRY=AS_WKT | csvformat -D "|" > $local_ingest_file
+    ogr2ogr -t_srs EPSG:4326 -f CSV /vsistdout/ $local_path/temp/red_vial.shp -lco GEOMETRY=AS_WKT | csvformat -D "|" | awk 'BEGIN{FS="|"}{if (NF<8) {printf "%s",$0} else print}' | sed 's/\"N\/D|\"/N\/D/g' | sed 's///g' > $local_ingest_file
 elif [ $year = '2015' ]
 then
     mv $local_path/temporal/red_nacional_de_caminos_2015/conjunto_de_datos $local_path/temp
+    ogr2ogr -t_srs EPSG:4326 -f CSV /vsistdout/ $local_path/temp/red_vial.shp -lco GEOMETRY=AS_WKT | csvformat -D "|" | sed -i -e 's/^d -1 M\n//g' > $local_ingest_file
+elif [ $year = '2017' ]
+then
+    mv $local_path/temporal/conjunto_de_datos $local_path/temp
     ogr2ogr -t_srs EPSG:4326 -f CSV /vsistdout/ $local_path/temp/red_vial.shp -lco GEOMETRY=AS_WKT | csvformat -D "|" > $local_ingest_file
 fi
 
