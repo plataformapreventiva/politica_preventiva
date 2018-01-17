@@ -156,3 +156,6 @@ site/
 
 # Diccionarios
 !*/politica_preventiva/pipelines/ingest/common/dictionaries/
+
+# neo4j
+politica_preventiva/pipelines/ingest/common/neo4j/

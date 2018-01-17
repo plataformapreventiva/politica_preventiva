@@ -75,7 +75,7 @@ if(length(opt) > 1){
   value <- "valor"
   not_gathered <- c("ent", "entidad",
                     "cve_muni", "municipio",
-                    "pob_tot", "gini", "ingreso_pobrezae_entre_nopobreynovulnerable",
+                    "pob_tot",
                     "actualizacion_sedesol", "data_date")
   selects_cols <- c('ent', 'cve_muni', 'pob_tot','variable', 'valor', 'pob_tot',
                     'data_date', 'actualizacion_sedesol')

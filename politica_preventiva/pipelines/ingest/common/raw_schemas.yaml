@@ -360,6 +360,53 @@ comedores:
   - x_coord
   - y_coord
   - status
+conagua_estaciones:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - estacion: TEXT
+    - latitud: FLOAT
+    - longitud: FLOAT
+    - nombre: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estacion
+  - latitud
+  - longitud
+  - nombre
+conagua_precipitacion:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - estacion: TEXT
+    - fecha: TEXT
+    - prec: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estacion
+  - fecha
+  - prec
+conagua_temperaturas:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - estacion: TEXT
+    - tmedia: FLOAT
+    - tmax: FLOAT
+    - tmin: FLOAT
+    - tobs: FLOAT
+    - fecha: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estacion
+  - tmedia
+  - tmax
+  - tmin
+  - tobs
+  - fecha
 coneval_estados:
   LUIGI:
     INDEX: folioviv
@@ -479,7 +526,7 @@ coneval_estados:
   - ict
 coneval_municipios:
   LUIGI:
-    INDEX: ent
+    INDEX: cve_muni
     SCHEMA:
     - ent: TEXT
     - entidad: TEXT
@@ -489,15 +536,12 @@ coneval_municipios:
     - pobreza_porcentaje: FLOAT
     - pobreza_num: FLOAT
     - pobreza_carencias: FLOAT
-    - int_pob: FLOAT
     - pobreza_e_porcentaje: FLOAT
     - pobreza_e_num: FLOAT
     - pobreza_e_carencias: FLOAT
-    - int_pobe: FLOAT
     - pobreza_m_porcentaje: FLOAT
     - pobreza_m_num: FLOAT
     - pobreza_m_carencias: FLOAT
-    - int_pobm: FLOAT
     - vul_car_porcentaje: FLOAT
     - vul_car_num: FLOAT
     - vul_car_carencias: FLOAT
@@ -507,26 +551,34 @@ coneval_municipios:
     - no_pobv_num: FLOAT
     - ic_rezedu_porcentaje: FLOAT
     - ic_rezedu_num: FLOAT
+    - ic_rezedu_carencias: FLOAT
     - ic_asalud_porcentaje: FLOAT
     - ic_asalud_num: FLOAT
+    - ic_asalud_carencias: FLOAT
     - ic_segsoc_porcentaje: FLOAT
     - ic_segsoc_num: FLOAT
+    - ic_segsoc_carencias: FLOAT
     - ic_cv_porcentaje: FLOAT
     - ic_cv_num: FLOAT
+    - ic_cv_carencias: FLOAT
     - ic_sbv_porcentaje: FLOAT
     - ic_sbv_num: FLOAT
+    - ic_sbv_carencias: FLOAT
     - ic_ali_porcentaje: FLOAT
     - ic_ali_num: FLOAT
+    - ic_ali_carencias: FLOAT
     - carencias_porcentaje: FLOAT
     - carencias_num: FLOAT
+    - carencias_carencias: FLOAT
     - carencias3_porcentaje: FLOAT
     - carencias3_num: FLOAT
-    - prof_b1_porcentaje: FLOAT
-    - prof_b1_num: FLOAT
-    - prof_bm1_porcentaje: FLOAT
-    - prof_bm1_num: FLOAT
-    - gini: TEXT
-    - ingreso_pobrezae_entre_nopobreynovulnerable: TEXT
+    - carencias3_carencias: FLOAT
+    - plb_porcentaje: FLOAT
+    - plb_num: FLOAT
+    - plb_carencias: FLOAT
+    - plb_m_porcentaje: FLOAT
+    - plb_m_num: FLOAT
+    - plb_m_carencias: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
@@ -537,45 +589,50 @@ coneval_municipios:
   - poblacion
   - pobreza_porcentaje
   - pobreza_personas
-  - pobreza_carencias
-  - pobreza_intensidad
+  - pobreza_carenciaspromedio
   - pobrezaextrema_porcentaje
   - pobrezaextrema_personas
-  - pobrezaextrema_carencias
-  - pobrezaextrema_intensidad
+  - pobrezaextrema_carenciaspromedio
   - pobrezamoderada_porcentaje
   - pobrezamoderada_personas
-  - pobrezamoderada_carencias
-  - pobrezamoderada_intensidad
+  - pobrezamoderada_carenciaspromedio
   - vulnerablesporcarenciasocial_porcentaje
   - vulnerablesporcarenciasocial_personas
-  - vulnerablesporcarenciasocial_carencias
+  - vulnerablesporcarenciasocial_carenciaspromedio
   - vulnerablesporingreso_porcentaje
   - vulnerablesporingreso_personas
   - nopobresynovulnerables_porcentaje
   - nopobresynovulnerables_personas
   - rezagoeducativo_porcentaje
   - rezagoeducativo_personas
+  - rezagoeducativo_carenciaspromedio
   - carenciaporaccesoalosserviciosdesalud_porcentaje
   - carenciaporaccesoalosserviciosdesalud_personas
+  - carenciaporaccesoalosserviciosdesalud_carenciaspromedio
   - carenciaporaccesoalaseguridadsocial_porcentaje
   - carenciaporaccesoalaseguridadsocial_personas
+  - carenciaporaccesoalaseguridadsocial_carenciaspromedio
   - carenciaporcalidadyespaciosdelavivienda_porcentaje
   - carenciaporcalidadyespaciosdelavivienda_personas
+  - carenciaporcalidadyespaciosdelavivienda_carenciaspromedio
   - carenciaporaccesoalosserviciosbasicosenlavivienda_porcentaje
   - carenciaporaccesoalosserviciosbasicosenlavivienda_personas
+  - carenciaporaccesoalosserviciosbasicosenlavivienda_carenciaspromedio
   - carenciaporaccesoalaalimentacion_porcentaje
   - carenciaporaccesoalaalimentacion_personas
+  - carenciaporaccesoalaalimentacion_carenciaspromedio
   - poblacionconalmenosunacarenciasocial_porcentaje
   - poblacionconalmenosunacarenciasocial_personas
+  - poblacionconalmenosunacarenciasocial_carenciaspromedio
   - poblacioncontresomascarenciassociales_porcentaje
   - poblacioncontresomascarenciassociales_personas
+  - poblacioncontresomascarenciassociales_carenciaspromedio
   - poblacionconingresoinferioralalineadebienestar_porcentaje
   - poblacionconingresoinferioralalineadebienestar_personas
+  - poblacionconingresoinferioralalineadebienestar_carenciaspromedio
   - poblacionconingresoinferioralalineadebienestarminimo_porcentaje
   - poblacionconingresoinferioralalineadebienestarminimo_personas
-  - coeficientedegini
-  - razondelingresoentrelapoblacionpobreextremaylapoblacionnopobreynovulnerable1
+  - poblacionconingresoinferioralalineadebienestarminimo_carenciaspromedio
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
@@ -1229,6 +1286,34 @@ finanzas_publicas_municipales:
   - descripcion_categoria
   - valor
   - estatus
+geoms_estados:
+  LUIGI:
+    INDEX: cve_ent
+    SCHEMA:
+    - wkt: geometry
+    - cve_ent: TEXT
+    - nom_ent: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - cve_ent
+  - nom_ent
+geoms_municipios:
+  LUIGI:
+    INDEX: cve_mun
+    SCHEMA:
+    - wkt: geometry
+    - cve_ent: TEXT
+    - cve_mun: TEXT
+    - nom_mun: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - cve_ent
+  - cve_mun
+  - nom_mun
 indesol:
   LUIGI:
     INDEX: cluni
@@ -1890,6 +1975,33 @@ lecherias:
   - dvainilla
   - dchocolate
   - ltsbenmes
+maiz_precios:
+  LUIGI:
+    INDEX: fecha
+    SCHEMA:
+    - fecha: TEXT
+    - origen: TEXT
+    - destino: TEXT
+    - precio_min: FLOAT
+    - precio_max: FLOAT
+    - precio_frec: FLOAT
+    - obs: TEXT
+    - anio: Integer
+    - mes: Integer
+    - semana: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - fecha
+  - origen
+  - destino
+  - precio_min
+  - precio_max
+  - precio_frec
+  - obs
+  - anio
+  - mes
+  - semana
 mir:
   LUIGI:
     INDEX: clave
@@ -2121,6 +2233,57 @@ sagarpa:
   - moda_hidr
   - ciclo
   - cultivo
+sagarpa_cierre_2003_2016:
+  LUIGI:
+    INDEX: cve_ent
+    SCHEMA:
+    - ano: Integer
+    - cve_ent: Integer
+    - nom_ent: TEXT
+    - cv_ddr: Integer
+    - nom_ddr: TEXT
+    - cv_cader: Integer
+    - nom_cader: TEXT
+    - cve_mun: Integer
+    - nom_mun: TEXT
+    - cv_cul: Integer
+    - nom_cul: TEXT
+    - cv_ciclo: Integer
+    - nom_ciclo: TEXT
+    - cv_moda: Integer
+    - nom_moda: TEXT
+    - sup_sem: TEXT
+    - sup_cos: TEXT
+    - sup_sin: TEXT
+    - volumen: TEXT
+    - rend: TEXT
+    - precio: TEXT
+    - valor: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ano
+  - cv_ent
+  - nom_ent
+  - cv_ddr
+  - nom_ddr
+  - cv_cader
+  - nom_cader
+  - cv_mun
+  - nom_mun
+  - cv_cul
+  - nom_cul
+  - cv_ciclo
+  - nom_ciclo
+  - cv_moda
+  - nom_moda
+  - sup_sem
+  - sup_cos
+  - sup_sin
+  - volumen
+  - rend
+  - precio
+  - valor
 segob:
   LUIGI:
     INDEX: null
