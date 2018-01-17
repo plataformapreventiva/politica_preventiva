@@ -41,8 +41,8 @@ def clean_column_names(x):
     return x
 
 
-def to_age(birthdate):
-    today = datetime.date.today()
+def to_age(birthdate, year, mes_corresp):
+    today = datetime.date(year=year, day=1, month=mes_corresp)
     try:
         born = datetime.strptime(birthdate, '%Y%m%d')
         age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
@@ -85,7 +85,7 @@ def clean_loc(loc):
         return None
     if (loc_int < 9999) & (loc_int > 0):
         cve_loc = str(loc_int).zfill(4)
-        return cve_loc 
+        return cve_loc
 
 def clean_cve_edo(edo):
     try:
@@ -123,11 +123,48 @@ def clean_origin(nb_origin):
         origin = None
     return origin
 
+def clean_anio(anio):
+   try:
+        clean_anio = int(anio)
+    except:
+        clean_anio = None
+    return clean_anio
+
+def clean_mes(mes):
+    try:
+        clean_mes = int(mes)
+    except:
+        clean_mes = None
+    if (clean_mes >= 1) & (clean_mes <= 12):
+        return clean_mes
+
+def gen_mes_corresp(periodo):
+    mes = periodo[2]
+    try:
+        clean_mes = int(mes)
+    except:
+        if mes.lower() == 'a':
+            clean_mes = 10
+        elif mes.lower() == 'b':
+            clean_mes = 11
+        elif mes.lower() == 'c':
+            clean_mes = 12
+        else:
+            clean_mes = None
+    return clean_mes
+
 def clean_pub(line):
     elems = line.split("|")
 
+    # clean year and meses
+    year = clean_anio(elems[D['anio']])
+    nu_mes_pago = clean_mes(elems[D['nu_mes_pago']])
+    mes_corresp = gen_mes_corresp(elems[D['periodo']])
+
     # generate age column and category
-    edad = to_age(elems[D['fh_nacimiento']])
+    edad = to_age(elems[D['fh_nacimiento']],
+                  year,
+                  mes_corresp)
     categoria_edad = parse_age(edad)
 
     # remove names for underage
@@ -135,7 +172,7 @@ def clean_pub(line):
     ap_mat = elems[D['nb_segundo_ap']]
     nom = elems[D["nb_nombre"]]
     try:
-        if edad < 19:
+        if edad < 18:
             ap_pat = ap_mat = nom = ""
     except:
         pass
@@ -156,7 +193,7 @@ def clean_pub(line):
               elems[D['id_admin']],
               elems[D['cd_programa']],
               elems[D['cd_padron']],
-              elems[D['anio']],
+              year,
               elems[D['periodo']],
               ap_pat,
               ap_mat,
@@ -165,7 +202,8 @@ def clean_pub(line):
               edad,
               categoria_edad,
               gender,
-              elems[D['nu_mes_pago']],
+              nu_mes_pago,
+              mes_corresp,
               elems[D['new_id']],
               elems[D['nu_imp_monetario']],
               cve_muni,
