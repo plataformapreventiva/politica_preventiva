@@ -1,7 +1,10 @@
 FROM dpa/python:0.1
 
 ENV PROJECT_NAME politica_preventiva
-ENV token $token
+# ARG token
+# ARG path
+# ENV token=$token
+# ENV path=$path
 
 ## Copiamos los scripts
 # ADD . /${PROJECT_NAME}/
@@ -30,8 +33,7 @@ RUN mkdir .ssh
 # RUN chmod +x /gitInit.sh
 # ENTRYPOINT ["/gitInit.sh"]
 # CMD [ git clone git@github.com:plataformapreventiva/politica_preventiva.git ] 
+COPY entrypoint-script.sh /tmp/entrypoint-script.sh
 
-RUN git clone https://$token@github.com/plataformapreventiva/politica_preventiva.git 
-
-
+ENTRYPOINT [ "/tmp/entrypoint-script.sh" ]
 CMD [ "/bin/bash" ]
