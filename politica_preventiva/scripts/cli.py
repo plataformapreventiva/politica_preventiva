@@ -9,7 +9,7 @@ import politica_preventiva.pipelines.politica_preventiva
 
 def check_server(host, port):
     """
-    Verifica si el servidor de luigi está ejecutándose
+    Checks if Luigi Server is running to use the central scheduler
     """
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -44,7 +44,7 @@ def main(server, port, luigi_cfg, workers, level):
                   '--level', str(level)
                  ]
 
-    # Ejecuta luigi con el local scheduler si no hay servidor
+    # If the server is not running then it uses the local scheduler
     if not check_server(server, port):
         luigi_args.append('--local-scheduler')
 
@@ -53,4 +53,3 @@ def main(server, port, luigi_cfg, workers, level):
 
 if __name__ == '__main__':
     main()
-
