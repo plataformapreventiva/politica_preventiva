@@ -1,0 +1,14 @@
+maize-price-interpolation:
+   dependencies:
+        - maiz_precios
+        - sagarpa_cierre_2003_2016
+   repository:
+        - food-price-warning-indicator
+maize-price-warning-indicator:
+   dependencies:
+        - maize-price-interpolation
+        - maiz_precios
+   repository:
+        - food-price-warning-indicator
+   parameter:
+        - maize
