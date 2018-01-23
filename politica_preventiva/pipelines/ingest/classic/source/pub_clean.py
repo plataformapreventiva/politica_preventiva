@@ -28,11 +28,19 @@ D = {'cd_dependencia': 0,
      'in_titular': 18,
      'cd_beneficio': 19}
 
+
 def trim(string):
     try:
         return string.strip()
     except:
         return ""
+
+
+def clean_string(x):
+    if isinstance(x, str):
+        return x.replace('"', '')
+    else:
+        return x
 
 
 def clean_column_names(x):
@@ -41,10 +49,14 @@ def clean_column_names(x):
     return x
 
 
-def to_age(birthdate, year, mes_corresp):
-    today = datetime.date(year=year, day=1, month=mes_corresp)
+def to_age(birthdate, anio, mes_corresp):
+    birthdate = str(clean_string(birthdate))
+    anio = int(clean_string(anio))
+    mes_corresp = int(clean_string(mes_corresp))
+    today = datetime.date(year=anio, day=1, month=mes_corresp)
+
     try:
-        born = datetime.strptime(birthdate, '%Y%m%d')
+        born = datetime.datetime.strptime(birthdate, '%Y%m%d')
         age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     except:
         age = None
@@ -66,7 +78,10 @@ def parse_age(age):
         categoria = None
     return categoria
 
+
 def clean_cve_muni(edo, muni):
+    edo = clean_string(edo)
+    muni = clean_string(muni)
     try:
         edo_int = int(edo)
         muni_int = int(muni)
@@ -78,7 +93,9 @@ def clean_cve_muni(edo, muni):
                                        mun=str(muni_int).zfill(4))
         return cve_muni
 
+
 def clean_loc(loc):
+    loc = clean_string(loc)
     try:
         loc_int = int(loc)
     except:
@@ -87,7 +104,9 @@ def clean_loc(loc):
         cve_loc = str(loc_int).zfill(4)
         return cve_loc
 
+
 def clean_cve_edo(edo):
+    edo = clean_string(edo)
     try:
         edo_int = int(edo)
     except:
@@ -96,6 +115,7 @@ def clean_cve_edo(edo):
     if (edo_int <= 32) & (edo_int > 0):
         cve_edo = str(edo_int).zfill(2)
         return cve_edo
+
 
 def clean_gender(gender):
     try:
@@ -108,6 +128,7 @@ def clean_gender(gender):
     except:
         gen = None
     return gen
+
 
 def clean_origin(nb_origin):
     try:
@@ -123,22 +144,28 @@ def clean_origin(nb_origin):
         origin = None
     return origin
 
-def clean_anio(anio):
-   try:
-        clean_anio = int(anio)
+
+def clean_integer(raw_int):
+    raw_int = clean_string(raw_int)
+    try:
+        clean_int = int(raw_int)
     except:
-        clean_anio = None
-    return clean_anio
+        clean_int = None
+    return clean_int
+
 
 def clean_mes(mes):
+    mes = clean_string(mes)
     try:
         clean_mes = int(mes)
     except:
-        clean_mes = None
+        return None
     if (clean_mes >= 1) & (clean_mes <= 12):
         return clean_mes
 
+
 def gen_mes_corresp(periodo):
+    periodo = clean_string(periodo)
     mes = periodo[2]
     try:
         clean_mes = int(mes)
@@ -153,11 +180,12 @@ def gen_mes_corresp(periodo):
             clean_mes = None
     return clean_mes
 
-def clean_pub(line):
+
+def clean_pub(line, year):
     elems = line.split("|")
 
     # clean year and meses
-    year = clean_anio(elems[D['anio']])
+    anio = clean_integer(elems[D['anio']])
     nu_mes_pago = clean_mes(elems[D['nu_mes_pago']])
     mes_corresp = gen_mes_corresp(elems[D['periodo']])
 
@@ -188,12 +216,14 @@ def clean_pub(line):
     # clean origin
     origin = clean_origin(elems[D['nb_origen']])
 
+    # clean monto
+    nu_imp_monetario = clean_integer(elems[D['nu_imp_monetario']])
     result = [elems[D['cd_dependencia']],
               origin,
               elems[D['id_admin']],
               elems[D['cd_programa']],
               elems[D['cd_padron']],
-              year,
+              anio,
               elems[D['periodo']],
               ap_pat,
               ap_mat,
@@ -205,7 +235,7 @@ def clean_pub(line):
               nu_mes_pago,
               mes_corresp,
               elems[D['new_id']],
-              elems[D['nu_imp_monetario']],
+              nu_imp_monetario,
               cve_muni,
               cve_edo,
               cve_loc,
@@ -231,5 +261,5 @@ if __name__ == "__main__":
     output_path = "s3n://pub-raw/clean/{}".format(year)
     print(output_path)
     raw_df = read_pub(year, input_path, output_path)
-    new_df = raw_df.map(clean_pub)
+    new_df = raw_df.map(lambda x: clean_pub(x, year))
     new_df.saveAsTextFile(output_path)
