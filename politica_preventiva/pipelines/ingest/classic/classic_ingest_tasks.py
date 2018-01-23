@@ -671,6 +671,17 @@ class sequia(IngestRTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
+class red_carretera(TDockerTask):
+    @property
+    def cmd(self):
+        # year = self.data_date.split("-")[0]
+        # month = self.data_date.split("-")[1].zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'red_carretera.sh', self.data_date,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)
+
 class conagua_temperaturas(TDockerTask):
     @property
     def cmd(self):
@@ -717,4 +728,3 @@ class cuaps_criterios(TDockerTask):
                        self.local_path +
                        self.pipeline_task, self.local_ingest_file]
        return " ".join(command_list)
-
