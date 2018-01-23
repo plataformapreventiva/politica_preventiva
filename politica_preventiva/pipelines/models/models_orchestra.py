@@ -27,11 +27,13 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import UpdateCleanDB
+from politica_preventiva.pipelines.ingest.tools.ingest_utils import final_dates
+
+
 # Env Setup
 load_dotenv(find_dotenv())
 
 # Logger & Config
-configuration.LuigiConfigParser.add_config_path('/pipelines/configs/luigi_models.cfg')
 conf = configuration.get_config()
 
 logging_conf = configuration.get_config().get("core", "logging_conf_file")
@@ -56,6 +58,10 @@ class ModelsPipeline(luigi.WrapperTask):
     client = S3Client()
 
     def requires(self):
+        set_pipelines = [(model_task, final_dates(False,
+                                                 model_task,
+                                                 self.current_date)) for
+                        model_task in self.models]
         return [RunModel(model_task, self.current_date)
                 for model_task in self.models]
 

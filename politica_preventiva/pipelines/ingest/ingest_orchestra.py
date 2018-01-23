@@ -35,7 +35,6 @@ from politica_preventiva.pipelines.utils import emr_tasks
 load_dotenv(find_dotenv())
 
 # Logger & Config
-configuration.LuigiConfigParser.add_config_path('/pipelines/configs/luigi_ingest.cfg')
 conf = configuration.get_config()
 
 logging_conf = configuration.get_config().get("core", "logging_conf_file")
