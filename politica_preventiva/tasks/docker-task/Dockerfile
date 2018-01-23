@@ -9,6 +9,8 @@ WORKDIR /${PROJECT_NAME}
 RUN apt-get -y install wget
 #RUN mkdir /${PROJECT_NAME}/data
 
+RUN apt-get -y install wget nodejs npm gdal-bin
+RUN npm install ogr2ogr
 
 ADD requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
