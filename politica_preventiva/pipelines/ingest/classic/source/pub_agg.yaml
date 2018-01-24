@@ -24,7 +24,7 @@ grupos:
     todo:
         key_col: []
         new_names: []
-        add_column: []
+        add_column: [cve_programa, cve_padron]
 
 tipos:
     cd_sexo:
@@ -43,8 +43,8 @@ temporalidad:
         new_names: [anio, mes]
         add_column: []
     mes_correspondencia:
-        key_col: [nu_mes_correspondencia]
-        new_names: [mes]
+        key_col: [anio, nu_mes_correspondencia]
+        new_names: [anio, mes]
         add_column: []
     anual:
         key_col: [anio]
