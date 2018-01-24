@@ -30,63 +30,6 @@ logging_conf = configuration.get_config().get("core", "logging_conf_file")
 logging.config.fileConfig(logging_conf)
 logger = logging.getLogger("dpa-sedesol")
 
-#######################
-# Abstract Tasks
-#######################
-
-class AddEmrStep(EmrTask):
-
-    """ Add Emr Step Task
-        This task adds steps for the EMR cluster.
-        Substitute of [Preprocess & Ingestion] when the source data is big enough
-        to need spark as engine.
-        TODO() This task has not yet been implemented
-
-        Note
-        ---------
-        Steps should be uploaded in S3 as .py scripts
-
-        Returns
-        --------
-        This task generate s3/pipeline/raw  ingestion files
-    """
-
-    current_date = luigi.DateParameter()
-    pipeline_task = luigi.Parameter()
-    data_date = luigi.Parameter()
-    suffix = luigi.Parameter()
-
-    spark_bucket = luigi.Parameter('DEFAULT')
-    raw_bucket = luigi.Parameter('DEFAULT')
-
-    classic_task_scripts = luigi.Parameter('DEFAULT')
-    client = S3Client(aws_access_key_id, aws_secret_access_key)
-
-    def requires(self):
-        # Copy file to s3
-        ingest_script = self.classic_task_scripts + self.pipeline_task +\
-                       ".py"
-        ingest_script_output = self.spark_bucket +\
-                       self.pipeline_task + '.py'
-        self.client.put(ingest_script, ingest_script_output)
-
-        # Check that cluster is running
-        id_name = self.pipeline_task + '_' + self.data_date
-        return InitializeCluster(id_name=id_name)
-
-    def run(self):
-        # TODO() Replae cluster id query to a general.
-        F = open(self.input().path,'r')
-        ClusterId = F.read().replace('\n','')
-        self.emr_loader.add_pipeline_step(ClusterId, self.pipeline_task,
-                                     'dpa-plataforma-preventiva/utils/spark',
-                                     self.pipeline_task + '.py', '--year', self.data_date)
-
-        status = self.emr_loader.get_final_status(ClusterId, 'pub')
-        self.emr_loader.shutdown_emr_cluster(ClusterId)
-        if not status:
-            logger.critical('Pub EMR Step did not finish.')
-
 
 #######################
 # Classic Ingest Tasks
@@ -97,6 +40,7 @@ class pub_agregacionesEMR(EmrTask):
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
     suffix = luigi.Parameter()
+    id_name = luigi.Parameter()
 
     spark_bucket = luigi.Parameter('DEFAULT')
     raw_bucket = luigi.Parameter('DEFAULT')
@@ -106,8 +50,8 @@ class pub_agregacionesEMR(EmrTask):
 
    def requires(self):
         # Copy script to S3
-        ingest_script = self.classic_task_scripts + self.pipeline_task +\
-                       ".py"
+        ingest_script = self.classic_task_scripts +\
+                         self.pipeline_task + ".py"
         ingest_script_output = self.spark_bucket +\
                        self.pipeline_task + '.py'
         self.client.put(ingest_script, ingest_script_output)
@@ -116,17 +60,17 @@ class pub_agregacionesEMR(EmrTask):
         ingest_aux_output = self.spark_bucket + 'pub_agg.yaml'
         self.client.put(ingest_aux, ingest_aux_output)
 
-        id_name = self.pipeline_task + '_' + self.data_date
         # check if pub clean exists
         exists_clean = self.client.exists('pub-raw/concatenation/{year}/pub_{year}.csv'.format(year=self.data_date))
 
         if exists_clean:
-            return InitializeCluster(id_name=id_name)
+            return InitializeCluster(id_name=self.id_name)
         else:
             return pub_concatenationEMR(pipeline_task=self.pipeline_task,
                                         current_date=self.current_date,
                                         data_date=self.data_date,
-                                        suffix=self.suffix)
+                                        suffix=self.suffix,
+                                        id_name=self.id_name)
 
     def run(self):
         F = open(self.input().path,'r')
@@ -150,12 +94,14 @@ class pub_agregacionesEMR(EmrTask):
             "{0}/exitoso.txt".format(self.data_date)
         return S3Target(file_path)
 
+
 class pub_concatenationEMR(AddEmrStep):
 
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
     suffix = luigi.Parameter()
+    id_name = luigi.Parameter()
 
     spark_bucket = luigi.Parameter('DEFAULT')
     raw_bucket = luigi.Parameter('DEFAULT')
@@ -164,29 +110,47 @@ class pub_concatenationEMR(AddEmrStep):
     client = S3Client(aws_access_key_id, aws_secret_access_key)
 
     def requieres(self):
-        id_name = self.pipeline_task + '_' + self.data_date
+        # Copy script to S3
+        ingest_script = './pipelines/utils/s3_utils.py'
+        ingest_script_output = self.spark_bucket + 's3_utils.py'
+        self.client.put(ingest_script, ingest_script_output)
         # check if pub clean exists
         exists_clean = self.client.exists('pub-raw/clean/{year}/exitoso.txt'.format(year=self.data_date))
         if exists_clean:
-            return InitializeCluster(id_name=id_name)
+            return InitializeCluster(id_name=self.id_name)
         else:
             return pub_cleanEMR(pipeline_task=self.pipeline_task,
                                 current_date=self.current_date,
                                 data_date=self.data_date,
-                                suffix=self.suffix)
+                                suffix=self.suffix,
+                                id_name=self.id_name)
     def run(self):
         #Concatenate
         result_filepath = 'concatenation/{year}/pub_{year}.csv'.format(self.data_date)
         # folder to concatenate
         folder_to_concatenate = 'clean/{year}/'.format(self.date_date)
-        # function for appending all .csv files in folder_to_concatenate
-        s3_utils.run_concatenation('pub-raw', folder_to_concatenate,
-                                  result_filepath, '.csv')
+
+        # Getting cluster id and instructions
+        F = open(self.input().path,'r')
+        ClusterId = F.read().replace('\n','')
+        copy_steps = self.copy_steps(self.spark_bucket, ['s3_utils.py'])
+        step_name = 'concatenate' + '_' + self.data_date
+        execute_steps = self.execute_step(step_name=step_name,
+                                          script_name='s3_utils.py',
+                                          parameters={'bucket': 'pub-raw',
+                                                      'folder': 'clean/{}'.format(self.data_date),
+                                                      'output': 'concatenation/{0}/pub_{0}.csv'.format(self.data_date),
+                                                      'suffix': ''})
+        send_pipeline_steps(steps=copy_steps + execute_steps,
+                            job_flow_id=ClusterId)
+        status = self.emr_loader.get_final_status(ClusterId, step_name)
+        self.emr_loader.shutdown_emr_cluster(ClusterId)
+        if not status:
+            logger.critical('Pub EMR Step did not finish.')
 
     def output(self):
         file_path = 'pub-raw/concatenation/{year}/pub_{year}.csv'.format(year=self.data_date)
         return S3Target(file_path)
-
 
 
 class pub_cleanEMR(AddEmrStep):
@@ -195,6 +159,7 @@ class pub_cleanEMR(AddEmrStep):
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
     suffix = luigi.Parameter()
+    id_name = luigi.Parameter()
 
     spark_bucket = luigi.Parameter('DEFAULT')
     raw_bucket = luigi.Parameter('DEFAULT')
@@ -206,8 +171,7 @@ class pub_cleanEMR(AddEmrStep):
         ingest_script = self.classic_task_scripts + 'pub_clean.py'
         ingest_script_output = self.spark_bucket + 'pub_clean.py'
         self.client.put(ingest_script, ingest_script_output)
-        id_name = self.pipeline_task + '_' + self.data_date
-        return InitializeCluster(id_name=id_name)
+        return InitializeCluster(id_name=self.id_name)
 
     def run(self):
         F = open(self.input().path,'r')
