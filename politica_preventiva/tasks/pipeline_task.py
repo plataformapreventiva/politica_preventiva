@@ -161,7 +161,7 @@ class InitializeCluster(EmrTask):
         """
         Create the EMR cluster
         """
-        cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt" 
+        cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt"
         # Launch Cluster
         self.emr_loader.launch_cluster()
         # Create Client
@@ -169,6 +169,9 @@ class InitializeCluster(EmrTask):
         file = open(cluster_id,'w')
         file.write(self.emr_loader.job_flow_id)
         file.close()
+        packages = ["boto3", "pandas"]
+        steps = self.general_steps(packages)
+        self.send_pipeline_steps(steps, self.emr_loader.job_flow_id)
 
     def output(self):
         cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt"
