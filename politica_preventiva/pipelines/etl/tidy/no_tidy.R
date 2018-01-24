@@ -59,7 +59,7 @@ con <- dbConnect(RPostgres::Postgres(),
 )
 
 
-query = sprintf("drop table if exists clean.%s; create table clean.%s as (select * from raw.%s;",
+query = sprintf("drop table if exists tidy.%s; create table tidy.%s as (select * from clean.%s;",
 	pipeline_task,
 	pipeline_task,
 	pipeline_task)
