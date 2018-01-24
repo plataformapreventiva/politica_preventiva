@@ -82,15 +82,6 @@ class EMRLoader(object):
                         'InstanceType': self.slave_instance_type,
                         'InstanceCount': self.instance_count,
                     }
-                    #,
-                    #{
-                    #    'Name': 'TaskInstanceType',
-                    #    'Market': 'SPOT',
-                    #    'InstanceRole': 'TASK',
-                    #    'BidPrice': '0.001',  # self.bidprice
-                    #    'InstanceType': self.slave_instance_type,
-                    #    'InstanceCount': 1,
-                    #}
                 ],
 
                 'KeepJobFlowAliveWhenNoSteps': False,
@@ -101,15 +92,12 @@ class EMRLoader(object):
             Applications=[
                 {
                     'Name': 'Spark'
-                    # 'Version':'2.1.0'
                 },
                 {
                     'Name': 'Ganglia'
-                    # 'Version': '3.7.2'
                 },
                 {
                     'Name': 'Zeppelin'
-                    # 'Version':'0.7.0'
                 }
             ],
             Configurations=[
@@ -147,44 +135,59 @@ class EMRLoader(object):
         return True  # self._poll_until_cluster_ready(job_flow_id)
 
 
-    def add_pipeline_step(self, job_flow_id, step_name, script_bucket_name,
-                          script_name, parameter='', value=''):
-        response = self.boto_client("emr").add_job_flow_steps(
-            JobFlowId=job_flow_id,
-            Steps=[
-                {
-                    'Name': 'setup - copy files',
+    def send_pipeline_steps(self, steps, job_flow_id):
+        response = self.boto_client("emr").add_job_flow_steps(JobFlowId=job_flow_id,
+                                                              Steps=steps)
+        return response
+
+
+    def copy_steps(self, script_bucket_name, script_names):
+        Steps = []
+        for script_name in script_names:
+            step = {'Name' : 'setup - copy {}'.format(script_name),
                     'ActionOnFailure': 'CANCEL_AND_WAIT',
                     'HadoopJarStep': {
                         'Jar': 'command-runner.jar',
                         'Args': ['aws', 's3', 'cp', 's3://{0}/{1}'.format(script_bucket_name, script_name),
-                                 '/home/hadoop/']
+                                '/home/hadoop/']
                     }
-                },
-                {
-                    'Name': 'install python packages',
-                    'ActionOnFailure': 'CANCEL_AND_WAIT',
-                    'HadoopJarStep': {
-                        'Jar': 'command-runner.jar',
-                        'Args': ['sudo','pip','install','boto3','pandas']
-                    }
-                },
-                #{
-                #    'Name': 'install python packages',
-                #    'ActionOnFailure': 'CANCEL_AND_WAIT',
-                #    'HadoopJarStep': {
-                #        'Jar': 'command-runner.jar',
-                #        'Args': ['sudo','pip','install','boto3',
-                #                '/home/hadoop']
-                #    }
-                #},
+            Steps.append(step)
+        return Steps
+
+
+    def execute_step(self, step_name, script_name, parameters=dict()):
+
+        args = ["--{par} {arg}".format(par=llave, arg=value)
+                    for llave,value in parameters.items()]
+        Step = [
                 {
                     'Name': step_name,
                     'ActionOnFailure': 'CANCEL_AND_WAIT',
                     'HadoopJarStep': {
                         'Jar': 'command-runner.jar',
-                        'Args': ['spark-submit', 
-                                 '--conf', 'spark.executor.instances=6', 
+                        'Args': ['/home/hadoop/' + script_name] + args
+                    }
+                }]
+        return Step
+
+
+    def general_steps(self, python_packages=[]):
+
+        step_py = [{
+                    'Name': 'install python packages',
+                    'ActionOnFailure': 'CANCEL_AND_WAIT',
+                    'HadoopJarStep': {
+                        'Jar': 'command-runner.jar',
+                        'Args': ['sudo','pip','install'] + python_packages
+                    }
+                }]
+       step_spark = [{
+                    'Name': "Spark parameters",
+                    'ActionOnFailure': 'CANCEL_AND_WAIT',
+                    'HadoopJarStep': {
+                        'Jar': 'command-runner.jar',
+                        'Args': ['spark-submit',
+                                 '--conf', 'spark.executor.instances=6',
                                  '--conf', 'spark.memory.fraction=0.8',
                                  '--conf', 'spark.memory.storageFraction=0.3',
                                  '--conf', 'spark.yarn.executor.memoryOverhead=1024',
@@ -194,12 +197,11 @@ class EMRLoader(object):
                                  '--conf', 'spark.driver.cores=1',
                                  '--conf', 'spark.executor.cores=7',
                                  '--conf', 'spark.yarn.appMasterEnv.PYSPARK_PYTHON=python3',
-                                 '--conf', 'spark.executorEnv.PYSPARK_PYTHON=python3',
-                                 '/home/hadoop/' + script_name, 
-                                 parameter, value]
-                    }
-                }
-            ])
+                                 '--conf', 'spark.executorEnv.PYSPARK_PYTHON=python3']
+                        }
+                    }]
+        return step_py + step_spark
+
 
     def shutdown_emr_cluster(self, job_flow_id):
         self.boto_client("emr").terminate_job_flow(job_flow_id)

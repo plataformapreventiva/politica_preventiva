@@ -302,11 +302,11 @@ class Concatenation(luigi.Task):
 
         if extra[0] == 'spark':
 
-            emr_task = eval(self.pipeline_task + 'EMR') 
+            emr_task = eval(self.pipeline_task + 'EMR')
             return emr_task(pipeline_task=self.pipeline_task,
                             current_date=self.current_date,
                             data_date=self.data_date,
-                            suffix=self.suffix)
+                            suffix=self.suffix)  
 
         else:
             for extra_p in extra:
