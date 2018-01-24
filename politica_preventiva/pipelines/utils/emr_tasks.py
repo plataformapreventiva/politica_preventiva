@@ -171,14 +171,15 @@ class EMRLoader(object):
         return Step
 
 
-    def general_steps(self, python_packages=[]):
+    def general_steps(self):
 
         step_py = [{
                     'Name': 'install python packages',
                     'ActionOnFailure': 'CANCEL_AND_WAIT',
                     'HadoopJarStep': {
                         'Jar': 'command-runner.jar',
-                        'Args': ['sudo','pip','install'] + python_packages
+                        'Args': ['sudo','pip','install', '-r',
+                                 'requirements.txt']
                     }
                 }]
        step_spark = [{
