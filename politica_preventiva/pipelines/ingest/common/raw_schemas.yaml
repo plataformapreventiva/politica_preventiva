@@ -1975,6 +1975,33 @@ lecherias:
   - dvainilla
   - dchocolate
   - ltsbenmes
+maiz_precios:
+  LUIGI:
+    INDEX: fecha
+    SCHEMA:
+    - fecha: TEXT
+    - origen: TEXT
+    - destino: TEXT
+    - precio_min: FLOAT
+    - precio_max: FLOAT
+    - precio_frec: FLOAT
+    - obs: TEXT
+    - anio: Integer
+    - mes: Integer
+    - semana: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - fecha
+  - origen
+  - destino
+  - precio_min
+  - precio_max
+  - precio_frec
+  - obs
+  - anio
+  - mes
+  - semana
 mir:
   LUIGI:
     INDEX: clave
@@ -2121,6 +2148,59 @@ pub:
     - grupo: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
+red_carretera:
+  LUIGI:
+    INDEX: nombre
+    SCHEMA:
+    - wkt: GEOMETRY
+    - id_red: Integer
+    - tipo_vial: TEXT
+    - nombre: TEXT
+    - codigo: TEXT
+    - cond_pav: TEXT
+    - recubri: TEXT
+    - carriles: Integer
+    - estatus: TEXT
+    - condicion: TEXT
+    - nivel: Integer
+    - peaje: TEXT
+    - administra: TEXT
+    - jurisdi: TEXT
+    - circula: TEXT
+    - escala_vis: Integer
+    - velocidad: Integer
+    - union_ini: Integer
+    - union_fin: Integer
+    - longitud: FLOAT
+    - ancho: FLOAT
+    - fecha_act: Date
+    - calirepr: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - id_red
+  - tipo_vial
+  - nombre
+  - codigo
+  - cond_pav
+  - recubri
+  - carriles
+  - estatus
+  - condicion
+  - nivel
+  - peaje
+  - administra
+  - jurisdi
+  - circula
+  - escala_vis
+  - velocidad
+  - union_ini
+  - union_fin
+  - longitud
+  - ancho
+  - fecha_act
+  - calirepr
 sagarpa:
   LUIGI:
     INDEX: null
@@ -2153,6 +2233,57 @@ sagarpa:
   - moda_hidr
   - ciclo
   - cultivo
+sagarpa_cierre_2003_2016:
+  LUIGI:
+    INDEX: cve_ent
+    SCHEMA:
+    - ano: Integer
+    - cve_ent: Integer
+    - nom_ent: TEXT
+    - cv_ddr: Integer
+    - nom_ddr: TEXT
+    - cv_cader: Integer
+    - nom_cader: TEXT
+    - cve_mun: Integer
+    - nom_mun: TEXT
+    - cv_cul: Integer
+    - nom_cul: TEXT
+    - cv_ciclo: Integer
+    - nom_ciclo: TEXT
+    - cv_moda: Integer
+    - nom_moda: TEXT
+    - sup_sem: FLOAT
+    - sup_cos: FLOAT
+    - sup_sin: FLOAT
+    - volumen: FLOAT
+    - rend: FLOAT
+    - precio: FLOAT
+    - valor: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ano
+  - cv_ent
+  - nom_ent
+  - cv_ddr
+  - nom_ddr
+  - cv_cader
+  - nom_cader
+  - cv_mun
+  - nom_mun
+  - cv_cul
+  - nom_cul
+  - cv_ciclo
+  - nom_ciclo
+  - cv_moda
+  - nom_moda
+  - sup_sem
+  - sup_cos
+  - sup_sin
+  - volumen
+  - rend
+  - precio
+  - valor
 segob:
   LUIGI:
     INDEX: null

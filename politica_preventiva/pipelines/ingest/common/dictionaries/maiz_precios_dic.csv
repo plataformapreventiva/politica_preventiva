@@ -1,0 +1,13 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+fecha|Fecha de registro del precio de maíz en la central de abastos.|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642||2015-1-m
+origen|Origen del maiz|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642||2015-1-m
+destino|Destino del maíz: central de abastos|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642||2015-1-m
+precio_min|Precio mínimo de la semana por kg|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642|PRECIO MÍNIMO: El valor más bajo de la cotización dentro de una muestra|2015-1-m
+precio_max|Precio máximo de la semana por kg|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642|PRECIO MÁXIMO: El valor más alto de la cotización dentro de una muestra|2015-1-m
+precio_frec|Precio observado más frecuentemente en la semana por kg (vendido en toneladas)|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642|PRECIO FRECUENTE: Es el dato que más se repite en la muestra (moda)|2015-1-m
+obs|Observaciones|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642|Precios al mayoreo de Granos Básicos . Pesos ($) por kilogramo comercializado en bulto de 50 kg.|2015-1-m
+anio|Año correspondiente a la observación del precio del maíz|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642||2015-1-m
+mes|Mes correspondiente a la observación del precio del maíz|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642||2015-1-m
+semana|Semana correspondiente a la observación del precio del maíz|SE|http://www.economia-sniim.gob.mx|capacidades|seguridad alimentaria|2018.0|2018-01-13 02:00:55.376642||2015-1-m
+actualizacion_sedesol|Fecha de actualización de datos en Sedesol|SEDESOL|||||2018-01-13 02:00:55.376642||2015-1-m
+data_date|Año-mes correspondiente a los datos|SEDESOL|||||2018-01-13 02:00:55.376642||2015-1-m
