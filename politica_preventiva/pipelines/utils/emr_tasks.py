@@ -151,6 +151,7 @@ class EMRLoader(object):
                         'Args': ['aws', 's3', 'cp', 's3://{0}/{1}'.format(script_bucket_name, script_name),
                                 '/home/hadoop/']
                     }
+                }
             Steps.append(step)
         return Steps
 
@@ -179,10 +180,9 @@ class EMRLoader(object):
                     'HadoopJarStep': {
                         'Jar': 'command-runner.jar',
                         'Args': ['sudo','pip','install', '-r',
-                                 'requirements.txt']
-                    }
+                                 'requirements.txt']}
                 }]
-       step_spark = [{
+        step_spark = [{
                     'Name': "Spark parameters",
                     'ActionOnFailure': 'CANCEL_AND_WAIT',
                     'HadoopJarStep': {

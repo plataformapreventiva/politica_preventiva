@@ -21,6 +21,7 @@ from py2neo import Graph, Node, Relationship
 
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
+from politica_preventiva.pipelines.ingest.classic.emr_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
     preprocessing_scripts.preprocessing_scripts import *
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_list, \
