@@ -2148,6 +2148,59 @@ pub:
     - grupo: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
+red_carretera:
+  LUIGI:
+    INDEX: nombre
+    SCHEMA:
+    - wkt: GEOMETRY
+    - id_red: Integer
+    - tipo_vial: TEXT
+    - nombre: TEXT
+    - codigo: TEXT
+    - cond_pav: TEXT
+    - recubri: TEXT
+    - carriles: Integer
+    - estatus: TEXT
+    - condicion: TEXT
+    - nivel: Integer
+    - peaje: TEXT
+    - administra: TEXT
+    - jurisdi: TEXT
+    - circula: TEXT
+    - escala_vis: Integer
+    - velocidad: Integer
+    - union_ini: Integer
+    - union_fin: Integer
+    - longitud: FLOAT
+    - ancho: FLOAT
+    - fecha_act: Date
+    - calirepr: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - id_red
+  - tipo_vial
+  - nombre
+  - codigo
+  - cond_pav
+  - recubri
+  - carriles
+  - estatus
+  - condicion
+  - nivel
+  - peaje
+  - administra
+  - jurisdi
+  - circula
+  - escala_vis
+  - velocidad
+  - union_ini
+  - union_fin
+  - longitud
+  - ancho
+  - fecha_act
+  - calirepr
 sagarpa:
   LUIGI:
     INDEX: null
@@ -2199,13 +2252,13 @@ sagarpa_cierre_2003_2016:
     - nom_ciclo: TEXT
     - cv_moda: Integer
     - nom_moda: TEXT
-    - sup_sem: TEXT
-    - sup_cos: TEXT
-    - sup_sin: TEXT
-    - volumen: TEXT
-    - rend: TEXT
-    - precio: TEXT
-    - valor: TEXT
+    - sup_sem: FLOAT
+    - sup_cos: FLOAT
+    - sup_sin: FLOAT
+    - volumen: FLOAT
+    - rend: FLOAT
+    - precio: FLOAT
+    - valor: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:

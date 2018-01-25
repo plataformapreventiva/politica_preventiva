@@ -34,7 +34,8 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id,
                   aws_secret_access_key=aws_secret_access_key,
                   region_name="us-west-2")
-# Logger
+# Logger & Config
+configuration.LuigiConfigParser.add_config_path('/pipelines/configs/luigi_model.cfg')
 logging_conf = configuration.get_config().get("core", "logging_conf_file")
 logging.config.fileConfig(logging_conf)
 logger = logging.getLogger("dpa-sedesol")
@@ -237,13 +238,14 @@ def dates_list(pipeline, end_date, periodicity):
     except(NoOptionError):
         return [end_date]
 
+
 def final_dates(historical, pipeline_task, current_date):
     periodicity = configuration.get_config().get(pipeline_task,
                                                  'periodicity')
     if periodicity == 'None':
         dates = ['na']
         suffix = 'fixed'
-        return (dates, suffix) 
+        return (dates, suffix)
 
     elif historical in ['True', 'T', '1', 'TRUE']:
         logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
@@ -283,6 +285,7 @@ def final_dates(historical, pipeline_task, current_date):
         logger.info('Start date is not defined for the pipeline {0}'.format(
             pipeline_task)+\
             'Luigi will get only the information of the last period')
+
 
 def extras(pipeline):
     # pdb.set_trace()
