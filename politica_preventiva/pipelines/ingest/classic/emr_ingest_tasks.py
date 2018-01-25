@@ -15,7 +15,7 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.ingest.tests import classic_tests
-from politica_preventiva.tasks.pipeline_task import *
+from politica_preventiva.tasks.emr-task.emr_task import *
 from politica_preventiva.pipelines.utils import emr_tasks
 
 conf = configuration.get_config()
