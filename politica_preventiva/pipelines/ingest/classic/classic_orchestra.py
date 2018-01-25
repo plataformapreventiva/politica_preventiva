@@ -307,7 +307,8 @@ class Concatenation(luigi.Task):
             return emr_task(pipeline_task=self.pipeline_task,
                             current_date=self.current_date,
                             data_date=self.data_date,
-                            suffix=self.suffix)  
+                            suffix=self.suffix,
+                            id_name=self.pipeline_task + '_' + self.data_date)
 
         else:
             for extra_p in extra:

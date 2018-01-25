@@ -263,3 +263,8 @@ if __name__ == "__main__":
     raw_df = read_pub(year, input_path, output_path)
     new_df = raw_df.map(lambda x: clean_pub(x, year))
     new_df.saveAsTextFile(output_path)
+    f = open("exitoso.txt", "w+")
+    s3 = boto3.resource('s3')
+    out = 'clean/{}/exitoso.txt'.format(year)
+    s3.Object('pub-raw', out).put(Body=open('exitoso.txt', 'rb'))
+    f.close()

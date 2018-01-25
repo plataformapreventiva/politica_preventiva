@@ -146,3 +146,8 @@ if __name__ == "__main__":
                     tipo,
                     grupo,
                     temp)
+    f = open("exitoso.txt", "w+")
+    s3 = boto3.resource('s3')
+    out = 'etl/pub/preprocess/{}/exitoso.txt'.format(year)
+    s3.Object('dpa-plataforma-preventiva', out).put(Body=open('exitoso.txt', 'rb'))
+    f.close()

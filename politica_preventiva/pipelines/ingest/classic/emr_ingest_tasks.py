@@ -35,7 +35,7 @@ logger = logging.getLogger("dpa-sedesol")
 # Classic Ingest Tasks
 #######################
 
-class pub_agregacionesEMR(EmrTask):
+class pub_agrupacionesEMR(EmrTask):
     current_date = luigi.DateParameter()
     pipeline_task = luigi.Parameter()
     data_date = luigi.Parameter()
@@ -59,18 +59,14 @@ class pub_agregacionesEMR(EmrTask):
         ingest_aux = self.classic_task_scripts + 'pub_agg.yaml'
         ingest_aux_output = self.spark_bucket + 'pub_agg.yaml'
         self.client.put(ingest_aux, ingest_aux_output)
-
-        # check if pub clean exists
-        exists_clean = self.client.exists('pub-raw/concatenation/{year}/pub_{year}.csv'.format(year=self.data_date))
-
-        if exists_clean:
-            return InitializeCluster(id_name=self.id_name)
-        else:
-            return pub_concatenationEMR(pipeline_task=self.pipeline_task,
-                                        current_date=self.current_date,
-                                        data_date=self.data_date,
-                                        suffix=self.suffix,
-                                        id_name=self.id_name)
+        # Initialize Cluster
+        InitializeCluster(id_name=self.id_name)
+        return [InitializeCluster(id_name=self.id_name),
+                pub_concatenationEMR(pipeline_task=self.pipeline_task,
+                                     current_date=self.current_date,
+                                     data_date=self.data_date,
+                                     suffix=self.suffix,
+                                     id_name=self.id_name)]
 
     def run(self):
         F = open(self.input().path,'r')
@@ -114,16 +110,14 @@ class pub_concatenationEMR(AddEmrStep):
         ingest_script = './pipelines/utils/s3_utils.py'
         ingest_script_output = self.spark_bucket + 's3_utils.py'
         self.client.put(ingest_script, ingest_script_output)
-        # check if pub clean exists
-        exists_clean = self.client.exists('pub-raw/clean/{year}/exitoso.txt'.format(year=self.data_date))
-        if exists_clean:
-            return InitializeCluster(id_name=self.id_name)
-        else:
-            return pub_cleanEMR(pipeline_task=self.pipeline_task,
-                                current_date=self.current_date,
-                                data_date=self.data_date,
-                                suffix=self.suffix,
-                                id_name=self.id_name)
+
+        return [InitializeCluster(id_name=self.id_name),
+                pub_cleanEMR(pipeline_task=self.pipeline_task,
+                             current_date=self.current_date,
+                             data_date=self.data_date,
+                             suffix=self.suffix,
+                            id_name=self.id_name)]
+
     def run(self):
         #Concatenate
         result_filepath = 'concatenation/{year}/pub_{year}.csv'.format(self.data_date)
@@ -191,6 +185,5 @@ class pub_cleanEMR(AddEmrStep):
             self.emr_loader.shutdown_emr_cluster(ClusterId)
 
     def output(self):
-        file_path = 'pub-raw' +\
-                "concatenation/{0}/exitoso.txt".format(self.data_date)
+        file_path = 'pub-raw/clean/{0}/exitoso.txt'.format(self.data_date)
         return S3Target(file_path)
