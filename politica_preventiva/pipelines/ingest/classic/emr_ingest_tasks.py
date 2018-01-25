@@ -87,7 +87,7 @@ class pub_agrupacionesEMR(EmrTask):
 
     def output(self):
         file_path = self.raw_bucket + 'pub/preprocess/' +\
-            "{0}/exitoso.txt".format(self.data_date)
+            '{0}/exitoso.txt'.format(self.data_date)
         return S3Target(file_path)
 
 
