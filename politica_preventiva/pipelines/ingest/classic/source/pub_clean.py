@@ -35,13 +35,13 @@ def trim(string):
     except:
         return ""
 
-
 def clean_string(x):
     if isinstance(x, str):
-        return x.replace('"', '')
+        x = x.replace('"', '')
+        x = x.replace("'", '')
+        return x
     else:
         return x
-
 
 def clean_column_names(x):
     x = x.strip()
@@ -50,13 +50,13 @@ def clean_column_names(x):
 
 
 def to_age(birthdate, anio, mes_corresp):
-    birthdate = str(clean_string(birthdate))
-    anio = int(clean_string(anio))
-    mes_corresp = int(clean_string(mes_corresp))
-    today = datetime.date(year=anio, day=1, month=mes_corresp)
+    birthdate_2 = str(clean_string(birthdate))
+    anio_2 = int(clean_string(anio))
+    mes_corresp_2 = int(clean_string(mes_corresp))
+    today = datetime.date(year=anio_2, day=1, month=mes_corresp_2)
 
     try:
-        born = datetime.datetime.strptime(birthdate, '%Y%m%d')
+        born = datetime.datetime.strptime(birthdate_2, '%Y%m%d')
         age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     except:
         age = None
@@ -66,11 +66,11 @@ def to_age(birthdate, anio, mes_corresp):
 
 def parse_age(age):
     try:
-        if age >= 60:
+        if int(age) >= 60:
             categoria = 'Adulto Mayor'
-        elif age <= 14:
+        elif int(age) <= 14:
             categoria = 'Infante'
-        elif age > 14:
+        elif int(age) > 14:
             categoria = 'Adulto'
         else:
             categoria = None
@@ -90,7 +90,7 @@ def clean_cve_muni(edo, muni):
 
     if (edo_int <= 32) & (edo_int > 0) & (muni_int < 999) & (muni_int > 0):
         cve_muni = "{ent}{mun}".format(ent=str(edo_int).zfill(2),
-                                       mun=str(muni_int).zfill(4))
+                                       mun=str(muni_int).zfill(3))
         return cve_muni
 
 
@@ -132,11 +132,11 @@ def clean_gender(gender):
 
 def clean_origin(nb_origin):
     try:
-        if re.search('F', origin):
+        if re.search('F', nb_origin):
             origin = 'F'
-        elif re.search('E', origin):
+        elif re.search('E', nb_origin):
             origin = 'E'
-        elif re.search('M', origin):
+        elif re.search('M', nb_origin):
             origin = 'M'
         else:
             origin = None
@@ -223,7 +223,7 @@ def clean_pub(line, year):
               elems[D['id_admin']],
               elems[D['cd_programa']],
               elems[D['cd_padron']],
-              anio,
+              year,
               elems[D['periodo']],
               ap_pat,
               ap_mat,
@@ -251,7 +251,7 @@ def read_pub(year, input_path, output_path):
 
 
 if __name__ == "__main__":
-    input_path = "s3n://pub-raw/"
+    input_path = "s3n://pub-raw/raw/"
     sc = SparkContext.getOrCreate()
     parser = argparse.ArgumentParser(description="S3 file combiner")
     parser.add_argument("--year", help="year", default = "2013")
