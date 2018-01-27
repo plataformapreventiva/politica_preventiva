@@ -1,4 +1,30 @@
+# coding: utf-8
 
+import luigi
+import logging
+import subprocess
+import yaml
+import os
+import pdb
+
+from luigi.contrib.s3 import S3Target, S3Client
+from politica_preventiva.pipelines.utils import emr_tasks
+from luigi import configuration
+
+# Logger
+logger = logging.getLogger("dpa-sedesol")
+
+
+# AWS
+aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+PLACES_API_KEY = os.environ.get('PLACES_API_KEY')
+
+# EMR config
+
+with open("pipelines/ingest/common/emr-config.yaml", "r") as file:
+    config = yaml.load(file)
+config_emr = config.get("emr")
 
 class EmrTask(luigi.Task):
 
@@ -41,6 +67,7 @@ class InitializeCluster(EmrTask):
     emr_path = luigi.Parameter('DEFAULT')
     spark_bucket = luigi.Parameter('DEFAULT')
     id_name = luigi.Parameter()
+    client = S3Client(aws_access_key_id, aws_secret_access_key)
 
     def run(self):
         """
@@ -58,10 +85,15 @@ class InitializeCluster(EmrTask):
         requirements_file = self.emr_path + 'requirements.txt'
         requirements_output = self.spark_bucket + 'requirements.txt'
         self.client.put(requirements_file, requirements_output)
-        copy_steps = self.copy_steps(self.spark_bucket, ['requirements.txt'])
+        set_up_file = self.emr_path + 'set_up.sh'
+        set_up_output = self.spark_bucket + 'set_up.sh'
+        self.client.put(set_up_file, set_up_output)
 
-        steps = copy_steps + self.general_steps()
-        self.send_pipeline_steps(steps, self.emr_loader.job_flow_id)
+        copy_steps = self.emr_loader.copy_steps(self.spark_bucket,
+                                                ['requirements.txt', 'set_up.sh'])
+
+        steps = copy_steps + self.emr_loader.general_steps()
+        self.emr_loader.send_pipeline_steps(steps, self.emr_loader.job_flow_id)
 
     def output(self):
         cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt"
