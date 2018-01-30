@@ -17,3 +17,4 @@ filechunkio
 #sqlite3
 messytables
 smart_open
+awscli
