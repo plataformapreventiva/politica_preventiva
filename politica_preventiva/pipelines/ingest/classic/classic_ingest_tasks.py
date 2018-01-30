@@ -108,7 +108,8 @@ class TDockerTask(SourceIngestTask):
         elif self.extension == 'Rscript':
             task = 'r-task'
 
-        cmd_docker = ['docker run', '-it', '--rm', '-v $PWD:/politica_preventiva',
+        cmd_docker = ['docker run', '--env-file $PWD/.env',
+              '-it', '--rm', '-v $PWD:/politica_preventiva',
               '-v politica_preventiva_store:/data ',
               '-e AWS_ACCESS_KEY_ID="{aws_access_key_id}"'.format(aws_access_key_id=aws_access_key_id),
               '-e AWS_SECRET_ACCESS_KEY="{aws_secret_access_key}"'.format(aws_secret_access_key=aws_secret_access_key),
@@ -674,8 +675,6 @@ class sequia(IngestRTask):
 class red_carretera(TDockerTask):
     @property
     def cmd(self):
-        # year = self.data_date.split("-")[0]
-        # month = self.data_date.split("-")[1].zfill(2)
         command_list = ['sh', self.classic_task_scripts +
                         'red_carretera.sh', self.data_date,
                         self.local_path +
@@ -725,6 +724,24 @@ class cuaps_criterios(TDockerTask):
     def cmd(self):
        command_list = ['sh', self.classic_task_scripts +
                        'cuaps_criterios.sh',
+                       self.local_path +
+                       self.pipeline_task, self.local_ingest_file]
+       return " ".join(command_list)
+
+class sifode(TDockerTask):
+    @property
+    def cmd(self):
+       command_list = ['sh', self.classic_task_scripts +
+                       'sifode.sh',
+                       self.local_path +
+                       self.pipeline_task, self.local_ingest_file]
+       return " ".join(command_list)
+
+class sifode_calificacion(TDockerTask):
+    @property
+    def cmd(self):
+       command_list = ['sh', self.classic_task_scripts +
+                       'sifode_calificacion.sh',
                        self.local_path +
                        self.pipeline_task, self.local_ingest_file]
        return " ".join(command_list)
