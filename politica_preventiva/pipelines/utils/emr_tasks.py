@@ -84,7 +84,7 @@ class EMRLoader(object):
                     }
                 ],
 
-                'KeepJobFlowAliveWhenNoSteps': True,
+                'KeepJobFlowAliveWhenNoSteps': False,
                 'TerminationProtected': False,
                 'Ec2KeyName': self.key_name,
                 'Ec2SubnetId': self.subnet_id
