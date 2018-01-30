@@ -26,13 +26,14 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 
-# Variables de ambiente
+# Env Setup
 load_dotenv(find_dotenv())
 
-# logger
+# Logger & Config
+configuration.LuigiConfigParser.add_config_path('/pipelines/configs/luigi_models.cfg')
 conf = configuration.get_config()
-logging_conf = configuration.get_config().get("core", "logging_conf_file")
 
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
 logging.config.fileConfig(logging_conf)
 logger = logging.getLogger("dpa-sedesol")
 
@@ -65,6 +66,7 @@ class ETLPipeline(luigi.WrapperTask):
 
 
 class UpdateTidyDB(PgRTask):
+
     """
     This Task runs the tidy script in tidy folder for
     the pipeline_task, if it doesn't exists then it runs

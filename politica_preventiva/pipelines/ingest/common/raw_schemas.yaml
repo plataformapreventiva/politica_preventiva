@@ -2252,13 +2252,13 @@ sagarpa_cierre_2003_2016:
     - nom_ciclo: TEXT
     - cv_moda: Integer
     - nom_moda: TEXT
-    - sup_sem: TEXT
-    - sup_cos: TEXT
-    - sup_sin: TEXT
-    - volumen: TEXT
-    - rend: TEXT
-    - precio: TEXT
-    - valor: TEXT
+    - sup_sem: FLOAT
+    - sup_cos: FLOAT
+    - sup_sin: FLOAT
+    - volumen: FLOAT
+    - rend: FLOAT
+    - precio: FLOAT
+    - valor: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
