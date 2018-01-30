@@ -173,15 +173,15 @@ class EMRLoader(object):
         flatten = lambda l: [item for sublist in l for item in sublist]
         flatten_args = flatten(args_parameters)
         Args = ['spark-submit',
-                             '--conf', 'spark.executor.instances=6',
-                             '--conf', 'spark.memory.fraction=0.8',
-                             '--conf', 'spark.memory.storageFraction=0.3',
+                             '--conf', 'spark.executor.instances=4',
+                             '--conf', 'spark.memory.fraction=0.6',
+                             '--conf', 'spark.memory.storageFraction=0.5',
                              '--conf', 'spark.yarn.executor.memoryOverhead=1024',
                              '--conf', 'spark.yarn.driver.memoryOverhead=512',
-                             '--conf', 'spark.executor.memory=9g',
-                             '--conf', 'spark.driver.memory=2g',
+                             '--conf', 'spark.executor.memory=1g',
+                             '--conf', 'spark.driver.memory=1g',
                              '--conf', 'spark.driver.cores=1',
-                             '--conf', 'spark.executor.cores=7',
+                             '--conf', 'spark.executor.cores=1',
                              '--conf', 'spark.yarn.appMasterEnv.PYSPARK_PYTHON=python3',
                              '--conf', 'spark.executorEnv.PYSPARK_PYTHON=python3',
                              '/home/hadoop/{}'.format(script_name)] +  flatten_args
