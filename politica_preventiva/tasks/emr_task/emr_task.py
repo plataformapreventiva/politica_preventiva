@@ -69,6 +69,7 @@ class InitializeCluster(EmrTask):
     id_name = luigi.Parameter()
     client = S3Client(aws_access_key_id, aws_secret_access_key)
 
+
     def run(self):
         """
         Create the EMR cluster
@@ -78,9 +79,8 @@ class InitializeCluster(EmrTask):
         self.emr_loader.launch_cluster()
         # Create Client
         self.emr_loader.boto_client("emr")
-        file = open(cluster_id,'w')
-        file.write(self.emr_loader.job_flow_id)
-        file.close()
+        with open(cluster_id, 'w') as f:
+            f.write(self.emr_loader.job_flow_id)
         # Put to S3
         requirements_file = self.emr_path + 'requirements.txt'
         requirements_output = self.spark_bucket + 'requirements.txt'

@@ -167,12 +167,13 @@ class EMRLoader(object):
         return Steps
 
 
-    def execute_step(self, step_name, script_name, parameters=dict()):
+    def execute_step(self, step_name, script_name, parameters=dict(), mode='spark'):
         args_parameters = [ ['--{par}'.format(par=llave), '{arg}'.format(arg=value)]
                                 for llave,value in parameters.items()]
         flatten = lambda l: [item for sublist in l for item in sublist]
         flatten_args = flatten(args_parameters)
-        Args = ['spark-submit',
+        if mode == 'spark':
+            Args = ['spark-submit',
                              '--conf', 'spark.executor.instances=4',
                              '--conf', 'spark.memory.fraction=0.6',
                              '--conf', 'spark.memory.storageFraction=0.5',
@@ -185,13 +186,17 @@ class EMRLoader(object):
                              '--conf', 'spark.yarn.appMasterEnv.PYSPARK_PYTHON=python3',
                              '--conf', 'spark.executorEnv.PYSPARK_PYTHON=python3',
                              '/home/hadoop/{}'.format(script_name)] +  flatten_args
+
+        elif mode == 'python':
+            Args = ['python3', '/home/hadoop/{}'.format(script_name)] +  flatten_args
+
         Step =  [{'Name': step_name,
-                 'ActionOnFailure': 'CANCEL_AND_WAIT',
-                 'HadoopJarStep': {
-                    'Jar': 'command-runner.jar',
-                    'Args': Args
-                    }
-                }]
+                  'ActionOnFailure': 'CANCEL_AND_WAIT',
+                  'HadoopJarStep': {
+                  'Jar': 'command-runner.jar',
+                  'Args': Args
+                }
+             }]
         return Step
 
 
@@ -247,16 +252,15 @@ class EMRLoader(object):
         return job_flow_id
 
 
-    def get_final_status(self, job_flow_id, Name):
+    def get_final_status(self, job_flow_id, step_name):
         start_time = time.time()
         is_job_finished = False
 
         while (not is_job_finished) and (
             time.time() - start_time < EMRLoader.CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS):
-
             try:
                 lista = self.boto_client("emr").list_steps(ClusterId=job_flow_id)
-                lista_name = [x for x in lista['Steps'] if x['Name'] == Name][-1]
+                lista_name = [x for x in lista['Steps'] if x['Name'] == step_name][0]
                 state = lista_name['Status']['State']
                 print(state)
                 if (state == u'TERMINATED') or (state == u'COMPLETED'):
