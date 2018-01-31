@@ -55,16 +55,6 @@ class pub_agrupacionesEMR(EmrTask):
     client = S3Client(aws_access_key_id, aws_secret_access_key)
 
     def requires(self):
-        # Copy script to S3
-        ingest_script = self.classic_task_scripts +\
-                         self.pipeline_task + ".py"
-        ingest_script_output = self.spark_bucket +\
-                       self.pipeline_task + '.py'
-        self.client.put(ingest_script, ingest_script_output)
-        # Copy yaml to S3
-        ingest_aux = self.classic_task_scripts + 'pub_agg.yaml'
-        ingest_aux_output = self.spark_bucket + 'pub_agg.yaml'
-        self.client.put(ingest_aux, ingest_aux_output)
         # Initialize Cluster
         InitializeCluster(id_name=self.id_name)
         return [#InitializeCluster(id_name=self.id_name),
@@ -75,6 +65,17 @@ class pub_agrupacionesEMR(EmrTask):
                                      id_name=self.id_name)]
 
     def run(self):
+        # Copy script to S3
+        ingest_script = self.classic_task_scripts +\
+                         self.pipeline_task + ".py"
+        ingest_script_output = self.spark_bucket +\
+                       self.pipeline_task + '.py'
+        self.client.put(ingest_script, ingest_script_output)
+        # Copy yaml to S3
+        ingest_aux = self.classic_task_scripts + 'pub_agg.yaml'
+        ingest_aux_output = self.spark_bucket + 'pub_agg.yaml'
+        self.client.put(ingest_aux, ingest_aux_output)
+
         cluster_path = self.common_path + "emr_id_" + self.id_name + ".txt"
         F = open(cluster_path,'r')
         ClusterId = F.read().replace('\n','')
@@ -114,10 +115,6 @@ class pub_concatenationEMR(EmrTask):
     client = S3Client(aws_access_key_id, aws_secret_access_key)
 
     def requires(self):
-        # Copy script to S3
-        ingest_script = self.classic_task_scripts + 'pub_concatenation.py'
-        ingest_script_output = self.spark_bucket + 'pub_concatenation.py'
-        self.client.put(ingest_script, ingest_script_output)
 
         return [InitializeCluster(id_name=self.id_name),
                 pub_cleanEMR(pipeline_task=self.pipeline_task,
@@ -127,6 +124,11 @@ class pub_concatenationEMR(EmrTask):
                             id_name=self.id_name)]
 
     def run(self):
+        # Copy script to S3
+        ingest_script = self.classic_task_scripts + 'pub_concatenation.py'
+        ingest_script_output = self.spark_bucket + 'pub_concatenation.py'
+        self.client.put(ingest_script, ingest_script_output)
+
         #Concatenate
         result_filepath = 'concatenation/{0}/pub_{0}.csv'.format(self.data_date)
         # folder to concatenate
@@ -172,12 +174,14 @@ class pub_cleanEMR(EmrTask):
     client = S3Client(aws_access_key_id, aws_secret_access_key)
 
     def requires(self):
-        ingest_script = self.classic_task_scripts + 'pub_clean.py'
-        ingest_script_output = self.spark_bucket + 'pub_clean.py'
-        self.client.put(ingest_script, ingest_script_output)
         return InitializeCluster(id_name=self.id_name)
 
     def run(self):
+        # Copy to S3
+        ingest_script = self.classic_task_scripts + 'pub_clean.py'
+        ingest_script_output = self.spark_bucket + 'pub_clean.py'
+        self.client.put(ingest_script, ingest_script_output)
+
         cluster_path = self.common_path + "emr_id_" + self.id_name + ".txt"
         F = open(cluster_path,'r')
         ClusterId = F.read().replace('\n','')
