@@ -115,11 +115,11 @@ class pub_concatenationEMR(EmrTask):
 
     def requires(self):
         # Copy script to S3
-        ingest_script = './pipelines/utils/s3_utils.py'
-        ingest_script_output = self.spark_bucket + 's3_utils.py'
+        ingest_script = self.classic_task_scripts + 'pub_concatenation.py'
+        ingest_script_output = self.spark_bucket + 'pub_concatenation.py'
         self.client.put(ingest_script, ingest_script_output)
 
-        return [#InitializeCluster(id_name=self.id_name),
+        return [InitializeCluster(id_name=self.id_name),
                 pub_cleanEMR(pipeline_task=self.pipeline_task,
                              current_date=self.current_date,
                              data_date=self.data_date,
@@ -142,8 +142,8 @@ class pub_concatenationEMR(EmrTask):
                                           script_name='s3_utils.py',
                                           parameters={'bucket': 'pub-raw',
                                                       'folder': 'clean/{}'.format(self.data_date),
-                                                      'output': 'concatenation/{0}/pub_{0}.csv'.format(self.data_date),
-                                                      'suffix': ''})
+                                                      'output': 'concatenation/{0}/pub_{0}.csv'.format(self.data_date)},
+                                         mode='python')
         self.emr_loader.send_pipeline_steps(steps=copy_steps + execute_steps,
                                           job_flow_id=ClusterId)
         status = self.emr_loader.get_final_status(ClusterId, step_name)
