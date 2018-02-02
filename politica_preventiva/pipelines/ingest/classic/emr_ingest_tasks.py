@@ -55,9 +55,8 @@ class pub_agrupacionesEMR(EmrTask):
     client = S3Client(aws_access_key_id, aws_secret_access_key)
 
     def requires(self):
-        # Initialize Cluster
-        InitializeCluster(id_name=self.id_name)
-        return [#InitializeCluster(id_name=self.id_name),
+        #InitializeCluster(id_name=self.id_name)
+        return [InitializeCluster(id_name=self.id_name),
                 pub_concatenationEMR(pipeline_task=self.pipeline_task,
                                      current_date=self.current_date,
                                      data_date=self.data_date,
@@ -94,7 +93,7 @@ class pub_agrupacionesEMR(EmrTask):
             logger.critical('Pub EMR Step did not finish.')
 
     def output(self):
-        file_path = self.raw_bucket + 'pub/preprocess/' +\
+        file_path = self.raw_bucket + 'pub_agrupaciones/preprocess/' +\
             '{0}/exitoso.txt'.format(self.data_date)
         return S3Target(file_path)
 
@@ -121,12 +120,12 @@ class pub_concatenationEMR(EmrTask):
                              current_date=self.current_date,
                              data_date=self.data_date,
                              suffix=self.suffix,
-                            id_name=self.id_name)]
+                             id_name=self.id_name)]
 
     def run(self):
         # Copy script to S3
-        ingest_script = self.classic_task_scripts + 'pub_concatenation.py'
-        ingest_script_output = self.spark_bucket + 'pub_concatenation.py'
+        ingest_script = './pipelines/utils/s3_utils.py'
+        ingest_script_output = self.spark_bucket + 's3_utils.py'
         self.client.put(ingest_script, ingest_script_output)
 
         #Concatenate

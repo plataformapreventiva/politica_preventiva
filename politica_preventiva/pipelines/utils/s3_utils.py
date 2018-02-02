@@ -20,6 +20,8 @@ import threading
 
 from boto.s3.key import Key
 from filechunkio import FileChunkIO
+from botocore.session import Session
+from botocore.client import Config
 
 
 # Script expects everything to happen in one bucket
@@ -28,6 +30,8 @@ BUCKET = "" # set by command line args
 MIN_S3_SIZE = 6000000
 # Setup logger to display timestamp
 logging.basicConfig(format='%(asctime)s => %(message)s')
+
+config = Config(connect_timeout=50, read_timeout=70)
 
 
 def s3_download(bucket, s3_file, local_file):
@@ -48,8 +52,8 @@ def run_concatenation(bucket, folder_to_concatenate, result_filepath, file_suffi
         result_filepath = "/".join(bucket_split_path[1:]) + "/" + result_filepath
 
     bucket = bucket_split_path[0]
-    s3 = new_s3_client()
-    #s3 = boto3.client('s3')
+    #s3 = new_s3_client()
+    s3 = boto3.client('s3', config=config)
     parts_list = collect_parts(s3, bucket,folder_to_concatenate, file_suffix)
 
     logging.warning("Found {} parts to concatenate in {}/{}".format(len(parts_list),
