@@ -242,9 +242,13 @@ def dates_list(pipeline, end_date, periodicity):
 def final_dates(historical, pipeline_task, current_date):
     periodicity = configuration.get_config().get(pipeline_task,
                                                  'periodicity')
+    force = force 
     if periodicity == 'None':
-        dates = ['na']
-        suffix = 'fixed'
+	dates = ['na']
+        if force == True:
+            suffix = 'fixed-' + current_date
+        else:
+            suffix = 'fixed'
         return (dates, suffix)
 
     elif historical in ['True', 'T', '1', 'TRUE']:
