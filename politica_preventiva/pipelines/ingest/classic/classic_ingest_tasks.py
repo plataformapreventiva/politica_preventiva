@@ -130,7 +130,7 @@ class general_ingest(TDockerTask):
 
     @property
     def cmd(self):
- 
+
         if self.extension == 'python':
             command_list = [self.extension,
                             self.classic_task_scripts +
