@@ -19,7 +19,10 @@ local_ingest_file=$3
 
 aws s3 cp s3://sifode-raw/CUIS_39_9.rar $local_path/CUIS_39_9.rar
 
+echo 'Decompressing rar file'
 unrar p -inul $local_path/CUIS_39_9.rar | \
-csvformat -d '^' -D '|' -e utf-8-sig | \ 
-cut -d'|' -f-4,9- > local_ingest_file
-
+iconv -c -t 'utf-8' | \
+sed -e 's/\r$// ; 1 s/^\xef\xbb\xbf//' | \
+csvformat -d '^' -D '|' -v | \
+cut -d'|' -f-4,9- > $local_ingest_file
+echo 'Written to: '$local_ingest_file
