@@ -234,20 +234,21 @@ class EMRLoader(object):
         self.boto_client("emr").list_clusters(cluster_states=['WAITING']).clusters[0].id
 
 
-    def get_final_status(self, job_flow_id, step_name):
+    def poll_until_all_jobs_completed(self, job_flow_id, step_name):
         start_time = time.time()
         is_job_finished = False
         completed = False
         print_execution_summary_flag = 0
 
+        # polling
         while (not is_job_finished) and (
             time.time() - start_time < EMRLoader.CLUSTER_OPERATION_RESULTS_TIMEOUT_SECONDS):
             try:
                 lista = self.boto_client("emr").list_steps(ClusterId=job_flow_id)
                 lista_name = [x for x in lista['Steps'] if x['Name'] == step_name][0]
                 state = lista_name['Status']['State']
-                print("Running step: {step}".format(step=step_name))
-                print("Step state: {state}".format(state=state))
+                logger.info("Running step: {step}".format(step=step_name))
+                logger.info("Step state: {state}".format(state=state))
                 if (state == u'TERMINATED') or (state == u'COMPLETED'):
                     is_job_finished = True
                     completed = True
@@ -261,18 +262,17 @@ class EMRLoader(object):
                     now = datetime.now(timezone.utc)
                     lista_sum = [ {'Name':l['Name'],
                                     'Status':l['Status']['State'],
-                                    'Start time':(l['Status']['Timeline']['CreationDateTime']-timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S"),
-                                    'Elapsed time (minutes)':round((l['Status']['Timeline']['CreationDateTime'] - now).seconds/3600,2) } \
+                                    'Creation time':(l['Status']['Timeline']['CreationDateTime']-timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S")} \
                             for l in lista['Steps'] ]
                     nombres = {x:x for x in lista_sum[0].keys()}
                     sum_print = '\n\n ' + tabulate(lista_sum, nombres) + '\n'
                     logger.info(sum_print)
-                    print("WAITING for further response from EMR Cluster.")
+                    logger.info("WAITING for further response from EMR Cluster.")
             except:
                 logger.debug("""AWS: (ThrottlingException) Maximum send rate exceeded when calling
                     the ListSteps operation (reached max retries: 4): Rate exceeded""")
                 try:
-                    print("WAITING for further response from EMR Cluster.")
+                    logger.info("WAITING for further response from EMR Cluster.")
                     time.sleep(EMRLoader.CLUSTER_BACKOFF_DURATION_SECONDS)
                 except:
                     logger.critical("Waiting exception.")
@@ -280,29 +280,30 @@ class EMRLoader(object):
         return completed
 
 
-    def poll_until_all_jobs_completed(self, job_flow_id, step_completed, cluster_path, steps_pending=True):
+    def get_final_status(self, job_flow_id, step_completed, cluster_path, steps_pending=True):
 
-        cluster_id = job_flow_id["JobFlowId"]
         job_flow_status = ""
         if (step_completed == True) and (steps_pending == True):
             # Keep cluster alive
-            state = self.boto_client("emr").describe_job_flows(JobFlowIds=[cluster_id]).state
-            print("EMR cluster state: {state}".format(state=state))
+            cluster_description = self.boto_client("emr").describe_cluster(ClusterId=job_flow_id)
+            status = cluster_description['Cluster']['Status']['State']
+            logger.info("EMR cluster state: {status}".format(status=status))
             job_flow_status = "Pending steps"
         elif (step_completed == True) and (steps_pending == False):
             # Terminate EMR cluster
-            state = self.boto_client("emr").describe_job_flows(JobFlowIds=[cluster_id]).state
+            cluster_description = self.boto_client("emr").describe_cluster(ClusterId=job_flow_id)
+            status = cluster_description['Cluster']['Status']['State']
             logger.info("All steps completed successfully.")
-            logger.info('Attempting to shut down the cluster with current status: %s' % state)
+            logger.info('Attempting to shut down the cluster with current status: %s' % status)
             job_flow_status = "Completed"
-            self.shutdown_emr_cluster(job_flow_id=cluster_id, cluster_path=cluster_path)
+            self.shutdown_emr_cluster(job_flow_id=job_flow_id, cluster_path=cluster_path)
         elif (step_completed == False) and (steps_pending == True):
             logger.critical("STEP FAILED WITH PENDING STEPS.")
             job_flow_status = "Step failed with pending steps"
-            self.shutdown_emr_cluster(job_flow_id=cluster_id, cluster_path=cluster_path)
+            self.shutdown_emr_cluster(job_flow_id=job_flow_id, cluster_path=cluster_path)
         elif (step_completed == False) and (steps_pending == False):
             job_flow_status = "Failed with no pending steps."
-            self.shutdown_emr_cluster(job_flow_id=cluster_id, cluster_path=cluster_path)
+            self.shutdown_emr_cluster(job_flow_id=job_flow_id, cluster_path=cluster_path)
 
         return job_flow_status
 
