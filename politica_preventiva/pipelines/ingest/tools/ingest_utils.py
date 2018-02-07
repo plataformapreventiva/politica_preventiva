@@ -242,13 +242,9 @@ def dates_list(pipeline, end_date, periodicity):
 def final_dates(historical, pipeline_task, current_date):
     periodicity = configuration.get_config().get(pipeline_task,
                                                  'periodicity')
-    force = force 
     if periodicity == 'None':
-	dates = ['na']
-        if force == True:
-            suffix = 'fixed-' + current_date
-        else:
-            suffix = 'fixed'
+        dates = ['na']
+        suffix = 'fixed'
         return (dates, suffix)
 
     elif historical in ['True', 'T', '1', 'TRUE']:
@@ -289,7 +285,6 @@ def final_dates(historical, pipeline_task, current_date):
         logger.info('Start date is not defined for the pipeline {0}'.format(
             pipeline_task)+\
             'Luigi will get only the information of the last period')
-
 
 def extras(pipeline):
     # pdb.set_trace()

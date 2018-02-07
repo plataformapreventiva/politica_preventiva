@@ -16,7 +16,6 @@ PROJECT_VERSION:=$(shell cat .project-version)
 PROJECT_USER:=$(shell cat .project-user)
 w=11
 p=ETLPipeline
-f=false
 
 ## Python Version
 VERSION_PYTHON:=$(shell cat .python-version)
@@ -146,7 +145,7 @@ S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 ########################################
 
 run:       ##@project Run pipeline: make run w=10 p=(IngestPipeline|ETLPipeline|SemanticPipeline|ModelsPipeline) 
-	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(w) level=$(p) force=$(f)
+	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(w) level=$(p)
 
 setup: task_build install##@project Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
 

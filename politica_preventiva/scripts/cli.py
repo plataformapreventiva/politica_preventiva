@@ -27,7 +27,6 @@ def check_server(host, port):
 @click.option('--workers', help='Número de workers en paralelo', type=click.INT, default=1)
 @click.option('--level', help='', default='ETLPipeline')
 @click.option('--server', help='', default='0.0.0.0')
-@click.option('--force', help='Define si las dependencias de los pipelines sin periodicidad se toman como hechas', default=False)
 def main(server, port, luigi_cfg, workers, level):
     """
     Ejecuta el pipeline
@@ -42,8 +41,7 @@ def main(server, port, luigi_cfg, workers, level):
                   # '--sleep', str(sleep),
                   '--workers', str(workers),
                   '--no-lock',
-                  '--level', str(level)
-                 '--force', str(force)]
+                  '--level', str(level)]
 
     # If the server is not running then it uses the local scheduler
     if not check_server(server, port):
