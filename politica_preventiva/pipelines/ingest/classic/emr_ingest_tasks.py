@@ -55,7 +55,6 @@ class pub_agrupacionesEMR(EmrTask):
     client = S3Client(aws_access_key_id, aws_secret_access_key)
 
     def requires(self):
-        #InitializeCluster(id_name=self.id_name)
         return [InitializeCluster(id_name=self.id_name),
                 pub_concatenationEMR(pipeline_task=self.pipeline_task,
                                      current_date=self.current_date,
@@ -91,6 +90,8 @@ class pub_agrupacionesEMR(EmrTask):
                                                         step_completed=status,
                                                         cluster_path=cluster_path,
                                                         steps_pending=False)
+        return job_flow_status
+
     def output(self):
         file_path = self.raw_bucket + 'pub_agrupaciones/preprocess/' +\
             '{0}/exitoso.txt'.format(self.data_date)

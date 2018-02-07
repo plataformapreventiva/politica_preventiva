@@ -305,5 +305,5 @@ class EMRLoader(object):
             job_flow_status = "Failed with no pending steps."
             self.shutdown_emr_cluster(job_flow_id=job_flow_id, cluster_path=cluster_path)
 
-        return job_flow_status
+        return True
 
