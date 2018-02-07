@@ -20,6 +20,8 @@ import threading
 
 from boto.s3.key import Key
 from filechunkio import FileChunkIO
+from botocore.session import Session
+from botocore.client import Config
 
 
 # Script expects everything to happen in one bucket
@@ -28,6 +30,8 @@ BUCKET = "" # set by command line args
 MIN_S3_SIZE = 6000000
 # Setup logger to display timestamp
 logging.basicConfig(format='%(asctime)s => %(message)s')
+
+config = Config(connect_timeout=50, read_timeout=70)
 
 
 def s3_download(bucket, s3_file, local_file):
@@ -48,8 +52,8 @@ def run_concatenation(bucket, folder_to_concatenate, result_filepath, file_suffi
         result_filepath = "/".join(bucket_split_path[1:]) + "/" + result_filepath
 
     bucket = bucket_split_path[0]
-    s3 = new_s3_client()
-    # s3 = boto3.client('s3')
+    #s3 = new_s3_client()
+    s3 = boto3.client('s3', config=config)
     parts_list = collect_parts(s3, bucket,folder_to_concatenate, file_suffix)
 
     logging.warning("Found {} parts to concatenate in {}/{}".format(len(parts_list),
@@ -288,11 +292,11 @@ if __name__ == "__main__":
     parser.add_argument("--bucket", help="base bucket to use")
     parser.add_argument("--folder", help="folder whose contents should be combined")
     parser.add_argument("--output", help="output location for resulting merged files, relative to the specified base bucket")
-    parser.add_argument("--suffix", help="suffix of files to include in the combination")
+    parser.add_argument("--suffix", help="suffix of files to include in the combination", default="")
     parser.add_argument("--filesize", type=int, help="max filesize of the concatenated files in bytes", default=999999999)
 
     args = parser.parse_args()
 
     logging.warning("Combining files in {}/{} to {}/{}, with a max size of {} bytes".format(BUCKET, args.folder, BUCKET, args.output, args.filesize))
     BUCKET = args.bucket
-    run_concatenation(args.folder, args.output, args.suffix, args.filesize)
+    run_concatenation(args.bucket, args.folder, args.output, args.suffix, args.filesize)

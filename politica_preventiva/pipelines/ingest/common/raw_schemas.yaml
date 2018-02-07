@@ -2614,7 +2614,7 @@ precios_granos:
   - mes
   - anio
   - central
-pub:
+pub_agrupaciones:
   LUIGI:
     INDEX: cve_muni
     SCHEMA:
@@ -2623,11 +2623,13 @@ pub:
     - cve_muni: TEXT
     - cve_programa: VARCHAR(5)
     - cve_padron: VARCHAR(5)
-    - n_beneficiarios: INT
-    - suma_importe: FLOAT
     - tipo: TEXT
+    - temporalidad: TEXT
+    - mes: INT
     - nivel: TEXT
     - grupo: TEXT
+    - n_beneficiarios: INT
+    - suma_importe: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
 red_carretera:

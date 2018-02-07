@@ -1,0 +1,52 @@
+niveles:
+    nacional:
+        key_col: []
+        new_names: []
+        add_column: [cve_ent, cve_muni]
+    estatal:
+        key_col: [cve_ent]
+        new_names: [cve_ent]
+        add_column: [cve_muni]
+    municipal:
+        key_col: [cve_ent, cve_muni]
+        new_names: [cve_ent, cve_muni]
+        add_column: []
+
+grupos:
+    programa:
+        key_col: [cd_programa]
+        new_names: [cve_programa]
+        add_column: [cve_padron]
+    padron:
+        key_col: [cd_programa, cd_padron]
+        new_names: [cve_programa, cve_padron]
+        add_column: []
+    todo:
+        key_col: []
+        new_names: []
+        add_column: [cve_programa, cve_padron]
+
+tipos:
+    cd_sexo:
+        key_col: [cd_sexo]
+        new_names: [tipo]
+    categoria_edad:
+        key_col: [categoria_edad]
+        new_names: [tipo]
+    total:
+         key_col: []
+         new_names: []
+
+temporalidad:
+    mes_pago:
+        key_col: [anio, nu_mes_pago]
+        new_names: [anio, mes]
+        add_column: []
+    mes_correspondencia:
+        key_col: [anio, nu_mes_correspondencia]
+        new_names: [anio, mes]
+        add_column: []
+    anual:
+        key_col: [anio]
+        new_names: [anio]
+        add_column: [mes] 
