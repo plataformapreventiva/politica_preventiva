@@ -81,14 +81,14 @@ class pub_agrupacionesEMR(EmrTask):
         copy_steps = self.emr_loader.copy_steps(self.spark_bucket,
                                 [self.pipeline_task + '.py', 'pub_agg.yaml'])
         step_name = self.pipeline_task + '_' + self.data_date
-        execute_steps = self.emr_loader.execute_step(step_name=step_name,
-                                          script_name=self.pipeline_task + '.py',
-                                          parameters={'year': self.data_date})
-
+        #execute_steps = self.emr_loader.execute_step(step_name=step_name,
+        #                                  script_name=self.pipeline_task + '.py',
+        #                                  parameters={'year': self.data_date})
+        execute_steps = []
         self.emr_loader.send_pipeline_steps(steps=copy_steps + execute_steps,
                             job_flow_id=ClusterId)
-        status = self.emr_loader.get_final_status(ClusterId, step_name)
-        job_flow_status = self.emr_loader.poll_until_all_jobs_completed(job_flow_id=ClusterId,
+        status = self.emr_loader.poll_until_all_jobs_completed(ClusterId, step_name)
+        job_flow_status = self.emr_loader.get_final_status(job_flow_id=ClusterId,
                                                         step_completed=status,
                                                         cluster_path=cluster_path,
                                                         steps_pending=False)
@@ -147,8 +147,8 @@ class pub_concatenationEMR(EmrTask):
                                          mode='python')
         self.emr_loader.send_pipeline_steps(steps=copy_steps + execute_steps,
                                           job_flow_id=ClusterId)
-        status = self.emr_loader.get_final_status(ClusterId, step_name)
-        job_flow_status = self.emr_loader.poll_until_all_jobs_completed(job_flow_id=ClusterId,
+        status = self.emr_loader.poll_until_all_jobs_completed(ClusterId, step_name)
+        job_flow_status = self.emr_loader.get_final_status(job_flow_id=ClusterId,
                                                         step_completed=status,
                                                         cluster_path=cluster_path)
 
@@ -193,8 +193,8 @@ class pub_cleanEMR(EmrTask):
 
         self.emr_loader.send_pipeline_steps(steps=copy_steps + execute_steps,
                             job_flow_id=ClusterId)
-        status = self.emr_loader.get_final_status(ClusterId, step_name)
-        job_flow_status = self.emr_loader.poll_until_all_jobs_completed(job_flow_id=ClusterId,
+        status = self.emr_loader.poll_until_all_jobs_completed(ClusterId, step_name)
+        job_flow_status = self.emr_loader.get_final_status(job_flow_id=ClusterId,
                                                         step_completed=status,
                                                         cluster_path=cluster_path)
 
