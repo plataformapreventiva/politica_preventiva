@@ -81,10 +81,9 @@ class pub_agrupacionesEMR(EmrTask):
         copy_steps = self.emr_loader.copy_steps(self.spark_bucket,
                                 [self.pipeline_task + '.py', 'pub_agg.yaml'])
         step_name = self.pipeline_task + '_' + self.data_date
-        #execute_steps = self.emr_loader.execute_step(step_name=step_name,
-        #                                  script_name=self.pipeline_task + '.py',
-        #                                  parameters={'year': self.data_date})
-        execute_steps = []
+        execute_steps = self.emr_loader.execute_step(step_name=step_name,
+                                          script_name=self.pipeline_task + '.py',
+                                          parameters={'year': self.data_date})
         self.emr_loader.send_pipeline_steps(steps=copy_steps + execute_steps,
                             job_flow_id=ClusterId)
         status = self.emr_loader.poll_until_all_jobs_completed(ClusterId, step_name)
