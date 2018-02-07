@@ -131,7 +131,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     year = args.year
     print(year)
-    output_path = 's3n://dpa-plataforma-preventiva/etl/pub/preprocess/{}'.format(year)
+    output_path = 's3n://dpa-plataforma-preventiva/etl/pub_agrupaciones/preprocess/{}'.format(year)
     input_path = "s3n://pub-raw/concatenation/{}".format(year)
 
     # Read yaml
@@ -149,6 +149,6 @@ if __name__ == "__main__":
                     temp)
     f = open("exitoso.txt", "w+")
     s3 = boto3.resource('s3')
-    out = 'etl/pub/preprocess/{}/exitoso.txt'.format(year)
+    out = 'etl/pub_agrupaciones/preprocess/{}/exitoso.txt'.format(year)
     s3.Object('dpa-plataforma-preventiva', out).put(Body=open('exitoso.txt', 'rb'))
     f.close()
