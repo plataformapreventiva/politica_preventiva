@@ -216,6 +216,22 @@ def coneval_municipios_prep(data_date, s3_file, extra_h, out_key):
     return True
 
 
+def cuis_39_9(data_date, s3_file, extra_h, out_key):
+    """
+    Preprocessing function for cuis_39_9 data: reads df from s3, fixes wrong characters 
+    and uploads to s3 
+   """
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+
+    if df is not None:
+        df = df.where((pd.notnull(df)), None)
+        df = pputils.replace_missing_with_none(df)
+        df['TIE_CURP'] = pputils.clean_character_dummies(df['TIE_CURP'])
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    return True
+
+
 def no_preprocess_method(data_date, s3_file, extra_h, out_key):
    bucket = 'dpa-plataforma-preventiva'
    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
