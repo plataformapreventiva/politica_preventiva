@@ -7,6 +7,7 @@ import yaml
 import pyspark.sql.functions as func
 
 from pyspark import SparkContext
+from pyspark.sql import SQLContext
 from pyspark.sql.types import *
 from itertools import product
 
@@ -28,7 +29,7 @@ SCHEMA = ['anio',
           'n_beneficiarios',
           'suma_importe']
 
-with open('pub_agg.yaml', 'r') as f:
+with open('/home/hadoop/pub_agg.yaml', 'r') as f:
     D = yaml.load(f)
 
 

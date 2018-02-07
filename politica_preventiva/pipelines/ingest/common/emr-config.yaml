@@ -7,7 +7,7 @@ emr:
   key_name: proyecto_sdv
   subnet_id: subnet-68dfb130
   log_uri: s3://spark-sedesol/logs/emr-logs/ 
-  software_version: emr-5.8.0 # Change emr version
+  software_version: emr-5.11.1 # Change emr version
   script_bucket_name: # This is used for quick cluster setup
   key: pub
   key_value: pub_sedesol

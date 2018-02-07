@@ -88,10 +88,10 @@ class pub_agrupacionesEMR(EmrTask):
         self.emr_loader.send_pipeline_steps(steps=copy_steps + execute_steps,
                             job_flow_id=ClusterId)
         status = self.emr_loader.get_final_status(ClusterId, step_name)
-        #self.emr_loader.shutdown_emr_cluster(ClusterId)
-        if not status:
-            logger.critical('Pub EMR Step did not finish.')
-
+        job_flow_status = self.emr_loader.poll_until_all_jobs_completed(job_flow_id=ClusterId,
+                                                        step_completed=status,
+                                                        cluster_path=cluster_path,
+                                                        steps_pending=False)
     def output(self):
         file_path = self.raw_bucket + 'pub_agrupaciones/preprocess/' +\
             '{0}/exitoso.txt'.format(self.data_date)
@@ -148,9 +148,9 @@ class pub_concatenationEMR(EmrTask):
         self.emr_loader.send_pipeline_steps(steps=copy_steps + execute_steps,
                                           job_flow_id=ClusterId)
         status = self.emr_loader.get_final_status(ClusterId, step_name)
-        #self.emr_loader.shutdown_emr_cluster(ClusterId)
-        if not status:
-            logger.critical('Pub EMR Step did not finish.')
+        job_flow_status = self.emr_loader.poll_until_all_jobs_completed(job_flow_id=ClusterId,
+                                                        step_completed=status,
+                                                        cluster_path=cluster_path)
 
     def output(self):
         file_path = 's3://pub-raw/concatenation/{year}/pub_{year}.csv'.format(year=self.data_date)
@@ -194,9 +194,9 @@ class pub_cleanEMR(EmrTask):
         self.emr_loader.send_pipeline_steps(steps=copy_steps + execute_steps,
                             job_flow_id=ClusterId)
         status = self.emr_loader.get_final_status(ClusterId, step_name)
-        if not status:
-            logger.critical('Pub EMR Step did not finish.')
-            #self.emr_loader.shutdown_emr_cluster(ClusterId)
+        job_flow_status = self.emr_loader.poll_until_all_jobs_completed(job_flow_id=ClusterId,
+                                                        step_completed=status,
+                                                        cluster_path=cluster_path)
 
     def output(self):
         file_path = 's3://pub-raw/clean/{0}/exitoso.txt'.format(self.data_date)
