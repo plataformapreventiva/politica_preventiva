@@ -286,7 +286,6 @@ def final_dates(historical, pipeline_task, current_date):
             pipeline_task)+\
             'Luigi will get only the information of the last period')
 
-
 def extras(pipeline):
     # pdb.set_trace()
     try:

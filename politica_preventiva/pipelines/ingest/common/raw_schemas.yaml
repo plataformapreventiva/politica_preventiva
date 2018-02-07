@@ -633,6 +633,207 @@ coneval_municipios:
   - poblacionconingresoinferioralalineadebienestarminimo_porcentaje
   - poblacionconingresoinferioralalineadebienestarminimo_personas
   - poblacionconingresoinferioralalineadebienestarminimo_carenciaspromedio
+cuaps_programas:
+  LUIGI:
+    INDEX: cuaps_folio
+    SCHEMA:
+    - cuaps_folio: TEXT
+    - fh_levantamiento: TEXT
+    - ra_folio: TEXT
+    - clave_usuario: TEXT
+    - fecha: TEXT
+    - nom_prog: TEXT
+    - cve_pres: TEXT
+    - nom_dr: TEXT
+    - cve_dr: TEXT
+    - nom_ua: TEXT
+    - cve_ua: TEXT
+    - orden_gob: Integer
+    - part_ua: Integer
+    - tua_nombre: TEXT
+    - tua_primer_ap: TEXT
+    - tua_segundo_ap: TEXT
+    - tua_cargo: TEXT
+    - tua_tel: TEXT
+    - tua_ext: Integer
+    - tua_correo: TEXT
+    - rp_nombre: TEXT
+    - rp_primer_ap: TEXT
+    - rp_segundo_ap: TEXT
+    - rp_cargo: TEXT
+    - rp_tel: TEXT
+    - rp_ext: Integer
+    - rp_correo: TEXT
+    - ep_nombre: TEXT
+    - ep_primer_ap: TEXT
+    - ep_segundo_ap: TEXT
+    - ep_cargo: TEXT
+    - ep_tel: TEXT
+    - ep_ext: Integer
+    - ep_correo: TEXT
+    - anio_inicio_prog: Integer
+    - doc_norma: Integer
+    - doc_supweb: INT
+    - nom_doc_norma: TEXT
+    - sitio_web: Integer
+    - sitio_web_esp: TEXT
+    - obj_gral_prog: TEXT
+    - obj_esp_prog_1: TEXT
+    - obj_esp_prog_2: TEXT
+    - obj_esp_prog_3: TEXT
+    - obj_esp_prog_4: TEXT
+    - obj_esp_prog_5: TEXT
+    - obj_esp_prog_6: TEXT
+    - obj_esp_prog_7: TEXT
+    - obj_esp_prog_8: TEXT
+    - obj_esp_prog_9: TEXT
+    - obj_esp_prog_10: TEXT
+    - obj_esp_prog_11: TEXT
+    - pob_obj_prog: TEXT
+    - cobertura_geo: Integer
+    - nom_entidad_federativa: TEXT
+    - cve_entidad_federativa: Integer
+    - nom_municipio: TEXT
+    - cve_municipio: Integer
+    - pob_poten: TEXT
+    - pob_poten_um: TEXT
+    - pob_objet: TEXT
+    - pob_objet_um: TEXT
+    - pob_aten_efa: TEXT
+    - pob_aten_efa_um: TEXT
+    - pres_anter: TEXT
+    - pres_vigen: TEXT
+    - cop_prog: Integer
+    - cop_tipart_1: Integer
+    - cop_npart_1: TEXT
+    - cop_ordgob_1: TEXT
+    - cop_tipint_1: Integer
+    - cop_tipart_2: Integer
+    - cop_npart_2: TEXT
+    - cop_ordgob_2: Integer
+    - cop_tipint_2: TEXT
+    - cop_tipart_3: Integer
+    - cop_npart_3: TEXT
+    - cop_ordgob_3: Integer
+    - cop_tipint_3: Integer
+    - cop_tipart_4: Integer
+    - cop_npart_4: TEXT
+    - cop_ordgob_4: Integer
+    - cop_tipint_4: Integer
+    - cop_tipart_5: TEXT
+    - cop_npart_5: TEXT
+    - cop_ordgob_5: TEXT
+    - cop_tipint_5: TEXT
+    - der_social_edu: INT
+    - der_social_sal: INT
+    - der_social_alim: INT
+    - der_social_viv: INT
+    - der_social_mam: INT
+    - der_social_tra: INT
+    - der_social_segsoc: INT
+    - der_social_nodis: INT
+    - der_social_beco: INT
+    - der_social_ning: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cuaps_folio
+  - fh_levantamiento
+  - ra_folio
+  - clave_usuario
+  - fecha
+  - nom_prog
+  - cve_pres
+  - nom_dr
+  - cve_dr
+  - nom_ua
+  - cve_ua
+  - orden_gob
+  - part_ua
+  - tua_nombre
+  - tua_primer_ap
+  - tua_segundo_ap
+  - tua_cargo
+  - tua_tel
+  - tua_ext
+  - tua_correo
+  - rp_nombre
+  - rp_primer_ap
+  - rp_segundo_ap
+  - rp_cargo
+  - rp_tel
+  - rp_ext
+  - rp_correo
+  - ep_nombre
+  - ep_primer_ap
+  - ep_segundo_ap
+  - ep_cargo
+  - ep_tel
+  - ep_ext
+  - ep_correo
+  - anio_inicio_prog
+  - doc_norma
+  - doc_supweb
+  - nom_doc_norma
+  - sitio_web
+  - sitio_web_esp
+  - obj_gral_prog
+  - obj_esp_prog_1
+  - obj_esp_prog_2
+  - obj_esp_prog_3
+  - obj_esp_prog_4
+  - obj_esp_prog_5
+  - obj_esp_prog_6
+  - obj_esp_prog_7
+  - obj_esp_prog_8
+  - obj_esp_prog_9
+  - obj_esp_prog_10
+  - obj_esp_prog_11
+  - pob_obj_prog
+  - cobertura_geo
+  - nom_entidad_federativa
+  - cve_entidad_federativa
+  - nom_municipio
+  - cve_municipio
+  - pob_poten
+  - pob_poten_um
+  - pob_objet
+  - pob_objet_um
+  - pob_aten_efa
+  - pob_aten_efa_um
+  - pres_anter
+  - pres_vigen
+  - cop_prog
+  - cop_tipart_1
+  - cop_npart_1
+  - cop_ordgob_1
+  - cop_tipint_1
+  - cop_tipart_2
+  - cop_npart_2
+  - cop_ordgob_2
+  - cop_tipint_2
+  - cop_tipart_3
+  - cop_npart_3
+  - cop_ordgob_3
+  - cop_tipint_3
+  - cop_tipart_4
+  - cop_npart_4
+  - cop_ordgob_4
+  - cop_tipint_4
+  - cop_tipart_5
+  - cop_npart_5
+  - cop_ordgob_5
+  - cop_tipint_5
+  - der_social_edu
+  - der_social_sal
+  - der_social_alim
+  - der_social_viv
+  - der_social_mam
+  - der_social_tra
+  - der_social_segsoc
+  - der_social_nodis
+  - der_social_beco
+  - der_social_ning
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
@@ -822,6 +1023,287 @@ cuenta_publica_trimestral:
   - monto_aprobado
   - monto_modificado
   - monto_pagado
+cuis_39_9:
+  LUIGI:
+    INDEX: id_unico_39_9
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - id_unico_39_9: Integer
+    - num_per: INT
+    - fch_nacimiento: TEXT
+    - cd_edo_nac: Integer
+    - cd_sexo: Integer
+    - edad: Integer
+    - edad_actual: Integer
+    - val_nb_renapo: INT
+    - c_lengua_ind: TEXT
+    - otro_dial: TEXT
+    - habl_esp: TEXT
+    - indigena: Integer
+    - leer_escr: TEXT
+    - c_ult_nivel: TEXT
+    - c_ult_gra: TEXT
+    - niv_ed: TEXT
+    - asis_esc: TEXT
+    - c_con_tra: TEXT
+    - c_pos_ocup: TEXT
+    - c_con_res: Integer
+    - c_cd_parentesco: Integer
+    - padre: Integer
+    - madre: Integer
+    - c_cd_edo_civil: TEXT
+    - conyuge: TEXT
+    - acta_nac: Integer
+    - trab_subor: TEXT
+    - trab_indep: TEXT
+    - trab_presta_a: TEXT
+    - trab_presta_b: TEXT
+    - trab_presta_c: TEXT
+    - trab_presta_d: TEXT
+    - trab_presta_e: TEXT
+    - trab_presta_f: TEXT
+    - trab_presta_g: TEXT
+    - trab_presta_h: TEXT
+    - c_salud_hoga: Integer
+    - c_salud_hogb: TEXT
+    - enf_art: TEXT
+    - enf_can: TEXT
+    - enf_cir: TEXT
+    - enf_ren: TEXT
+    - enf_dia: TEXT
+    - enf_cor: TEXT
+    - enf_pul: TEXT
+    - enf_vih: TEXT
+    - enf_def: TEXT
+    - enf_hip: TEXT
+    - enf_obe: TEXT
+    - tiene_disca: Integer
+    - disca_ori: TEXT
+    - disca_gra: TEXT
+    - tiene_discb: Integer
+    - discb_ori: TEXT
+    - discb_gra: TEXT
+    - tiene_discc: Integer
+    - discc_ori: TEXT
+    - discc_gra: TEXT
+    - tiene_discd: Integer
+    - discd_ori: TEXT
+    - discd_gra: TEXT
+    - tiene_disce: Integer
+    - disce_ori: TEXT
+    - disce_gra: TEXT
+    - tiene_discf: Integer
+    - discf_ori: TEXT
+    - discf_gra: TEXT
+    - otr_ing_a: TEXT
+    - otr_ing_b: TEXT
+    - otr_ing_c: TEXT
+    - otr_ing_d: TEXT
+    - otr_ing_e: TEXT
+    - otr_ing_f: TEXT
+    - otr_ing_g: TEXT
+    - inapam: TEXT
+    - am_a: INT
+    - am_b: TEXT
+    - am_c: INT
+    - am_d: TEXT
+    - am_e: TEXT
+    - con_remesa: Integer
+    - c_escusado: Integer
+    - uso_exc: TEXT
+    - fogon_chim: TEXT
+    - ts_vhs_dvd_br: Integer
+    - ts_refri: Integer
+    - ts_vehi: Integer
+    - ts_micro: Integer
+    - ts_telefon: Integer
+    - ts_compu: Integer
+    - ts_est_gas: Integer
+    - ts_internet: Integer
+    - ts_celular: TEXT
+    - ts_television: TEXT
+    - c_sit_viv: Integer
+    - escritura1: TEXT
+    - escritura2: TEXT
+    - tie_agri: TEXT
+    - prop_tierra1: TEXT
+    - prop_tierra2: TEXT
+    - c_maiz: TEXT
+    - c_frij: TEXT
+    - c_cere: TEXT
+    - c_frut: TEXT
+    - c_cana: TEXT
+    - c_jito: TEXT
+    - c_chil: TEXT
+    - c_limn: TEXT
+    - c_papa: TEXT
+    - c_cafe: TEXT
+    - c_cate: TEXT
+    - c_forr: TEXT
+    - c_otro: TEXT
+    - c_ning: TEXT
+    - cul_riego: TEXT
+    - cul_maquina: TEXT
+    - cul_anim: TEXT
+    - cul_ferorg: TEXT
+    - cul_ferquim: TEXT
+    - cul_plagui: TEXT
+    - uso_hid_tra: TEXT
+    - proyecto: TEXT
+    - p_agri: TEXT
+    - p_manu: TEXT
+    - p_come: TEXT
+    - p_tran: TEXT
+    - p_prof: TEXT
+    - p_educ: TEXT
+    - p_sald: TEXT
+    - p_recr: TEXT
+    - p_aloj: TEXT
+    - p_comu: TEXT
+    - p_otro: TEXT
+    - tipo_proy_esp: TEXT
+    - tie_curp: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - id_unico_39_9
+  - num_per
+  - fch_nacimiento
+  - cd_edo_nac
+  - cd_sexo
+  - edad
+  - edad_actual
+  - val_nb_renapo
+  - c_lengua_ind
+  - otro_dial
+  - habl_esp
+  - indigena
+  - leer_escr
+  - c_ult_nivel
+  - c_ult_gra
+  - niv_ed
+  - asis_esc
+  - c_con_tra
+  - c_pos_ocup
+  - c_con_res
+  - c_cd_parentesco
+  - padre
+  - madre
+  - c_cd_edo_civil
+  - conyuge
+  - acta_nac
+  - trab_subor
+  - trab_indep
+  - trab_presta_a
+  - trab_presta_b
+  - trab_presta_c
+  - trab_presta_d
+  - trab_presta_e
+  - trab_presta_f
+  - trab_presta_g
+  - trab_presta_h
+  - c_salud_hoga
+  - c_salud_hogb
+  - enf_art
+  - enf_can
+  - enf_cir
+  - enf_ren
+  - enf_dia
+  - enf_cor
+  - enf_pul
+  - enf_vih
+  - enf_def
+  - enf_hip
+  - enf_obe
+  - tiene_disca
+  - disca_ori
+  - disca_gra
+  - tiene_discb
+  - discb_ori
+  - discb_gra
+  - tiene_discc
+  - discc_ori
+  - discc_gra
+  - tiene_discd
+  - discd_ori
+  - discd_gra
+  - tiene_disce
+  - disce_ori
+  - disce_gra
+  - tiene_discf
+  - discf_ori
+  - discf_gra
+  - otr_ing_a
+  - otr_ing_b
+  - otr_ing_c
+  - otr_ing_d
+  - otr_ing_e
+  - otr_ing_f
+  - otr_ing_g
+  - inapam
+  - am_a
+  - am_b
+  - am_c
+  - am_d
+  - am_e
+  - con_remesa
+  - c_escusado
+  - uso_exc
+  - fogon_chim
+  - ts_vhs_dvd_br
+  - ts_refri
+  - ts_vehi
+  - ts_micro
+  - ts_telefon
+  - ts_compu
+  - ts_est_gas
+  - ts_internet
+  - ts_celular
+  - ts_television
+  - c_sit_viv
+  - escritura1
+  - escritura2
+  - tie_agri
+  - prop_tierra1
+  - prop_tierra2
+  - c_maiz
+  - c_frij
+  - c_cere
+  - c_frut
+  - c_cana
+  - c_jito
+  - c_chil
+  - c_limn
+  - c_papa
+  - c_cafe
+  - c_cate
+  - c_forr
+  - c_otro
+  - c_ning
+  - cul_riego
+  - cul_maquina
+  - cul_anim
+  - cul_ferorg
+  - cul_ferquim
+  - cul_plagui
+  - uso_hid_tra
+  - proyecto
+  - p_agri
+  - p_manu
+  - p_come
+  - p_tran
+  - p_prof
+  - p_educ
+  - p_sald
+  - p_recr
+  - p_aloj
+  - p_comu
+  - p_otro
+  - tipo_proy_esp
+  - tie_curp
 declaratoria:
   LUIGI:
     INDEX: cve_mun
