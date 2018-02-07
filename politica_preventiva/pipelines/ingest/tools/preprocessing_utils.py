@@ -154,6 +154,13 @@ def replace_missing_with_none(df):
     return df
 
 
+def clean_character_dummies(df):
+    """
+    Method to replace spaces and empty chars with None
+    """
+    str_replace = r'\D+'
+    df.replace({str_replace:None}, regex=True, inplace=True)
+    return df
 
 
 
