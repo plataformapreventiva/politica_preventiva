@@ -41,8 +41,7 @@ def main(server, port, luigi_cfg, workers, level):
                   # '--sleep', str(sleep),
                   '--workers', str(workers),
                   '--no-lock',
-                  '--level', str(level)
-                 ]
+                  '--level', str(level)]
 
     # If the server is not running then it uses the local scheduler
     if not check_server(server, port):

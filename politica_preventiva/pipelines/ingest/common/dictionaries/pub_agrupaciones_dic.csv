@@ -1,0 +1,15 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+anio|Año de pago del beneficio.|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+cve_ent|Clave de entidad|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+cve_muni|Clave de municipio|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+cve_programa|Clave de programa social|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+cve_padron|Clave de padrón|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+tipo|Tipo de agregación|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+temporalidad|Temporalidad|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+mes|Mes|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+nivel|Nivel de agregación|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+grupo|Grupo de agregación|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+n_beneficiarios|Número de beneficiarios|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+suma_importe|Suma del importe monetario|Sedesol DGGPB|http://pub.sedesol.gob.mx/spp/|Cobertura|Padrón|2011-2016|2018-02-07 21:15:11.011426||2014-a
+actualizacion_sedesol|Fecha de actualización en Sedesol|Sedesol|http://pub.sedesol.gob.mx/spp/||||2018-02-07 21:15:11.011426||2014-a
+data_date|Año.|Sedesol|http://pub.sedesol.gob.mx/spp/||||2018-02-07 21:15:11.011426||2014-a
