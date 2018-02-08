@@ -1,0 +1,131 @@
+---
+title: 'Focalización en México: EDA'
+author: "Mónica Zamudio"
+date: "17/1/2018"
+output: html_document
+---
+
+```{r}
+## EDA: focalización
+
+# Setup y conexión a la base
+
+source('setup.R')
+source('connect.R')
+
+prog <- tbl(con, dbplyr::in_schema('raw','cuaps_programas'))
+comp <- tbl(con, dbplyr::in_schema('raw','cuaps_componentes'))
+
+```
+
+## Derechos sociales en los programas
+
+```{r}
+prog %>% 
+  filter(orden_gob == 1) %>%
+  select(cuaps_folio, starts_with('der_social')) %>% 
+  data.frame() %>%
+  gather(derecho, presente, -cuaps_folio) %>%
+  mutate(derecho = gsub('(der_social_)(.*)', '\\2', derecho)) %>%
+  filter(presente == 1) -> der_soc
+
+ggplot(der_soc) +
+  geom_bar(aes(derecho, fill = derecho)) +
+  labs(x = 'Derechos sociales',
+       y = 'Número de programas') +
+  guides(fill = 'none') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90),
+        plot.subtitle = element_text(face = 'italic'))
+```
+
+
+## Derechos sociales e indicadores
+
+
+```{r}
+
+prog %>% 
+  filter(orden_gob == 1) %>%
+  select(cuaps_folio, starts_with('der_social')) %>% 
+  left_join(select(comp, cuaps_folio, indic_a:indic_t)) %>%
+  data.frame() %>%
+  gather(indic, presente, -cuaps_folio, -one_of(derechos)) %>%
+  mutate(indic = gsub('(indic_)(.*)', '\\2', indic)) %>%
+  filter(presente == 1) %>%
+  select(-presente) %>%
+  gather(derecho, presente, -cuaps_folio, -indic) %>%
+  mutate(derecho = gsub('(der_social_)(.*)', '\\2', derecho)) %>%
+  filter(presente == 1) -> indicadores
+
+indicadores %>%
+filter(indic != 't') %>%
+ggplot() +
+  geom_bar(aes(indic, fill = indic)) +
+  labs(x = 'Indicador',
+       y = 'Número de programas') +
+  facet_wrap(~derecho) +
+  guides(fill = 'none') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90),
+        plot.subtitle = element_text(face = 'italic'))
+
+```
+
+## Derechos sociales y tipos de apoyos
+
+```{r}
+prog %>% 
+  filter(orden_gob == 1) %>%
+  select(cuaps_folio, starts_with('der_social')) %>% 
+  left_join(select(comp, cuaps_folio, starts_with('tipo_apoyo'))) %>%
+  data.frame() %>%
+  gather(apoyo, presente, -cuaps_folio, -starts_with('der_social')) %>%
+  mutate(apoyo = gsub('(tipo_apoyo_)(.*)', '\\2', apoyo)) %>%
+  filter(presente == 1) %>%
+  select(-presente) %>%
+  gather(derecho, presente, -cuaps_folio, -apoyo) %>%
+  mutate(derecho = gsub('(der_social_)(.*)', '\\2', derecho)) %>%
+  filter(presente == 1) -> apoyos
+
+ggplot(apoyos) +
+  geom_bar(aes(apoyo, fill = apoyo)) +
+  labs(x = 'Tipo de apoyo',
+       y = 'Número de programas') +
+  facet_wrap(~derecho) +
+  theme_minimal() +
+  theme(plot.subtitle = element_text(face = 'italic'),
+        axis.text.x = element_blank(),
+        axis.ticks = element_blank())
+```
+
+## Derechos sociales y tipos de beneficiario
+
+```{r}
+prog %>% 
+  filter(orden_gob == 1) %>%
+  select(cuaps_folio, starts_with('der_social')) %>% 
+  left_join(select(comp, cuaps_folio, tipo_pob_apo)) %>%
+  data.frame() %>%
+  gather(derecho, presente, -cuaps_folio, -tipo_pob_apo) %>%
+  mutate(derecho = gsub('(der_social_)(.*)', '\\2', derecho),
+         tipo_pob_apo = as.character(tipo_pob_apo)) %>%
+  filter(presente == 1) -> dersoc_tipopob
+
+
+ggplot(dersoc_tipopob) +
+  geom_bar(aes(tipo_pob_apo, fill = tipo_pob_apo)) +
+  facet_wrap(~derecho) +
+  labs(x = 'Tipo de población',
+       y = 'Número de apoyos') +
+  guides(fill = 'none') +
+  theme_minimal()
+```
+
+
+## Tipos de apoyos y montos presupuestados
+
+```{r}
+
+```
+
