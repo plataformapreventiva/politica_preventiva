@@ -672,11 +672,11 @@ class sequia(IngestRTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
-class red_carretera(TDockerTask):
+class geoms_red_carretera(TDockerTask):
     @property
     def cmd(self):
         command_list = ['sh', self.classic_task_scripts +
-                        'red_carretera.sh', self.data_date,
+                        'geoms_red_carretera.sh', self.data_date,
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
@@ -728,20 +728,20 @@ class cuaps_criterios(TDockerTask):
                        self.pipeline_task, self.local_ingest_file]
        return " ".join(command_list)
 
-class sifode(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
 class sifode_calificacion(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_calificacion.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
+  @property
+  def cmd(self):
+     command_list = ['sh', self.classic_task_scripts +
+                     'sifode_calificacion.sh',
+                     self.local_path +
+                     self.pipeline_task, self.local_ingest_file]
+     return " ".join(command_list)
+
+class sifode_domicilio(TDockerTask):
+  @property
+  def cmd(self):
+     command_list = ['sh', self.classic_task_scripts +
+                     'sifode_domicilio.sh',
+                     self.local_path +
+                     self.pipeline_task, self.local_ingest_file]
+     return " ".join(command_list)
