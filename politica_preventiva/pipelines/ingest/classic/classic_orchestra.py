@@ -21,6 +21,7 @@ from py2neo import Graph, Node, Relationship
 
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
+from politica_preventiva.pipelines.ingest.classic.emr_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.\
     preprocessing_scripts.preprocessing_scripts import *
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_list, \
@@ -303,10 +304,12 @@ class Concatenation(luigi.Task):
 
         if extra[0] == 'spark':
 
-            return AddEmrStep(pipeline_task=self.pipeline_task,
-                              current_date=self.current_date,
-                              data_date=self.data_date,
-                              suffix=self.suffix)
+            emr_task = eval(self.pipeline_task + 'EMR')
+            return emr_task(pipeline_task=self.pipeline_task,
+                            current_date=self.current_date,
+                            data_date=self.data_date,
+                            suffix=self.suffix,
+                            id_name=self.pipeline_task + '_' + self.data_date)
 
         else:
             for extra_p in extra:
@@ -333,65 +336,6 @@ class Concatenation(luigi.Task):
         return S3Target(path=self.raw_bucket + self.pipeline_task +
                         "/concatenation/" + self.data_date + "/" +
                         self.pipeline_task + '.csv')
-
-
-class AddEmrStep(EmrTask):
-
-    """ Add Emr Step Task
-        This task adds steps for the EMR cluster.
-        Substitute of [Preprocess & Ingestion] when the source data is big enough
-        to need spark as engine.
-        TODO() This task has not yet been implemented
-
-        Note
-        ---------
-        Steps should be uploaded in S3 as .py scripts
-
-        Returns
-        --------
-        This task generate s3/pipeline/raw  ingestion files
-    """
-
-    current_date = luigi.DateParameter()
-    pipeline_task = luigi.Parameter()
-    data_date = luigi.Parameter()
-    suffix = luigi.Parameter()
-
-    spark_bucket = luigi.Parameter('DEFAULT')
-    raw_bucket = luigi.Parameter('DEFAULT')
-
-    classic_task_scripts = luigi.Parameter('DEFAULT')
-    client = S3Client(aws_access_key_id, aws_secret_access_key)
-
-    def requires(self):
-        # Copy file to s3
-        ingest_script = self.classic_task_scripts + self.pipeline_task +\
-                       ".py"
-        ingest_script_output = self.spark_bucket +\
-                       self.pipeline_task + '.py'
-        self.client.put(ingest_script, ingest_script_output)
-
-        # Check that cluster is running
-        id_name = self.pipeline_task + '_' + self.data_date
-        return InitializeCluster(id_name=id_name)
-
-    def run(self):
-        # TODO() Replae cluster id query to a general.
-        F = open(self.input().path,'r')
-        ClusterId = F.read().replace('\n','')
-        self.emr_loader.add_pipeline_step(ClusterId, self.pipeline_task,
-                                     'dpa-plataforma-preventiva/utils/spark',
-                                     self.pipeline_task + '.py', '--year', self.data_date)
-
-        status = self.emr_loader.get_final_status(ClusterId, 'pub')
-        self.emr_loader.shutdown_emr_cluster(ClusterId)
-        if not status:
-            logger.critical('Pub EMR Step did not finish.')
-
-    def output(self):
-        file_path = self.raw_bucket + 'pub/preprocess/' +\
-                "{0}/exitoso.txt".format(self.data_date)
-        return S3Target(file_path)
 
 
 class Preprocess(luigi.Task):
