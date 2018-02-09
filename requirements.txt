@@ -17,3 +17,5 @@ filechunkio
 #sqlite3
 messytables
 smart_open
+tabulate==0.8.2
+
