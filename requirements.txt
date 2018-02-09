@@ -18,3 +18,4 @@ filechunkio
 messytables
 smart_open
 awscli
+tabulate==0.8.2
