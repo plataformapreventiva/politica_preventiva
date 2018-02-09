@@ -20,8 +20,6 @@ aws s3 cp s3://sifode-raw/universos_39.9.zip $local_path/universos_39_9.zip
 
 echo 'Decompressing zip file'
 
-CSVKIT_ENCODING='UTF-8'
-
 gunzip -cd $local_path/universos_39_9.zip | \
 sed -e 's/\r$// ; s/^\xef\xbb\xbf//' | \
 csvformat -d '^' -D '|' -v > $local_ingest_file
