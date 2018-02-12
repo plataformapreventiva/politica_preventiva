@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS clean.pub;
-CREATE TABLE clean.pub AS (
+DROP TABLE IF EXISTS clean.pub_agrupaciones;
+CREATE TABLE clean.pub_agrupaciones AS (
     WITH clean1 as (
        SELECT *
-       FROM raw.pub p
+       FROM raw.pub_agrupaciones p
        WHERE (p.cve_muni IS NULL
        OR  ((p.cve_muni ~ '^\s*\d+\s*$')
        AND substring(p.cve_muni, 1,2)::int >=1
@@ -136,9 +136,20 @@ CREATE TABLE clean.pub AS (
        	and substring(p.cve_muni, 3,5)::INT <= 58)
        ) ))
   ) 
-  SELECT anio, cve_ent, cve_muni, cve_programa, cve_padron,
-         n_beneficiarios, max(suma_importe) AS suma_importe, tipo,
-        nivel, grupo, actualizacion_sedesol, data_date
+  SELECT anio, --1
+	 cve_ent, --2
+	 cve_muni, --3
+	 cve_programa,  --4
+	 cve_padron, --5
+	 tipo, --6
+	 temporalidad, --7
+	 mes, --8
+	 nivel, --9
+	 grupo, --10
+         n_beneficiarios, --11
+	 max(suma_importe) AS suma_importe, --12
+         actualizacion_sedesol, --13
+	 data_date --14
   FROM clean1
-  GROUP BY 1,2,3,4,5,6,8,9,10,11,12
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,13,14
 );
