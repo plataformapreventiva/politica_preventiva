@@ -4,17 +4,24 @@
 # CUAPS: criterion-level
 ########################
 
-# Este script ingesta los datos del CUAPS a nivel criterio de focalización. 
+# Este script ingesta los datos del CUAPS (Cuestionario Único de Aplicación a Programas)  a nivel acriterio de focalización. Los apoyos de cada programa pueden tener distintas combinaciones de criterios de focalización.
+# El script asume que se tiene acceso a la carpeta sifode-raw, en el S3 del proyecto
 
 # Se toman como parámetros, en ese orden, el data day, el directorio de ingesta y el output path.
 
-## Pendiente: incluir fecha cuando se actualicen los nombres de archivos.
+period=$1
+local_path=$2
+local_ingest_file=$3
 
 echo 'Downloading CUAPS:criterion-level data'
 
-aws s3 cp s3://sedesol-lab/CUAPS-PROGRAMAS/BDCUAPS_FOCALIZACION.xlsx $2/cuaps_criterios.xlsx
+aws s3 cp s3://sedesol-lab/CUAPS-PROGRAMAS/BDCUAPS_FOCALIZACION_3.xlsx $local_path/cuaps_criterios.xlsx
 
-in2csv --sheet 'BD_FOCALIZACION' $2/cuaps_criterios.xlsx | \
-csvformat -D '|' > $3
+echo 'Ingesting CSV file for period: '$period
 
-rm $2/cuaps_criterios.xlsx
+in2csv --sheet 'BDCUAPS_FOCALIZACION' $local_path/cuaps_criterios.xlsx | \
+csvformat -D '|' | \
+sed -e '1 s/\./_/g' | \
+sed -e 's/"^M"//g ; s/True/1/g ; s/False/0/g' > $local_ingest_file
+
+echo 'Written to: '$local_ingest_file
