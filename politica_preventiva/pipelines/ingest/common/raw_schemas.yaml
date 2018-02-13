@@ -633,49 +633,225 @@ coneval_municipios:
   - poblacionconingresoinferioralalineadebienestarminimo_porcentaje
   - poblacionconingresoinferioralalineadebienestarminimo_personas
   - poblacionconingresoinferioralalineadebienestarminimo_carenciaspromedio
+cuaps_componentes:
+  LUIGI:
+    INDEX: cuaps_folio
+    SCHEMA:
+    - cuaps_folio: TEXT
+    - csc_estatus_cuaps_fk: INT
+    - chr_nombre_programa_cuaps: TEXT
+    - tiene_componentes: Integer
+    - id_componente: Integer
+    - nombre_componente: TEXT
+    - obj_compo: TEXT
+    - pob_compo: TEXT
+    - ap_compo: Integer
+    - id_apoyo: Integer
+    - nombre_apoyo: TEXT
+    - descr_apoyo: TEXT
+    - tipo_pob_apo_cod: Integer
+    - tipo_pob_apo: TEXT
+    - tipo_pob_apo_otro: TEXT
+    - tipo_apoyo_mon: INT
+    - tipo_apoyo_sub: INT
+    - tipo_apoyo_esp: INT
+    - tipo_apoyo_obra: INT
+    - tipo_apoyo_serv: INT
+    - tipo_apoyo_cap: INT
+    - tipo_apoyo_otro: INT
+    - otro_tipo_apoyo: TEXT
+    - period_apoyo_cod: Integer
+    - period_apoyo: TEXT
+    - otro_period_apoyo: TEXT
+    - monto_apoyo_otor: BIGINT
+    - period_monto_cod: Integer
+    - period_monto: TEXT
+    - indic_a: INT
+    - indic_b: INT
+    - indic_c: INT
+    - indic_d: INT
+    - indic_e: INT
+    - indic_f: INT
+    - indic_g: INT
+    - indic_h: INT
+    - indic_i: INT
+    - indic_j: INT
+    - indic_k: INT
+    - indic_l: INT
+    - indic_m: INT
+    - indic_n: INT
+    - indic_o: INT
+    - indic_p: INT
+    - indic_q: INT
+    - indic_r: INT
+    - indic_s: INT
+    - indic_t: INT
+    - tem_apoyo: Integer
+    - tem_apoyo_otra_esp: TEXT
+    - apoyo_gen_padron: Integer
+    - tipo_padron: Integer
+    - otro_tipo_padron: TEXT
+    - periodicidad_padron: Integer
+    - actualiza_padron: TEXT
+    - otro_actualiza_padron: TEXT
+    - cuenta_info_geo: Integer
+    - instru_socioe: Integer
+    - instru_socioe_cual: TEXT
+    - observaciones: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cuaps_folio
+  - csc_estatus_cuaps_fk
+  - chr_nombre_programa_cuaps
+  - tiene_componentes
+  - id_componente
+  - nombre_componente
+  - obj_compo
+  - pob_compo
+  - ap_compo
+  - id_apoyo
+  - nombre_apoyo
+  - descr_apoyo
+  - tipo_pob_apo_cod
+  - tipo_pob_apo
+  - tipo_pob_apo_otro
+  - tipo_apoyo_mon
+  - tipo_apoyo_sub
+  - tipo_apoyo_esp
+  - tipo_apoyo_obra
+  - tipo_apoyo_serv
+  - tipo_apoyo_cap
+  - tipo_apoyo_otro
+  - otro_tipo_apoyo
+  - period_apoyo_cod
+  - period_apoyo
+  - otro_period_apoyo
+  - monto_apoyo_otor
+  - period_monto_cod
+  - period_monto
+  - indic_a
+  - indic_b
+  - indic_c
+  - indic_d
+  - indic_e
+  - indic_f
+  - indic_g
+  - indic_h
+  - indic_i
+  - indic_j
+  - indic_k
+  - indic_l
+  - indic_m
+  - indic_n
+  - indic_o
+  - indic_p
+  - indic_q
+  - indic_r
+  - indic_s
+  - indic_t
+  - tem_apoyo
+  - tem_apoyo_otra_esp
+  - apoyo_gen_padron
+  - tipo_padron
+  - otro_tipo_padron
+  - periodicidad_padron
+  - actualiza_padron
+  - otro_actualiza_padron
+  - cuenta_info_geo
+  - instru_socioe
+  - instru_socioe_cual
+  - observaciones
+cuaps_criterios:
+  LUIGI:
+    INDEX: cuaps_folio
+    SCHEMA:
+    - cuaps_folio: TEXT
+    - csc_estatus_cuaps_fk: INT
+    - chr_nombre_programa_cuaps: TEXT
+    - id_componente: Integer
+    - nombre_componente: TEXT
+    - id_apoyo: Integer
+    - nombre_apoyo: TEXT
+    - orden: Integer
+    - csc_nivel_0: Integer
+    - chr_descripcion: TEXT
+    - padre: Integer
+    - csc_configuracion_foc: Integer
+    - descripc: TEXT
+    - chr_otra_descripcion: TEXT
+    - valor1: TEXT
+    - valor2: TEXT
+    - mg: TEXT
+    - sinx: TEXT
+    - condicion: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cuaps_folio
+  - csc_estatus_cuaps_fk
+  - chr_nombre_programa_cuaps
+  - id_componente
+  - nombre_componente
+  - id_apoyo
+  - nombre_apoyo
+  - orden
+  - csc_nivel_0
+  - chr_descripcion
+  - padre
+  - csc_configuracion_foc
+  - descripc
+  - chr_otra_descripcion
+  - valor1
+  - valor2
+  - mg
+  - sinx
+  - condicion
 cuaps_programas:
   LUIGI:
     INDEX: cuaps_folio
     SCHEMA:
     - cuaps_folio: TEXT
-    - fh_levantamiento: TEXT
-    - ra_folio: TEXT
-    - clave_usuario: TEXT
-    - fecha: TEXT
-    - nom_prog: TEXT
-    - cve_pres: TEXT
-    - nom_dr: TEXT
-    - cve_dr: TEXT
-    - nom_ua: TEXT
-    - cve_ua: TEXT
+    - fh_levantamiento: TIMESTAMP
+    - fh_fin_levantamiento: TIMESTAMP
+    - chr_usuario: TEXT
+    - csc_estatus_cuaps_fk: Integer
+    - chr_nombre_programa_cuaps: TEXT
+    - chr_clave_prespupuestal_pro: TEXT
+    - chr_descripcion_dependencia: TEXT
+    - chr_cve_dependencia: TEXT
+    - chr_unidad_administrativa_cuaps: TEXT
+    - chr_cve_unidad_adm_cuaps: TEXT
     - orden_gob: Integer
     - part_ua: Integer
     - tua_nombre: TEXT
     - tua_primer_ap: TEXT
     - tua_segundo_ap: TEXT
     - tua_cargo: TEXT
-    - tua_tel: TEXT
+    - tua_tel: BIGINT
     - tua_ext: Integer
     - tua_correo: TEXT
     - rp_nombre: TEXT
     - rp_primer_ap: TEXT
     - rp_segundo_ap: TEXT
     - rp_cargo: TEXT
-    - rp_tel: TEXT
+    - rp_tel: BIGINT
     - rp_ext: Integer
     - rp_correo: TEXT
     - ep_nombre: TEXT
     - ep_primer_ap: TEXT
     - ep_segundo_ap: TEXT
     - ep_cargo: TEXT
-    - ep_tel: TEXT
+    - ep_tel: BIGINT
     - ep_ext: Integer
     - ep_correo: TEXT
     - anio_inicio_prog: Integer
-    - doc_norma: Integer
+    - doc_norma: INT
     - doc_supweb: INT
     - nom_doc_norma: TEXT
-    - sitio_web: Integer
+    - sitio_web: INT
+    - chr_doc_norma: TEXT
+    - csc_archivo: TEXT
     - sitio_web_esp: TEXT
     - obj_gral_prog: TEXT
     - obj_esp_prog_1: TEXT
@@ -685,45 +861,33 @@ cuaps_programas:
     - obj_esp_prog_5: TEXT
     - obj_esp_prog_6: TEXT
     - obj_esp_prog_7: TEXT
-    - obj_esp_prog_8: TEXT
-    - obj_esp_prog_9: TEXT
-    - obj_esp_prog_10: TEXT
-    - obj_esp_prog_11: TEXT
     - pob_obj_prog: TEXT
-    - cobertura_geo: Integer
-    - nom_entidad_federativa: TEXT
+    - cobertura_geo: TEXT
     - cve_entidad_federativa: Integer
-    - nom_municipio: TEXT
+    - nom_entidad_federativa: TEXT
     - cve_municipio: Integer
-    - pob_poten: TEXT
+    - nom_municipio: TEXT
+    - pob_poten: Integer
     - pob_poten_um: TEXT
-    - pob_objet: TEXT
+    - num_pob_objet: Integer
     - pob_objet_um: TEXT
-    - pob_aten_efa: TEXT
+    - pob_aten_efa: Integer
     - pob_aten_efa_um: TEXT
-    - pres_anter: TEXT
-    - pres_vigen: TEXT
-    - cop_prog: Integer
-    - cop_tipart_1: Integer
+    - pres_anter: BIGINT
+    - pres_vigen: BIGINT
+    - coparticipacion: Integer
+    - cop_tipart_1: TEXT
+    - cop_tipart_2: TEXT
+    - cop_tipart_3: TEXT
     - cop_npart_1: TEXT
-    - cop_ordgob_1: TEXT
-    - cop_tipint_1: Integer
-    - cop_tipart_2: Integer
     - cop_npart_2: TEXT
-    - cop_ordgob_2: Integer
-    - cop_tipint_2: TEXT
-    - cop_tipart_3: Integer
     - cop_npart_3: TEXT
-    - cop_ordgob_3: Integer
-    - cop_tipint_3: Integer
-    - cop_tipart_4: Integer
-    - cop_npart_4: TEXT
-    - cop_ordgob_4: Integer
-    - cop_tipint_4: Integer
-    - cop_tipart_5: TEXT
-    - cop_npart_5: TEXT
-    - cop_ordgob_5: TEXT
-    - cop_tipint_5: TEXT
+    - cop_ordgob_1: TEXT
+    - cop_ordgob_2: TEXT
+    - cop_ordgob_3: TEXT
+    - cop_tipint_1: TEXT
+    - cop_tipint_2: TEXT
+    - cop_tipint_3: TEXT
     - der_social_edu: INT
     - der_social_sal: INT
     - der_social_alim: INT
@@ -734,20 +898,21 @@ cuaps_programas:
     - der_social_nodis: INT
     - der_social_beco: INT
     - der_social_ning: INT
+    - tiene_componentes: Integer
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
   - cuaps_folio
   - fh_levantamiento
-  - ra_folio
-  - clave_usuario
-  - fecha
-  - nom_prog
-  - cve_pres
-  - nom_dr
-  - cve_dr
-  - nom_ua
-  - cve_ua
+  - fh_fin_levantamiento
+  - chr_usuario
+  - csc_estatus_cuaps_fk
+  - chr_nombre_programa_cuaps
+  - chr_clave_prespupuestal_pro
+  - chr_descripcion_dependencia
+  - chr_cve_dependencia
+  - chr_unidad_administrativa_cuaps
+  - chr_cve_unidad_adm_cuaps
   - orden_gob
   - part_ua
   - tua_nombre
@@ -776,6 +941,8 @@ cuaps_programas:
   - doc_supweb
   - nom_doc_norma
   - sitio_web
+  - chr_doc_norma
+  - csc_archivo
   - sitio_web_esp
   - obj_gral_prog
   - obj_esp_prog_1
@@ -785,45 +952,33 @@ cuaps_programas:
   - obj_esp_prog_5
   - obj_esp_prog_6
   - obj_esp_prog_7
-  - obj_esp_prog_8
-  - obj_esp_prog_9
-  - obj_esp_prog_10
-  - obj_esp_prog_11
   - pob_obj_prog
   - cobertura_geo
-  - nom_entidad_federativa
   - cve_entidad_federativa
-  - nom_municipio
+  - nom_entidad_federativa
   - cve_municipio
+  - nom_municipio
   - pob_poten
   - pob_poten_um
-  - pob_objet
+  - num_pob_objet
   - pob_objet_um
   - pob_aten_efa
   - pob_aten_efa_um
   - pres_anter
   - pres_vigen
-  - cop_prog
+  - coparticipacion
   - cop_tipart_1
-  - cop_npart_1
-  - cop_ordgob_1
-  - cop_tipint_1
   - cop_tipart_2
-  - cop_npart_2
-  - cop_ordgob_2
-  - cop_tipint_2
   - cop_tipart_3
+  - cop_npart_1
+  - cop_npart_2
   - cop_npart_3
+  - cop_ordgob_1
+  - cop_ordgob_2
   - cop_ordgob_3
+  - cop_tipint_1
+  - cop_tipint_2
   - cop_tipint_3
-  - cop_tipart_4
-  - cop_npart_4
-  - cop_ordgob_4
-  - cop_tipint_4
-  - cop_tipart_5
-  - cop_npart_5
-  - cop_ordgob_5
-  - cop_tipint_5
   - der_social_edu
   - der_social_sal
   - der_social_alim
@@ -834,6 +989,7 @@ cuaps_programas:
   - der_social_nodis
   - der_social_beco
   - der_social_ning
+  - tiene_componentes
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
