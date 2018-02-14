@@ -16,9 +16,9 @@ from luigi import configuration
 from bs4 import BeautifulSoup
 
 
-logging_conf = configuration.get_config().get("core", "logging_conf_file")
-logging.config.fileConfig(logging_conf)
-logger = logging.getLogger("dpa-sedesol")
+# logging_conf = configuration.get_config().get("core", "logging_conf_file")
+# logging.config.fileConfig(logging_conf)
+# logger = logging.getLogger("dpa-sedesol")
 
 
 def centrales_conacca(local_ingest_file=''):
@@ -71,8 +71,8 @@ def centrales_conacca(local_ingest_file=''):
                         else:
                             file = open(file_name, 'w')
                             file.close()
-    except Exception, e:
-        logger.error('Failed to request url: ' + str(e))
+    except Exception as e:
+        #logger.error('Failed to request url: ' + str(e))
         print('Connection error')
 
 
@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--data_date', type=str, default='na',
                         help='This pipeline does not have a data date')
-    parser.add_argument('--local_path', type=str, default='/data/conacca',
+    parser.add_argument('--data_dir', type=str, default='/data/conacca',
                         help='Local path of ingest data')
     parser.add_argument('--local_ingest_file', type=str, default='',
                         help='Name of output file')
