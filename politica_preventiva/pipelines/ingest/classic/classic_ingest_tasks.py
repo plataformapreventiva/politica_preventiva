@@ -701,30 +701,3 @@ class conagua_precipitacion(TDockerTask):
                         '--local_path', self.local_path + self.pipeline_task,
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
-
-class cuaps_programas(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'cuaps_programas.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class cuaps_componentes(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'cuaps_componentes.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class cuaps_criterios(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'cuaps_criterios.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)

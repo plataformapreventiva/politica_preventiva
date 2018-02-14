@@ -9,6 +9,6 @@ ipak <- function(pkg){
 
 
 packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'lubridate',
-	      'readxl')
+	      'readxl', 'RPostgres')
 
 ipak(packages)
