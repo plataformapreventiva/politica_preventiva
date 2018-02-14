@@ -360,6 +360,25 @@ comedores:
   - x_coord
   - y_coord
   - status
+conacca:
+  LUIGI:
+    INDEX: nombredelacentraldeabasto
+    SCHEMA:
+    - num: Integer
+    - nombredelacentraldeabasto: TEXT
+    - domicilio: TEXT
+    - colonia: TEXT
+    - entidadfederativa: TEXT
+    - telefono: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - 'no'
+  - nombredelacentraldeabasto
+  - domicilio
+  - colonia
+  - entidadfederativa
+  - telefono
 conagua_estaciones:
   LUIGI:
     INDEX: estacion
