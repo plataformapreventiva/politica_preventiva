@@ -3,12 +3,12 @@ library(optparse)
 library(tidyverse)
 library(dbplyr)
 library(DBI)
-library(RPostgreSQL)
+source("pipelines/etl/tools/tidy_tools.R")
 
 option_list = list(
-  make_option(c("--datadate"), type="character", default="", 
+  make_option(c("--data_date"), type="character", default="",
               help="data date", metavar="character"),
-  make_option(c("--database"), type="character", default="", 
+  make_option(c("--database"), type="character", default="",
               help="database name", metavar="character"),
   make_option(c("--user"), type="character", default="",
               help="database user", metavar="character"),
@@ -17,10 +17,10 @@ option_list = list(
   make_option(c("--host"), type="character", default="",
               help="database host name", metavar="character"),
   make_option(c("--pipeline"), type="character", default="",
-  			  help="pipeline task", metavar="character")
+              help="pipeline task", metavar="character")
 );
 
-opt_parser <- OptionParser(option_list=option_list);
+opt_parser <- OptionParser(option_list=option_list)
 
 opt <- tryCatch(
         {
@@ -40,35 +40,47 @@ opt <- tryCatch(
         finally={
             message("Finished attempting to parse arguments.")
         }
-    ) 
+    )
 
+if(length(opt) > 1){
 
-PGDATABASE <- opt$database
-POSTGRES_PASSWORD <- opt$password
-POSTGRES_USER <- opt$user
-PGHOST <- opt$host
-PGPORT <- "5432"
-pipeline_task <- opt$pipeline
+  if (opt$database=="" | opt$user=="" |
+      opt$password=="" | opt$host=="" ){
+    print_help(opt_parser)
+    stop("Database connection arguments are not supplied.n", call.=FALSE)
+  }else{
+    PGDATABASE <- opt$database
+    POSTGRES_PASSWORD <- opt$password
+    POSTGRES_USER <- opt$user
+    PGHOST <- opt$host
+    PGPORT <- "5432"
+    pipeline_task <- opt$pipeline
+  }
 
-con <- dbConnect(RPostgres::Postgres(),
+  con <- DBI::dbConnect(RPostgres::Postgres(),
     host = PGHOST,
     port = PGPORT,
     dbname = PGDATABASE,
     user = POSTGRES_USER,
     password = POSTGRES_PASSWORD
-)
+  )
 
+  # Drop
+  #query_drop = sprintf("create table if exists tidy.%s", pipeline_task)
+  #dbGetQuery(con, query_drop)
+  #dbCommit(con)
 
-query = sprintf("drop table if exists tidy.%s; create table tidy.%s as (select * from clean.%s;",
-	pipeline_task,
-	pipeline_task,
-	pipeline_task)
+  # Create
+  query_create = sprintf("create table tidy.%s as (select * from clean.%s)",
+  	         pipeline_task,
+	         pipeline_task,
+	         pipeline_task)
 
-dbGetQuery(con, query)
+  dbGetQuery(con, query_create)
 
-# commit the change
-dbCommit(con)
+  # commit the change
+  dbCommit(con)
 
-# disconnect from the database
-dbDisconnect(con)
-
+  # disconnect from the database
+  dbDisconnect(con)
+}
