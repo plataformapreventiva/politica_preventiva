@@ -360,6 +360,25 @@ comedores:
   - x_coord
   - y_coord
   - status
+conacca:
+  LUIGI:
+    INDEX: nombredelacentraldeabasto
+    SCHEMA:
+    - num: Integer
+    - nombredelacentraldeabasto: TEXT
+    - domicilio: TEXT
+    - colonia: TEXT
+    - entidadfederativa: TEXT
+    - telefono: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - 'no'
+  - nombredelacentraldeabasto
+  - domicilio
+  - colonia
+  - entidadfederativa
+  - telefono
 conagua_estaciones:
   LUIGI:
     INDEX: estacion
@@ -633,49 +652,225 @@ coneval_municipios:
   - poblacionconingresoinferioralalineadebienestarminimo_porcentaje
   - poblacionconingresoinferioralalineadebienestarminimo_personas
   - poblacionconingresoinferioralalineadebienestarminimo_carenciaspromedio
+cuaps_componentes:
+  LUIGI:
+    INDEX: cuaps_folio
+    SCHEMA:
+    - cuaps_folio: TEXT
+    - csc_estatus_cuaps_fk: INT
+    - chr_nombre_programa_cuaps: TEXT
+    - tiene_componentes: Integer
+    - id_componente: Integer
+    - nombre_componente: TEXT
+    - obj_compo: TEXT
+    - pob_compo: TEXT
+    - ap_compo: Integer
+    - id_apoyo: Integer
+    - nombre_apoyo: TEXT
+    - descr_apoyo: TEXT
+    - tipo_pob_apo_cod: Integer
+    - tipo_pob_apo: TEXT
+    - tipo_pob_apo_otro: TEXT
+    - tipo_apoyo_mon: INT
+    - tipo_apoyo_sub: INT
+    - tipo_apoyo_esp: INT
+    - tipo_apoyo_obra: INT
+    - tipo_apoyo_serv: INT
+    - tipo_apoyo_cap: INT
+    - tipo_apoyo_otro: INT
+    - otro_tipo_apoyo: TEXT
+    - period_apoyo_cod: Integer
+    - period_apoyo: TEXT
+    - otro_period_apoyo: TEXT
+    - monto_apoyo_otor: BIGINT
+    - period_monto_cod: Integer
+    - period_monto: TEXT
+    - indic_a: INT
+    - indic_b: INT
+    - indic_c: INT
+    - indic_d: INT
+    - indic_e: INT
+    - indic_f: INT
+    - indic_g: INT
+    - indic_h: INT
+    - indic_i: INT
+    - indic_j: INT
+    - indic_k: INT
+    - indic_l: INT
+    - indic_m: INT
+    - indic_n: INT
+    - indic_o: INT
+    - indic_p: INT
+    - indic_q: INT
+    - indic_r: INT
+    - indic_s: INT
+    - indic_t: INT
+    - tem_apoyo: Integer
+    - tem_apoyo_otra_esp: TEXT
+    - apoyo_gen_padron: Integer
+    - tipo_padron: Integer
+    - otro_tipo_padron: TEXT
+    - periodicidad_padron: Integer
+    - actualiza_padron: TEXT
+    - otro_actualiza_padron: TEXT
+    - cuenta_info_geo: Integer
+    - instru_socioe: Integer
+    - instru_socioe_cual: TEXT
+    - observaciones: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cuaps_folio
+  - csc_estatus_cuaps_fk
+  - chr_nombre_programa_cuaps
+  - tiene_componentes
+  - id_componente
+  - nombre_componente
+  - obj_compo
+  - pob_compo
+  - ap_compo
+  - id_apoyo
+  - nombre_apoyo
+  - descr_apoyo
+  - tipo_pob_apo_cod
+  - tipo_pob_apo
+  - tipo_pob_apo_otro
+  - tipo_apoyo_mon
+  - tipo_apoyo_sub
+  - tipo_apoyo_esp
+  - tipo_apoyo_obra
+  - tipo_apoyo_serv
+  - tipo_apoyo_cap
+  - tipo_apoyo_otro
+  - otro_tipo_apoyo
+  - period_apoyo_cod
+  - period_apoyo
+  - otro_period_apoyo
+  - monto_apoyo_otor
+  - period_monto_cod
+  - period_monto
+  - indic_a
+  - indic_b
+  - indic_c
+  - indic_d
+  - indic_e
+  - indic_f
+  - indic_g
+  - indic_h
+  - indic_i
+  - indic_j
+  - indic_k
+  - indic_l
+  - indic_m
+  - indic_n
+  - indic_o
+  - indic_p
+  - indic_q
+  - indic_r
+  - indic_s
+  - indic_t
+  - tem_apoyo
+  - tem_apoyo_otra_esp
+  - apoyo_gen_padron
+  - tipo_padron
+  - otro_tipo_padron
+  - periodicidad_padron
+  - actualiza_padron
+  - otro_actualiza_padron
+  - cuenta_info_geo
+  - instru_socioe
+  - instru_socioe_cual
+  - observaciones
+cuaps_criterios:
+  LUIGI:
+    INDEX: cuaps_folio
+    SCHEMA:
+    - cuaps_folio: TEXT
+    - csc_estatus_cuaps_fk: INT
+    - chr_nombre_programa_cuaps: TEXT
+    - id_componente: Integer
+    - nombre_componente: TEXT
+    - id_apoyo: Integer
+    - nombre_apoyo: TEXT
+    - orden: Integer
+    - csc_nivel_0: Integer
+    - chr_descripcion: TEXT
+    - padre: Integer
+    - csc_configuracion_foc: Integer
+    - descripc: TEXT
+    - chr_otra_descripcion: TEXT
+    - valor1: TEXT
+    - valor2: TEXT
+    - mg: TEXT
+    - sinx: TEXT
+    - condicion: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cuaps_folio
+  - csc_estatus_cuaps_fk
+  - chr_nombre_programa_cuaps
+  - id_componente
+  - nombre_componente
+  - id_apoyo
+  - nombre_apoyo
+  - orden
+  - csc_nivel_0
+  - chr_descripcion
+  - padre
+  - csc_configuracion_foc
+  - descripc
+  - chr_otra_descripcion
+  - valor1
+  - valor2
+  - mg
+  - sinx
+  - condicion
 cuaps_programas:
   LUIGI:
     INDEX: cuaps_folio
     SCHEMA:
     - cuaps_folio: TEXT
-    - fh_levantamiento: TEXT
-    - ra_folio: TEXT
-    - clave_usuario: TEXT
-    - fecha: TEXT
-    - nom_prog: TEXT
-    - cve_pres: TEXT
-    - nom_dr: TEXT
-    - cve_dr: TEXT
-    - nom_ua: TEXT
-    - cve_ua: TEXT
+    - fh_levantamiento: TIMESTAMP
+    - fh_fin_levantamiento: TIMESTAMP
+    - chr_usuario: TEXT
+    - csc_estatus_cuaps_fk: Integer
+    - chr_nombre_programa_cuaps: TEXT
+    - chr_clave_prespupuestal_pro: TEXT
+    - chr_descripcion_dependencia: TEXT
+    - chr_cve_dependencia: TEXT
+    - chr_unidad_administrativa_cuaps: TEXT
+    - chr_cve_unidad_adm_cuaps: TEXT
     - orden_gob: Integer
     - part_ua: Integer
     - tua_nombre: TEXT
     - tua_primer_ap: TEXT
     - tua_segundo_ap: TEXT
     - tua_cargo: TEXT
-    - tua_tel: TEXT
+    - tua_tel: BIGINT
     - tua_ext: Integer
     - tua_correo: TEXT
     - rp_nombre: TEXT
     - rp_primer_ap: TEXT
     - rp_segundo_ap: TEXT
     - rp_cargo: TEXT
-    - rp_tel: TEXT
+    - rp_tel: BIGINT
     - rp_ext: Integer
     - rp_correo: TEXT
     - ep_nombre: TEXT
     - ep_primer_ap: TEXT
     - ep_segundo_ap: TEXT
     - ep_cargo: TEXT
-    - ep_tel: TEXT
+    - ep_tel: BIGINT
     - ep_ext: Integer
     - ep_correo: TEXT
     - anio_inicio_prog: Integer
-    - doc_norma: Integer
+    - doc_norma: INT
     - doc_supweb: INT
     - nom_doc_norma: TEXT
-    - sitio_web: Integer
+    - sitio_web: INT
+    - chr_doc_norma: TEXT
+    - csc_archivo: TEXT
     - sitio_web_esp: TEXT
     - obj_gral_prog: TEXT
     - obj_esp_prog_1: TEXT
@@ -685,45 +880,33 @@ cuaps_programas:
     - obj_esp_prog_5: TEXT
     - obj_esp_prog_6: TEXT
     - obj_esp_prog_7: TEXT
-    - obj_esp_prog_8: TEXT
-    - obj_esp_prog_9: TEXT
-    - obj_esp_prog_10: TEXT
-    - obj_esp_prog_11: TEXT
     - pob_obj_prog: TEXT
-    - cobertura_geo: Integer
-    - nom_entidad_federativa: TEXT
+    - cobertura_geo: TEXT
     - cve_entidad_federativa: Integer
-    - nom_municipio: TEXT
+    - nom_entidad_federativa: TEXT
     - cve_municipio: Integer
-    - pob_poten: TEXT
+    - nom_municipio: TEXT
+    - pob_poten: Integer
     - pob_poten_um: TEXT
-    - pob_objet: TEXT
+    - num_pob_objet: Integer
     - pob_objet_um: TEXT
-    - pob_aten_efa: TEXT
+    - pob_aten_efa: Integer
     - pob_aten_efa_um: TEXT
-    - pres_anter: TEXT
-    - pres_vigen: TEXT
-    - cop_prog: Integer
-    - cop_tipart_1: Integer
+    - pres_anter: BIGINT
+    - pres_vigen: BIGINT
+    - coparticipacion: Integer
+    - cop_tipart_1: TEXT
+    - cop_tipart_2: TEXT
+    - cop_tipart_3: TEXT
     - cop_npart_1: TEXT
-    - cop_ordgob_1: TEXT
-    - cop_tipint_1: Integer
-    - cop_tipart_2: Integer
     - cop_npart_2: TEXT
-    - cop_ordgob_2: Integer
-    - cop_tipint_2: TEXT
-    - cop_tipart_3: Integer
     - cop_npart_3: TEXT
-    - cop_ordgob_3: Integer
-    - cop_tipint_3: Integer
-    - cop_tipart_4: Integer
-    - cop_npart_4: TEXT
-    - cop_ordgob_4: Integer
-    - cop_tipint_4: Integer
-    - cop_tipart_5: TEXT
-    - cop_npart_5: TEXT
-    - cop_ordgob_5: TEXT
-    - cop_tipint_5: TEXT
+    - cop_ordgob_1: TEXT
+    - cop_ordgob_2: TEXT
+    - cop_ordgob_3: TEXT
+    - cop_tipint_1: TEXT
+    - cop_tipint_2: TEXT
+    - cop_tipint_3: TEXT
     - der_social_edu: INT
     - der_social_sal: INT
     - der_social_alim: INT
@@ -734,20 +917,21 @@ cuaps_programas:
     - der_social_nodis: INT
     - der_social_beco: INT
     - der_social_ning: INT
+    - tiene_componentes: Integer
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
   - cuaps_folio
   - fh_levantamiento
-  - ra_folio
-  - clave_usuario
-  - fecha
-  - nom_prog
-  - cve_pres
-  - nom_dr
-  - cve_dr
-  - nom_ua
-  - cve_ua
+  - fh_fin_levantamiento
+  - chr_usuario
+  - csc_estatus_cuaps_fk
+  - chr_nombre_programa_cuaps
+  - chr_clave_prespupuestal_pro
+  - chr_descripcion_dependencia
+  - chr_cve_dependencia
+  - chr_unidad_administrativa_cuaps
+  - chr_cve_unidad_adm_cuaps
   - orden_gob
   - part_ua
   - tua_nombre
@@ -776,6 +960,8 @@ cuaps_programas:
   - doc_supweb
   - nom_doc_norma
   - sitio_web
+  - chr_doc_norma
+  - csc_archivo
   - sitio_web_esp
   - obj_gral_prog
   - obj_esp_prog_1
@@ -785,45 +971,33 @@ cuaps_programas:
   - obj_esp_prog_5
   - obj_esp_prog_6
   - obj_esp_prog_7
-  - obj_esp_prog_8
-  - obj_esp_prog_9
-  - obj_esp_prog_10
-  - obj_esp_prog_11
   - pob_obj_prog
   - cobertura_geo
-  - nom_entidad_federativa
   - cve_entidad_federativa
-  - nom_municipio
+  - nom_entidad_federativa
   - cve_municipio
+  - nom_municipio
   - pob_poten
   - pob_poten_um
-  - pob_objet
+  - num_pob_objet
   - pob_objet_um
   - pob_aten_efa
   - pob_aten_efa_um
   - pres_anter
   - pres_vigen
-  - cop_prog
+  - coparticipacion
   - cop_tipart_1
-  - cop_npart_1
-  - cop_ordgob_1
-  - cop_tipint_1
   - cop_tipart_2
-  - cop_npart_2
-  - cop_ordgob_2
-  - cop_tipint_2
   - cop_tipart_3
+  - cop_npart_1
+  - cop_npart_2
   - cop_npart_3
+  - cop_ordgob_1
+  - cop_ordgob_2
   - cop_ordgob_3
+  - cop_tipint_1
+  - cop_tipint_2
   - cop_tipint_3
-  - cop_tipart_4
-  - cop_npart_4
-  - cop_ordgob_4
-  - cop_tipint_4
-  - cop_tipart_5
-  - cop_npart_5
-  - cop_ordgob_5
-  - cop_tipint_5
   - der_social_edu
   - der_social_sal
   - der_social_alim
@@ -834,6 +1008,7 @@ cuaps_programas:
   - der_social_nodis
   - der_social_beco
   - der_social_ning
+  - tiene_componentes
 cuaps_sedesol:
   LUIGI:
     INDEX: dependencia
@@ -1796,6 +1971,59 @@ geoms_municipios:
   - cve_ent
   - cve_mun
   - nom_mun
+geoms_red_carretera:
+  LUIGI:
+    INDEX: id_red
+    SCHEMA:
+    - wkt: geometry
+    - id_red: Integer
+    - tipo_vial: TEXT
+    - nombre: TEXT
+    - codigo: TEXT
+    - cond_pav: TEXT
+    - recubri: TEXT
+    - carriles: Integer
+    - estatus: TEXT
+    - condicion: TEXT
+    - nivel: Integer
+    - peaje: TEXT
+    - administra: TEXT
+    - jurisdi: TEXT
+    - circula: TEXT
+    - escala_vis: Integer
+    - velocidad: Integer
+    - union_ini: Integer
+    - union_fin: Integer
+    - longitud: FLOAT
+    - ancho: FLOAT
+    - fecha_act: Date
+    - calirepr: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - id_red
+  - tipo_vial
+  - nombre
+  - codigo
+  - cond_pav
+  - recubri
+  - carriles
+  - estatus
+  - condicion
+  - nivel
+  - peaje
+  - administra
+  - jurisdi
+  - circula
+  - escala_vis
+  - velocidad
+  - union_ini
+  - union_fin
+  - longitud
+  - ancho
+  - fecha_act
+  - calirepr
 indesol:
   LUIGI:
     INDEX: cluni
@@ -2636,7 +2864,7 @@ red_carretera:
   LUIGI:
     INDEX: nombre
     SCHEMA:
-    - wkt: GEOMETRY
+    - wkt: geometry
     - id_red: Integer
     - tipo_vial: TEXT
     - nombre: TEXT
@@ -2820,16 +3048,1984 @@ sequia:
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
-  - cve_concatenada
-  - cve_ent
-  - cve_mun
-  - pob_2005
-  - pob2010
-  - nombre_mun
-  - entidad
-  - org_cuenca
-  - clv_oc
-  - con_cuenca
-  - cve_conc
-  - fecha
-  - declaratoria
+  - llave_hogar_h
+  - c_integrante
+  - id_unico
+  - in_bec
+  - in_elecpub
+  - in_lamina
+  - in_letrina
+  - in_mejviv
+  - in_pprod
+  - in_techlam
+  - in_tomagu
+  - in_tomdren
+  - in_celsol
+  - in_estufa
+  - in_alim
+  - in_cenergia
+  - in_techco
+  - in_educ
+  - in_mjfach
+  - in_vivurb
+  - in_inaes_econ
+  - in_pop_econ
+  - in_pop_pproduc
+  - in_fonart_ccap
+  - in_paja_arribo
+  - in_paja_bec
+  - in_pasl_bhog
+  - in_pasl_lech
+  - in_pei_cuininos
+  - in_pei_estaper
+  - in_pei_estinic
+  - in_prosp_alim
+  - in_prosp_am
+  - in_prosp_bec
+  - in_prosp_bhog
+  - in_prosp_uesc
+  - in_sed_pet
+  - in_paiei_inf
+  - in_paiei_otinf
+  - in_paiei_moderemay
+  - in_paiei_moderemen
+  - in_pdciter_servp
+  - in_pdciter_produc
+  - in_pdciter_fcomer
+  - in_pdciter_ecap
+  - in_pdciter_servint
+  - in_ppmr_compra
+  - in_ppmr_desastres
+  - in_procampo_ingreso
+  - in_procampo_dieselagr
+  - in_procampo_dieselmar
+  - in_procampo_produc
+  - in_procampo_gasolina
+  - in_procampo_modern
+  - in_procampo_pproduc
+  - in_ppe_bhog
+  - in_ppe_conserv
+  - in_ppe_posproduc
+  - in_ppe_maq
+  - in_ppe_consagua
+  - in_ppe_servp
+  - in_ppe_producp
+  - in_ppe_otrinf
+  - in_aviv_acviv
+  - in_aviv_aplan
+  - in_aviv_asviv
+  - in_aviv_cale
+  - in_aviv_fossep
+  - in_aviv_imper
+  - in_aviv_mjfach
+  - in_aviv_muro
+  - in_aviv_piso
+  - in_aviv_puerven
+  - in_aviv_techco
+  - in_aviv_techla
+  - in_aviv_tina
+  - in_aviv_vivrur
+  - in_aviv_vivurb
+  - in_aviv_hogb
+  - in_zinf_asviv
+  - in_zinf_celsol
+  - in_zinf_dren2
+  - in_zinf_estu
+  - in_zinf_lamina
+  - in_zinf_letrina
+  - in_zinf_muro
+  - in_zinf_pisof
+  - in_zinf_tinaco
+  - in_zinf_tomagu
+  - in_zinf_huerto
+  - in_zinf_despensa
+  - in_zinf_tomdren
+  - in_zinf_redagup
+  - in_zinf_vivrur
+  - in_zinf_elecpub
+  - in_zinf_bhog
+  - in_pefsfv_lote
+  - in_pefsfv_viv
+  - in_pefsfv_apviv
+  - in_pefsfv_mviv
+  - in_pfcasvs_insumos
+  - in_inea_15mas
+  - in_inea_prim
+  - in_inea_sec
+  - in_pacareeib_bec
+  - in_paei_hospalim
+  - in_papci_pcomun
+  - in_patn_servmed
+  - in_pfdci_pproduc
+  - in_pfci_bec
+  - in_popmi_bec
+  - in_popmi_pproduc
+  - in_paid_econ
+  - in_paid_tcultivo
+  - in_paid_mconst
+  - in_pae_ccap
+  - in_pae_maq
+  - in_pcavfpae_btrabajo
+  - in_pcavfpae_fempleo
+  - in_3x113
+  - in_cc
+  - in_inaes
+  - in_pop
+  - in_fonart
+  - in_inapam
+  - in_paja
+  - in_pasl
+  - in_pei
+  - in_prosp
+  - in_sedpet
+  - in_paiei_sagarpa
+  - in_pdciter_sagarpa
+  - in_ppmr_sagarpa
+  - in_procampo_sagarpa
+  - in_ppe_sagarpa
+  - in_pronafim_se
+  - in_aviv_sedatu
+  - in_zinf_sedatu
+  - in_pinf_sedatu
+  - in_pefsfv_sedatu
+  - in_pronafor_semarnat
+  - in_semarnat_pet
+  - in_pcds
+  - in_pfcasvs
+  - in_inea
+  - in_pacareeib
+  - in_segagr_shcp
+  - in_paei
+  - in_cdi
+  - in_papci
+  - in_patn
+  - in_pfdci
+  - in_pfci
+  - in_popmi
+  - in_paid
+  - in_pae
+  - in_pcavfpae
+  - in_sepo
+  - in_sct_pet
+  - in_pet
+  - in_imss_prosp
+  - in_sedesol
+  - in_sagarpa
+  - in_se
+  - in_sedatu
+  - in_semarnat
+  - in_sep
+  - in_shcp
+  - in_stps
+  - in_ssa
+  - in_sct
+  - in_otras
+  - in_pub
+  - in_cnch
+  - ao
+sifode_2013:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - id_unico_39_9: Integer
+    - in_3x113_bec: INT
+    - in_3x113_elecpub: INT
+    - in_3x113_lamina: INT
+    - in_3x113_letrina: INT
+    - in_3x113_mejviv: INT
+    - in_3x113_pprod: INT
+    - in_3x113_techlam: INT
+    - in_3x113_tomagu: INT
+    - in_3x113_tomdren: INT
+    - in_3x113_celsol: INT
+    - in_3x113_estufa: INT
+    - in_3x113_alim: INT
+    - in_3x113_cenergia: INT
+    - in_3x113_techco: INT
+    - in_3x113_educ: INT
+    - in_3x113_mjfach: INT
+    - in_3x113_vivurb: INT
+    - in_inaes13_econ: INT
+    - in_pop13_econ: INT
+    - in_pop13_pproduc: INT
+    - in_fonart13_ccap: INT
+    - in_paja13_arribo: INT
+    - in_paja13_bec: INT
+    - in_pasl13_bhog: INT
+    - in_pasl13_lech: INT
+    - in_pei13_cuininos: INT
+    - in_pei13_estaper: INT
+    - in_pei13_estinic: INT
+    - in_prosp13_alim: INT
+    - in_prosp13_am: INT
+    - in_prosp13_bec: INT
+    - in_prosp13_bhog: INT
+    - in_prosp13_uesc: INT
+    - in_sed13_pet: INT
+    - in_paiei13_inf: INT
+    - in_paiei13_otinf: INT
+    - in_paiei13_moderemay: INT
+    - in_paiei13_moderemen: INT
+    - in_pdciter13_servp: INT
+    - in_pdciter13_produc: INT
+    - in_pdciter13_fcomer: INT
+    - in_pdciter13_ecap: INT
+    - in_pdciter13_servint: INT
+    - in_ppmr13_compra: INT
+    - in_ppmr13_desastres: INT
+    - in_procampo13_ingreso: INT
+    - in_procampo13_dieselagr: INT
+    - in_procampo13_dieselmar: INT
+    - in_procampo13_produc: INT
+    - in_procampo13_gasolina: INT
+    - in_procampo13_modern: INT
+    - in_procampo13_pproduc: INT
+    - in_ppe13_bhog: INT
+    - in_ppe13_conserv: INT
+    - in_ppe13_posproduc: INT
+    - in_ppe13_maq: INT
+    - in_ppe13_consagua: INT
+    - in_ppe13_servp: INT
+    - in_ppe13_producp: INT
+    - in_ppe13_otrinf: INT
+    - in_aviv13_acviv: INT
+    - in_aviv13_aplan: INT
+    - in_aviv13_asviv: INT
+    - in_aviv13_cale: INT
+    - in_aviv13_fossep: INT
+    - in_aviv13_imper: INT
+    - in_aviv13_mjfach: INT
+    - in_aviv13_muro: INT
+    - in_aviv13_piso: INT
+    - in_aviv13_puerven: INT
+    - in_aviv13_techco: INT
+    - in_aviv13_techla: INT
+    - in_aviv13_tina: INT
+    - in_aviv13_vivrur: INT
+    - in_aviv13_vivurb: INT
+    - in_aviv13_hogb: INT
+    - in_zinf13_asviv: INT
+    - in_zinf13_celsol: INT
+    - in_zinf13_dren2: INT
+    - in_zinf13_estu: INT
+    - in_zinf13_lamina: INT
+    - in_zinf13_letrina: INT
+    - in_zinf13_muro: INT
+    - in_zinf13_pisof: INT
+    - in_zinf13_tinaco: INT
+    - in_zinf13_tomagu: INT
+    - in_zinf13_huerto: INT
+    - in_zinf13_despensa: INT
+    - in_zinf13_tomdren: INT
+    - in_zinf13_redagup: INT
+    - in_zinf13_vivrur: INT
+    - in_zinf13_elecpub: INT
+    - in_zinf13_bhog: INT
+    - in_pefsfv13_lote: INT
+    - in_pefsfv13_viv: INT
+    - in_pefsfv13_apviv: INT
+    - in_pefsfv13_mviv: INT
+    - in_pfcasvs13_insumos: INT
+    - in_inea13_15mas: INT
+    - in_inea13_prim: INT
+    - in_inea13_sec: INT
+    - in_pacareeib13_bec: INT
+    - in_paei13_hospalim: INT
+    - in_papci13_pcomun: INT
+    - in_patn13_servmed: INT
+    - in_pfdci13_pproduc: INT
+    - in_pfci13_bec: INT
+    - in_popmi13_bec: INT
+    - in_popmi13_pproduc: INT
+    - in_paid13_econ: INT
+    - in_paid13_tcultivo: INT
+    - in_paid13_mconst: INT
+    - in_pae13_ccap: INT
+    - in_pae13_maq: INT
+    - in_pcavfpae13_btrabajo: INT
+    - in_pcavfpae13_fempleo: INT
+    - in_3x113: INT
+    - in_cc13: INT
+    - in_inaes13: INT
+    - in_pop13: INT
+    - in_fonart13: INT
+    - in_inapam13: INT
+    - in_paja13: INT
+    - in_pasl13: INT
+    - in_pei13: INT
+    - in_prosp13: INT
+    - in_sedpet13: INT
+    - in_paiei13_sagarpa: INT
+    - in_pdciter13_sagarpa: INT
+    - in_ppmr13_sagarpa: INT
+    - in_procampo13_sagarpa: INT
+    - in_ppe13_sagarpa: INT
+    - in_pronafim13_se: INT
+    - in_aviv13_sedatu: INT
+    - in_zinf13_sedatu: INT
+    - in_pinf13_sedatu: INT
+    - in_pefsfv13_sedatu: INT
+    - in_pronafor13_semarnat: INT
+    - in_semarnat13_pet: INT
+    - in_pcds13: INT
+    - in_pfcasvs13: INT
+    - in_inea13: INT
+    - in_pacareeib13: INT
+    - in_segagr13_shcp: INT
+    - in_paei13: INT
+    - in_cdi13: INT
+    - in_papci13: INT
+    - in_patn13: INT
+    - in_pfdci13: INT
+    - in_pfci13: INT
+    - in_popmi13: INT
+    - in_paid13: INT
+    - in_pae13: INT
+    - in_pcavfpae13: INT
+    - in_sepo13: INT
+    - in_sct13_pet: INT
+    - in_pet13: INT
+    - in_imss13_prosp: INT
+    - in_sedesol_2013: INT
+    - in_sagarpa13: INT
+    - in_se13: INT
+    - in_sedatu13: INT
+    - in_semarnat13: INT
+    - in_sep13: INT
+    - in_shcp13: INT
+    - in_stps13: INT
+    - in_ssa13: INT
+    - in_sct13: INT
+    - in_otras_2013: INT
+    - in_pub_2013: INT
+    - in_cnch_2013: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - id_unico_39_9
+  - in_3x113_bec
+  - in_3x113_elecpub
+  - in_3x113_lamina
+  - in_3x113_letrina
+  - in_3x113_mejviv
+  - in_3x113_pprod
+  - in_3x113_techlam
+  - in_3x113_tomagu
+  - in_3x113_tomdren
+  - in_3x113_celsol
+  - in_3x113_estufa
+  - in_3x113_alim
+  - in_3x113_cenergia
+  - in_3x113_techco
+  - in_3x113_educ
+  - in_3x113_mjfach
+  - in_3x113_vivurb
+  - in_inaes13_econ
+  - in_pop13_econ
+  - in_pop13_pproduc
+  - in_fonart13_ccap
+  - in_paja13_arribo
+  - in_paja13_bec
+  - in_pasl13_bhog
+  - in_pasl13_lech
+  - in_pei13_cuininos
+  - in_pei13_estaper
+  - in_pei13_estinic
+  - in_prosp13_alim
+  - in_prosp13_am
+  - in_prosp13_bec
+  - in_prosp13_bhog
+  - in_prosp13_uesc
+  - in_sed13_pet
+  - in_paiei13_inf
+  - in_paiei13_otinf
+  - in_paiei13_moderemay
+  - in_paiei13_moderemen
+  - in_pdciter13_servp
+  - in_pdciter13_produc
+  - in_pdciter13_fcomer
+  - in_pdciter13_ecap
+  - in_pdciter13_servint
+  - in_ppmr13_compra
+  - in_ppmr13_desastres
+  - in_procampo13_ingreso
+  - in_procampo13_dieselagr
+  - in_procampo13_dieselmar
+  - in_procampo13_produc
+  - in_procampo13_gasolina
+  - in_procampo13_modern
+  - in_procampo13_pproduc
+  - in_ppe13_bhog
+  - in_ppe13_conserv
+  - in_ppe13_posproduc
+  - in_ppe13_maq
+  - in_ppe13_consagua
+  - in_ppe13_servp
+  - in_ppe13_producp
+  - in_ppe13_otrinf
+  - in_aviv13_acviv
+  - in_aviv13_aplan
+  - in_aviv13_asviv
+  - in_aviv13_cale
+  - in_aviv13_fossep
+  - in_aviv13_imper
+  - in_aviv13_mjfach
+  - in_aviv13_muro
+  - in_aviv13_piso
+  - in_aviv13_puerven
+  - in_aviv13_techco
+  - in_aviv13_techla
+  - in_aviv13_tina
+  - in_aviv13_vivrur
+  - in_aviv13_vivurb
+  - in_aviv13_hogb
+  - in_zinf13_asviv
+  - in_zinf13_celsol
+  - in_zinf13_dren2
+  - in_zinf13_estu
+  - in_zinf13_lamina
+  - in_zinf13_letrina
+  - in_zinf13_muro
+  - in_zinf13_pisof
+  - in_zinf13_tinaco
+  - in_zinf13_tomagu
+  - in_zinf13_huerto
+  - in_zinf13_despensa
+  - in_zinf13_tomdren
+  - in_zinf13_redagup
+  - in_zinf13_vivrur
+  - in_zinf13_elecpub
+  - in_zinf13_bhog
+  - in_pefsfv13_lote
+  - in_pefsfv13_viv
+  - in_pefsfv13_apviv
+  - in_pefsfv13_mviv
+  - in_pfcasvs13_insumos
+  - in_inea13_15mas
+  - in_inea13_prim
+  - in_inea13_sec
+  - in_pacareeib13_bec
+  - in_paei13_hospalim
+  - in_papci13_pcomun
+  - in_patn13_servmed
+  - in_pfdci13_pproduc
+  - in_pfci13_bec
+  - in_popmi13_bec
+  - in_popmi13_pproduc
+  - in_paid13_econ
+  - in_paid13_tcultivo
+  - in_paid13_mconst
+  - in_pae13_ccap
+  - in_pae13_maq
+  - in_pcavfpae13_btrabajo
+  - in_pcavfpae13_fempleo
+  - in_3x113
+  - in_cc13
+  - in_inaes13
+  - in_pop13
+  - in_fonart13
+  - in_inapam13
+  - in_paja13
+  - in_pasl13
+  - in_pei13
+  - in_prosp13
+  - in_sedpet13
+  - in_paiei13_sagarpa
+  - in_pdciter13_sagarpa
+  - in_ppmr13_sagarpa
+  - in_procampo13_sagarpa
+  - in_ppe13_sagarpa
+  - in_pronafim13_se
+  - in_aviv13_sedatu
+  - in_zinf13_sedatu
+  - in_pinf13_sedatu
+  - in_pefsfv13_sedatu
+  - in_pronafor13_semarnat
+  - in_semarnat13_pet
+  - in_pcds13
+  - in_pfcasvs13
+  - in_inea13
+  - in_pacareeib13
+  - in_segagr13_shcp
+  - in_paei13
+  - in_cdi13
+  - in_papci13
+  - in_patn13
+  - in_pfdci13
+  - in_pfci13
+  - in_popmi13
+  - in_paid13
+  - in_pae13
+  - in_pcavfpae13
+  - in_sepo13
+  - in_sct13_pet
+  - in_pet13
+  - in_imss13_prosp
+  - in_sedesol_2013
+  - in_sagarpa13
+  - in_se13
+  - in_sedatu13
+  - in_semarnat13
+  - in_sep13
+  - in_shcp13
+  - in_stps13
+  - in_ssa13
+  - in_sct13
+  - in_otras_2013
+  - in_pub_2013
+  - in_cnch_2013
+sifode_2014:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - id_unico_39_9: Integer
+    - in_3x114_bec: INT
+    - in_3x114_elecpart: INT
+    - in_3x114_elecpub: INT
+    - in_3x114_fert: INT
+    - in_3x114_lamina: INT
+    - in_3x114_letrina: INT
+    - in_3x114_mejviv: INT
+    - in_3x114_pisof: INT
+    - in_3x114_pprod: INT
+    - in_3x114_prodgan: INT
+    - in_3x114_tomagu: INT
+    - in_3x114_tomdren: INT
+    - in_3x114_ccap: INT
+    - in_3x114_cerco: INT
+    - in_3x114_estufa: INT
+    - in_3x114_alim: INT
+    - in_3x114_cenergia: INT
+    - in_3x114_techco: INT
+    - in_3x114_vivienda: INT
+    - in_3x114_sruedas: INT
+    - in_inaes14_ccap: INT
+    - in_inaes14_econ: INT
+    - in_inaes14_educ: INT
+    - in_inaes14_insfin: INT
+    - in_inaes14_recon: INT
+    - in_inaes14_dnaturales: INT
+    - in_pop14_econ: INT
+    - in_fonart14_ccap: INT
+    - in_imjuve14_bec: INT
+    - in_paja14_arribo: INT
+    - in_paja14_bec: INT
+    - in_paja14_alim: INT
+    - in_pam14_econ: INT
+    - in_pam14_dcap: INT
+    - in_pasl14_bhog: INT
+    - in_pasl14_lech: INT
+    - in_pei14_cuininos: INT
+    - in_pei14_estaper: INT
+    - in_pei14_estinic: INT
+    - in_prosp14_alim: INT
+    - in_prosp14_am: INT
+    - in_prosp14_bec: INT
+    - in_prosp14_bhog: INT
+    - in_prosp14_uesc: INT
+    - in_sed14_pet: INT
+    - in_pfa14_biosus: INT
+    - in_pfa14_proagro: INT
+    - in_pfa14_pproduc: INT
+    - in_pfa14_procafe: INT
+    - in_pfa14_paqtec: INT
+    - in_pfa14_biosus2: INT
+    - in_pidr14_dnaturales: INT
+    - in_pidr14_ccap: INT
+    - in_pidr14_maqequip: INT
+    - in_pidr14_servconsult: INT
+    - in_pidr14_centrosveg: INT
+    - in_pidr14_upecuario: INT
+    - in_pidr14_consalim: INT
+    - in_pidr14_captec: INT
+    - in_pidr14_fertilizante: INT
+    - in_pidr14_infraprote: INT
+    - in_pidr14_infrproduc: INT
+    - in_pidr14_insumosinfr: INT
+    - in_pidr14_mvsemilla: INT
+    - in_pidr14_captagua: INT
+    - in_pidr14_otrinfra: INT
+    - in_pidr14_agroquim: INT
+    - in_pidr14_pproduc: INT
+    - in_pidr14_riegotec: INT
+    - in_pfppa14_aproyectos: INT
+    - in_pfppa14_dieselm: INT
+    - in_pfppa14_gasolinar: INT
+    - in_pfppa14_infpesq: INT
+    - in_pfppa14_embarcamay: INT
+    - in_pfppa14_embarcamen: INT
+    - in_pfppa14_ccap: INT
+    - in_pfg14_maqequip: INT
+    - in_pfg14_infrproduc: INT
+    - in_pfg14_recriapecuaria: INT
+    - in_pyc14_centrosdi: INT
+    - in_pyc14_centroslarv: INT
+    - in_aviv14_acviv: INT
+    - in_aviv14_aplan: INT
+    - in_aviv14_asviv: INT
+    - in_aviv14_cale: INT
+    - in_aviv14_estu: INT
+    - in_aviv14_imper: INT
+    - in_aviv14_instele: INT
+    - in_aviv14_insthidr: INT
+    - in_aviv14_letrin: INT
+    - in_aviv14_mjfach: INT
+    - in_aviv14_muro: INT
+    - in_aviv14_piso: INT
+    - in_aviv14_puerven: INT
+    - in_aviv14_techco: INT
+    - in_aviv14_techla: INT
+    - in_aviv14_tina: INT
+    - in_aviv14_vivrur: INT
+    - in_aviv14_vivurb: INT
+    - in_jea14_agro: INT
+    - in_jea14_esc: INT
+    - in_hinf14_ccap: INT
+    - in_hinf14_dren: INT
+    - in_hinf14_elecpu: INT
+    - in_hinf14_pavim: INT
+    - in_hinf14_promo: INT
+    - in_hinf14_redagu: INT
+    - in_hinf14_servsoc: INT
+    - in_hinf14_tallcap: INT
+    - in_hinf14_hogb: INT
+    - in_zinf14_captagu: INT
+    - in_zinf14_celsol: INT
+    - in_zinf14_cuarto: INT
+    - in_zinf14_dren2: INT
+    - in_zinf14_elecpart: INT
+    - in_zinf14_estu: INT
+    - in_zinf14_lamina: INT
+    - in_zinf14_letrina: INT
+    - in_zinf14_muro: INT
+    - in_zinf14_pisof: INT
+    - in_zinf14_techco: INT
+    - in_zinf14_techlam: INT
+    - in_zinf14_tinaco: INT
+    - in_zinf14_tomagu: INT
+    - in_zinf14_huerto: INT
+    - in_zinf14_despensa: INT
+    - in_zinf14_cobija: INT
+    - in_zinf14_tomdren: INT
+    - in_zinf14_redagup: INT
+    - in_pfcasvs14_insumos: INT
+    - in_inea14_15mas: INT
+    - in_inea14_prim: INT
+    - in_inea14_sec: INT
+    - in_di14_comuind: INT
+    - in_di14_jovind: INT
+    - in_di14_sermed: INT
+    - in_di14_solar: INT
+    - in_di14_tiecul: INT
+    - in_paei14_becindig: INT
+    - in_pae14_ccap: INT
+    - in_pae14_econ: INT
+    - in_pae14_maq: INT
+    - in_pascl14_ccap: INT
+    - in_pascl14_contingencia: INT
+    - in_pcavfpae14_btrabajo: INT
+    - in_pcavfpae14_fempleo: INT
+    - in_3x114: INT
+    - in_cc14: INT
+    - in_inaes14: INT
+    - in_pop14: INT
+    - in_fonart14: INT
+    - in_imjuve14: INT
+    - in_inapam14: INT
+    - in_paja14: INT
+    - in_pam14: INT
+    - in_pasl14: INT
+    - in_pei14: INT
+    - in_prosp14: INT
+    - in_psjf14: INT
+    - in_sedpet14: INT
+    - in_pfa14_sagarpa: INT
+    - in_pidr14_sagarpa: INT
+    - in_pfppa14_sagarpa: INT
+    - in_pfg14_sagarpa: INT
+    - in_pyc14_sagarpa: INT
+    - in_fne14_se: INT
+    - in_pronafim14_se: INT
+    - in_aviv14_sedatu: INT
+    - in_jea14_sedatu: INT
+    - in_hinf14_sedatu: INT
+    - in_zinf14_sedatu: INT
+    - in_pinf14_sedatu: INT
+    - in_pronafor14_semarnat: INT
+    - in_semarnat14_pet: INT
+    - in_pcds14: INT
+    - in_pfcasvs14: INT
+    - in_inea14: INT
+    - in_segagr14_shcp: INT
+    - in_di14: INT
+    - in_paei14: INT
+    - in_cdi14: INT
+    - in_pae14: INT
+    - in_pascl14: INT
+    - in_pcavfpae14: INT
+    - in_sepo14: INT
+    - in_sct14_pet: INT
+    - in_pet14: INT
+    - in_imss14_prosp: INT
+    - in_sedesol_2014: INT
+    - in_sagarpa14: INT
+    - in_se14: INT
+    - in_sedatu14: INT
+    - in_semarnat14: INT
+    - in_sep14: INT
+    - in_shcp14: INT
+    - in_stps14: INT
+    - in_ssa14: INT
+    - in_sct14: INT
+    - in_otras_2014: INT
+    - in_pub_2014: INT
+    - in_cnch_2014: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - id_unico_39_9
+  - in_3x114_bec
+  - in_3x114_elecpart
+  - in_3x114_elecpub
+  - in_3x114_fert
+  - in_3x114_lamina
+  - in_3x114_letrina
+  - in_3x114_mejviv
+  - in_3x114_pisof
+  - in_3x114_pprod
+  - in_3x114_prodgan
+  - in_3x114_tomagu
+  - in_3x114_tomdren
+  - in_3x114_ccap
+  - in_3x114_cerco
+  - in_3x114_estufa
+  - in_3x114_alim
+  - in_3x114_cenergia
+  - in_3x114_techco
+  - in_3x114_vivienda
+  - in_3x114_sruedas
+  - in_inaes14_ccap
+  - in_inaes14_econ
+  - in_inaes14_educ
+  - in_inaes14_insfin
+  - in_inaes14_recon
+  - in_inaes14_dnaturales
+  - in_pop14_econ
+  - in_fonart14_ccap
+  - in_imjuve14_bec
+  - in_paja14_arribo
+  - in_paja14_bec
+  - in_paja14_alim
+  - in_pam14_econ
+  - in_pam14_dcap
+  - in_pasl14_bhog
+  - in_pasl14_lech
+  - in_pei14_cuininos
+  - in_pei14_estaper
+  - in_pei14_estinic
+  - in_prosp14_alim
+  - in_prosp14_am
+  - in_prosp14_bec
+  - in_prosp14_bhog
+  - in_prosp14_uesc
+  - in_sed14_pet
+  - in_pfa14_biosus
+  - in_pfa14_proagro
+  - in_pfa14_pproduc
+  - in_pfa14_procafe
+  - in_pfa14_paqtec
+  - in_pfa14_biosus2
+  - in_pidr14_dnaturales
+  - in_pidr14_ccap
+  - in_pidr14_maqequip
+  - in_pidr14_servconsult
+  - in_pidr14_centrosveg
+  - in_pidr14_upecuario
+  - in_pidr14_consalim
+  - in_pidr14_captec
+  - in_pidr14_fertilizante
+  - in_pidr14_infraprote
+  - in_pidr14_infrproduc
+  - in_pidr14_insumosinfr
+  - in_pidr14_mvsemilla
+  - in_pidr14_captagua
+  - in_pidr14_otrinfra
+  - in_pidr14_agroquim
+  - in_pidr14_pproduc
+  - in_pidr14_riegotec
+  - in_pfppa14_aproyectos
+  - in_pfppa14_dieselm
+  - in_pfppa14_gasolinar
+  - in_pfppa14_infpesq
+  - in_pfppa14_embarcamay
+  - in_pfppa14_embarcamen
+  - in_pfppa14_ccap
+  - in_pfg14_maqequip
+  - in_pfg14_infrproduc
+  - in_pfg14_recriapecuaria
+  - in_pyc14_centrosdi
+  - in_pyc14_centroslarv
+  - in_aviv14_acviv
+  - in_aviv14_aplan
+  - in_aviv14_asviv
+  - in_aviv14_cale
+  - in_aviv14_estu
+  - in_aviv14_imper
+  - in_aviv14_instele
+  - in_aviv14_insthidr
+  - in_aviv14_letrin
+  - in_aviv14_mjfach
+  - in_aviv14_muro
+  - in_aviv14_piso
+  - in_aviv14_puerven
+  - in_aviv14_techco
+  - in_aviv14_techla
+  - in_aviv14_tina
+  - in_aviv14_vivrur
+  - in_aviv14_vivurb
+  - in_jea14_agro
+  - in_jea14_esc
+  - in_hinf14_ccap
+  - in_hinf14_dren
+  - in_hinf14_elecpu
+  - in_hinf14_pavim
+  - in_hinf14_promo
+  - in_hinf14_redagu
+  - in_hinf14_servsoc
+  - in_hinf14_tallcap
+  - in_hinf14_hogb
+  - in_zinf14_captagu
+  - in_zinf14_celsol
+  - in_zinf14_cuarto
+  - in_zinf14_dren2
+  - in_zinf14_elecpart
+  - in_zinf14_estu
+  - in_zinf14_lamina
+  - in_zinf14_letrina
+  - in_zinf14_muro
+  - in_zinf14_pisof
+  - in_zinf14_techco
+  - in_zinf14_techlam
+  - in_zinf14_tinaco
+  - in_zinf14_tomagu
+  - in_zinf14_huerto
+  - in_zinf14_despensa
+  - in_zinf14_cobija
+  - in_zinf14_tomdren
+  - in_zinf14_redagup
+  - in_pfcasvs14_insumos
+  - in_inea14_15mas
+  - in_inea14_prim
+  - in_inea14_sec
+  - in_di14_comuind
+  - in_di14_jovind
+  - in_di14_sermed
+  - in_di14_solar
+  - in_di14_tiecul
+  - in_paei14_becindig
+  - in_pae14_ccap
+  - in_pae14_econ
+  - in_pae14_maq
+  - in_pascl14_ccap
+  - in_pascl14_contingencia
+  - in_pcavfpae14_btrabajo
+  - in_pcavfpae14_fempleo
+  - in_3x114
+  - in_cc14
+  - in_inaes14
+  - in_pop14
+  - in_fonart14
+  - in_imjuve14
+  - in_inapam14
+  - in_paja14
+  - in_pam14
+  - in_pasl14
+  - in_pei14
+  - in_prosp14
+  - in_psjf14
+  - in_sedpet14
+  - in_pfa14_sagarpa
+  - in_pidr14_sagarpa
+  - in_pfppa14_sagarpa
+  - in_pfg14_sagarpa
+  - in_pyc14_sagarpa
+  - in_fne14_se
+  - in_pronafim14_se
+  - in_aviv14_sedatu
+  - in_jea14_sedatu
+  - in_hinf14_sedatu
+  - in_zinf14_sedatu
+  - in_pinf14_sedatu
+  - in_pronafor14_semarnat
+  - in_semarnat14_pet
+  - in_pcds14
+  - in_pfcasvs14
+  - in_inea14
+  - in_segagr14_shcp
+  - in_di14
+  - in_paei14
+  - in_cdi14
+  - in_pae14
+  - in_pascl14
+  - in_pcavfpae14
+  - in_sepo14
+  - in_sct14_pet
+  - in_pet14
+  - in_imss14_prosp
+  - in_sedesol_2014
+  - in_sagarpa14
+  - in_se14
+  - in_sedatu14
+  - in_semarnat14
+  - in_sep14
+  - in_shcp14
+  - in_stps14
+  - in_ssa14
+  - in_sct14
+  - in_otras_2014
+  - in_pub_2014
+  - in_cnch_2014
+sifode_2015:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - id_unico_39_9: Integer
+    - in_3x115_bec: INT
+    - in_3x115_boiler: INT
+    - in_3x115_captagu: INT
+    - in_3x115_cuarto: INT
+    - in_3x115_drenaje: INT
+    - in_3x115_elecpart: INT
+    - in_3x115_elecpub: INT
+    - in_3x115_fert: INT
+    - in_3x115_filtagu: INT
+    - in_3x115_lamina: INT
+    - in_3x115_letrina: INT
+    - in_3x115_mejviv: INT
+    - in_3x115_pavim: INT
+    - in_3x115_pisof: INT
+    - in_3x115_pprod: INT
+    - in_3x115_prodgan: INT
+    - in_3x115_redagup: INT
+    - in_3x115_techlam: INT
+    - in_3x115_tinaco: INT
+    - in_3x115_tomagu: INT
+    - in_3x115_tomdren: INT
+    - in_3x115_celsol: INT
+    - in_3x115_hogb: INT
+    - in_inaes15_ccap: INT
+    - in_inaes15_comer: INT
+    - in_inaes15_desorg: INT
+    - in_inaes15_econ: INT
+    - in_inaes15_educ: INT
+    - in_inaes15_insfin: INT
+    - in_pop15_econ: INT
+    - in_fonart15_ccap: INT
+    - in_fonart15_comer: INT
+    - in_fonart15_conc: INT
+    - in_fonart15_prod: INT
+    - in_fonart15_salocu: INT
+    - in_imjuve15_bec: INT
+    - in_imjuve15_becmdig: INT
+    - in_imjuve15_becrj: INT
+    - in_imjuve15_concdp: INT
+    - in_imjuve15_concpnjuv: INT
+    - in_imjuve15_conctsj: INT
+    - in_imjuve15_salint: INT
+    - in_paja15_arribo: INT
+    - in_paja15_bec: INT
+    - in_pam15_econ: INT
+    - in_pam15_incfin: INT
+    - in_pam15_march: INT
+    - in_pasl15_bhog: INT
+    - in_pasl15_lech: INT
+    - in_pei15_cuininos: INT
+    - in_pei15_estaper: INT
+    - in_pei15_estecon: INT
+    - in_pei15_estinic: INT
+    - in_pei15_estpcivil: INT
+    - in_pei15_estseg: INT
+    - in_prosp15_alim: INT
+    - in_prosp15_am: INT
+    - in_prosp15_bec: INT
+    - in_prosp15_bhog: INT
+    - in_prosp15_uesc: INT
+    - in_sed15_pet: INT
+    - in_pfa15_agro: INT
+    - in_pfa15_biosus: INT
+    - in_pfa15_proagro: INT
+    - in_pidr15_segalim: INT
+    - in_pyc15_infequip: INT
+    - in_aviv15_acviv: INT
+    - in_aviv15_aplan: INT
+    - in_aviv15_asviv: INT
+    - in_aviv15_cale: INT
+    - in_aviv15_estu: INT
+    - in_aviv15_fossep: INT
+    - in_aviv15_imper: INT
+    - in_aviv15_instele: INT
+    - in_aviv15_insthidr: INT
+    - in_aviv15_instsan: INT
+    - in_aviv15_letrin: INT
+    - in_aviv15_mjfach: INT
+    - in_aviv15_muro: INT
+    - in_aviv15_piso: INT
+    - in_aviv15_puerven: INT
+    - in_aviv15_techco: INT
+    - in_aviv15_techla: INT
+    - in_aviv15_tina: INT
+    - in_aviv15_vivrur: INT
+    - in_aviv15_vivurb: INT
+    - in_jea15_agro: INT
+    - in_jea15_esc: INT
+    - in_hinf15_alumpu: INT
+    - in_hinf15_ccap: INT
+    - in_hinf15_ccapsoc: INT
+    - in_hinf15_consoc: INT
+    - in_hinf15_dren: INT
+    - in_hinf15_elecpu: INT
+    - in_hinf15_pavim: INT
+    - in_hinf15_promo: INT
+    - in_hinf15_redagu: INT
+    - in_hinf15_servsoc: INT
+    - in_hinf15_tallcap: INT
+    - in_zinf15_asviv: INT
+    - in_zinf15_captagu: INT
+    - in_zinf15_celsol: INT
+    - in_zinf15_cuarto: INT
+    - in_zinf15_dren2: INT
+    - in_zinf15_elecpart: INT
+    - in_zinf15_estu: INT
+    - in_zinf15_lamina: INT
+    - in_zinf15_letrina: INT
+    - in_zinf15_mejviv: INT
+    - in_zinf15_muro: INT
+    - in_zinf15_pisof: INT
+    - in_zinf15_techlam: INT
+    - in_zinf15_tinaco: INT
+    - in_zinf15_tomagu: INT
+    - in_zinf15_huerto: INT
+    - in_pfcasvs15_insumos: INT
+    - in_inea15_15mas: INT
+    - in_inea15_prim: INT
+    - in_inea15_sec: INT
+    - in_mppi15_pprocc: INT
+    - in_mppi15_pprom: INT
+    - in_mppi15_pprot: INT
+    - in_mppi15_prsoc: INT
+    - in_di15_comuind: INT
+    - in_di15_jovind: INT
+    - in_di15_mconst: INT
+    - in_di15_sermed: INT
+    - in_di15_solar: INT
+    - in_di15_tiecul: INT
+    - in_paei15_ccnindig: INT
+    - in_paei15_espindig: INT
+    - in_pae15_ccap: INT
+    - in_pae15_econ: INT
+    - in_pae15_maq: INT
+    - in_3x115: INT
+    - in_cc15: INT
+    - in_inaes15: INT
+    - in_pop15: INT
+    - in_fonart15: INT
+    - in_imjuve15: INT
+    - in_inapam15: INT
+    - in_paja15: INT
+    - in_pam15: INT
+    - in_pasl15: INT
+    - in_pei15: INT
+    - in_prosp15: INT
+    - in_psjf15: INT
+    - in_sedpet15: INT
+    - in_pcvm15: INT
+    - in_pfa15_sagarpa: INT
+    - in_pidr15_sagarpa: INT
+    - in_pyc15_sagarpa: INT
+    - in_fne15_se: INT
+    - in_pronafim15_se: INT
+    - in_aviv15_sedatu: INT
+    - in_jea15_sedatu: INT
+    - in_hinf15_sedatu: INT
+    - in_zinf15_sedatu: INT
+    - in_pinf15_sedatu: INT
+    - in_pronafor15_semarnat: INT
+    - in_semarnat15_pet: INT
+    - in_pfcasvs15: INT
+    - in_eib15_sep: INT
+    - in_inea15: INT
+    - in_segagr15_shcp: INT
+    - in_mppi15: INT
+    - in_di15: INT
+    - in_paei15: INT
+    - in_cdi15: INT
+    - in_pae15: INT
+    - in_sepo15: INT
+    - in_sct15_pet: INT
+    - in_pet15: INT
+    - in_imss15_prosp: INT
+    - in_sedesol_2015: INT
+    - in_sagarpa15: INT
+    - in_se15: INT
+    - in_sedatu15: INT
+    - in_semarnat15: INT
+    - in_sep15: INT
+    - in_shcp15: INT
+    - in_stps15: INT
+    - in_ssa15: INT
+    - in_sct15: INT
+    - in_otras_2015: INT
+    - in_pub_2015: INT
+    - in_cnch_2015: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - id_unico_39_9
+  - in_3x115_bec
+  - in_3x115_boiler
+  - in_3x115_captagu
+  - in_3x115_cuarto
+  - in_3x115_drenaje
+  - in_3x115_elecpart
+  - in_3x115_elecpub
+  - in_3x115_fert
+  - in_3x115_filtagu
+  - in_3x115_lamina
+  - in_3x115_letrina
+  - in_3x115_mejviv
+  - in_3x115_pavim
+  - in_3x115_pisof
+  - in_3x115_pprod
+  - in_3x115_prodgan
+  - in_3x115_redagup
+  - in_3x115_techlam
+  - in_3x115_tinaco
+  - in_3x115_tomagu
+  - in_3x115_tomdren
+  - in_3x115_celsol
+  - in_3x115_hogb
+  - in_inaes15_ccap
+  - in_inaes15_comer
+  - in_inaes15_desorg
+  - in_inaes15_econ
+  - in_inaes15_educ
+  - in_inaes15_insfin
+  - in_pop15_econ
+  - in_fonart15_ccap
+  - in_fonart15_comer
+  - in_fonart15_conc
+  - in_fonart15_prod
+  - in_fonart15_salocu
+  - in_imjuve15_bec
+  - in_imjuve15_becmdig
+  - in_imjuve15_becrj
+  - in_imjuve15_concdp
+  - in_imjuve15_concpnjuv
+  - in_imjuve15_conctsj
+  - in_imjuve15_salint
+  - in_paja15_arribo
+  - in_paja15_bec
+  - in_pam15_econ
+  - in_pam15_incfin
+  - in_pam15_march
+  - in_pasl15_bhog
+  - in_pasl15_lech
+  - in_pei15_cuininos
+  - in_pei15_estaper
+  - in_pei15_estecon
+  - in_pei15_estinic
+  - in_pei15_estpcivil
+  - in_pei15_estseg
+  - in_prosp15_alim
+  - in_prosp15_am
+  - in_prosp15_bec
+  - in_prosp15_bhog
+  - in_prosp15_uesc
+  - in_sed15_pet
+  - in_pfa15_agro
+  - in_pfa15_biosus
+  - in_pfa15_proagro
+  - in_pidr15_segalim
+  - in_pyc15_infequip
+  - in_aviv15_acviv
+  - in_aviv15_aplan
+  - in_aviv15_asviv
+  - in_aviv15_cale
+  - in_aviv15_estu
+  - in_aviv15_fossep
+  - in_aviv15_imper
+  - in_aviv15_instele
+  - in_aviv15_insthidr
+  - in_aviv15_instsan
+  - in_aviv15_letrin
+  - in_aviv15_mjfach
+  - in_aviv15_muro
+  - in_aviv15_piso
+  - in_aviv15_puerven
+  - in_aviv15_techco
+  - in_aviv15_techla
+  - in_aviv15_tina
+  - in_aviv15_vivrur
+  - in_aviv15_vivurb
+  - in_jea15_agro
+  - in_jea15_esc
+  - in_hinf15_alumpu
+  - in_hinf15_ccap
+  - in_hinf15_ccapsoc
+  - in_hinf15_consoc
+  - in_hinf15_dren
+  - in_hinf15_elecpu
+  - in_hinf15_pavim
+  - in_hinf15_promo
+  - in_hinf15_redagu
+  - in_hinf15_servsoc
+  - in_hinf15_tallcap
+  - in_zinf15_asviv
+  - in_zinf15_captagu
+  - in_zinf15_celsol
+  - in_zinf15_cuarto
+  - in_zinf15_dren2
+  - in_zinf15_elecpart
+  - in_zinf15_estu
+  - in_zinf15_lamina
+  - in_zinf15_letrina
+  - in_zinf15_mejviv
+  - in_zinf15_muro
+  - in_zinf15_pisof
+  - in_zinf15_techlam
+  - in_zinf15_tinaco
+  - in_zinf15_tomagu
+  - in_zinf15_huerto
+  - in_pfcasvs15_insumos
+  - in_inea15_15mas
+  - in_inea15_prim
+  - in_inea15_sec
+  - in_mppi15_pprocc
+  - in_mppi15_pprom
+  - in_mppi15_pprot
+  - in_mppi15_prsoc
+  - in_di15_comuind
+  - in_di15_jovind
+  - in_di15_mconst
+  - in_di15_sermed
+  - in_di15_solar
+  - in_di15_tiecul
+  - in_paei15_ccnindig
+  - in_paei15_espindig
+  - in_pae15_ccap
+  - in_pae15_econ
+  - in_pae15_maq
+  - in_3x115
+  - in_cc15
+  - in_inaes15
+  - in_pop15
+  - in_fonart15
+  - in_imjuve15
+  - in_inapam15
+  - in_paja15
+  - in_pam15
+  - in_pasl15
+  - in_pei15
+  - in_prosp15
+  - in_psjf15
+  - in_sedpet15
+  - in_pcvm15
+  - in_pfa15_sagarpa
+  - in_pidr15_sagarpa
+  - in_pyc15_sagarpa
+  - in_fne15_se
+  - in_pronafim15_se
+  - in_aviv15_sedatu
+  - in_jea15_sedatu
+  - in_hinf15_sedatu
+  - in_zinf15_sedatu
+  - in_pinf15_sedatu
+  - in_pronafor15_semarnat
+  - in_semarnat15_pet
+  - in_pfcasvs15
+  - in_eib15_sep
+  - in_inea15
+  - in_segagr15_shcp
+  - in_mppi15
+  - in_di15
+  - in_paei15
+  - in_cdi15
+  - in_pae15
+  - in_sepo15
+  - in_sct15_pet
+  - in_pet15
+  - in_imss15_prosp
+  - in_sedesol_2015
+  - in_sagarpa15
+  - in_se15
+  - in_sedatu15
+  - in_semarnat15
+  - in_sep15
+  - in_shcp15
+  - in_stps15
+  - in_ssa15
+  - in_sct15
+  - in_otras_2015
+  - in_pub_2015
+  - in_cnch_2015
+sifode_2016:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - id_unico_39_9: Integer
+    - in_3x116_bec: INT
+    - in_3x116_boiler: INT
+    - in_3x116_disc: INT
+    - in_3x116_pprod: INT
+    - in_inaes16_ccap: INT
+    - in_inaes16_comer: INT
+    - in_inaes16_desorg: INT
+    - in_inaes16_econ: INT
+    - in_inaes16_educ: INT
+    - in_pop16_econ: INT
+    - in_fonart16_ccap: INT
+    - in_fonart16_comer: INT
+    - in_fonart16_conc: INT
+    - in_fonart16_prod: INT
+    - in_fonart16_salocu: INT
+    - in_imjuve16_becrj: INT
+    - in_imjuve16_concdp: INT
+    - in_imjuve16_projuve: INT
+    - in_imjuve16_concpnjuv: INT
+    - in_imjuve16_salint: INT
+    - in_paja16_arribo: INT
+    - in_paja16_bec: INT
+    - in_pam16_econ: INT
+    - in_pam16_incfin: INT
+    - in_pam16_march: INT
+    - in_pasl16_bhog: INT
+    - in_pasl16_lech: INT
+    - in_pei16_cuininos: INT
+    - in_pei16_estaper: INT
+    - in_pei16_estinic: INT
+    - in_prosp16_alim: INT
+    - in_prosp16_am: INT
+    - in_prosp16_bec: INT
+    - in_prosp16_disc: INT
+    - in_prosp16_bhog: INT
+    - in_prosp16_uesc: INT
+    - in_prosp16_trans: INT
+    - in_prosp16_bech: INT
+    - in_prosp16_becm: INT
+    - in_prosp16_transh: INT
+    - in_prosp16_transm: INT
+    - in_prosp16_bec2: INT
+    - in_sed16_pet: INT
+    - in_pfa16_proagro: INT
+    - in_aviv16_acviv: INT
+    - in_aviv16_aplan: INT
+    - in_aviv16_asviv: INT
+    - in_aviv16_cale: INT
+    - in_aviv16_estu: INT
+    - in_aviv16_imper: INT
+    - in_aviv16_instele: INT
+    - in_aviv16_insthidr: INT
+    - in_aviv16_instsan: INT
+    - in_aviv16_letrin: INT
+    - in_aviv16_mjfach: INT
+    - in_aviv16_puerven: INT
+    - in_aviv16_techco: INT
+    - in_aviv16_tina: INT
+    - in_aviv16_vivrur: INT
+    - in_aviv16_vivurb: INT
+    - in_aviv16_mviv: INT
+    - in_aviv16_foto: INT
+    - in_inea16_15mas: INT
+    - in_inea16_prim: INT
+    - in_inea16_sec: INT
+    - in_mppi16_becindig: INT
+    - in_di16_comuind: INT
+    - in_di16_jovind: INT
+    - in_di16_sermed: INT
+    - in_di16_excar: INT
+    - in_paei16_becindig: INT
+    - in_paei16_ccnindig: INT
+    - in_paei16_espindig: INT
+    - in_pae16_ccap: INT
+    - in_pae16_econ: INT
+    - in_pae16_maq: INT
+    - in_3x116: INT
+    - in_cc16: INT
+    - in_inaes16: INT
+    - in_pop16: INT
+    - in_fonart16: INT
+    - in_imjuve16: INT
+    - in_inapam16: INT
+    - in_paja16: INT
+    - in_pam16: INT
+    - in_pasl16: INT
+    - in_pei16: INT
+    - in_prosp16: INT
+    - in_psjf16: INT
+    - in_sedpet16: INT
+    - in_pfa16_sagarpa: INT
+    - in_fne16_se: INT
+    - in_pronafim16_se: INT
+    - in_aviv16_sedatu: INT
+    - in_pronafor16_semarnat: INT
+    - in_semarnat16_pet: INT
+    - in_inea16: INT
+    - in_segagr16_shcp: INT
+    - in_mppi16: INT
+    - in_di16: INT
+    - in_paei16: INT
+    - in_cdi16: INT
+    - in_pae16: INT
+    - in_sepo16: INT
+    - in_sct16_pet: INT
+    - in_pet16: INT
+    - in_imss16_prosp: INT
+    - in_sedesol_2016: INT
+    - in_sagarpa16: INT
+    - in_se16: INT
+    - in_sedatu16: INT
+    - in_semarnat16: INT
+    - in_sep16: INT
+    - in_shcp16: INT
+    - in_stps16: INT
+    - in_ssa16: INT
+    - in_sct16: INT
+    - in_otras_2016: INT
+    - in_pub_2016: INT
+    - in_cnch_2016: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - id_unico_39_9
+  - in_3x116_bec
+  - in_3x116_boiler
+  - in_3x116_disc
+  - in_3x116_pprod
+  - in_inaes16_ccap
+  - in_inaes16_comer
+  - in_inaes16_desorg
+  - in_inaes16_econ
+  - in_inaes16_educ
+  - in_pop16_econ
+  - in_fonart16_ccap
+  - in_fonart16_comer
+  - in_fonart16_conc
+  - in_fonart16_prod
+  - in_fonart16_salocu
+  - in_imjuve16_becrj
+  - in_imjuve16_concdp
+  - in_imjuve16_projuve
+  - in_imjuve16_concpnjuv
+  - in_imjuve16_salint
+  - in_paja16_arribo
+  - in_paja16_bec
+  - in_pam16_econ
+  - in_pam16_incfin
+  - in_pam16_march
+  - in_pasl16_bhog
+  - in_pasl16_lech
+  - in_pei16_cuininos
+  - in_pei16_estaper
+  - in_pei16_estinic
+  - in_prosp16_alim
+  - in_prosp16_am
+  - in_prosp16_bec
+  - in_prosp16_disc
+  - in_prosp16_bhog
+  - in_prosp16_uesc
+  - in_prosp16_trans
+  - in_prosp16_bech
+  - in_prosp16_becm
+  - in_prosp16_transh
+  - in_prosp16_transm
+  - in_prosp16_bec2
+  - in_sed16_pet
+  - in_pfa16_proagro
+  - in_aviv16_acviv
+  - in_aviv16_aplan
+  - in_aviv16_asviv
+  - in_aviv16_cale
+  - in_aviv16_estu
+  - in_aviv16_imper
+  - in_aviv16_instele
+  - in_aviv16_insthidr
+  - in_aviv16_instsan
+  - in_aviv16_letrin
+  - in_aviv16_mjfach
+  - in_aviv16_puerven
+  - in_aviv16_techco
+  - in_aviv16_tina
+  - in_aviv16_vivrur
+  - in_aviv16_vivurb
+  - in_aviv16_mviv
+  - in_aviv16_foto
+  - in_inea16_15mas
+  - in_inea16_prim
+  - in_inea16_sec
+  - in_mppi16_becindig
+  - in_di16_comuind
+  - in_di16_jovind
+  - in_di16_sermed
+  - in_di16_excar
+  - in_paei16_becindig
+  - in_paei16_ccnindig
+  - in_paei16_espindig
+  - in_pae16_ccap
+  - in_pae16_econ
+  - in_pae16_maq
+  - in_3x116
+  - in_cc16
+  - in_inaes16
+  - in_pop16
+  - in_fonart16
+  - in_imjuve16
+  - in_inapam16
+  - in_paja16
+  - in_pam16
+  - in_pasl16
+  - in_pei16
+  - in_prosp16
+  - in_psjf16
+  - in_sedpet16
+  - in_pfa16_sagarpa
+  - in_fne16_se
+  - in_pronafim16_se
+  - in_aviv16_sedatu
+  - in_pronafor16_semarnat
+  - in_semarnat16_pet
+  - in_inea16
+  - in_segagr16_shcp
+  - in_mppi16
+  - in_di16
+  - in_paei16
+  - in_cdi16
+  - in_pae16
+  - in_sepo16
+  - in_sct16_pet
+  - in_pet16
+  - in_imss16_prosp
+  - in_sedesol_2016
+  - in_sagarpa16
+  - in_se16
+  - in_sedatu16
+  - in_semarnat16
+  - in_sep16
+  - in_shcp16
+  - in_stps16
+  - in_ssa16
+  - in_sct16
+  - in_otras_2016
+  - in_pub_2016
+  - in_cnch_2016
+sifode_2017:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - id_unico_39_9: Integer
+    - in_pop17_econ: INT
+    - in_fonart17_ccap: INT
+    - in_fonart17_comer: INT
+    - in_fonart17_conc: INT
+    - in_fonart17_prod: INT
+    - in_imjuve17_bec2: INT
+    - in_paja17_arribo: INT
+    - in_paja17_bec: INT
+    - in_pam17_econ: INT
+    - in_pam17_march: INT
+    - in_pasl17_bhog: INT
+    - in_pasl17_lech: INT
+    - in_pei17_cuininos: INT
+    - in_pei17_estaper: INT
+    - in_pei17_estinic: INT
+    - in_prosp17_alim: INT
+    - in_prosp17_bhog: INT
+    - in_prosp17_disc: INT
+    - in_prosp17_bech: INT
+    - in_prosp17_becm: INT
+    - in_prosp17_transh: INT
+    - in_prosp17_transm: INT
+    - in_inea17_15mas: INT
+    - in_inea17_sec: INT
+    - in_mppi17_becindig: INT
+    - in_di17_sermed: INT
+    - in_di17_traduc: INT
+    - in_di17_asispenal: INT
+    - in_paei17_becindig: INT
+    - in_paei17_ccnindig: INT
+    - in_pae17_ccap: INT
+    - in_pae17_econ: INT
+    - in_pae17_maq: INT
+    - in_cc17: INT
+    - in_pop17: INT
+    - in_fonart17: INT
+    - in_imjuve17: INT
+    - in_inapam17: INT
+    - in_paja17: INT
+    - in_pam17: INT
+    - in_pasl17: INT
+    - in_pei17: INT
+    - in_prosp17: INT
+    - in_psjf17: INT
+    - in_pronafor17_semarnat: INT
+    - in_semarnat17_pet: INT
+    - in_inea17: INT
+    - in_mppi17: INT
+    - in_di17: INT
+    - in_paei17: INT
+    - in_cdi17: INT
+    - in_pae17: INT
+    - in_sepo17: INT
+    - in_sct17_pet: INT
+    - in_pet17: INT
+    - in_sedesol_2017: INT
+    - in_semarnat17: INT
+    - in_sep17: INT
+    - in_shcp17: INT
+    - in_stps17: INT
+    - in_ssa17: INT
+    - in_sct17: INT
+    - in_otras_2017: INT
+    - in_pub_2017: INT
+    - in_cnch_2017: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - id_unico_39_9
+  - in_pop17_econ
+  - in_fonart17_ccap
+  - in_fonart17_comer
+  - in_fonart17_conc
+  - in_fonart17_prod
+  - in_imjuve17_bec2
+  - in_paja17_arribo
+  - in_paja17_bec
+  - in_pam17_econ
+  - in_pam17_march
+  - in_pasl17_bhog
+  - in_pasl17_lech
+  - in_pei17_cuininos
+  - in_pei17_estaper
+  - in_pei17_estinic
+  - in_prosp17_alim
+  - in_prosp17_bhog
+  - in_prosp17_disc
+  - in_prosp17_bech
+  - in_prosp17_becm
+  - in_prosp17_transh
+  - in_prosp17_transm
+  - in_inea17_15mas
+  - in_inea17_sec
+  - in_mppi17_becindig
+  - in_di17_sermed
+  - in_di17_traduc
+  - in_di17_asispenal
+  - in_paei17_becindig
+  - in_paei17_ccnindig
+  - in_pae17_ccap
+  - in_pae17_econ
+  - in_pae17_maq
+  - in_cc17
+  - in_pop17
+  - in_fonart17
+  - in_imjuve17
+  - in_inapam17
+  - in_paja17
+  - in_pam17
+  - in_pasl17
+  - in_pei17
+  - in_prosp17
+  - in_psjf17
+  - in_pronafor17_semarnat
+  - in_semarnat17_pet
+  - in_inea17
+  - in_mppi17
+  - in_di17
+  - in_paei17
+  - in_cdi17
+  - in_pae17
+  - in_sepo17
+  - in_sct17_pet
+  - in_pet17
+  - in_sedesol_2017
+  - in_semarnat17
+  - in_sep17
+  - in_shcp17
+  - in_stps17
+  - in_ssa17
+  - in_sct17
+  - in_otras_2017
+  - in_pub_2017
+  - in_cnch_2017
+sifode_calificacion:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - id_unico_39_9: TEXT
+    - anio_nac: Integer
+    - pobrezap: INT
+    - pob_extremp: INT
+    - pob_extrem_alimp: INT
+    - pob_modp: INT
+    - vul_carenp: INT
+    - vul_ingresop: INT
+    - np_nvp: INT
+    - carenciadap: INT
+    - carencias3p: INT
+    - ic_rezedu_1: INT
+    - ic_rezedu15m: INT
+    - ic_rezedu_81: INT
+    - ic_rezedu_82: INT
+    - jubilado_ic: INT
+    - ic_asalud: INT
+    - seg_pop_1: INT
+    - imss_1: TEXT
+    - issste_1: TEXT
+    - pemex_1: TEXT
+    - priva_1: TEXT
+    - serv_sal_99: INT
+    - serv_sal: INT
+    - ic_ss: INT
+    - sspei: INT
+    - sspea: INT
+    - ssintocup: INT
+    - ssam: INT
+    - ic_cv: INT
+    - ic_piso: INT
+    - ic_tech: INT
+    - ic_muro: INT
+    - ic_hac: INT
+    - ic_sbv: INT
+    - isbv_agua: INT
+    - isbv_dren: INT
+    - isbv_luz: INT
+    - isbv_combus: INT
+    - ic_ali: INT
+    - inseg_alim: Integer
+    - ia_ad: INT
+    - ia_men: INT
+    - sumcarenp: Integer
+    - pob_lbm: INT
+    - pob_lb: INT
+    - int0a15: INT
+    - int16a64: INT
+    - int65a98: INT
+    - muj15a49: INT
+    - mujer: INT
+    - hombre: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - id_unico_39_9
+  - anio_nac
+  - pobrezap
+  - pob_extremp
+  - pob_extrem_alimp
+  - pob_modp
+  - vul_carenp
+  - vul_ingresop
+  - np_nvp
+  - carenciadap
+  - carencias3p
+  - ic_rezedu_1
+  - ic_rezedu15m
+  - ic_rezedu_81
+  - ic_rezedu_82
+  - jubilado_ic
+  - ic_asalud
+  - seg_pop_1
+  - imss_1
+  - issste_1
+  - pemex_1
+  - priva_1
+  - serv_sal_99
+  - serv_sal
+  - ic_ss
+  - sspei
+  - sspea
+  - ssintocup
+  - ssam
+  - ic_cv
+  - ic_piso
+  - ic_tech
+  - ic_muro
+  - ic_hac
+  - ic_sbv
+  - isbv_agua
+  - isbv_dren
+  - isbv_luz
+  - isbv_combus
+  - ic_ali
+  - inseg_alim
+  - ia_ad
+  - ia_men
+  - sumcarenp
+  - pob_lbm
+  - pob_lb
+  - int0a15
+  - int16a64
+  - int65a98
+  - muj15a49
+  - mujer
+  - hombre
+sifode_domicilio:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - id_unico_39_9: Integer
+    - anio_nac: Integer
+    - pobrezap: INT
+    - pob_extremp: INT
+    - pob_extrem_alimp: INT
+    - pob_modp: INT
+    - vul_carenp: INT
+    - vul_ingresop: INT
+    - np_nvp: INT
+    - carenciadap: INT
+    - carencias3p: INT
+    - ic_rezedu_1: INT
+    - ic_rezedu15m: INT
+    - ic_rezedu_81: INT
+    - ic_rezedu_82: INT
+    - jubilado_ic: INT
+    - ic_asalud: INT
+    - seg_pop_1: TEXT
+    - imss_1: TEXT
+    - issste_1: TEXT
+    - pemex_1: TEXT
+    - priva_1: TEXT
+    - serv_sal_99: INT
+    - serv_sal: INT
+    - ic_ss: INT
+    - sspei: INT
+    - sspea: INT
+    - ssintocup: INT
+    - ssam: INT
+    - ic_cv: INT
+    - ic_piso: INT
+    - ic_tech: INT
+    - ic_muro: INT
+    - ic_hac: INT
+    - ic_sbv: INT
+    - isbv_agua: INT
+    - isbv_dren: INT
+    - isbv_luz: INT
+    - isbv_combus: INT
+    - ic_ali: INT
+    - inseg_alim: Integer
+    - ia_ad: INT
+    - ia_men: INT
+    - sumcarenp: Integer
+    - pob_lbm: INT
+    - pob_lb: INT
+    - int0a15: INT
+    - int16a64: INT
+    - int65a98: INT
+    - muj15a49: INT
+    - mujer: INT
+    - hombre: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - id_unico_39_9
+  - anio_nac
+  - pobrezap
+  - pob_extremp
+  - pob_extrem_alimp
+  - pob_modp
+  - vul_carenp
+  - vul_ingresop
+  - np_nvp
+  - carenciadap
+  - carencias3p
+  - ic_rezedu_1
+  - ic_rezedu15m
+  - ic_rezedu_81
+  - ic_rezedu_82
+  - jubilado_ic
+  - ic_asalud
+  - seg_pop_1
+  - imss_1
+  - issste_1
+  - pemex_1
+  - priva_1
+  - serv_sal_99
+  - serv_sal
+  - ic_ss
+  - sspei
+  - sspea
+  - ssintocup
+  - ssam
+  - ic_cv
+  - ic_piso
+  - ic_tech
+  - ic_muro
+  - ic_hac
+  - ic_sbv
+  - isbv_agua
+  - isbv_dren
+  - isbv_luz
+  - isbv_combus
+  - ic_ali
+  - inseg_alim
+  - ia_ad
+  - ia_men
+  - sumcarenp
+  - pob_lbm
+  - pob_lb
+  - int0a15
+  - int16a64
+  - int65a98
+  - muj15a49
+  - mujer
+  - hombre
+sifode_indicadores:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - id_unico_39_9: Integer
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - usabilidad: Integer
+    - vigencia: INT
+    - consistencia: INT
+    - int_care: Integer
+    - ejercicio: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - id_unico_39_9
+  - llave_hogar_h
+  - c_integrante
+  - usabilidad
+  - vigencia
+  - consistencia
+  - int_care
+  - ejercicio
