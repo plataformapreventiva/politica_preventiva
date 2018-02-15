@@ -87,9 +87,9 @@ class UpdateSemanticDB(postgres.PostgresQuery):
             query = sqlfile.read()
 
         except:
-            query = """DROP TABLE IF EXISTS {0};
-            CREATE TABLE {0} AS (SELECT * FROM
-            tidy.{1};""".format(self.table, self.pipeline_task)
+            query = ("""DROP TABLE IF EXISTS {0};
+                     CREATE TABLE {0} AS (SELECT * FROM tidy.{1});"""
+                     .format(self.table, self.semantic_task))
 
         return query
 
