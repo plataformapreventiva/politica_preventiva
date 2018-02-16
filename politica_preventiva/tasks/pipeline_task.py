@@ -13,7 +13,6 @@ from luigi import configuration
 # Logger
 logger = logging.getLogger("dpa-sedesol")
 
-
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -89,6 +88,33 @@ class RTask(luigi.Task):
         logger.info(out)
 
 
+class ModelTask(luigi.Task):
+
+    """
+    Task Abstraction to Dockerize models
+
+    Note:
+
+    Use:
+    Define the @property def cmd(self):
+        R **/**.py
+
+    """
+
+    def run(self):
+
+        logger.info('Luigi is using the dockerized version of the model task' +
+                    ' {0}'.format(self.pipeline_task))
+
+        cmd_docker = '''
+         docker run -it --rm  -v $PWD:/politica_preventiva\
+                -v politica_preventiva_store:/data\
+           politica_preventiva/task/models-task {0} > /dev/null
+         '''.format(self.cmd)
+        pdb.set_trace()
+        out = subprocess.call(cmd_docker, shell=True)
+        logger.info(out)
+
 
 class DockerTask(luigi.Task):
 
@@ -109,68 +135,12 @@ class DockerTask(luigi.Task):
                     ' {0}'.format(self.pipeline_task))
 
         cmd_docker = '''
-         docker run -it --rm  -v $PWD:/politica_preventiva\
+         docker run --env-file $PWD/.env\
+                -it --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/data\
            politica_preventiva/task/docker-task {0} > /dev/null
          '''.format(self.cmd)
 
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
-
-
-class EmrTask(luigi.Task):
-
-    """
-    Abstract EMR Luigi Task
-    """
-    # Load EMR Configuratio
-    emr_loader = emr_tasks.EMRLoader(
-        aws_access_key=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        region_name=config_emr.get("region_name"),
-        cluster_name=config_emr.get("cluster_name"),
-        instance_count=config_emr.get("instance_count"),
-        master_instance_type=config_emr.get("master_instance_type"),
-        slave_instance_type=config_emr.get("slave_instance_type"),
-        key_name=config_emr.get("key_name"),
-        subnet_id=config_emr.get("subnet_id"),
-        log_uri=config_emr.get("log_uri"),
-        software_version=config_emr.get("software_version"),
-        script_bucket_name=config_emr.get("script_bucket_name"),
-        key=config_emr.get("key"),
-        key_value=config_emr.get("key_value"))
-    emr_client = emr_loader.boto_client("emr")
-
-class AddStep(EmrTask):
-    id_name = luigi.Parameter()
-
-    def requires(self):
-        return InitializeCluster(self.id_name)
-
-class InitializeCluster(EmrTask):
-    """
-    Luigi Task to initialize  EMR cluster.
-    This Task writes an output token to the location designated by the
-    created. The Task will fail if the cluster cannot be initialized.
-    """
-
-    common_path = luigi.Parameter('DEFAULT')
-    id_name = luigi.Parameter()
-
-    def run(self):
-        """
-        Create the EMR cluster
-        """
-        cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt" 
-        # Launch Cluster
-        self.emr_loader.launch_cluster()
-        # Create Client
-        self.emr_loader.boto_client("emr")
-        file = open(cluster_id,'w')
-        file.write(self.emr_loader.job_flow_id)
-        file.close()
-
-    def output(self):
-        cluster_id = self.common_path + "emr_id_" + self.id_name + ".txt"
-        return luigi.LocalTarget(cluster_id)
 

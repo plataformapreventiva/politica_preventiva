@@ -186,3 +186,9 @@ def upload_to_s3(aws_access_key_id, aws_secret_access_key, file, bucket, key, ca
     if sent == size:
         return True
     return False
+
+
+
+
+
+

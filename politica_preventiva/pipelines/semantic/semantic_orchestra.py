@@ -41,13 +41,13 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 # Semantic Schema
 
-with open("pipelines/semantic/tools/semantic_schemas.yaml", "r") as file:
+with open("pipelines/configs/semantic_dependencies.yaml", "r") as file:
     composition = yaml.load(file)
 
 
 class SemanticPipeline(luigi.WrapperTask):
 
-    semantics = parse_cfg_list(conf.get("SemanticPipeline", "semantics"))
+    semantics = parse_cfg_list(conf.get("SemanticPipeline", "pipelines"))
     current_date = luigi.DateParameter()
     client = S3Client()
 
@@ -87,9 +87,9 @@ class UpdateSemanticDB(postgres.PostgresQuery):
             query = sqlfile.read()
 
         except:
-            query = """DROP TABLE IF EXISTS {0};
-            CREATE TABLE {0} AS (SELECT * FROM
-            tidy.{1};""".format(self.table, self.pipeline_task)
+            query = ("""DROP TABLE IF EXISTS {0};
+                     CREATE TABLE {0} AS (SELECT * FROM tidy.{1});"""
+                     .format(self.table, self.semantic_task))
 
         return query
 

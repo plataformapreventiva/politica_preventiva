@@ -31,6 +31,17 @@ from politica_preventiva.pipelines.ingest.tests import classic_tests
 from politica_preventiva.tasks.pipeline_task import *
 from politica_preventiva.pipelines.utils import emr_tasks
 
+# Env Setup
+load_dotenv(find_dotenv())
+
+# Logger & Config
+conf = configuration.get_config()
+
+logging_conf = configuration.get_config().get("core", "logging_conf_file")
+logging.config.fileConfig(logging_conf)
+logger = logging.getLogger("dpa-sedesol")
+
+
 # Load Postgres Schemas
 with open('./pipelines/ingest/common/raw_schemas.yaml', 'r') as file:
     header_d = yaml.load(file)
@@ -41,11 +52,6 @@ conf = configuration.get_config()
 with open("pipelines/ingest/common/emr-config.yaml", "r") as file:
         config = yaml.load(file)
         config_emr = config.get("emr")
-
-# logger
-logging_conf = configuration.get_config().get("core", "logging_conf_file")
-logging.config.fileConfig(logging_conf)
-logger = logging.getLogger("dpa-sedesol")
 
 
 class IngestPipeline(luigi.WrapperTask):
