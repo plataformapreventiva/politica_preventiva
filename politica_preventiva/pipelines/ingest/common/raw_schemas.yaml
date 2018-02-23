@@ -379,6 +379,19 @@ conacca:
   - colonia
   - entidadfederativa
   - telefono
+conagua_dirviento:
+  LUIGI:
+    INDEX: estacion
+    SCHEMA:
+    - dirviento: Integer
+    - estacion: TEXT
+    - fecha: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - dirviento
+  - estacion
+  - fecha
 conagua_estaciones:
   LUIGI:
     INDEX: estacion
