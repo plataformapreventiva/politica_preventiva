@@ -1,0 +1,6 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+dirviento|dirección del viento|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx?WSDL|Amenazas|Climatológico|2018.0|2018-02-23 23:35:56.201642||2018-53-d
+estacion|Código de estación climatológica|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx?WSDL|Amenazas|Climatológico|2018.0|2018-02-23 23:35:56.201642||2018-53-d
+fecha|Fecha de observación de la temperatura en el estación climatológica correspondiente|CONAGUA|https://correo1.conagua.gob.mx/google/Google.asmx?WSDL|Amenazas|Climatológico|2018.0|2018-02-23 23:35:56.201642||2018-53-d
+actualizacion_sedesol|Fecha de actualización de datos en Sedesol|SEDESOL|||||2018-02-23 23:35:56.201642||2018-53-d
+data_date|Año|SEDESOL|||||2018-02-23 23:35:56.201642||2018-53-d
