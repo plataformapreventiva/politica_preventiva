@@ -16,11 +16,11 @@ year=$1
 local_path=$2
 local_ingest_file=$3
 
-aws s3 cp s3://sifode-raw/universos_39.9.zip $local_path/universos_39_9.zip
+aws s3 cp s3://sifode-raw/Base_universos_39_9.rar $local_path/universos_39_9.rar
 
-echo 'Decompressing zip file'
+echo 'Decompressing rar file'
 
-gunzip -cd $local_path/universos_39_9.zip | \
+unrar p -inul $local_path/universos_39_9.rar | \
 sed -e 's/\r$// ; s/^\xef\xbb\xbf//' | \
 csvformat -d '^' -D '|' -v > $local_ingest_file
 
