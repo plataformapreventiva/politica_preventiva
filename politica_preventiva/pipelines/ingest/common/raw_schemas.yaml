@@ -3041,201 +3041,6 @@ segob:
   - poblaciondelacabeceramunicipal
   - superficiedelmunicipioenkm2
   - cve_muni
-sequia:
-  LUIGI:
-    INDEX: cve_muni
-    SCHEMA:
-    - cve_muni: TEXT
-    - cve_ent: Integer
-    - cve_mun: Integer
-    - pob_2005: TEXT
-    - pob_2010: TEXT
-    - nombre_mun: TEXT
-    - entidad: TEXT
-    - org_cuenca: TEXT
-    - clv_oc: TEXT
-    - con_cuenca: TEXT
-    - cve_conc: Integer
-    - fecha: TIMESTAMP
-    - declaratoria: TEXT
-    - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
-  RAW:
-  - llave_hogar_h
-  - c_integrante
-  - id_unico
-  - in_bec
-  - in_elecpub
-  - in_lamina
-  - in_letrina
-  - in_mejviv
-  - in_pprod
-  - in_techlam
-  - in_tomagu
-  - in_tomdren
-  - in_celsol
-  - in_estufa
-  - in_alim
-  - in_cenergia
-  - in_techco
-  - in_educ
-  - in_mjfach
-  - in_vivurb
-  - in_inaes_econ
-  - in_pop_econ
-  - in_pop_pproduc
-  - in_fonart_ccap
-  - in_paja_arribo
-  - in_paja_bec
-  - in_pasl_bhog
-  - in_pasl_lech
-  - in_pei_cuininos
-  - in_pei_estaper
-  - in_pei_estinic
-  - in_prosp_alim
-  - in_prosp_am
-  - in_prosp_bec
-  - in_prosp_bhog
-  - in_prosp_uesc
-  - in_sed_pet
-  - in_paiei_inf
-  - in_paiei_otinf
-  - in_paiei_moderemay
-  - in_paiei_moderemen
-  - in_pdciter_servp
-  - in_pdciter_produc
-  - in_pdciter_fcomer
-  - in_pdciter_ecap
-  - in_pdciter_servint
-  - in_ppmr_compra
-  - in_ppmr_desastres
-  - in_procampo_ingreso
-  - in_procampo_dieselagr
-  - in_procampo_dieselmar
-  - in_procampo_produc
-  - in_procampo_gasolina
-  - in_procampo_modern
-  - in_procampo_pproduc
-  - in_ppe_bhog
-  - in_ppe_conserv
-  - in_ppe_posproduc
-  - in_ppe_maq
-  - in_ppe_consagua
-  - in_ppe_servp
-  - in_ppe_producp
-  - in_ppe_otrinf
-  - in_aviv_acviv
-  - in_aviv_aplan
-  - in_aviv_asviv
-  - in_aviv_cale
-  - in_aviv_fossep
-  - in_aviv_imper
-  - in_aviv_mjfach
-  - in_aviv_muro
-  - in_aviv_piso
-  - in_aviv_puerven
-  - in_aviv_techco
-  - in_aviv_techla
-  - in_aviv_tina
-  - in_aviv_vivrur
-  - in_aviv_vivurb
-  - in_aviv_hogb
-  - in_zinf_asviv
-  - in_zinf_celsol
-  - in_zinf_dren2
-  - in_zinf_estu
-  - in_zinf_lamina
-  - in_zinf_letrina
-  - in_zinf_muro
-  - in_zinf_pisof
-  - in_zinf_tinaco
-  - in_zinf_tomagu
-  - in_zinf_huerto
-  - in_zinf_despensa
-  - in_zinf_tomdren
-  - in_zinf_redagup
-  - in_zinf_vivrur
-  - in_zinf_elecpub
-  - in_zinf_bhog
-  - in_pefsfv_lote
-  - in_pefsfv_viv
-  - in_pefsfv_apviv
-  - in_pefsfv_mviv
-  - in_pfcasvs_insumos
-  - in_inea_15mas
-  - in_inea_prim
-  - in_inea_sec
-  - in_pacareeib_bec
-  - in_paei_hospalim
-  - in_papci_pcomun
-  - in_patn_servmed
-  - in_pfdci_pproduc
-  - in_pfci_bec
-  - in_popmi_bec
-  - in_popmi_pproduc
-  - in_paid_econ
-  - in_paid_tcultivo
-  - in_paid_mconst
-  - in_pae_ccap
-  - in_pae_maq
-  - in_pcavfpae_btrabajo
-  - in_pcavfpae_fempleo
-  - in_3x113
-  - in_cc
-  - in_inaes
-  - in_pop
-  - in_fonart
-  - in_inapam
-  - in_paja
-  - in_pasl
-  - in_pei
-  - in_prosp
-  - in_sedpet
-  - in_paiei_sagarpa
-  - in_pdciter_sagarpa
-  - in_ppmr_sagarpa
-  - in_procampo_sagarpa
-  - in_ppe_sagarpa
-  - in_pronafim_se
-  - in_aviv_sedatu
-  - in_zinf_sedatu
-  - in_pinf_sedatu
-  - in_pefsfv_sedatu
-  - in_pronafor_semarnat
-  - in_semarnat_pet
-  - in_pcds
-  - in_pfcasvs
-  - in_inea
-  - in_pacareeib
-  - in_segagr_shcp
-  - in_paei
-  - in_cdi
-  - in_papci
-  - in_patn
-  - in_pfdci
-  - in_pfci
-  - in_popmi
-  - in_paid
-  - in_pae
-  - in_pcavfpae
-  - in_sepo
-  - in_sct_pet
-  - in_pet
-  - in_imss_prosp
-  - in_sedesol
-  - in_sagarpa
-  - in_se
-  - in_sedatu
-  - in_semarnat
-  - in_sep
-  - in_shcp
-  - in_stps
-  - in_ssa
-  - in_sct
-  - in_otras
-  - in_pub
-  - in_cnch
-  - ao
 sifode_2013:
   LUIGI:
     INDEX: llave_hogar_h
@@ -5042,3 +4847,37 @@ sifode_indicadores:
   - consistencia
   - int_care
   - ejercicio
+sequia:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - cve_muni: TEXT
+    - cve_ent: Integer
+    - cve_mun: Integer
+    - pob_2005: TEXT
+    - pob_2010: TEXT
+    - nombre_mun: TEXT
+    - entidad: TEXT
+    - org_cuenca: TEXT
+    - clv_oc: TEXT
+    - con_cuenca: TEXT
+    - con_cuenca: TEXT
+    - cve_conc: Integer
+    - fecha: TIMESTAMP
+    - declaratoria: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+    - cve_concatenada 
+    - cve_ent 
+    - cve_mun 
+    - pob_2005 
+    - pob_2010 
+    - nombre_mun 
+    - entidad 
+    - org_cuenca 
+    - clv_oc 
+    - con_cuenca 
+    - cve_conc 
+    - fecha 
+    - declaratoria 
