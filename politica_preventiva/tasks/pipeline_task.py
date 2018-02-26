@@ -13,7 +13,6 @@ from luigi import configuration
 # Logger
 logger = logging.getLogger("dpa-sedesol")
 
-
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -136,7 +135,8 @@ class DockerTask(luigi.Task):
                     ' {0}'.format(self.pipeline_task))
 
         cmd_docker = '''
-         docker run -it --rm  -v $PWD:/politica_preventiva\
+         docker run --env-file $PWD/.env\
+                -it --rm  -v $PWD:/politica_preventiva\
                 -v politica_preventiva_store:/data\
            politica_preventiva/task/docker-task {0} > /dev/null
          '''.format(self.cmd)
