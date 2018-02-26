@@ -1,7 +1,7 @@
 SHELL := /bin/bash 
 PROJECT_NAME:=$(shell cat ../.project-name)
 DATA_DIRECTORY:=/data
-IMAGES = docker-task
+IMAGES =  # docker-task
 
 run:
 	 @LUIGI_CONFIG_PATH=./pipelines/configs/luigi.cfg $(PROJECT_NAME) --server 0.0.0.0 --port 8082 --workers $(WORKERS) --level=$(level)
