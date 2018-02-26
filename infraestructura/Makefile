@@ -7,7 +7,7 @@ SHELL := /bin/bash
 PROJECT_NAME:= politica_preventiva
 DATA_DIRECTORY:= /data
 DOCKER_REGISTRY:= "localhost:5000"
-IMAGES = python r luigi-server-c
+IMAGES = python r luigi-server
 #base python r java luigi-server luigi-worker spark-client hadoop-client
 IMAGE_VERSION:= 0.1
 
