@@ -14,6 +14,6 @@ local_ingest_file=$3
 
 echo 'Descarga diccionario'
 
-aws s3 cp s3://pub-raw/diccionarios/catalogo_pub.csv $local_ingest_file
+aws s3 cp s3://pub-raw/diccionarios/pub-programas/catalogo_pub.csv $local_ingest_file
 
 echo 'Written to: '$local_ingest_file
