@@ -1,0 +1,13 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+cd_dependencia|Clave de la dependencia a la que pertenece el programa|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+cd_programa|Clave del programa al que pertenece el padrón|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+cd_padron|Clave del padrón|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+anio|Año en el que se dio el beneficio|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+iduni|ID creado internamente para identificar los padrones|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+nb_dependencia|Nombre de la dependencia|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+nb_subp1|Nombre del subprograma 1|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+nb_subp2|Nombre del subprograma 2|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+nb_origen|Origen del programa (FEDERAL,ESTATAL,MUNICIPAL)|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+nb_programa|Nombre del programa|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+actualizacion_sedesol|Fecha en la cual se hizo la actualización|SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
+data_date||SEDESOL|||||2018-03-07 01:37:04.612606||na-fixed
