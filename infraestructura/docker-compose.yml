@@ -2,7 +2,7 @@ version: "3"
 
 services:                                                     
   luigi-server-c:        
-    image: dpa/luigi-server-c 
+    image: dpa/luigi-server 
     ports:
         - "8082:8082"
     env_file: .env

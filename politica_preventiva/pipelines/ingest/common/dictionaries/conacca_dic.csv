@@ -1,0 +1,9 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+num|Número de la central de abastos|CONACCA|http://www.conacca.mx/index.php/styles/centrales-de-abasto|amenaza|inseguridad alimentaria|ls|2018-02-14 20:36:36.005004||na-fixed
+nombredelacentraldeabasto|Nombre por el cual se conoce comúnmente a la central|CONACCA|http://www.conacca.mx/index.php/styles/centrales-de-abasto|amenaza|inseguridad alimentaria|2016-2017|2018-02-14 20:36:36.005004||na-fixed
+domicilio|Domicilio reportador por la central de abastos.|CONACCA|http://www.conacca.mx/index.php/styles/centrales-de-abasto|amenaza|inseguridad alimentaria|2016-2017|2018-02-14 20:36:36.005004||na-fixed
+colonia|Colonia|CONACCA|http://www.conacca.mx/index.php/styles/centrales-de-abasto|amenaza|inseguridad alimentaria|2016-2017|2018-02-14 20:36:36.005004||na-fixed
+entidadfederativa|Entidad|CONACCA|http://www.conacca.mx/index.php/styles/centrales-de-abasto|amenaza|inseguridad alimentaria|2016-2017|2018-02-14 20:36:36.005004||na-fixed
+telefono|Teléfono|CONACCA|http://www.conacca.mx/index.php/styles/centrales-de-abasto|amenaza|inseguridad alimentaria|2016-2017|2018-02-14 20:36:36.005004||na-fixed
+actualizacion_sedesol|Actualización Sedesol|SEDESOL|||||2018-02-14 20:36:36.005004||na-fixed
+data_date|Data Date|SEDESOL|||||2018-02-14 20:36:36.005004||na-fixed
