@@ -1513,7 +1513,7 @@ cuis_historico_encuesta:
     SCHEMA:
     - llave_hogar_h: TEXT
     - folio_sedesol: TEXT
-    - folio_cuis: BIGINT
+    - folio_cuis: TEXT
     - folio_prog_proy: TEXT
     - folio_prog_proy2: BIGINT
     - c_tipo_proc: INT
