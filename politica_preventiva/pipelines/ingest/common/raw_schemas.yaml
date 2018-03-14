@@ -71,6 +71,33 @@ cajeros_banxico:
   - lat
   - lon
   - nombre_institucion
+catalogo_padrones:
+  LUIGI:
+    INDEX: cd_programa
+    SCHEMA:
+    - cd_dependencia: TEXT
+    - cd_programa: TEXT
+    - cd_padron: TEXT
+    - anio: Integer
+    - iduni: TEXT
+    - nb_dependencia: TEXT
+    - nb_subp1: TEXT
+    - nb_subp2: TEXT
+    - nb_origen: TEXT
+    - nb_programa: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cd_dependencia
+  - cd_programa
+  - cd_padron
+  - anio
+  - iduni
+  - nb_dependencia
+  - nb_subp1
+  - nb_subp2
+  - nb_origen
+  - nb_programa
 cenapred:
   LUIGI:
     INDEX: a_reglam
