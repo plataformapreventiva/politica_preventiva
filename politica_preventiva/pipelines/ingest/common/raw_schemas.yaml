@@ -3102,6 +3102,673 @@ sequia:
   - cve_conc
   - fecha
   - declaratoria
+sifode:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - c_integrante: Integer
+    - id_unico_39_9: Integer
+    - in_3x1: Integer
+    - in_3x1_alim: Integer
+    - in_3x1_bec: Integer
+    - in_3x1_boiler: TEXT
+    - in_3x1_captagu: TEXT
+    - in_3x1_ccap: TEXT
+    - in_3x1_celsol: Integer
+    - in_3x1_cenergia: Integer
+    - in_3x1_cerco: TEXT
+    - in_3x1_cuarto: TEXT
+    - in_3x1_disc: TEXT
+    - in_3x1_drenaje: TEXT
+    - in_3x1_educ: Integer
+    - in_3x1_elecpart: TEXT
+    - in_3x1_elecpub: Integer
+    - in_3x1_estufa: Integer
+    - in_3x1_fert: TEXT
+    - in_3x1_filtagu: TEXT
+    - in_3x1_hogb: TEXT
+    - in_3x1_lamina: Integer
+    - in_3x1_letrina: Integer
+    - in_3x1_mejviv: Integer
+    - in_3x1_mjfach: Integer
+    - in_3x1_pavim: TEXT
+    - in_3x1_pisof: TEXT
+    - in_3x1_pprod: Integer
+    - in_3x1_prodgan: TEXT
+    - in_3x1_redagup: TEXT
+    - in_3x1_sruedas: TEXT
+    - in_3x1_techco: Integer
+    - in_3x1_techlam: Integer
+    - in_3x1_tinaco: TEXT
+    - in_3x1_tomagu: Integer
+    - in_3x1_tomdren: Integer
+    - in_3x1_vivienda: TEXT
+    - in_3x1_vivurb: Integer
+    - in_aviv_acviv: Integer
+    - in_aviv_aplan: Integer
+    - in_aviv_asviv: Integer
+    - in_aviv_cale: Integer
+    - in_aviv_estu: TEXT
+    - in_aviv_fossep: Integer
+    - in_aviv_foto: TEXT
+    - in_aviv_hogb: Integer
+    - in_aviv_imper: Integer
+    - in_aviv_instele: TEXT
+    - in_aviv_insthidr: TEXT
+    - in_aviv_instsan: TEXT
+    - in_aviv_letrin: TEXT
+    - in_aviv_mjfach: Integer
+    - in_aviv_muro: Integer
+    - in_aviv_mviv: TEXT
+    - in_aviv_piso: Integer
+    - in_aviv_puerven: Integer
+    - in_aviv_sedatu: Integer
+    - in_aviv_techco: Integer
+    - in_aviv_techla: Integer
+    - in_aviv_tina: Integer
+    - in_aviv_vivrur: Integer
+    - in_aviv_vivurb: Integer
+    - in_cc: Integer
+    - in_cdi: Integer
+    - in_cnch: Integer
+    - in_di: TEXT
+    - in_di_asispenal: TEXT
+    - in_di_comuind: TEXT
+    - in_di_excar: TEXT
+    - in_di_jovind: TEXT
+    - in_di_mconst: TEXT
+    - in_di_sermed: TEXT
+    - in_di_solar: TEXT
+    - in_di_tiecul: TEXT
+    - in_di_traduc: TEXT
+    - in_eib_sep: TEXT
+    - in_fne_se: TEXT
+    - in_fonart: Integer
+    - in_fonart_ccap: Integer
+    - in_fonart_comer: TEXT
+    - in_fonart_conc: TEXT
+    - in_fonart_prod: TEXT
+    - in_fonart_salocu: TEXT
+    - in_hinf_alumpu: TEXT
+    - in_hinf_ccap: TEXT
+    - in_hinf_ccapsoc: TEXT
+    - in_hinf_consoc: TEXT
+    - in_hinf_dren: TEXT
+    - in_hinf_elecpu: TEXT
+    - in_hinf_hogb: TEXT
+    - in_hinf_pavim: TEXT
+    - in_hinf_promo: TEXT
+    - in_hinf_redagu: TEXT
+    - in_hinf_sedatu: TEXT
+    - in_hinf_servsoc: TEXT
+    - in_hinf_tallcap: TEXT
+    - in_imjuve: TEXT
+    - in_imjuve_bec: TEXT
+    - in_imjuve_bec2: TEXT
+    - in_imjuve_becmdig: TEXT
+    - in_imjuve_becrj: TEXT
+    - in_imjuve_concdp: TEXT
+    - in_imjuve_concpnjuv: TEXT
+    - in_imjuve_conctsj: TEXT
+    - in_imjuve_projuve: TEXT
+    - in_imjuve_salint: TEXT
+    - in_imss_prosp: Integer
+    - in_inaes: Integer
+    - in_inaes_ccap: TEXT
+    - in_inaes_comer: TEXT
+    - in_inaes_desorg: TEXT
+    - in_inaes_dnaturales: TEXT
+    - in_inaes_econ: Integer
+    - in_inaes_educ: TEXT
+    - in_inaes_insfin: TEXT
+    - in_inaes_recon: TEXT
+    - in_inapam: Integer
+    - in_inea: Integer
+    - in_inea_15mas: Integer
+    - in_inea_prim: Integer
+    - in_inea_sec: Integer
+    - in_jea_agro: TEXT
+    - in_jea_esc: TEXT
+    - in_jea_sedatu: TEXT
+    - in_mppi: TEXT
+    - in_mppi_becindig: TEXT
+    - in_mppi_pprocc: TEXT
+    - in_mppi_pprom: TEXT
+    - in_mppi_pprot: TEXT
+    - in_mppi_prsoc: TEXT
+    - in_otras: Integer
+    - in_pacareeib: Integer
+    - in_pacareeib_bec: Integer
+    - in_pae: Integer
+    - in_paei: Integer
+    - in_paei_becindig: TEXT
+    - in_paei_ccnindig: TEXT
+    - in_paei_espindig: TEXT
+    - in_paei_hospalim: Integer
+    - in_pae_ccap: Integer
+    - in_pae_econ: TEXT
+    - in_pae_maq: Integer
+    - in_paid: Integer
+    - in_paid_econ: Integer
+    - in_paid_mconst: Integer
+    - in_paid_tcultivo: Integer
+    - in_paiei_inf: Integer
+    - in_paiei_moderemay: Integer
+    - in_paiei_moderemen: Integer
+    - in_paiei_otinf: Integer
+    - in_paiei_sagarpa: Integer
+    - in_paja: Integer
+    - in_paja_alim: TEXT
+    - in_paja_arribo: Integer
+    - in_paja_bec: Integer
+    - in_pam: TEXT
+    - in_pam_dcap: TEXT
+    - in_pam_econ: TEXT
+    - in_pam_incfin: TEXT
+    - in_pam_march: TEXT
+    - in_papci: Integer
+    - in_papci_pcomun: Integer
+    - in_pascl: TEXT
+    - in_pascl_ccap: TEXT
+    - in_pascl_contingencia: TEXT
+    - in_pasl: Integer
+    - in_pasl_bhog: Integer
+    - in_pasl_lech: Integer
+    - in_patn: Integer
+    - in_patn_servmed: Integer
+    - in_pcavfpae: Integer
+    - in_pcavfpae_btrabajo: Integer
+    - in_pcavfpae_fempleo: Integer
+    - in_pcds: Integer
+    - in_pcvm: TEXT
+    - in_pdciter_ecap: Integer
+    - in_pdciter_fcomer: Integer
+    - in_pdciter_produc: Integer
+    - in_pdciter_sagarpa: Integer
+    - in_pdciter_servint: Integer
+    - in_pdciter_servp: Integer
+    - in_pefsfv_apviv: Integer
+    - in_pefsfv_lote: Integer
+    - in_pefsfv_mviv: Integer
+    - in_pefsfv_sedatu: Integer
+    - in_pefsfv_viv: Integer
+    - in_pei: Integer
+    - in_pei_cuininos: Integer
+    - in_pei_estaper: Integer
+    - in_pei_estecon: TEXT
+    - in_pei_estinic: Integer
+    - in_pei_estpcivil: TEXT
+    - in_pei_estseg: TEXT
+    - in_pet: Integer
+    - in_pfa_agro: TEXT
+    - in_pfa_biosus: TEXT
+    - in_pfa_biosus2: TEXT
+    - in_pfa_paqtec: TEXT
+    - in_pfa_pproduc: TEXT
+    - in_pfa_proagro: TEXT
+    - in_pfa_procafe: TEXT
+    - in_pfa_sagarpa: TEXT
+    - in_pfcasvs: Integer
+    - in_pfcasvs_insumos: Integer
+    - in_pfci: Integer
+    - in_pfci_bec: Integer
+    - in_pfdci: Integer
+    - in_pfdci_pproduc: Integer
+    - in_pfg_infrproduc: TEXT
+    - in_pfg_maqequip: TEXT
+    - in_pfg_recriapecuaria: TEXT
+    - in_pfg_sagarpa: TEXT
+    - in_pfppa_aproyectos: TEXT
+    - in_pfppa_ccap: TEXT
+    - in_pfppa_dieselm: TEXT
+    - in_pfppa_embarcamay: TEXT
+    - in_pfppa_embarcamen: TEXT
+    - in_pfppa_gasolinar: TEXT
+    - in_pfppa_infpesq: TEXT
+    - in_pfppa_sagarpa: TEXT
+    - in_pidr_agroquim: TEXT
+    - in_pidr_captagua: TEXT
+    - in_pidr_captec: TEXT
+    - in_pidr_ccap: TEXT
+    - in_pidr_centrosveg: TEXT
+    - in_pidr_consalim: TEXT
+    - in_pidr_dnaturales: TEXT
+    - in_pidr_fertilizante: TEXT
+    - in_pidr_infraprote: TEXT
+    - in_pidr_infrproduc: TEXT
+    - in_pidr_insumosinfr: TEXT
+    - in_pidr_maqequip: TEXT
+    - in_pidr_mvsemilla: TEXT
+    - in_pidr_otrinfra: TEXT
+    - in_pidr_pproduc: TEXT
+    - in_pidr_riegotec: TEXT
+    - in_pidr_sagarpa: TEXT
+    - in_pidr_segalim: TEXT
+    - in_pidr_servconsult: TEXT
+    - in_pidr_upecuario: TEXT
+    - in_pinf_sedatu: Integer
+    - in_pop: Integer
+    - in_popmi: Integer
+    - in_popmi_bec: Integer
+    - in_popmi_pproduc: Integer
+    - in_pop_econ: Integer
+    - in_pop_pproduc: Integer
+    - in_ppe_bhog: Integer
+    - in_ppe_consagua: Integer
+    - in_ppe_conserv: Integer
+    - in_ppe_maq: Integer
+    - in_ppe_otrinf: Integer
+    - in_ppe_posproduc: Integer
+    - in_ppe_producp: Integer
+    - in_ppe_sagarpa: Integer
+    - in_ppe_servp: Integer
+    - in_ppmr_compra: Integer
+    - in_ppmr_desastres: Integer
+    - in_ppmr_sagarpa: Integer
+    - in_procampo_dieselagr: Integer
+    - in_procampo_dieselmar: Integer
+    - in_procampo_gasolina: Integer
+    - in_procampo_ingreso: Integer
+    - in_procampo_modern: Integer
+    - in_procampo_pproduc: Integer
+    - in_procampo_produc: Integer
+    - in_procampo_sagarpa: Integer
+    - in_pronafim_se: Integer
+    - in_pronafor_semarnat: Integer
+    - in_prosp: Integer
+    - in_prosp_alim: Integer
+    - in_prosp_am: Integer
+    - in_prosp_bec: Integer
+    - in_prosp_bec2: TEXT
+    - in_prosp_bech: TEXT
+    - in_prosp_becm: TEXT
+    - in_prosp_bhog: Integer
+    - in_prosp_disc: TEXT
+    - in_prosp_trans: TEXT
+    - in_prosp_transh: TEXT
+    - in_prosp_transm: TEXT
+    - in_prosp_uesc: Integer
+    - in_psjf: TEXT
+    - in_pub: Integer
+    - in_pyc_centrosdi: TEXT
+    - in_pyc_centroslarv: TEXT
+    - in_pyc_infequip: TEXT
+    - in_pyc_sagarpa: TEXT
+    - in_sagarpa: Integer
+    - in_sct: Integer
+    - in_sct_pet: Integer
+    - in_se: Integer
+    - in_sedatu: Integer
+    - in_sedesol: Integer
+    - in_sedpet: Integer
+    - in_sed_pet: Integer
+    - in_segagr_shcp: Integer
+    - in_semarnat: Integer
+    - in_semarnat_pet: Integer
+    - in_sep: Integer
+    - in_sepo: Integer
+    - in_shcp: Integer
+    - in_ssa: Integer
+    - in_stps: Integer
+    - in_zinf_asviv: Integer
+    - in_zinf_bhog: Integer
+    - in_zinf_captagu: TEXT
+    - in_zinf_celsol: Integer
+    - in_zinf_cobija: TEXT
+    - in_zinf_cuarto: TEXT
+    - in_zinf_despensa: Integer
+    - in_zinf_dren2: Integer
+    - in_zinf_elecpart: TEXT
+    - in_zinf_elecpub: Integer
+    - in_zinf_estu: Integer
+    - in_zinf_huerto: Integer
+    - in_zinf_lamina: Integer
+    - in_zinf_letrina: Integer
+    - in_zinf_mejviv: TEXT
+    - in_zinf_muro: Integer
+    - in_zinf_pisof: Integer
+    - in_zinf_redagup: Integer
+    - in_zinf_sedatu: Integer
+    - in_zinf_techco: TEXT
+    - in_zinf_techlam: TEXT
+    - in_zinf_tinaco: Integer
+    - in_zinf_tomagu: Integer
+    - in_zinf_tomdren: Integer
+    - in_zinf_vivrur: Integer
+    - llave_hogar_h: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - c_integrante
+  - id_unico_39_9
+  - in_3x1
+  - in_3x1_alim
+  - in_3x1_bec
+  - in_3x1_boiler
+  - in_3x1_captagu
+  - in_3x1_ccap
+  - in_3x1_celsol
+  - in_3x1_cenergia
+  - in_3x1_cerco
+  - in_3x1_cuarto
+  - in_3x1_disc
+  - in_3x1_drenaje
+  - in_3x1_educ
+  - in_3x1_elecpart
+  - in_3x1_elecpub
+  - in_3x1_estufa
+  - in_3x1_fert
+  - in_3x1_filtagu
+  - in_3x1_hogb
+  - in_3x1_lamina
+  - in_3x1_letrina
+  - in_3x1_mejviv
+  - in_3x1_mjfach
+  - in_3x1_pavim
+  - in_3x1_pisof
+  - in_3x1_pprod
+  - in_3x1_prodgan
+  - in_3x1_redagup
+  - in_3x1_sruedas
+  - in_3x1_techco
+  - in_3x1_techlam
+  - in_3x1_tinaco
+  - in_3x1_tomagu
+  - in_3x1_tomdren
+  - in_3x1_vivienda
+  - in_3x1_vivurb
+  - in_aviv_acviv
+  - in_aviv_aplan
+  - in_aviv_asviv
+  - in_aviv_cale
+  - in_aviv_estu
+  - in_aviv_fossep
+  - in_aviv_foto
+  - in_aviv_hogb
+  - in_aviv_imper
+  - in_aviv_instele
+  - in_aviv_insthidr
+  - in_aviv_instsan
+  - in_aviv_letrin
+  - in_aviv_mjfach
+  - in_aviv_muro
+  - in_aviv_mviv
+  - in_aviv_piso
+  - in_aviv_puerven
+  - in_aviv_sedatu
+  - in_aviv_techco
+  - in_aviv_techla
+  - in_aviv_tina
+  - in_aviv_vivrur
+  - in_aviv_vivurb
+  - in_cc
+  - in_cdi
+  - in_cnch
+  - in_di
+  - in_di_asispenal
+  - in_di_comuind
+  - in_di_excar
+  - in_di_jovind
+  - in_di_mconst
+  - in_di_sermed
+  - in_di_solar
+  - in_di_tiecul
+  - in_di_traduc
+  - in_eib_sep
+  - in_fne_se
+  - in_fonart
+  - in_fonart_ccap
+  - in_fonart_comer
+  - in_fonart_conc
+  - in_fonart_prod
+  - in_fonart_salocu
+  - in_hinf_alumpu
+  - in_hinf_ccap
+  - in_hinf_ccapsoc
+  - in_hinf_consoc
+  - in_hinf_dren
+  - in_hinf_elecpu
+  - in_hinf_hogb
+  - in_hinf_pavim
+  - in_hinf_promo
+  - in_hinf_redagu
+  - in_hinf_sedatu
+  - in_hinf_servsoc
+  - in_hinf_tallcap
+  - in_imjuve
+  - in_imjuve_bec
+  - in_imjuve_bec2
+  - in_imjuve_becmdig
+  - in_imjuve_becrj
+  - in_imjuve_concdp
+  - in_imjuve_concpnjuv
+  - in_imjuve_conctsj
+  - in_imjuve_projuve
+  - in_imjuve_salint
+  - in_imss_prosp
+  - in_inaes
+  - in_inaes_ccap
+  - in_inaes_comer
+  - in_inaes_desorg
+  - in_inaes_dnaturales
+  - in_inaes_econ
+  - in_inaes_educ
+  - in_inaes_insfin
+  - in_inaes_recon
+  - in_inapam
+  - in_inea
+  - in_inea_15mas
+  - in_inea_prim
+  - in_inea_sec
+  - in_jea_agro
+  - in_jea_esc
+  - in_jea_sedatu
+  - in_mppi
+  - in_mppi_becindig
+  - in_mppi_pprocc
+  - in_mppi_pprom
+  - in_mppi_pprot
+  - in_mppi_prsoc
+  - in_otras
+  - in_pacareeib
+  - in_pacareeib_bec
+  - in_pae
+  - in_paei
+  - in_paei_becindig
+  - in_paei_ccnindig
+  - in_paei_espindig
+  - in_paei_hospalim
+  - in_pae_ccap
+  - in_pae_econ
+  - in_pae_maq
+  - in_paid
+  - in_paid_econ
+  - in_paid_mconst
+  - in_paid_tcultivo
+  - in_paiei_inf
+  - in_paiei_moderemay
+  - in_paiei_moderemen
+  - in_paiei_otinf
+  - in_paiei_sagarpa
+  - in_paja
+  - in_paja_alim
+  - in_paja_arribo
+  - in_paja_bec
+  - in_pam
+  - in_pam_dcap
+  - in_pam_econ
+  - in_pam_incfin
+  - in_pam_march
+  - in_papci
+  - in_papci_pcomun
+  - in_pascl
+  - in_pascl_ccap
+  - in_pascl_contingencia
+  - in_pasl
+  - in_pasl_bhog
+  - in_pasl_lech
+  - in_patn
+  - in_patn_servmed
+  - in_pcavfpae
+  - in_pcavfpae_btrabajo
+  - in_pcavfpae_fempleo
+  - in_pcds
+  - in_pcvm
+  - in_pdciter_ecap
+  - in_pdciter_fcomer
+  - in_pdciter_produc
+  - in_pdciter_sagarpa
+  - in_pdciter_servint
+  - in_pdciter_servp
+  - in_pefsfv_apviv
+  - in_pefsfv_lote
+  - in_pefsfv_mviv
+  - in_pefsfv_sedatu
+  - in_pefsfv_viv
+  - in_pei
+  - in_pei_cuininos
+  - in_pei_estaper
+  - in_pei_estecon
+  - in_pei_estinic
+  - in_pei_estpcivil
+  - in_pei_estseg
+  - in_pet
+  - in_pfa_agro
+  - in_pfa_biosus
+  - in_pfa_biosus2
+  - in_pfa_paqtec
+  - in_pfa_pproduc
+  - in_pfa_proagro
+  - in_pfa_procafe
+  - in_pfa_sagarpa
+  - in_pfcasvs
+  - in_pfcasvs_insumos
+  - in_pfci
+  - in_pfci_bec
+  - in_pfdci
+  - in_pfdci_pproduc
+  - in_pfg_infrproduc
+  - in_pfg_maqequip
+  - in_pfg_recriapecuaria
+  - in_pfg_sagarpa
+  - in_pfppa_aproyectos
+  - in_pfppa_ccap
+  - in_pfppa_dieselm
+  - in_pfppa_embarcamay
+  - in_pfppa_embarcamen
+  - in_pfppa_gasolinar
+  - in_pfppa_infpesq
+  - in_pfppa_sagarpa
+  - in_pidr_agroquim
+  - in_pidr_captagua
+  - in_pidr_captec
+  - in_pidr_ccap
+  - in_pidr_centrosveg
+  - in_pidr_consalim
+  - in_pidr_dnaturales
+  - in_pidr_fertilizante
+  - in_pidr_infraprote
+  - in_pidr_infrproduc
+  - in_pidr_insumosinfr
+  - in_pidr_maqequip
+  - in_pidr_mvsemilla
+  - in_pidr_otrinfra
+  - in_pidr_pproduc
+  - in_pidr_riegotec
+  - in_pidr_sagarpa
+  - in_pidr_segalim
+  - in_pidr_servconsult
+  - in_pidr_upecuario
+  - in_pinf_sedatu
+  - in_pop
+  - in_popmi
+  - in_popmi_bec
+  - in_popmi_pproduc
+  - in_pop_econ
+  - in_pop_pproduc
+  - in_ppe_bhog
+  - in_ppe_consagua
+  - in_ppe_conserv
+  - in_ppe_maq
+  - in_ppe_otrinf
+  - in_ppe_posproduc
+  - in_ppe_producp
+  - in_ppe_sagarpa
+  - in_ppe_servp
+  - in_ppmr_compra
+  - in_ppmr_desastres
+  - in_ppmr_sagarpa
+  - in_procampo_dieselagr
+  - in_procampo_dieselmar
+  - in_procampo_gasolina
+  - in_procampo_ingreso
+  - in_procampo_modern
+  - in_procampo_pproduc
+  - in_procampo_produc
+  - in_procampo_sagarpa
+  - in_pronafim_se
+  - in_pronafor_semarnat
+  - in_prosp
+  - in_prosp_alim
+  - in_prosp_am
+  - in_prosp_bec
+  - in_prosp_bec2
+  - in_prosp_bech
+  - in_prosp_becm
+  - in_prosp_bhog
+  - in_prosp_disc
+  - in_prosp_trans
+  - in_prosp_transh
+  - in_prosp_transm
+  - in_prosp_uesc
+  - in_psjf
+  - in_pub
+  - in_pyc_centrosdi
+  - in_pyc_centroslarv
+  - in_pyc_infequip
+  - in_pyc_sagarpa
+  - in_sagarpa
+  - in_sct
+  - in_sct_pet
+  - in_se
+  - in_sedatu
+  - in_sedesol
+  - in_sedpet
+  - in_sed_pet
+  - in_segagr_shcp
+  - in_semarnat
+  - in_semarnat_pet
+  - in_sep
+  - in_sepo
+  - in_shcp
+  - in_ssa
+  - in_stps
+  - in_zinf_asviv
+  - in_zinf_bhog
+  - in_zinf_captagu
+  - in_zinf_celsol
+  - in_zinf_cobija
+  - in_zinf_cuarto
+  - in_zinf_despensa
+  - in_zinf_dren2
+  - in_zinf_elecpart
+  - in_zinf_elecpub
+  - in_zinf_estu
+  - in_zinf_huerto
+  - in_zinf_lamina
+  - in_zinf_letrina
+  - in_zinf_mejviv
+  - in_zinf_muro
+  - in_zinf_pisof
+  - in_zinf_redagup
+  - in_zinf_sedatu
+  - in_zinf_techco
+  - in_zinf_techlam
+  - in_zinf_tinaco
+  - in_zinf_tomagu
+  - in_zinf_tomdren
+  - in_zinf_vivrur
+  - llave_hogar_h
 sifode_2013:
   LUIGI:
     INDEX: llave_hogar_h
