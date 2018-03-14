@@ -114,7 +114,7 @@ class TDockerTask(SourceIngestTask):
               '-e AWS_ACCESS_KEY_ID="{aws_access_key_id}"'.format(aws_access_key_id=aws_access_key_id),
               '-e AWS_SECRET_ACCESS_KEY="{aws_secret_access_key}"'.format(aws_secret_access_key=aws_secret_access_key),
               'politica_preventiva/task/{task}'.format(task=task),
-              '{cmd_docker} > /dev/null'.format(cmd_docker=self.cmd)]
+              '{cmd_docker}'.format(cmd_docker=self.cmd)]
         out = subprocess.call(" ".join(cmd_docker), shell=True)
         logger.info(out)
 
@@ -691,6 +691,16 @@ class conagua_temperaturas(TDockerTask):
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
 
+class conagua_dirviento(TDockerTask):
+    @property
+    def cmd(self):
+        command_list = ['python', self.classic_task_scripts +
+                        'conagua_dirviento.py',
+                        '--data_date', self.data_date,
+                        '--local_path', self.local_path + self.pipeline_task,
+                        '--local_ingest_file', self.local_ingest_file]
+        return " ".join(command_list)
+
 class conagua_precipitacion(TDockerTask):
     @property
     def cmd(self):
@@ -714,7 +724,7 @@ class sifode_2014(TDockerTask):
     @property
     def cmd(self):
        command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2014.sh',
+                       'sifode_2013.sh',
                        self.local_path +
                        self.pipeline_task, self.local_ingest_file]
        return " ".join(command_list)

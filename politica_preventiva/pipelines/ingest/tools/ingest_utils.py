@@ -8,6 +8,7 @@ Utilities used throughout SEDESOL pipeline
 import os
 import string
 import datetime
+import calendar
 import psycopg2
 import logging
 import numpy as np
@@ -149,7 +150,7 @@ def current_bimonth(dt):
 
 def year_fraction(periods, start_date, end_year, suffix):
     """
-    Creates a list with year fractions (quarter, semester, weeks)
+    Creates a list with year fractions (quarter, semester, weeks, days)
     Args:
       (periods): List of posible year fractions
       (start_date): Str YYYY or YYYY-MM
@@ -169,9 +170,9 @@ def year_fraction(periods, start_date, end_year, suffix):
 
     years = list(range(start_year, end_year + 1))
     return [str(year) + '-' + str(period) for year, period in
-            product(years, periods) if (period <= end_period or
-            year < end_year) and
-            (period >= start_period or year > start_year)]
+            product(years, periods)
+                if (period <= end_period or year < end_year)
+                    and (period >= start_period or year > start_year)]
 
 
 def dates_list(pipeline, end_date, periodicity):
@@ -226,6 +227,15 @@ def dates_list(pipeline, end_date, periodicity):
             end_date = end_date.strftime('%Y-%m')
             start_date = look_for_end_date(pipeline, end_date)
             p = list(range(1, 52))
+            dates = year_fraction(p, start_date, end_year, suffix)
+
+        elif periodicity in ["daily", "d"]:
+            suffix = 'd-' + str(end_date.timetuple().tm_yday)
+            start_date = look_for_end_date(pipeline, end_date)
+            if int(end_date.year) % 4 == 0:
+                p = list(range(1,367))
+            else:
+                p = list(range(1,366))
             dates = year_fraction(p, start_date, end_year, suffix)
 
         else:
