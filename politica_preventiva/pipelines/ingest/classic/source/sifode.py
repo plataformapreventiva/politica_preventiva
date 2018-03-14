@@ -39,11 +39,11 @@ def ingest_sifode(data_date='', data_dir='', local_ingest_file=''):
     df = pd.DataFrame(columns=headers,dtype=object)
 
     df2 = pd.read_csv(data_dir+'/in_'+data_date+'_39_9.txt', sep='^',\
-            chunksize=10000,dtype=object)
+            chunksize=1000,dtype=object)
 
     for chunk in df2:
         chunk.columns=headers_anio
-        pd.concat([df,chunk],axis=0).to_csv(local_ingest_file,chunksize=10000,sep='|',mode='a',index=False)
+        pd.concat([df,chunk],axis=0).to_csv(local_ingest_file,chunksize=1000,sep='|',mode='a',index=False)
 
     os.remove(data_dir+'/in_'+data_date+'_39_9.txt')
     os.remove(data_dir+'/in_'+data_date+'_39_9.tar.gz')

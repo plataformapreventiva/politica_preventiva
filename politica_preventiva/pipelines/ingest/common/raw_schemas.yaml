@@ -3102,7 +3102,6 @@ sequia:
   - cve_conc
   - fecha
   - declaratoria
-
 sifode:
   LUIGI:
     INDEX: llave_hogar_h
