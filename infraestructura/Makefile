@@ -28,6 +28,7 @@ setup: create up
 create: .images_built .network_built .data_built  
 
 .images_built:
+	@./registrar.sh
 	@for image in $(IMAGES) ; do \
 	 	 docker build --tag dpa/$$image:$(IMAGE_VERSION) --tag dpa/$$image:latest $$image ; \
 	 done
