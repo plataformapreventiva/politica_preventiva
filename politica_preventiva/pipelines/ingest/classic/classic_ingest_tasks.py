@@ -711,51 +711,6 @@ class conagua_precipitacion(TDockerTask):
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
 
-class sifode_2013(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2013.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class sifode_2014(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2014.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class sifode_2015(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2015.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class sifode_2016(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2016.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class sifode_2017(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2017.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
 class sifode_calificacion(TDockerTask):
   @property
   def cmd(self):
