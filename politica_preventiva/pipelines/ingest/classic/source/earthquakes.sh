@@ -4,7 +4,7 @@
 ####    EarthQuake  ####
 #########################
 
-# This script ingest earthquake data from
+# This script ingests earthquake data from
 # https://earthquake.usgs.gov/fdsnws/event/1/
 
 # Ahorita el classic_ingest_task nos manda el mes anterior.
