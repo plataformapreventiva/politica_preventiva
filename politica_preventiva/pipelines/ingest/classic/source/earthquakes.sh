@@ -21,5 +21,5 @@ local_ingest_file=$4
 echo 'Downloading Earthquake data'
 URL="https://earthquake.usgs.gov/fdsnws/event/1/query?format=csv&starttime=$year-$month-01&endtime=$year-$month-31&minmagnitude=5&minlatitude=14.555427&maxlatitude=33.168382&minlongitude=-119.725409&maxlongitude=-85.316230" 
 
-wget -qO- $URL|\
- csvformat -D '|' > $4
+wget -qO- $URL | \
+csvformat -D '|' > $local_ingest_file
