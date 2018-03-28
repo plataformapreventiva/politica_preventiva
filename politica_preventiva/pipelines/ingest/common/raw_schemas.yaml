@@ -1846,6 +1846,129 @@ donatarias_sat:
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
     - actualizacion_sedesol: TIMESTAMP
+enigh_viviendas:
+  LUIGI:
+    INDEX: folioviv
+    SCHEMA:
+    - folioviv: TEXT
+    - tipo_viv: TEXT
+    - mat_pared: TEXT
+    - mat_techos: TEXT
+    - mat_pisos: TEXT
+    - antiguedad: TEXT
+    - antigua_ne: TEXT
+    - cocina: Integer
+    - cocina_dor: TEXT
+    - cuart_dorm: Integer
+    - num_cuarto: Integer
+    - disp_agua: Integer
+    - dotac_agua: TEXT
+    - excusado: Integer
+    - uso_compar: TEXT
+    - sanit_agua: TEXT
+    - drenaje: Integer
+    - disp_elect: Integer
+    - combustible: TEXT
+    - estufa_chi: TEXT
+    - eli_basura: Integer
+    - tenencia: Integer
+    - num_dueno1: TEXT
+    - hog_dueno1: TEXT
+    - num_dueno2: TEXT
+    - hog_dueno2: TEXT
+    - escrituras: TEXT
+    - tipo_finan: TEXT
+    - renta: TEXT
+    - estim_pago: TEXT
+    - pago_viv: TEXT
+    - pago_mesp: TEXT
+    - tipo_adqui: TEXT
+    - viv_usada: TEXT
+    - lavadero: Integer
+    - fregadero: Integer
+    - regadera: Integer
+    - tinaco_azo: Integer
+    - cisterna: Integer
+    - pileta: Integer
+    - medidor_luz: Integer
+    - bomba_agua: Integer
+    - tanque_gas: Integer
+    - aire_acond: Integer
+    - calefacc: Integer
+    - tot_resid: Integer
+    - tot_hom: Integer
+    - tot_muj: Integer
+    - tot_hog: Integer
+    - ubica_geo: Integer
+    - ageb: TEXT
+    - tam_loc: Integer
+    - est_socio: Integer
+    - est_dis: Integer
+    - upm: Integer
+    - factor_viv: Integer
+    - num_focos: Integer
+    - calentador: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - folioviv
+  - tipo_viv
+  - mat_pared
+  - mat_techos
+  - mat_pisos
+  - antiguedad
+  - antigua_ne
+  - cocina
+  - cocina_dor
+  - cuart_dorm
+  - num_cuarto
+  - disp_agua
+  - dotac_agua
+  - excusado
+  - uso_compar
+  - sanit_agua
+  - drenaje
+  - disp_elect
+  - combustible
+  - estufa_chi
+  - eli_basura
+  - tenencia
+  - num_dueno1
+  - hog_dueno1
+  - num_dueno2
+  - hog_dueno2
+  - escrituras
+  - tipo_finan
+  - renta
+  - estim_pago
+  - pago_viv
+  - pago_mesp
+  - tipo_adqui
+  - viv_usada
+  - lavadero
+  - fregadero
+  - regadera
+  - tinaco_azo
+  - cisterna
+  - pileta
+  - medidor_luz
+  - bomba_agua
+  - tanque_gas
+  - aire_acond
+  - calefacc
+  - tot_resid
+  - tot_hom
+  - tot_muj
+  - tot_hog
+  - ubica_geo
+  - ageb
+  - tam_loc
+  - est_socio
+  - est_dis
+  - upm
+  - factor_viv
+  - num_focos
+  - calentador
 estancias:
   LUIGI:
     INDEX: id_est
