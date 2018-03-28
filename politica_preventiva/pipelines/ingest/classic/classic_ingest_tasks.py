@@ -615,6 +615,7 @@ class declaratoria(TDockerTask):
 
         return " ".join(command_list)
 
+
 class insp(TDockerTask):
 
     @property
@@ -652,6 +653,7 @@ class estancias(TDockerTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
+
 class lecherias(TDockerTask):
     @property
     def cmd(self):
@@ -663,6 +665,7 @@ class lecherias(TDockerTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
+
 class sequia(IngestRTask):
     @property
     def cmd(self):
@@ -672,6 +675,7 @@ class sequia(IngestRTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
+
 class geoms_red_carretera(TDockerTask):
     @property
     def cmd(self):
@@ -680,6 +684,7 @@ class geoms_red_carretera(TDockerTask):
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
+
 
 class conagua_temperaturas(TDockerTask):
     @property
@@ -691,6 +696,7 @@ class conagua_temperaturas(TDockerTask):
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
 
+
 class conagua_dirviento(TDockerTask):
     @property
     def cmd(self):
@@ -700,6 +706,7 @@ class conagua_dirviento(TDockerTask):
                         '--local_path', self.local_path + self.pipeline_task,
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
+
 
 class conagua_precipitacion(TDockerTask):
     @property
@@ -711,6 +718,7 @@ class conagua_precipitacion(TDockerTask):
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
 
+
 class sifode_calificacion(TDockerTask):
   @property
   def cmd(self):
@@ -720,6 +728,7 @@ class sifode_calificacion(TDockerTask):
                      self.pipeline_task, self.local_ingest_file]
      return " ".join(command_list)
 
+
 class sifode_domicilio(TDockerTask):
   @property
   def cmd(self):
@@ -728,3 +737,32 @@ class sifode_domicilio(TDockerTask):
                      self.local_path +
                      self.pipeline_task, self.local_ingest_file]
      return " ".join(command_list)
+
+
+class earthquakes(TDockerTask):
+    """ Earthquake source script
+    Args:
+        data_date (str):  Year and month of data date
+            separated by a "-"
+        classic_task_scripts (str): ingestion script path
+        local_path (str): output file name
+        local_ingest_file (str): full path of output file
+    """
+
+    @property
+    def cmd(self):
+        year = self.data_date.split("-")[0]
+        # Get last month number
+        month = int(self.data_date.split("-")[1]) - 1
+        month = str(month).zfill(2)
+        # If it's the first month of the year, take last month
+        # of previous year
+        if month == 0:
+            month = 12
+            year = year - 1
+        command_list = ['sh', self.classic_task_scripts +
+                        'earthquakes.sh', year, month,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+
+        return " ".join(command_list)
