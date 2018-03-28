@@ -18,6 +18,8 @@ services:
       - "7687:7687"
     networks:
       - politica_preventiva_net
+    volumes: 
+        - politica_preventiva_store:/data
 
 volumes:
   politica_preventiva_store:
