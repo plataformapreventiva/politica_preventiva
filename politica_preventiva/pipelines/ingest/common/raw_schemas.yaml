@@ -2563,6 +2563,129 @@ enigh_poblacion:
   - act_discap
   - act_otra
   - num_trabaj
+enigh_trabajos:
+  LUIGI:
+    INDEX: folioviv
+    SCHEMA:
+    - folioviv: BIGINT
+    - foliohog: BIGINT
+    - numren: Integer
+    - id_trabajo: Integer
+    - trapais: Integer
+    - subor: Integer
+    - indep: TEXT
+    - personal: TEXT
+    - pago: TEXT
+    - contrato: TEXT
+    - tipocontr: TEXT
+    - pres_1: TEXT
+    - pres_2: TEXT
+    - pres_3: TEXT
+    - pres_4: TEXT
+    - pres_5: TEXT
+    - pres_6: TEXT
+    - pres_7: TEXT
+    - pres_8: TEXT
+    - pres_9: TEXT
+    - pres_10: TEXT
+    - pres_11: TEXT
+    - pres_12: TEXT
+    - pres_13: TEXT
+    - pres_14: TEXT
+    - pres_15: TEXT
+    - pres_16: TEXT
+    - pres_17: TEXT
+    - pres_18: TEXT
+    - pres_19: TEXT
+    - pres_20: TEXT
+    - pres_21: TEXT
+    - pres_22: TEXT
+    - pres_23: TEXT
+    - pres_24: TEXT
+    - pres_25: TEXT
+    - pres_26: TEXT
+    - htrab: Integer
+    - sinco: Integer
+    - scian: Integer
+    - clas_emp: TEXT
+    - tam_emp: Integer
+    - no_ing: TEXT
+    - tiene_suel: TEXT
+    - tipoact: TEXT
+    - socios: TEXT
+    - soc_nr1: TEXT
+    - soc_nr2: TEXT
+    - soc_resp: TEXT
+    - otra_act: TEXT
+    - tipoact2: TEXT
+    - tipoact3: TEXT
+    - tipoact4: TEXT
+    - lugar: TEXT
+    - conf_pers: TEXT
+    - reg_not: TEXT
+    - reg_cont: TEXT
+    - com_fis: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - folioviv
+  - foliohog
+  - numren
+  - id_trabajo
+  - trapais
+  - subor
+  - indep
+  - personal
+  - pago
+  - contrato
+  - tipocontr
+  - pres_1
+  - pres_2
+  - pres_3
+  - pres_4
+  - pres_5
+  - pres_6
+  - pres_7
+  - pres_8
+  - pres_9
+  - pres_10
+  - pres_11
+  - pres_12
+  - pres_13
+  - pres_14
+  - pres_15
+  - pres_16
+  - pres_17
+  - pres_18
+  - pres_19
+  - pres_20
+  - pres_21
+  - pres_22
+  - pres_23
+  - pres_24
+  - pres_25
+  - pres_26
+  - htrab
+  - sinco
+  - scian
+  - clas_emp
+  - tam_emp
+  - no_ing
+  - tiene_suel
+  - tipoact
+  - socios
+  - soc_nr1
+  - soc_nr2
+  - soc_resp
+  - otra_act
+  - tipoact2
+  - tipoact3
+  - tipoact4
+  - lugar
+  - conf_pers
+  - reg_not
+  - reg_cont
+  - com_fis
 enigh_viviendas:
   LUIGI:
     INDEX: folioviv
