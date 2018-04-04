@@ -2186,6 +2186,47 @@ enigh_hogares:
   - pago_dicon
   - otro_pago
   - factor_hog
+enigh_ingresos:
+  LUIGI:
+    INDEX: folioviv
+    SCHEMA:
+    - folioviv: BIGINT
+    - foliohog: BIGINT
+    - numren: Integer
+    - clave: TEXT
+    - mes_1: TEXT
+    - mes_2: TEXT
+    - mes_3: TEXT
+    - mes_4: TEXT
+    - mes_5: TEXT
+    - mes_6: TEXT
+    - ing_1: Integer
+    - ing_2: TEXT
+    - ing_3: TEXT
+    - ing_4: TEXT
+    - ing_5: TEXT
+    - ing_6: TEXT
+    - ing_tri: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - folioviv
+  - foliohog
+  - numren
+  - clave
+  - mes_1
+  - mes_2
+  - mes_3
+  - mes_4
+  - mes_5
+  - mes_6
+  - ing_1
+  - ing_2
+  - ing_3
+  - ing_4
+  - ing_5
+  - ing_6
+  - ing_tri
 enigh_poblacion:
   LUIGI:
     INDEX: folioviv
