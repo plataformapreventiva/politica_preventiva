@@ -1846,6 +1846,346 @@ donatarias_sat:
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
     - actualizacion_sedesol: TIMESTAMP
+earthquakes:
+  LUIGI:
+    INDEX: id
+    SCHEMA:
+    - time: TEXT
+    - latitude: TEXT
+    - longitude: TEXT
+    - depth: FLOAT
+    - mag: FLOAT
+    - magtype: TEXT
+    - nst: TEXT
+    - gap: Integer
+    - dmin: FLOAT
+    - rms: FLOAT
+    - net: TEXT
+    - id: TEXT
+    - updated: TEXT
+    - place: TEXT
+    - type: TEXT
+    - horizontalerror: FLOAT
+    - deptherror: FLOAT
+    - magerror: FLOAT
+    - magnst: Integer
+    - status: TEXT
+    - locationsource: TEXT
+    - magsource: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - time
+  - latitude
+  - longitude
+  - depth
+  - mag
+  - magtype
+  - nst
+  - gap
+  - dmin
+  - rms
+  - net
+  - id
+  - updated
+  - place
+  - type
+  - horizontalerror
+  - deptherror
+  - magerror
+  - magnst
+  - status
+  - locationsource
+  - magsource
+enigh_hogares:
+  LUIGI:
+    INDEX: foliohog
+    SCHEMA:
+    - folioviv: BIGINT
+    - foliohog: BIGINT
+    - huespedes: INT
+    - huesp_come: TEXT
+    - num_trab_d: INT
+    - trab_come: TEXT
+    - acc_alim1: Integer
+    - acc_alim2: Integer
+    - acc_alim3: Integer
+    - acc_alim4: Integer
+    - acc_alim5: Integer
+    - acc_alim6: Integer
+    - acc_alim7: TEXT
+    - acc_alim8: TEXT
+    - acc_alim9: TEXT
+    - acc_alim10: TEXT
+    - acc_alim11: TEXT
+    - acc_alim12: TEXT
+    - acc_alim13: TEXT
+    - acc_alim14: TEXT
+    - acc_alim15: TEXT
+    - acc_alim16: TEXT
+    - alim17_1: Integer
+    - alim17_2: Integer
+    - alim17_3: Integer
+    - alim17_4: Integer
+    - alim17_5: Integer
+    - alim17_6: Integer
+    - alim17_7: Integer
+    - alim17_8: Integer
+    - alim17_9: Integer
+    - alim17_10: Integer
+    - alim17_11: Integer
+    - alim17_12: Integer
+    - acc_alim18: Integer
+    - telefono: Integer
+    - celular: Integer
+    - tv_paga: Integer
+    - conex_inte: Integer
+    - num_auto: Integer
+    - anio_auto: TEXT
+    - num_van: Integer
+    - anio_van: TEXT
+    - num_pickup: Integer
+    - anio_pickup: TEXT
+    - num_moto: Integer
+    - anio_moto: TEXT
+    - num_bici: Integer
+    - anio_bici: TEXT
+    - num_trici: Integer
+    - anio_trici: TEXT
+    - num_carret: INT
+    - anio_carret: TEXT
+    - num_canoa: INT
+    - anio_canoa: TEXT
+    - num_otro: INT
+    - anio_otro: TEXT
+    - num_ester: Integer
+    - anio_ester: TEXT
+    - num_grab: Integer
+    - anio_grab: TEXT
+    - num_radio: Integer
+    - anio_radio: TEXT
+    - num_tva: Integer
+    - anio_tva: TEXT
+    - num_tvd: Integer
+    - anio_tvd: TEXT
+    - num_dvd: Integer
+    - anio_dvd: TEXT
+    - num_video: Integer
+    - anio_video: TEXT
+    - num_licua: Integer
+    - anio_licua: TEXT
+    - num_tosta: Integer
+    - anio_tosta: TEXT
+    - num_micro: Integer
+    - anio_micro: TEXT
+    - num_refri: Integer
+    - anio_refri: TEXT
+    - num_estuf: Integer
+    - anio_estuf: TEXT
+    - num_lavad: Integer
+    - anio_lavad: TEXT
+    - num_planc: Integer
+    - anio_planc: TEXT
+    - num_maqui: Integer
+    - anio_maqui: TEXT
+    - num_venti: Integer
+    - anio_venti: TEXT
+    - num_aspir: Integer
+    - anio_aspir: TEXT
+    - num_compu: Integer
+    - anio_compu: TEXT
+    - num_impre: Integer
+    - anio_impre: TEXT
+    - num_juego: Integer
+    - anio_juego: TEXT
+    - esc_radio: Integer
+    - er_aparato: TEXT
+    - er_celular: TEXT
+    - er_compu: TEXT
+    - er_aplicac: TEXT
+    - er_tv: TEXT
+    - er_otro: TEXT
+    - recib_tvd: TEXT
+    - tsalud1_h: Integer
+    - tsalud1_m: Integer
+    - tsalud1_c: TEXT
+    - tsalud2_h: TEXT
+    - tsalud2_m: TEXT
+    - habito_1: TEXT
+    - habito_2: TEXT
+    - habito_3: TEXT
+    - habito_4: TEXT
+    - habito_5: TEXT
+    - habito_6: TEXT
+    - consumo: TEXT
+    - nr_viv: TEXT
+    - tarjeta: Integer
+    - pagotarjet: Integer
+    - regalotar: Integer
+    - regalodado: Integer
+    - autocons: Integer
+    - regalos: Integer
+    - remunera: Integer
+    - transferen: Integer
+    - parto_g: Integer
+    - embarazo_g: Integer
+    - negcua: Integer
+    - est_alim: Integer
+    - est_trans: TEXT
+    - bene_licon: Integer
+    - cond_licon: TEXT
+    - lts_licon: TEXT
+    - otros_lts: TEXT
+    - diconsa: Integer
+    - frec_dicon: TEXT
+    - cond_dicon: TEXT
+    - pago_dicon: TEXT
+    - otro_pago: TEXT
+    - factor_hog: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - folioviv
+  - foliohog
+  - huespedes
+  - huesp_come
+  - num_trab_d
+  - trab_come
+  - acc_alim1
+  - acc_alim2
+  - acc_alim3
+  - acc_alim4
+  - acc_alim5
+  - acc_alim6
+  - acc_alim7
+  - acc_alim8
+  - acc_alim9
+  - acc_alim10
+  - acc_alim11
+  - acc_alim12
+  - acc_alim13
+  - acc_alim14
+  - acc_alim15
+  - acc_alim16
+  - alim17_1
+  - alim17_2
+  - alim17_3
+  - alim17_4
+  - alim17_5
+  - alim17_6
+  - alim17_7
+  - alim17_8
+  - alim17_9
+  - alim17_10
+  - alim17_11
+  - alim17_12
+  - acc_alim18
+  - telefono
+  - celular
+  - tv_paga
+  - conex_inte
+  - num_auto
+  - anio_auto
+  - num_van
+  - anio_van
+  - num_pickup
+  - anio_pickup
+  - num_moto
+  - anio_moto
+  - num_bici
+  - anio_bici
+  - num_trici
+  - anio_trici
+  - num_carret
+  - anio_carret
+  - num_canoa
+  - anio_canoa
+  - num_otro
+  - anio_otro
+  - num_ester
+  - anio_ester
+  - num_grab
+  - anio_grab
+  - num_radio
+  - anio_radio
+  - num_tva
+  - anio_tva
+  - num_tvd
+  - anio_tvd
+  - num_dvd
+  - anio_dvd
+  - num_video
+  - anio_video
+  - num_licua
+  - anio_licua
+  - num_tosta
+  - anio_tosta
+  - num_micro
+  - anio_micro
+  - num_refri
+  - anio_refri
+  - num_estuf
+  - anio_estuf
+  - num_lavad
+  - anio_lavad
+  - num_planc
+  - anio_planc
+  - num_maqui
+  - anio_maqui
+  - num_venti
+  - anio_venti
+  - num_aspir
+  - anio_aspir
+  - num_compu
+  - anio_compu
+  - num_impre
+  - anio_impre
+  - num_juego
+  - anio_juego
+  - esc_radio
+  - er_aparato
+  - er_celular
+  - er_compu
+  - er_aplicac
+  - er_tv
+  - er_otro
+  - recib_tvd
+  - tsalud1_h
+  - tsalud1_m
+  - tsalud1_c
+  - tsalud2_h
+  - tsalud2_m
+  - habito_1
+  - habito_2
+  - habito_3
+  - habito_4
+  - habito_5
+  - habito_6
+  - consumo
+  - nr_viv
+  - tarjeta
+  - pagotarjet
+  - regalotar
+  - regalodado
+  - autocons
+  - regalos
+  - remunera
+  - transferen
+  - parto_g
+  - embarazo_g
+  - negcua
+  - est_alim
+  - est_trans
+  - bene_licon
+  - cond_licon
+  - lts_licon
+  - otros_lts
+  - diconsa
+  - frec_dicon
+  - cond_dicon
+  - pago_dicon
+  - otro_pago
+  - factor_hog
 enigh_viviendas:
   LUIGI:
     INDEX: folioviv
@@ -1969,57 +2309,6 @@ enigh_viviendas:
   - factor_viv
   - num_focos
   - calentador
-earthquakes:
-  LUIGI:
-    INDEX: id
-    SCHEMA:
-    - time: TEXT
-    - latitude: TEXT
-    - longitude: TEXT
-    - depth: FLOAT
-    - mag: FLOAT
-    - magtype: TEXT
-    - nst: TEXT
-    - gap: Integer
-    - dmin: FLOAT
-    - rms: FLOAT
-    - net: TEXT
-    - id: TEXT
-    - updated: TEXT
-    - place: TEXT
-    - type: TEXT
-    - horizontalerror: FLOAT
-    - deptherror: FLOAT
-    - magerror: FLOAT
-    - magnst: Integer
-    - status: TEXT
-    - locationsource: TEXT
-    - magsource: TEXT
-    - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
-  RAW:
-  - time
-  - latitude
-  - longitude
-  - depth
-  - mag
-  - magtype
-  - nst
-  - gap
-  - dmin
-  - rms
-  - net
-  - id
-  - updated
-  - place
-  - type
-  - horizontalerror
-  - deptherror
-  - magerror
-  - magnst
-  - status
-  - locationsource
-  - magsource
 estancias:
   LUIGI:
     INDEX: id_est
