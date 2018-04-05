@@ -1897,6 +1897,118 @@ earthquakes:
   - status
   - locationsource
   - magsource
+enigh_gastohogar:
+  LUIGI:
+    INDEX: folioviv
+    SCHEMA:
+    - folioviv: BIGINT
+    - foliohog: BIGINT
+    - clave: TEXT
+    - tipo_gasto: TEXT
+    - mes_dia: INT
+    - forma_pago: TEXT
+    - forma_pag1: Integer
+    - forma_pag2: INT
+    - forma_pag3: INT
+    - lugar_comp: Integer
+    - orga_inst: INT
+    - frecuencia: INT
+    - fecha_adqu: INT
+    - fecha_pago: INT
+    - cantidad: TEXT
+    - gasto: FLOAT
+    - pago_mp: TEXT
+    - costo: TEXT
+    - inmujer: TEXT
+    - inst_1: TEXT
+    - inst_2: TEXT
+    - num_meses: TEXT
+    - num_pagos: TEXT
+    - ultim_pago: TEXT
+    - gasto_tri: FLOAT
+    - gasto_nm: TEXT
+    - gas_nm_tri: TEXT
+    - imujer_tri: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - folioviv
+  - foliohog
+  - clave
+  - tipo_gasto
+  - mes_dia
+  - forma_pago
+  - forma_pag1
+  - forma_pag2
+  - forma_pag3
+  - lugar_comp
+  - orga_inst
+  - frecuencia
+  - fecha_adqu
+  - fecha_pago
+  - cantidad
+  - gasto
+  - pago_mp
+  - costo
+  - inmujer
+  - inst_1
+  - inst_2
+  - num_meses
+  - num_pagos
+  - ultim_pago
+  - gasto_tri
+  - gasto_nm
+  - gas_nm_tri
+  - imujer_tri
+enigh_gastopersonas:
+  LUIGI:
+    INDEX: folioviv
+    SCHEMA:
+    - folioviv: BIGINT
+    - foliohog: BIGINT
+    - numren: Integer
+    - clave: TEXT
+    - tipo_gasto: TEXT
+    - mes_dia: Integer
+    - frec_rem: Integer
+    - inst: TEXT
+    - forma_pago: TEXT
+    - forma_pag1: INT
+    - forma_pag2: INT
+    - forma_pag3: INT
+    - inscrip: TEXT
+    - colegia: TEXT
+    - material: TEXT
+    - cantidad: TEXT
+    - gasto: TEXT
+    - costo: FLOAT
+    - gasto_tri: TEXT
+    - gasto_nm: FLOAT
+    - gas_nm_tri: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - folioviv
+  - foliohog
+  - numren
+  - clave
+  - tipo_gasto
+  - mes_dia
+  - frec_rem
+  - inst
+  - forma_pago
+  - forma_pag1
+  - forma_pag2
+  - forma_pag3
+  - inscrip
+  - colegia
+  - material
+  - cantidad
+  - gasto
+  - costo
+  - gasto_tri
+  - gasto_nm
+  - gas_nm_tri
 enigh_hogares:
   LUIGI:
     INDEX: folioviv
