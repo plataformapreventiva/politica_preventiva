@@ -318,10 +318,6 @@ class UpdateDictionary(postgres.CopyToTable):
                                actualizacion=self.actualizacion,
                                data_date=self.data_date, suffix=self.suffix)
 
-    def tos3(self):
-        logging.info("Trying to upload dic to s3 for "+\
-                     "the pipeline_task {0} ".format(self.pipeline_task))
-        return s3_utils.dic_to_s3(self.pipeline_task)
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database,
