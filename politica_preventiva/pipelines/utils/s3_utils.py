@@ -218,7 +218,7 @@ def dic_to_s3(pipeline_task):
     try:
         print("Uploading dictionary:".format(pipeline_task))
 
-        tc = boto3.s3.transfer.TransferConfig(/)
+        tc = boto3.s3.transfer.TransferConfig()
         t = boto3.s3.transfer.S3Transfer( client=s3_client,
                                          config=tc )
         t.upload_file( pipeline_task,\
