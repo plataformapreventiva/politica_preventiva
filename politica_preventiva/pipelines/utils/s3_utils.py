@@ -212,21 +212,6 @@ def s3_folder_to_folder(bucket, src_key_name, new_key_name):
     copy_source = { 'Bucket': bucket , 'Key': src_key_name}
     s3.meta.client.copy(copy_source, bucket, new_key_name) 
 
-def dic_to_s3(pipeline_task):
-    session = boto3.Session()
-    s3_client = session.client( 's3' )
-    try:
-        print("Uploading dictionary:".format(pipeline_task))
-
-        tc = boto3.s3.transfer.TransferConfig()
-        t = boto3.s3.transfer.S3Transfer( client=s3_client,
-                                         config=tc )
-        t.upload_file( pipeline_task,\
-                'dpa-plataforma-preventiva','commons/metadata/dics/')
-
-    except Exception as e:
-        print("Error uploading: %s".format( e ) )
-
 
 def big_file_to_s3( filename, s3_name):
     session = boto3.Session()
