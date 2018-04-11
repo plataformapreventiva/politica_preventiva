@@ -45,7 +45,6 @@ logger = logging.getLogger("dpa-sedesol")
 # Load Postgres Schemas
 with open('./pipelines/ingest/common/raw_schemas.yaml', 'r') as file:
     header_d = yaml.load(file)
-# open('./pipelines/ingest/common/raw_schemas.yaml').close()
 conf = configuration.get_config()
 
 # EMR
