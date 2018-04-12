@@ -1846,6 +1846,57 @@ donatarias_sat:
     - numero_telefonico: TEXT
     - acreditamiento: TEXT
     - actualizacion_sedesol: TIMESTAMP
+earthquakes:
+  LUIGI:
+    INDEX: id
+    SCHEMA:
+    - time: TEXT
+    - latitude: TEXT
+    - longitude: TEXT
+    - depth: FLOAT
+    - mag: FLOAT
+    - magtype: TEXT
+    - nst: TEXT
+    - gap: Integer
+    - dmin: FLOAT
+    - rms: FLOAT
+    - net: TEXT
+    - id: TEXT
+    - updated: TEXT
+    - place: TEXT
+    - type: TEXT
+    - horizontalerror: FLOAT
+    - deptherror: FLOAT
+    - magerror: FLOAT
+    - magnst: Integer
+    - status: TEXT
+    - locationsource: TEXT
+    - magsource: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - time
+  - latitude
+  - longitude
+  - depth
+  - mag
+  - magtype
+  - nst
+  - gap
+  - dmin
+  - rms
+  - net
+  - id
+  - updated
+  - place
+  - type
+  - horizontalerror
+  - deptherror
+  - magerror
+  - magnst
+  - status
+  - locationsource
+  - magsource
 estancias:
   LUIGI:
     INDEX: id_est
