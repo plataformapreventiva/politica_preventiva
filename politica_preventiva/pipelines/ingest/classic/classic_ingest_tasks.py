@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # coding: utf-8
+import datetime
 import luigi
 import logging
 import os
@@ -751,18 +753,16 @@ class earthquakes(TDockerTask):
 
     @property
     def cmd(self):
-        year = self.data_date.split("-")[0]
-        # Get last month number
-        month = int(self.data_date.split("-")[1]) - 1
-        month = str(month).zfill(2)
+        year = int(self.data_date.split("-")[0])
+        day = int(self.data_date.split("-")[1])
+        # Get day and month
+        date_datetime = datetime.date(year,1,1) +  datetime.timedelta(day)
+        month_s = str(date_datetime.month).zfill(2)
+        day_s = str(date_datetime.day).zfill(2)
         # If it's the first month of the year, take last month
         # of previous year
-        if month == 0:
-            month = 12
-            year = year - 1
         command_list = ['sh', self.classic_task_scripts +
-                        'earthquakes.sh', year, month,
+                        'earthquakes.sh', str(year), month_s, day_s,
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
-
         return " ".join(command_list)
