@@ -4248,3 +4248,20 @@ sifode_universos:
   - u_cc_voluntarias
   - u_cc_comensales_mas
   - u_cc_comensales_menos
+test:
+  LUIGI:
+    INDEX: variable1
+    SCHEMA:
+    - variable1: INT
+    - variable2: TEXT
+    - variable3: Integer
+    - variable4: TEXT
+    - variable5: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - variable1
+  - variable2
+  - variable3
+  - variable4
+  - variable5
