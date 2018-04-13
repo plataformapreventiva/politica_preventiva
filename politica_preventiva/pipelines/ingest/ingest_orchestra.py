@@ -45,7 +45,6 @@ logger = logging.getLogger("dpa-sedesol")
 # Load Postgres Schemas
 with open('./pipelines/ingest/common/raw_schemas.yaml', 'r') as file:
     header_d = yaml.load(file)
-open('./pipelines/ingest/common/raw_schemas.yaml').close()
 conf = configuration.get_config()
 
 # EMR
@@ -318,6 +317,7 @@ class UpdateDictionary(postgres.CopyToTable):
                                pipeline_task=self.pipeline_task,
                                actualizacion=self.actualizacion,
                                data_date=self.data_date, suffix=self.suffix)
+
 
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database,
