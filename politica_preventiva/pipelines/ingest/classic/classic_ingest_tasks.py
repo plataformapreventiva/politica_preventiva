@@ -756,13 +756,12 @@ class earthquakes(TDockerTask):
         year = int(self.data_date.split("-")[0])
         day = int(self.data_date.split("-")[1])
         # Get day and month
-        date_datetime = datetime.date(year,1,1) +  datetime.timedelta(day)
+        date_datetime = datetime.date(year,1,1) + datetime.timedelta(day)
         month_s = str(date_datetime.month).zfill(2)
         day_s = str(date_datetime.day).zfill(2)
-        # If it's the first month of the year, take last month
-        # of previous year
+        #day_s_t = str(date_datetime.day + 1).zfill(2)
         command_list = ['sh', self.classic_task_scripts +
-                        'earthquakes.sh', str(year), month_s, day_s,
+                        'earthquakes.sh', str(year), month_s, day_s, # day_s_t,
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
