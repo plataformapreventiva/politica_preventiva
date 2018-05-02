@@ -1519,6 +1519,707 @@ cuis_39_9:
   - p_otro
   - tipo_proy_esp
   - tie_curp
+cuis_historico_domicilios:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - cve_entidad_federativa: TEXT
+    - cve_municipio: TEXT
+    - cve_localidad: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - cve_entidad_federativa
+  - cve_municipio
+  - cve_localidad
+cuis_historico_encuesta:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - folio_sedesol: TEXT
+    - folio_cuis: TEXT
+    - folio_prog_proy: TEXT
+    - folio_prog_proy2: BIGINT
+    - c_tipo_proc: INT
+    - hora_ini: TEXT
+    - hora_term: TEXT
+    - ejercicio: Integer
+    - ejercicio_captura: Integer
+    - fh_levanta: TEXT
+    - c_origen_encuesta: Integer
+    - c_programa_social: Integer
+    - vcalidad: Integer
+    - uso_s: Integer
+    - fch_creacion: TEXT
+    - usr_creacion: TEXT
+    - csc_hogar: INT
+    - c_encuesta: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - folio_sedesol
+  - folio_cuis
+  - folio_prog_proy
+  - folio_prog_proy2
+  - c_tipo_proc
+  - hora_ini
+  - hora_term
+  - ejercicio
+  - ejercicio_captura
+  - fh_levanta
+  - c_origen_encuesta
+  - c_programa_social
+  - vcalidad
+  - uso_s
+  - fch_creacion
+  - usr_creacion
+  - csc_hogar
+  - c_encuesta
+cuis_historico_ids:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - new_id: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - new_id
+cuis_historico_integrante:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - c_con_res: Integer
+    - c_cd_parentesco: Integer
+    - reside: TEXT
+    - padre: Integer
+    - madre: Integer
+    - c_cd_edo_civil: TEXT
+    - edad: Integer
+    - val_nb_renapo: TEXT
+    - num_per: INT
+    - fch_creacion: TEXT
+    - usr_creacion: TEXT
+    - conyuge: TEXT
+    - csc_hogar: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - c_con_res
+  - c_cd_parentesco
+  - reside
+  - padre
+  - madre
+  - c_cd_edo_civil
+  - edad
+  - val_nb_renapo
+  - num_per
+  - fch_creacion
+  - usr_creacion
+  - conyuge
+  - csc_hogar
+cuis_historico_persona:
+  LUIGI:
+    INDEX: llave_hogar_h
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - tie_curp: Integer
+    - acta_nac: Integer
+    - fch_creacion: TEXT
+    - usr_creacion: TEXT
+    - id_unico: TEXT
+    - rol: TEXT
+    - csc_hogar: INT
+    - id_hog_padp: TEXT
+    - id_pers_padp: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - tie_curp
+  - acta_nac
+  - fch_creacion
+  - usr_creacion
+  - id_unico
+  - rol
+  - csc_hogar
+  - id_hog_padp
+  - id_pers_padp
+cuis_historico_se_integrante:
+  LUIGI:
+    INDEX: llave_hogar_h 
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_integrante: Integer
+    - c_instsal_a: Integer
+    - c_instsal_b: Integer
+    - c_afilsal_a: Integer
+    - c_afilsal_b: Integer
+    - c_lengua_ind: Integer
+    - otro_dial: TEXT
+    - habl_esp: Integer
+    - indigena: Integer
+    - leer_escr: Integer
+    - c_ult_nivel: Integer
+    - c_ult_gra: Integer
+    - asis_esc: Integer
+    - c_aban_escu: Integer
+    - c_con_tra: Integer
+    - c_ver_con_trab: Integer
+    - c_pos_ocup: Integer
+    - c_peri_tra: Integer
+    - c_mot_notr: Integer
+    - trab_subor: Integer
+    - trab_indep: INT
+    - trab_presta_a: INT
+    - trab_presta_b: INT
+    - trab_presta_c: INT
+    - trab_presta_d: INT
+    - trab_presta_e: INT
+    - trab_presta_f: INT
+    - trab_presta_g: INT
+    - trab_presta_h: INT
+    - trab_no_re: Integer
+    - monto: Integer
+    - c_periodo: Integer
+    - seg_volunt_a: INT
+    - seg_volunt_b: INT
+    - seg_volunt_c: INT
+    - seg_volunt_d: INT
+    - seg_volunt_e: INT
+    - seg_volunt_f: INT
+    - seg_volunt_g: INT
+    - jubilado: TEXT
+    - jubilado_1: Integer
+    - jubilado_2: Integer
+    - inapam: Integer
+    - am_a: INT
+    - am_b: INT
+    - am_c: INT
+    - am_d: INT
+    - am_e: INT
+    - otr_ing_a: INT
+    - otr_ing_a_2: TEXT
+    - otr_ing_b: INT
+    - otr_ing_b_2: TEXT
+    - otr_ing_c: INT
+    - otr_ing_c_2: TEXT
+    - otr_ing_d: INT
+    - otr_ing_d_2: TEXT
+    - otr_ing_e: INT
+    - otr_ing_e_2: TEXT
+    - otr_ing_f: INT
+    - otr_ing_f_2: TEXT
+    - otr_ing_g: INT
+    - tiene_disca: Integer
+    - disca_ori: Integer
+    - disca_gra: Integer
+    - tiene_discb: Integer
+    - discb_ori: Integer
+    - discb_gra: Integer
+    - tiene_discc: Integer
+    - discc_ori: Integer
+    - discc_gra: Integer
+    - tiene_discd: Integer
+    - discd_ori: Integer
+    - discd_gra: Integer
+    - tiene_disce: Integer
+    - disce_ori: Integer
+    - disce_gra: Integer
+    - tiene_discf: Integer
+    - discf_ori: Integer
+    - discf_gra: Integer
+    - enf_art: Integer
+    - enf_can: Integer
+    - enf_cir: Integer
+    - enf_ren: Integer
+    - enf_dia: Integer
+    - enf_cor: Integer
+    - enf_pul: Integer
+    - enf_vih: Integer
+    - enf_def: Integer
+    - enf_hip: Integer
+    - enf_obe: Integer
+    - p_agri: INT
+    - p_manu: INT
+    - p_come: INT
+    - p_tran: INT
+    - p_prof: INT
+    - p_educ: INT
+    - p_sald: INT
+    - p_recr: INT
+    - p_aloj: INT
+    - p_comu: INT
+    - p_otro: INT
+    - tipo_proy_esp: TEXT
+    - fch_creacion: TEXT
+    - usr_creacion: TEXT
+    - c_raz_no_trab: TEXT
+    - csc_hogar: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_integrante
+  - c_instsal_a
+  - c_instsal_b
+  - c_afilsal_a
+  - c_afilsal_b
+  - c_lengua_ind
+  - otro_dial
+  - habl_esp
+  - indigena
+  - leer_escr
+  - c_ult_nivel
+  - c_ult_gra
+  - asis_esc
+  - c_aban_escu
+  - c_con_tra
+  - c_ver_con_trab
+  - c_pos_ocup
+  - c_peri_tra
+  - c_mot_notr
+  - trab_subor
+  - trab_indep
+  - trab_presta_a
+  - trab_presta_b
+  - trab_presta_c
+  - trab_presta_d
+  - trab_presta_e
+  - trab_presta_f
+  - trab_presta_g
+  - trab_presta_h
+  - trab_no_re
+  - monto
+  - c_periodo
+  - seg_volunt_a
+  - seg_volunt_b
+  - seg_volunt_c
+  - seg_volunt_d
+  - seg_volunt_e
+  - seg_volunt_f
+  - seg_volunt_g
+  - jubilado
+  - jubilado_1
+  - jubilado_2
+  - inapam
+  - am_a
+  - am_b
+  - am_c
+  - am_d
+  - am_e
+  - otr_ing_a
+  - otr_ing_a_2
+  - otr_ing_b
+  - otr_ing_b_2
+  - otr_ing_c
+  - otr_ing_c_2
+  - otr_ing_d
+  - otr_ing_d_2
+  - otr_ing_e
+  - otr_ing_e_2
+  - otr_ing_f
+  - otr_ing_f_2
+  - otr_ing_g
+  - tiene_disca
+  - disca_ori
+  - disca_gra
+  - tiene_discb
+  - discb_ori
+  - discb_gra
+  - tiene_discc
+  - discc_ori
+  - discc_gra
+  - tiene_discd
+  - discd_ori
+  - discd_gra
+  - tiene_disce
+  - disce_ori
+  - disce_gra
+  - tiene_discf
+  - discf_ori
+  - discf_gra
+  - enf_art
+  - enf_can
+  - enf_cir
+  - enf_ren
+  - enf_dia
+  - enf_cor
+  - enf_pul
+  - enf_vih
+  - enf_def
+  - enf_hip
+  - enf_obe
+  - p_agri
+  - p_manu
+  - p_come
+  - p_tran
+  - p_prof
+  - p_educ
+  - p_sald
+  - p_recr
+  - p_aloj
+  - p_comu
+  - p_otro
+  - tipo_proy_esp
+  - fch_creacion
+  - usr_creacion
+  - c_raz_no_trab
+  - csc_hogar
+cuis_historico_se_vivienda:
+  LUIGI:
+    INDEX: llave_hogar_h 
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_salud_hoga: Integer
+    - c_salud_hogb: Integer
+    - ut_cuida1: Integer
+    - ut_cuida2: Integer
+    - ut_volun1: Integer
+    - ut_volun2: Integer
+    - ut_repara1: Integer
+    - ut_repara2: Integer
+    - ut_limpia1: Integer
+    - ut_limpia2: Integer
+    - ut_acarrea1: Integer
+    - ut_acarrea2: Integer
+    - con_remesa: Integer
+    - gas_alim: Integer
+    - gas_vest: Integer
+    - gas_educ: Integer
+    - com_dia: Integer
+    - com_dia_nsnr: INT
+    - cereal: Integer
+    - verduras: Integer
+    - frutas: Integer
+    - leguminosas: Integer
+    - carne_huevo: Integer
+    - lacteos: Integer
+    - grasas: Integer
+    - seg_alim_1: Integer
+    - seg_alim_2: Integer
+    - seg_alim_3: Integer
+    - seg_alim_4: Integer
+    - seg_alim_5: Integer
+    - seg_alim_a: Integer
+    - seg_alim_b: Integer
+    - seg_alim_c: Integer
+    - seg_alim_d: Integer
+    - seg_alim_e: Integer
+    - seg_alim_f: Integer
+    - seg_alim_g: Integer
+    - desay_nin: Integer
+    - desay_lugar: Integer
+    - desay_razon: Integer
+    - cuart: Integer
+    - cua_dor: Integer
+    - coc_duer: Integer
+    - c_piso_viv: Integer
+    - condi_piso: Integer
+    - cuar_pis_t: Integer
+    - c_tech_viv: Integer
+    - condi_techo: Integer
+    - c_muro_viv: Integer
+    - condi_muro: Integer
+    - c_escusado: Integer
+    - uso_exc: Integer
+    - c_agua_a: Integer
+    - trat_agua_a: INT
+    - trat_agua_b: INT
+    - trat_agua_c: INT
+    - trat_agua_d: INT
+    - trat_agua_e: INT
+    - trat_agua_f: INT
+    - trat_agua_esp: TEXT
+    - c_con_drena: Integer
+    - c_basura: Integer
+    - c_combus_cocin: Integer
+    - fogon_chim: Integer
+    - ts_refri: Integer
+    - ts_lavadora: Integer
+    - ts_vhs_dvd_br: Integer
+    - ts_vehi: Integer
+    - ts_telefon: Integer
+    - ts_micro: Integer
+    - ts_compu: Integer
+    - ts_est_gas: Integer
+    - ts_boiler: Integer
+    - ts_internet: Integer
+    - ts_celular: Integer
+    - ts_television: Integer
+    - ts_tv_digital: Integer
+    - ts_tv_paga: Integer
+    - ts_tinaco: Integer
+    - ts_clima: Integer
+    - c_luz_ele: Integer
+    - c_sit_viv: Integer
+    - escritura1: Integer
+    - escritura2: Integer
+    - esp_niveles: Integer
+    - esp_construc: Integer
+    - construc_med: Integer
+    - esp_local: Integer
+    - local_med: Integer
+    - tie_agri: Integer
+    - prop_tierra1: Integer
+    - prop_tierra2: Integer
+    - c_maiz: INT
+    - c_frij: INT
+    - c_cere: INT
+    - c_frut: INT
+    - c_cana: INT
+    - c_jito: INT
+    - c_chil: INT
+    - c_limn: INT
+    - c_papa: INT
+    - c_cafe: INT
+    - c_cate: INT
+    - c_forr: INT
+    - c_otro: INT
+    - c_ning: INT
+    - cul_riego: Integer
+    - cul_maquina: Integer
+    - cul_anim: Integer
+    - cul_ferorg: Integer
+    - cul_ferquim: Integer
+    - cul_plagui: Integer
+    - uso_hid_tra: Integer
+    - caballos: Integer
+    - burros: Integer
+    - bueyes: Integer
+    - chivos: Integer
+    - reses: Integer
+    - gallinas: Integer
+    - cerdos: Integer
+    - conejos: Integer
+    - proyecto: Integer
+    - fch_creacion: TEXT
+    - usr_creacion: TEXT
+    - piso_prog: TEXT
+    - escusado_prog: TEXT
+    - compu_prog: TEXT
+    - csc_hogar: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_salud_hoga
+  - c_salud_hogb
+  - ut_cuida1
+  - ut_cuida2
+  - ut_volun1
+  - ut_volun2
+  - ut_repara1
+  - ut_repara2
+  - ut_limpia1
+  - ut_limpia2
+  - ut_acarrea1
+  - ut_acarrea2
+  - con_remesa
+  - gas_alim
+  - gas_vest
+  - gas_educ
+  - com_dia
+  - com_dia_nsnr
+  - cereal
+  - verduras
+  - frutas
+  - leguminosas
+  - carne_huevo
+  - lacteos
+  - grasas
+  - seg_alim_1
+  - seg_alim_2
+  - seg_alim_3
+  - seg_alim_4
+  - seg_alim_5
+  - seg_alim_a
+  - seg_alim_b
+  - seg_alim_c
+  - seg_alim_d
+  - seg_alim_e
+  - seg_alim_f
+  - seg_alim_g
+  - desay_nin
+  - desay_lugar
+  - desay_razon
+  - cuart
+  - cua_dor
+  - coc_duer
+  - c_piso_viv
+  - condi_piso
+  - cuar_pis_t
+  - c_tech_viv
+  - condi_techo
+  - c_muro_viv
+  - condi_muro
+  - c_escusado
+  - uso_exc
+  - c_agua_a
+  - trat_agua_a
+  - trat_agua_b
+  - trat_agua_c
+  - trat_agua_d
+  - trat_agua_e
+  - trat_agua_f
+  - trat_agua_esp
+  - c_con_drena
+  - c_basura
+  - c_combus_cocin
+  - fogon_chim
+  - ts_refri
+  - ts_lavadora
+  - ts_vhs_dvd_br
+  - ts_vehi
+  - ts_telefon
+  - ts_micro
+  - ts_compu
+  - ts_est_gas
+  - ts_boiler
+  - ts_internet
+  - ts_celular
+  - ts_television
+  - ts_tv_digital
+  - ts_tv_paga
+  - ts_tinaco
+  - ts_clima
+  - c_luz_ele
+  - c_sit_viv
+  - escritura1
+  - escritura2
+  - esp_niveles
+  - esp_construc
+  - construc_med
+  - esp_local
+  - local_med
+  - tie_agri
+  - prop_tierra1
+  - prop_tierra2
+  - c_maiz
+  - c_frij
+  - c_cere
+  - c_frut
+  - c_cana
+  - c_jito
+  - c_chil
+  - c_limn
+  - c_papa
+  - c_cafe
+  - c_cate
+  - c_forr
+  - c_otro
+  - c_ning
+  - cul_riego
+  - cul_maquina
+  - cul_anim
+  - cul_ferorg
+  - cul_ferquim
+  - cul_plagui
+  - uso_hid_tra
+  - caballos
+  - burros
+  - bueyes
+  - chivos
+  - reses
+  - gallinas
+  - cerdos
+  - conejos
+  - proyecto
+  - fch_creacion
+  - usr_creacion
+  - piso_prog
+  - escusado_prog
+  - compu_prog
+  - csc_hogar
+cuis_historico_visita_encuestador:
+  LUIGI:
+    INDEX: llave_hogar_h 
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - visita: TEXT
+    - tpo_opera: TEXT
+    - info_adec: INT
+    - c_doc_edad: TEXT
+    - folio_edad: TEXT
+    - sn_folio_edad: TEXT
+    - doc_identidad: TEXT
+    - sn_folio_ident: TEXT
+    - folio_ident: TEXT
+    - phone: TEXT
+    - num_phone: TEXT
+    - c_tipo_phone: TEXT
+    - c_res_entr: INT
+    - observaciones: TEXT
+    - traduct: TEXT
+    - cve_encuestador: TEXT
+    - nom_encuestador: TEXT
+    - fch_creacion: TEXT
+    - usr_creacion: TEXT
+    - csc_hogar: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - visita
+  - tpo_opera
+  - info_adec
+  - c_doc_edad
+  - folio_edad
+  - sn_folio_edad
+  - doc_identidad
+  - sn_folio_ident
+  - folio_ident
+  - phone
+  - num_phone
+  - c_tipo_phone
+  - c_res_entr
+  - observaciones
+  - traduct
+  - cve_encuestador
+  - nom_encuestador
+  - fch_creacion
+  - usr_creacion
+  - csc_hogar
+cuis_historico_vivienda:
+  LUIGI:
+    INDEX: llave_hogar_h 
+    SCHEMA:
+    - llave_hogar_h: TEXT
+    - c_tipo_viv: Integer
+    - tot_per_viv: Integer
+    - tot_hog: Integer
+    - tot_per: Integer
+    - per_gasto: INT
+    - per_alim: INT
+    - fch_creacion: TEXT
+    - usr_creacion: TEXT
+    - csc_hogar: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - llave_hogar_h
+  - c_tipo_viv
+  - tot_per_viv
+  - tot_hog
+  - tot_per
+  - per_gasto
+  - per_alim
+  - fch_creacion
+  - usr_creacion
+  - csc_hogar
 declaratoria:
   LUIGI:
     INDEX: cve_mun
