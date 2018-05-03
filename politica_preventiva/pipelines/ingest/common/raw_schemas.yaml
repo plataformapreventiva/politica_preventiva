@@ -2933,6 +2933,151 @@ precios_granos:
   - mes
   - anio
   - central
+prospera_verificacion:
+  LUIGI:
+    INDEX: folio
+    SCHEMA:
+    - programa: TEXT
+    - folio: TEXT
+    - folio_sede: TEXT
+    - ent_fed: Integer
+    - munici: Integer
+    - locali: Integer
+    - folio_enca: TEXT
+    - tipo_encue: INT
+    - familia_id: TEXT
+    - vtot_cua: Integer
+    - vcuarto_d: NUMERIC
+    - vcua_dor: NUMERIC
+    - vpiso_viv: NUMERIC
+    - vcua_pis_t: NUMERIC
+    - vtech_viv: NUMERIC
+    - vmuro_viv: NUMERIC
+    - vagua: NUMERIC
+    - vescusado: NUMERIC
+    - vuso_exc: NUMERIC
+    - vcon_dren: NUMERIC
+    - vluz_ele: NUMERIC
+    - vfocos: NUMERIC
+    - vestgas: NUMERIC
+    - vsir_est: NUMERIC
+    - vrefri: NUMERIC
+    - vsir_refr: NUMERIC
+    - vlicuadora: NUMERIC
+    - vsir_lic: NUMERIC
+    - vmicro: NUMERIC
+    - vsir_micro: NUMERIC
+    - vfregadero: NUMERIC
+    - vsir_freg: NUMERIC
+    - vlavadora: NUMERIC
+    - vsir_lava: NUMERIC
+    - vplancha: NUMERIC
+    - vsir_plan: NUMERIC
+    - vtinaco: NUMERIC
+    - vsir_tina: NUMERIC
+    - vcal_agua: NUMERIC
+    - vsir_cal: NUMERIC
+    - vradio: NUMERIC
+    - vsir_radio: NUMERIC
+    - vtelevis: NUMERIC
+    - vsir_tv: NUMERIC
+    - vtelev_dig: NUMERIC
+    - vsir_tvdig: NUMERIC
+    - vant_sky: NUMERIC
+    - vsir_sky: NUMERIC
+    - vvideocas: NUMERIC
+    - vsir_vid: NUMERIC
+    - vtelefon: NUMERIC
+    - vsir_telef: NUMERIC
+    - vcelular: NUMERIC
+    - vsir_cel: NUMERIC
+    - vcompu: NUMERIC
+    - vsir_compu: NUMERIC
+    - vclima: NUMERIC
+    - vsir_clima: NUMERIC
+    - vvehiculo: NUMERIC
+    - vsir_vehi: NUMERIC
+    - vtractor: NUMERIC
+    - vsir_trac: NUMERIC
+    - vinternet: NUMERIC
+    - vsir_inter: NUMERIC
+    - vtraduc: NUMERIC
+    - vverdad: NUMERIC
+    - vpobre: NUMERIC
+    - observa: TEXT
+    - id_corte: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - programa
+  - folio
+  - folio_sede
+  - ent_fed
+  - munici
+  - locali
+  - folio_enca
+  - tipo_encue
+  - familia_id
+  - vtot_cua
+  - vcuarto_d
+  - vcua_dor
+  - vpiso_viv
+  - vcua_pis_t
+  - vtech_viv
+  - vmuro_viv
+  - vagua
+  - vescusado
+  - vuso_exc
+  - vcon_dren
+  - vluz_ele
+  - vfocos
+  - vestgas
+  - vsir_est
+  - vrefri
+  - vsir_refr
+  - vlicuadora
+  - vsir_lic
+  - vmicro
+  - vsir_micro
+  - vfregadero
+  - vsir_freg
+  - vlavadora
+  - vsir_lava
+  - vplancha
+  - vsir_plan
+  - vtinaco
+  - vsir_tina
+  - vcal_agua
+  - vsir_cal
+  - vradio
+  - vsir_radio
+  - vtelevis
+  - vsir_tv
+  - vtelev_dig
+  - vsir_tvdig
+  - vant_sky
+  - vsir_sky
+  - vvideocas
+  - vsir_vid
+  - vtelefon
+  - vsir_telef
+  - vcelular
+  - vsir_cel
+  - vcompu
+  - vsir_compu
+  - vclima
+  - vsir_clima
+  - vvehiculo
+  - vsir_vehi
+  - vtractor
+  - vsir_trac
+  - vinternet
+  - vsir_inter
+  - vtraduc
+  - vverdad
+  - vpobre
+  - observa
+  - id_corte
 pub_agrupaciones:
   LUIGI:
     INDEX: cve_muni
