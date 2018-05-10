@@ -65,21 +65,17 @@ if(length(opt) > 1){
     password = POSTGRES_PASSWORD
   )
 
-  cenapred <- tbl(con, sql("select cve_muni,data_date,gp_bajaste,gp_ciclnes,
-                          gp_granizo,gp_inundac,gp_nevadas,gp_sequia2,gp_sismico,
-                          gp_susinfl,gp_sustox,gp_tormele,gp_tsunami,gp_ondasca, 
-                          actualizacion_sedesol
-                          from clean.cenapred"))
+  cuaps_programas <- tbl(con, sql("select * from clean.cuaps_programas"))
 
   key <- "variable"
   value <- "valor"
-  not_gathered <- c("cve_muni", "data_date", "actualizacion_sedesol")
+  not_gathered <- c("cuaps_folio", "data_date", "actualizacion_sedesol")
 
-  cenapred_larga <- gather_db(cenapred, key, value, not_gathered) %>%
-    select(clave=cve_muni, variable, valor, data_date, actualizacion_sedesol) %>%
-    compute(name="cenapred_temp")
+  cuaps_programas_long <- gather_db(cuaps_programas, key, value, not_gathered) %>%
+    select(clave=cuaps_folio, variable, valor, data_date, actualizacion_sedesol) %>%
+    compute(name="cuaps_programas_temp")
 
-  dbGetQuery(con, "create table tidy.cenapred as (select * from cenapred_temp)")
+  dbGetQuery(con, "create table tidy.cuaps_programas as (select * from cuaps_programas_temp)")
 
   # commit the change
   dbCommit(con)

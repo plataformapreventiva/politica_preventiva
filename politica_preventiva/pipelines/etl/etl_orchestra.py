@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding: utf-8
 
 import datetime
@@ -71,6 +72,8 @@ class UpdateTidyDB(PgRTask):
     This Task runs the tidy script in tidy folder for
     the pipeline_task, if it doesn't exists then it runs
     the no_tidy.R script from the same folder.
+
+    The recommended minimal header for your TidyDB is: [id, variable, valor, data-date, actualizacion-sedesol]
     """
 
     current_date = luigi.DateParameter()
