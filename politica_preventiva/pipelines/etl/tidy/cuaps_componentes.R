@@ -82,10 +82,10 @@ if(length(opt) > 1){
                          mutate_at(vars(starts_with('c_indic')), as.numeric)
 
 
-  varnames <- c('c_indic', 'tipo_apoyo', 'tipo_pob_apo_cod', 'apoyo_gen_padron')
-  plotnames <- c('s06_contribuciones', 's09_tipo_apoyos', 's09_tipo_poblaciones', 's10_padrones')
+  varnames <- c('c_indic', 'tipo_apoyo_', 'tipo_pob_apo_cod', 'apoyo_gen_padron')
+  plotnames <- c('s05_contribuciones', 's09_tipo_apoyos', 's09_tipo_poblaciones', 's10_padrones')
   subsets <- list('c_indic' = 1,
-                  'tipo_apoyo' = 1:7,
+                  'tipo_apoyo_' = 1,
                   'tipo_pob_apo_cod' = 1:6,
                   'apoyo_gen_padron' = 1:2)
 

@@ -1,8 +1,11 @@
 #!/usr/bin/env Rscript
 library(optparse)
-library(tidyverse)
 library(dbplyr)
+library(rlang)
+library(dplyr)
+library(purrr)
 library(stringr)
+library(tidyr)
 library(DBI)
 source("pipelines/etl/tools/tidy_tools.R")
 
@@ -91,10 +94,38 @@ if(length(opt) > 1){
                                     '176' = 'r_7',
                                     '44' = 'r_9')
   criterios_pobreza <- 31:35
-  criterios_carencias <- 1:6
-  criterios_territorio <- 130:133
+  criterios_carencias <- list('19' = 'r_lb',
+                              '20' = 'r_lbm',
+                              '1758' = 'r_alim',
+                              '1759' = 'r_alim',
+                              '1760' = 'r_alim',
+                              '1761' = 'r_viv',
+                              '1762' = 'r_viv',
+                              '1763' = 'r_viv',
+                              '1764' = 'r_viv',
+                              '1765' = 'r_viv',
+                              '1766' = 'r_serv',
+                              '1767' = 'r_serv',
+                              '1768' = 'r_serv',
+                              '1769' = 'r_serv',
+                              '1770' = 'r_serv',
+                              '1771' = 'r_salud',
+                              '1772' = 'r_edu',
+                              '1773' = 'r_edu',
+                              '1774' = 'r_edu',
+                              '1775' = 'r_edu',
+                              '1776' = 'r_segsoc',
+                              '1777' = 'r_segsoc',
+                              '1778' = 'r_segsoc',
+                              '1779' = 'r_segsoc',
+                              '1780' = 'r_segsoc')
+
+
+  criterios_localidades <- 130:133
   criterios_zap <- 158:160
-  criterios_marginacion <- 134:145
+  criterios_marginacion_mun <- 134:139
+  criterios_marginacion_loc <- 140:145
+  criterios_territorios <- 22:29
 
   # Fetch data
   cuaps_criterios <- tbl(con, sql("select * from clean.cuaps_criterios")) %>%
@@ -106,29 +137,38 @@ if(length(opt) > 1){
                                                                    !!! criterios_grupos_vulnerables),
                                atiende_pobreza = filter_values(csc_configuracion_foc,
                                                                criterios_pobreza),
-                               atiende_carencias = filter_values(csc_configuracion_foc,
-                                                                 criterios_carencias),
-                               atiende_territorio = filter_values(csc_configuracion_foc,
-                                                                  criterios_territorio),
+                               atiende_carencias = recode(filter_values(csc_configuracion_foc,
+                                                                 names(criterios_carencias)),
+                                                          !!! criterios_carencias),
+                               atiende_localidades = filter_values(csc_configuracion_foc,
+                                                                  criterios_localidades),
                                atiende_zap = filter_values(csc_configuracion_foc,
                                                            criterios_zap),
-                               atiende_marginacion = filter_values(csc_configuracion_foc,
-                                                                   criterios_marginacion))
+                               atiende_marginacion_mun = filter_values(csc_configuracion_foc,
+                                                                   criterios_marginacion_mun),
+                               atiende_marginacion_loc = filter_values(csc_configuracion_foc,
+                                                                   criterios_marginacion_loc),
+                               atiende_territorios = filter_values(padre,
+                                                                   criterios_territorios))
 
 
   varnames <- c('atiende_grupos_vulnerables', 'atiende_pobreza',
-                          'atiende_carencias', 'atiende_territorios', 'atiende_zap',
-                          'atiende_marginacion')
+                          'atiende_carencias', 'atiende_localidades', 'atiende_zap',
+                          'atiende_marginacion_mun', 'atiende_marginacion_loc',
+                          'atiende_territorios')
 
   plotnames <- c('s04_grupos_vulnerables', 's05_pobreza', 's07_carencias',
-                           's08_territorios', 's08_zap', 's08_marginacion')
+                           's08_localidades', 's08_zap', 's08_marginacion_mun',
+                           's08_marginacion_loc', 's08_territorios')
 
-  subsets <- list('atiende_grupos_vulnerables' = criterios_grupos_vulnerables,
+  subsets <- list('atiende_grupos_vulnerables' = unlist(criterios_grupos_vulnerables),
                   'atiende_pobreza' = criterios_pobreza,
-                  'atiende_carencias' = criterios_carencias,
-                  'atiende_territorios' = criterios_territorios,
+                  'atiende_carencias' = unlist(criterios_carencias),
+                  'atiende_localidades' = criterios_localidades,
                   'atiende_zap' = criterios_zap,
-                  'atiende_marginacion' = criterios_marginacion)
+                  'atiende_marginacion_mun' = criterios_marginacion_mun,
+                  'atiende_marginacion_loc' = criterios_marginacion_loc,
+                  'atiende_territorios' = criterios_territorios)
 
   names_df <- create_varnames_data(cuaps_criterios, varnames, plotnames, subsets)
 

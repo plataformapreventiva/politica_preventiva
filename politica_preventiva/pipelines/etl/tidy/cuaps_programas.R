@@ -68,15 +68,20 @@ if(length(opt) > 1){
     password = POSTGRES_PASSWORD
   )
 
+  dependencias_federales = c('06', '08', '10', '11', '12',
+                             '14', '15', '16', '48', '50', '1900')
 
   cuaps_programas <- tbl(con,  sql('select * from clean.cuaps_programas')) %>%
-                         collect()
+                         collect() %>%
+                         mutate(dependencia = filter_values(chr_cve_dependencia,
+                                                            dependencias_federales))
 
 
-  varnames <- c('orden_gob', 'cve_entidad_federativa', 'der_social')
-  plotnames <- c('s01_ordengob', 's02_estados', 's03_derechos')
+  varnames <- c('orden_gob', 'cve_entidad_federativa', 'dependencia', 'der_social')
+  plotnames <- c('s01_ordengob', 's02_estados', 's03_dependencias', 's04_derechos')
   subsets <- list('orden_gob' = 1:3,
                 'cve_entidad_federativa' = as.character(1:32),
+                'dependencia' = dependencias_federales,
                 'der_social' = 1)
 
   names_df <- create_varnames_data(cuaps_programas, varnames, plotnames, subsets) %>%
