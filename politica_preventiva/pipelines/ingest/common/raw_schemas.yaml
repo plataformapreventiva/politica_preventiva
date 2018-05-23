@@ -697,7 +697,7 @@ cuaps_componentes:
     INDEX: cuaps_folio
     SCHEMA:
     - cuaps_folio: TEXT
-    - csc_estatus_cuaps_fk: INT
+    - csc_estatus_cuaps_fk: TEXT
     - chr_nombre_programa_cuaps: TEXT
     - tiene_componentes: Integer
     - id_componente: Integer
@@ -722,7 +722,7 @@ cuaps_componentes:
     - period_apoyo_cod: Integer
     - period_apoyo: TEXT
     - otro_period_apoyo: TEXT
-    - monto_apoyo_otor: BIGINT
+    - monto_apoyo_otor: TEXT
     - period_monto_cod: Integer
     - period_monto: TEXT
     - indic_a: INT
@@ -826,7 +826,7 @@ cuaps_criterios:
     INDEX: cuaps_folio
     SCHEMA:
     - cuaps_folio: TEXT
-    - csc_estatus_cuaps_fk: INT
+    - csc_estatus_cuaps_fk: TEXT
     - chr_nombre_programa_cuaps: TEXT
     - id_componente: Integer
     - nombre_componente: TEXT
@@ -871,10 +871,10 @@ cuaps_programas:
     INDEX: cuaps_folio
     SCHEMA:
     - cuaps_folio: TEXT
-    - fh_levantamiento: TIMESTAMP
-    - fh_fin_levantamiento: TIMESTAMP
+    - fh_levantamiento: TEXT
+    - fh_fin_levantamiento: TEXT
     - chr_usuario: TEXT
-    - csc_estatus_cuaps_fk: Integer
+    - csc_estatus_cuaps_fk: TEXT
     - chr_nombre_programa_cuaps: TEXT
     - chr_clave_prespupuestal_pro: TEXT
     - chr_descripcion_dependencia: TEXT
@@ -887,28 +887,28 @@ cuaps_programas:
     - tua_primer_ap: TEXT
     - tua_segundo_ap: TEXT
     - tua_cargo: TEXT
-    - tua_tel: BIGINT
+    - tua_tel: TEXT
     - tua_ext: Integer
     - tua_correo: TEXT
     - rp_nombre: TEXT
     - rp_primer_ap: TEXT
     - rp_segundo_ap: TEXT
     - rp_cargo: TEXT
-    - rp_tel: BIGINT
+    - rp_tel: TEXT
     - rp_ext: Integer
     - rp_correo: TEXT
     - ep_nombre: TEXT
     - ep_primer_ap: TEXT
     - ep_segundo_ap: TEXT
     - ep_cargo: TEXT
-    - ep_tel: BIGINT
+    - ep_tel: TEXT
     - ep_ext: Integer
     - ep_correo: TEXT
     - anio_inicio_prog: Integer
-    - doc_norma: INT
+    - doc_norma: Integer
     - doc_supweb: INT
     - nom_doc_norma: TEXT
-    - sitio_web: INT
+    - sitio_web: Integer
     - chr_doc_norma: TEXT
     - csc_archivo: TEXT
     - sitio_web_esp: TEXT
@@ -920,6 +920,10 @@ cuaps_programas:
     - obj_esp_prog_5: TEXT
     - obj_esp_prog_6: TEXT
     - obj_esp_prog_7: TEXT
+    - obj_esp_prog_8: TEXT
+    - obj_esp_prog_9: TEXT
+    - obj_esp_prog_10: TEXT
+    - obj_esp_prog_11: TEXT
     - pob_obj_prog: TEXT
     - cobertura_geo: TEXT
     - cve_entidad_federativa: Integer
@@ -930,23 +934,31 @@ cuaps_programas:
     - pob_poten_um: TEXT
     - num_pob_objet: Integer
     - pob_objet_um: TEXT
-    - pob_aten_efa: Integer
+    - pob_aten_efa: TEXT
     - pob_aten_efa_um: TEXT
-    - pres_anter: BIGINT
-    - pres_vigen: BIGINT
+    - pres_anter: FLOAT
+    - pres_vigen: FLOAT
     - coparticipacion: Integer
-    - cop_tipart_1: TEXT
-    - cop_tipart_2: TEXT
-    - cop_tipart_3: TEXT
-    - cop_npart_1: TEXT
-    - cop_npart_2: TEXT
-    - cop_npart_3: TEXT
-    - cop_ordgob_1: TEXT
-    - cop_ordgob_2: TEXT
-    - cop_ordgob_3: TEXT
     - cop_tipint_1: TEXT
     - cop_tipint_2: TEXT
     - cop_tipint_3: TEXT
+    - cop_tipint_4: TEXT
+    - cop_tipint_5: TEXT
+    - cop_npart_1: TEXT
+    - cop_npart_2: TEXT
+    - cop_npart_3: TEXT
+    - cop_npart_4: TEXT
+    - cop_npart_5: TEXT
+    - cop_ordgob_1: TEXT
+    - cop_ordgob_2: TEXT
+    - cop_ordgob_3: TEXT
+    - cop_ordgob_4: TEXT
+    - cop_ordgob_5: TEXT
+    - cop_tipart_1: TEXT
+    - cop_tipart_2: TEXT
+    - cop_tipart_3: TEXT
+    - cop_tipart_4: TEXT
+    - cop_tipart_5: TEXT
     - der_social_edu: INT
     - der_social_sal: INT
     - der_social_alim: INT
@@ -1011,6 +1023,10 @@ cuaps_programas:
   - obj_esp_prog_5
   - obj_esp_prog_6
   - obj_esp_prog_7
+  - obj_esp_prog_8
+  - obj_esp_prog_9
+  - obj_esp_prog_10
+  - obj_esp_prog_11
   - pob_obj_prog
   - cobertura_geo
   - cve_entidad_federativa
@@ -1026,18 +1042,26 @@ cuaps_programas:
   - pres_anter
   - pres_vigen
   - coparticipacion
-  - cop_tipart_1
-  - cop_tipart_2
-  - cop_tipart_3
-  - cop_npart_1
-  - cop_npart_2
-  - cop_npart_3
-  - cop_ordgob_1
-  - cop_ordgob_2
-  - cop_ordgob_3
   - cop_tipint_1
   - cop_tipint_2
   - cop_tipint_3
+  - cop_tipint_4
+  - cop_tipint_5
+  - cop_npart_1
+  - cop_npart_2
+  - cop_npart_3
+  - cop_npart_4
+  - cop_npart_5
+  - cop_ordgob_1
+  - cop_ordgob_2
+  - cop_ordgob_3
+  - cop_ordgob_4
+  - cop_ordgob_5
+  - cop_tipart_1
+  - cop_tipart_2
+  - cop_tipart_3
+  - cop_tipart_4
+  - cop_tipart_5
   - der_social_edu
   - der_social_sal
   - der_social_alim
@@ -1660,7 +1684,7 @@ cuis_historico_persona:
   - id_pers_padp
 cuis_historico_se_integrante:
   LUIGI:
-    INDEX: llave_hogar_h 
+    INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
     - c_integrante: Integer
@@ -1881,7 +1905,7 @@ cuis_historico_se_integrante:
   - csc_hogar
 cuis_historico_se_vivienda:
   LUIGI:
-    INDEX: llave_hogar_h 
+    INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
     - c_salud_hoga: Integer
@@ -2146,7 +2170,7 @@ cuis_historico_se_vivienda:
   - csc_hogar
 cuis_historico_visita_encuestador:
   LUIGI:
-    INDEX: llave_hogar_h 
+    INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
     - visita: TEXT
@@ -2195,7 +2219,7 @@ cuis_historico_visita_encuestador:
   - csc_hogar
 cuis_historico_vivienda:
   LUIGI:
-    INDEX: llave_hogar_h 
+    INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
     - c_tipo_viv: Integer
