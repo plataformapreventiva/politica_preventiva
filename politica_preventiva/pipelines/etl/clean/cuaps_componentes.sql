@@ -78,5 +78,4 @@ create table clean.cuaps_componentes as
         data_date
     from raw.cuaps_componentes
     join temp_tipo_apoyos using (tipo_pob_apo_cod)
-    where csc_estatus_cuaps_fk = 1
 ;

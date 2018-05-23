@@ -1,9 +1,12 @@
 #!/usr/bin/env Rscript
-library(optparse)
-library(tidyverse)
-library(dbplyr)
-library(stringr)
 library(DBI)
+library(dbplyr)
+library(dplyr)
+library(optparse)
+library(purrr)
+library(rlang)
+library(stringr)
+library(tidyr)
 source("pipelines/etl/tools/tidy_tools.R")
 
 option_list = list(

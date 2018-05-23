@@ -61,5 +61,4 @@ create table clean.cuaps_programas as
         actualizacion_sedesol,
         data_date
     from raw.cuaps_programas
-    where csc_estatus_cuaps_fk=1
 ;
