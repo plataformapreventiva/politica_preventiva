@@ -220,7 +220,7 @@ def big_file_to_s3( filename, s3_name):
         print("Uploading file:".format(filename))
 
         tc = boto3.s3.transfer.TransferConfig()
-        t = boto3.s3.transfer.S3Transfer( client=s3_client, 
+        t = boto3.s3.transfer.S3Transfer( client=s3_client,
                                          config=tc )
         t.upload_file( filename, 'dpa-plataforma-preventiva', s3_name)
 
