@@ -83,7 +83,7 @@ if(length(opt) > 1){
 
 
   varnames <- c('c_indic', 'tipo_apoyo_', 'tipo_pob_apo_cod', 'apoyo_gen_padron')
-  plotnames <- c('s05_contribuciones', 's09_tipo_apoyos', 's09_tipo_poblaciones', 's10_padrones')
+  plotnames <- c('s05_indicadores', 's06_1_tipo_apoyos', 's06_2_tipo_poblaciones', 's07_padrones')
   subsets <- list('c_indic' = 1,
                   'tipo_apoyo_' = 1,
                   'tipo_pob_apo_cod' = 1:6,

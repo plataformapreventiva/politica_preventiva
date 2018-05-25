@@ -157,13 +157,13 @@ if(length(opt) > 1){
                           'atiende_marginacion_mun', 'atiende_marginacion_loc',
                           'atiende_territorios')
 
-  plotnames <- c('s04_grupos_vulnerables', 's05_pobreza', 's07_carencias',
-                           's08_localidades', 's08_zap', 's08_marginacion_mun',
-                           's08_marginacion_loc', 's08_territorios')
+  plotnames <- c('s09_grupos_vulnerables', 's08_pobreza', 's10_carencias',
+                           's11_2_localidades', 's11_4_zap', 's11_3_marginacion_mun',
+                           's11_3_marginacion_loc', 's11_1_territorios')
 
-  subsets <- list('atiende_grupos_vulnerables' = unlist(criterios_grupos_vulnerables),
+  subsets <- list('atiende_grupos_vulnerables' = unique(unlist(criterios_grupos_vulnerables)),
                   'atiende_pobreza' = criterios_pobreza,
-                  'atiende_carencias' = unlist(criterios_carencias),
+                  'atiende_carencias' = unique(unlist(criterios_carencias)),
                   'atiende_localidades' = criterios_localidades,
                   'atiende_zap' = criterios_zap,
                   'atiende_marginacion_mun' = criterios_marginacion_mun,

@@ -68,8 +68,8 @@ if(length(opt) > 1){
     password = POSTGRES_PASSWORD
   )
 
-  dependencias_federales = c('06', '08', '10', '11', '12',
-                             '14', '15', '16', '48', '50', '1900')
+  dependencias_federales = c('06', '08', '10', '11', '12', '14',
+                             '15', '16', '20', '48', '50', '1900')
 
   cuaps_programas <- tbl(con,  sql('select * from clean.cuaps_programas')) %>%
                          collect() %>%
@@ -78,7 +78,7 @@ if(length(opt) > 1){
 
 
   varnames <- c('orden_gob', 'cve_entidad_federativa', 'dependencia', 'der_social')
-  plotnames <- c('s01_ordengob', 's02_estados', 's03_dependencias', 's04_derechos')
+  plotnames <- c('s01_orden_gob', 's02_estados', 's03_dependencias', 's04_derechos')
   subsets <- list('orden_gob' = 1:3,
                 'cve_entidad_federativa' = as.character(1:32),
                 'dependencia' = dependencias_federales,
@@ -87,11 +87,19 @@ if(length(opt) > 1){
   names_df <- create_varnames_data(cuaps_programas, varnames, plotnames, subsets) %>%
                 filter(varname != 'der_social_ning')
 
+  coneval_added <- tibble(variable = 'coneval_orden_gob',
+                          plot = 's01_ordengob',
+                          categoria = as.character(1:3))
 
   cuaps_programas_tidy <- map_df(1:nrow(names_df), function(x) tidy_count(data = cuaps_programas,
                                                      count_var = names_df$varname[x],
                                                      plotname = names_df$plotname[x],
-                                                     subset = names_df$subset[[x]]))
+                                                     subset = names_df$subset[[x]])) %>%
+                            filter((!variable %in% c('chr_descripcion_dependencia', 'chr_cve_dependencia'))) %>%
+                            bind_rows(coneval_added) %>%
+                            replace_na(list(actualizacion_sedesol = pull_filler(cuaps_programas, 'actualizacion_sedesol'),
+                                            data_date = pull_filler(cuaps_programas, 'data_date')))
+
 
   copy_to(con, cuaps_programas_tidy,
           dbplyr::in_schema('tidy', 'cuaps_programas'),
@@ -101,3 +109,4 @@ if(length(opt) > 1){
   # disconnect from the database
   dbDisconnect(con)
 }
+
