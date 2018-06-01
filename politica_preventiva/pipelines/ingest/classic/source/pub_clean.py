@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from __future__ import print_function
 import argparse
 import boto3
@@ -50,13 +51,17 @@ def clean_column_names(x):
 
 
 def to_age(birthdate, anio, mes_corresp):
-    birthdate_2 = str(clean_string(birthdate))
-    anio_2 = int(clean_string(anio))
-    mes_corresp_2 = int(clean_string(mes_corresp))
-    today = datetime.date(year=anio_2, day=1, month=mes_corresp_2)
+    """
+    This function gets the actual age given the birthdate
+    and year to compare
+    """
+    birthdate_clean = str(clean_string(birthdate))
+    anio_clean = int(clean_string(anio))
+    mes_corresp_clean = int(clean_string(mes_corresp))
+    today = datetime.date(year=anio_clean, day=1, month=mes_corresp_clean)
 
     try:
-        born = datetime.datetime.strptime(birthdate_2, '%Y%m%d')
+        born = datetime.datetime.strptime(birthdate_clean, '%Y%m%d')
         age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     except:
         age = None
@@ -65,21 +70,27 @@ def to_age(birthdate, anio, mes_corresp):
 
 
 def parse_age(age):
+    """
+    Generate age categories
+    """
     try:
         if int(age) >= 60:
-            categoria = 'Adulto Mayor'
+            age_category = 'Adulto Mayor'
         elif int(age) <= 14:
-            categoria = 'Infante'
+            age_category = 'Infante'
         elif int(age) > 14:
-            categoria = 'Adulto'
+            age_category = 'Adulto'
         else:
-            categoria = None
+            age_category = None
     except:
-        categoria = None
-    return categoria
+        age_category = None
+    return age_category
 
 
 def clean_cve_muni(edo, muni):
+    """
+    Clean municipality key string
+    """
     edo = clean_string(edo)
     muni = clean_string(muni)
     try:
@@ -95,17 +106,24 @@ def clean_cve_muni(edo, muni):
 
 
 def clean_loc(loc):
+    """
+    Clean locality key string
+    """
     loc = clean_string(loc)
     try:
         loc_int = int(loc)
     except:
         return None
+
     if (loc_int < 9999) & (loc_int > 0):
         cve_loc = str(loc_int).zfill(4)
         return cve_loc
 
 
 def clean_cve_edo(edo):
+    """
+    Clean state key string
+    """
     edo = clean_string(edo)
     try:
         edo_int = int(edo)
@@ -118,6 +136,11 @@ def clean_cve_edo(edo):
 
 
 def clean_gender(gender):
+    """
+    Clean string gender and returns
+       - H for men
+       - M for woman
+    """
     try:
         if re.search('H', gender):
             gen = "H"
@@ -131,6 +154,12 @@ def clean_gender(gender):
 
 
 def clean_origin(nb_origin):
+    """
+    Clean program origin and returns
+        - F for federal level
+        - E for state level
+        - M for municipality level
+    """
     try:
         if re.search('F', nb_origin):
             origin = 'F'
@@ -155,6 +184,9 @@ def clean_integer(raw_int):
 
 
 def clean_mes(mes):
+    """
+    Clean month variables
+    """
     mes = clean_string(mes)
     try:
         clean_mes = int(mes)
@@ -165,6 +197,9 @@ def clean_mes(mes):
 
 
 def gen_mes_corresp(periodo):
+    """
+    Generate correspondance month
+    """
     periodo = clean_string(periodo)
     mes = periodo[2]
     try:

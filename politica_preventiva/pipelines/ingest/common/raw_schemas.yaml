@@ -3104,7 +3104,7 @@ enigh_viviendas:
   LUIGI:
     INDEX: folioviv
     SCHEMA:
-    - folioviv: TEXT
+    - folioviv: BIGINT
     - tipo_viv: TEXT
     - mat_pared: TEXT
     - mat_techos: TEXT
