@@ -1660,7 +1660,7 @@ cuis_historico_persona:
   - id_pers_padp
 cuis_historico_se_integrante:
   LUIGI:
-    INDEX: llave_hogar_h 
+    INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
     - c_integrante: Integer
@@ -1881,7 +1881,7 @@ cuis_historico_se_integrante:
   - csc_hogar
 cuis_historico_se_vivienda:
   LUIGI:
-    INDEX: llave_hogar_h 
+    INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
     - c_salud_hoga: Integer
@@ -2146,7 +2146,7 @@ cuis_historico_se_vivienda:
   - csc_hogar
 cuis_historico_visita_encuestador:
   LUIGI:
-    INDEX: llave_hogar_h 
+    INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
     - visita: TEXT
@@ -2195,7 +2195,7 @@ cuis_historico_visita_encuestador:
   - csc_hogar
 cuis_historico_vivienda:
   LUIGI:
-    INDEX: llave_hogar_h 
+    INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
     - c_tipo_viv: Integer
@@ -2222,17 +2222,31 @@ cuis_historico_vivienda:
   - csc_hogar
 declaratoria:
   LUIGI:
-    INDEX: cve_mun
+    INDEX: fecha_publicacion
     SCHEMA:
-    - nom_mun: TEXT
-    - nom_ent: TEXT
-    - cve_mun: TEXT
+    - estado: TEXT
+    - clave_completa: Integer
+    - municipio: TEXT
+    - fecha_publicacion: Date
+    - fecha_inicio: Date
+    - fecha_termino: Date
+    - tipo_declaratoria: TEXT
+    - tipo_fenomeno: TEXT
+    - clasificacion: TEXT
+    - observaciones: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
-  - nom_mun
-  - nom_ent
-  - clave_inegi
+  - estado
+  - clave_completa
+  - municipio
+  - fecha_publicacion
+  - fecha_inicio
+  - fecha_termino
+  - tipo_declaratoria
+  - tipo_fenomeno
+  - clasificacion
+  - observaciones
 defunciones_fetales:
   LUIGI:
     INDEX: mun_regis
