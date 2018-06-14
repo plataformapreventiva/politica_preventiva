@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import csv
 import logging
@@ -81,7 +82,7 @@ def header_test(path, task, common_path, suffix, new=True):
                 first_line = [remove_extra_chars(x)  for x in first_lines]
                 types = ['TEXT'] * len(first_line)
                 types.append("TIMESTAMP")
-                types.append('TEXT') 
+                types.append('TEXT')
 
         except:
             # Otro error aún no reconocido
@@ -101,7 +102,7 @@ def header_test(path, task, common_path, suffix, new=True):
                           "SCHEMA": initial_schema}}
         logger.info('After updating the raw_schemas.yaml with the column types' +\
                     '\n\t\t\t\t\t\t you must change the "new" flag to False in luigi.cfg.')
-        # TODO put logger 
+        # TODO put logger
         logger.critical('\n\n !!! Important message: \n ' +\
                  'Please specify the column types of the pipeline_task '+\
                  task + '\n see: pipelines/ingest/common/raw_schemas.yaml \n' +\
