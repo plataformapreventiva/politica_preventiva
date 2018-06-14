@@ -2899,6 +2899,261 @@ insp:
   - cantidad
   - unidad
   - estatus
+inventario_coneval_federales:
+  LUIGI:
+    INDEX: id_programa
+    SCHEMA:
+    - ciclo: Integer
+    - ramo: TEXT
+    - dependencia_acronimo: TEXT
+    - dependencia: TEXT
+    - unidad_responsable: TEXT
+    - coparticipacion: TEXT
+    - modalidad_presupuestal: TEXT
+    - clave_presupuestal: Integer
+    - nb_programa: TEXT
+    - nb_programa_acronimo: TEXT
+    - nb_programa_anterior: TEXT
+    - anio_inicio_prog: Integer
+    - anio_operacion_prog: Integer
+    - rp_programa: TEXT
+    - rp_tel: TEXT
+    - rp_correo: TEXT
+    - derecho_social_directo: TEXT
+    - derecho_social_indirecto: TEXT
+    - area_atencion: TEXT
+    - objetivo_programa: TEXT
+    - objetivo_programa_cat: TEXT
+    - necesidad_prioritaria: TEXT
+    - nom_doc_norma: TEXT
+    - sitio_web_esp: TEXT
+    - matriz_marco_logico: TEXT
+    - fin: TEXT
+    - proposito: TEXT
+    - componentes: TEXT
+    - actividades: TEXT
+    - meta_nacional: TEXT
+    - objetivo_meta_nacional: TEXT
+    - estrategia_alineada: TEXT
+    - programa_alineado: TEXT
+    - objetivo_alineado: TEXT
+    - indicador_alineado: TEXT
+    - programa_sexo: TEXT
+    - etapa_atencion: TEXT
+    - grupos_atencion: TEXT
+    - ambito_atencion: TEXT
+    - tipo_apoyo: TEXT
+    - tipo_apoyo_monetario: TEXT
+    - criterio_focalizacion: TEXT
+    - orden_gob: TEXT
+    - entidad_federativa: TEXT
+    - pob_poten_definida: TEXT
+    - pob_poten_um: TEXT
+    - pob_poten_num: TEXT
+    - pob_poten_def: TEXT
+    - pob_objet_definida: TEXT
+    - pob_objet_um: TEXT
+    - pob_objet_num: TEXT
+    - pob_objet_def: TEXT
+    - pob_aten_definida: TEXT
+    - pob_aten_um: TEXT
+    - pob_aten_num: TEXT
+    - pob_aten_def: TEXT
+    - cobertura_programa: TEXT
+    - eficiencia_programa: TEXT
+    - apoyo_gen_padron: TEXT
+    - actualiza_padron: TEXT
+    - programa_cuenta_cs: TEXT
+    - presupuesto_original: TEXT
+    - presupuesto_modificado: TEXT
+    - presupuesto_ejercido: TEXT
+    - programa_evaldis: TEXT
+    - nb_eval_dis: TEXT
+    - nb_dependencia_eval_dis: TEXT
+    - nb_coord_eval_dis: TEXT
+    - procedimiento_contr_eval_dis: TEXT
+    - costo_eval_dis: TEXT
+    - link_eval_dis: TEXT
+    - programa_eval_cr: TEXT
+    - nb_eval_cr: TEXT
+    - nb_dependencia_eval_cr: TEXT
+    - nb_coord_eval_cr: TEXT
+    - procedimiento_contr_eval_cr: TEXT
+    - costo_eval_cr: TEXT
+    - link_eval_cr: TEXT
+    - programa_eval_proc: TEXT
+    - nb_eval_proc: TEXT
+    - nb_dependencia_eval_proc: TEXT
+    - nb_coord_eval_proc: TEXT
+    - procedimiento_contr_eval_proc: TEXT
+    - costo_eval_proc: TEXT
+    - link_eval_proc: TEXT
+    - programa_eval_des: TEXT
+    - nb_eval_des: TEXT
+    - nb_dependencia_eval_des: TEXT
+    - nb_coord_eval_des: TEXT
+    - procedimiento_contr_eval_des: TEXT
+    - costo_eval_des: TEXT
+    - link_eval_des: TEXT
+    - programa_eval_ind: TEXT
+    - nb_eval_ind: TEXT
+    - nb_dependencia_eval_ind: TEXT
+    - nb_coord_eval_ind: TEXT
+    - procedimiento_contr_eval_ind: TEXT
+    - costo_eval_ind: TEXT
+    - link_eval_ind: TEXT
+    - programa_eval_imp: TEXT
+    - nb_eval_imp: TEXT
+    - nb_dependencia_eval_imp: TEXT
+    - nb_coord_eval_imp: TEXT
+    - procedimiento_contr_eval_imp: TEXT
+    - costo_eval_imp: TEXT
+    - link_eval_imp: TEXT
+    - metodologia_eval_imp: TEXT
+    - grupos_eval_imp: TEXT
+    - programa_eval_otra: TEXT
+    - nb_eval_otra: TEXT
+    - nb_dependencia_eval_otra: TEXT
+    - nb_coord_eval_otra: TEXT
+    - procedimiento_contr_eval_otra: TEXT
+    - costo_eval_otra: TEXT
+    - link_eval_otra: TEXT
+    - tecnicas_eval_otra: TEXT
+    - instr_eval_otra: TEXT
+    - link_datos_eval_otra: TEXT
+    - link_instr_eval_otra: TEXT
+    - link_metod_eval_otra: TEXT
+    - link_asm: TEXT
+    - tasa_informacion: FLOAT
+    - clave_programa: TEXT
+    - id_programa: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ciclo
+  - ramo
+  - dependencia_acronimo
+  - dependencia
+  - unidad_responsable
+  - coparticipacion
+  - modalidad_presupuestal
+  - clave_presupuestal
+  - nb_programa
+  - nb_programa_acronimo
+  - nb_programa_anterior
+  - anio_inicio_prog
+  - anio_operacion_prog
+  - rp_programa
+  - rp_tel
+  - rp_correo
+  - derecho_social_directo
+  - derecho_social_indirecto
+  - area_atencion
+  - objetivo_programa
+  - objetivo_programa_cat
+  - necesidad_prioritaria
+  - nom_doc_norma
+  - sitio_web_esp
+  - matriz_marco_logico
+  - fin
+  - proposito
+  - componentes
+  - actividades
+  - meta_nacional
+  - objetivo_meta_nacional
+  - estrategia_alineada
+  - programa_alineado
+  - objetivo_alineado
+  - indicador_alineado
+  - programa_sexo
+  - etapa_atencion
+  - grupos_atencion
+  - ambito_atencion
+  - tipo_apoyo
+  - tipo_apoyo_monetario
+  - criterio_focalizacion
+  - orden_gob
+  - entidad_federativa
+  - pob_poten_definida
+  - pob_poten_um
+  - pob_poten_num
+  - pob_poten_def
+  - pob_objet_definida
+  - pob_objet_um
+  - pob_objet_num
+  - pob_objet_def
+  - pob_aten_definida
+  - pob_aten_um
+  - pob_aten_num
+  - pob_aten_def
+  - cobertura_programa
+  - eficiencia_programa
+  - apoyo_gen_padron
+  - actualiza_padron
+  - programa_cuenta_cs
+  - presupuesto_original
+  - presupuesto_modificado
+  - presupuesto_ejercido
+  - programa_evaldis
+  - nb_eval_dis
+  - nb_dependencia_eval_dis
+  - nb_coord_eval_dis
+  - procedimiento_contr_eval_dis
+  - costo_eval_dis
+  - link_eval_dis
+  - programa_eval_cr
+  - nb_eval_cr
+  - nb_dependencia_eval_cr
+  - nb_coord_eval_cr
+  - procedimiento_contr_eval_cr
+  - costo_eval_cr
+  - link_eval_cr
+  - programa_eval_proc
+  - nb_eval_proc
+  - nb_dependencia_eval_proc
+  - nb_coord_eval_proc
+  - procedimiento_contr_eval_proc
+  - costo_eval_proc
+  - link_eval_proc
+  - programa_eval_des
+  - nb_eval_des
+  - nb_dependencia_eval_des
+  - nb_coord_eval_des
+  - procedimiento_contr_eval_des
+  - costo_eval_des
+  - link_eval_des
+  - programa_eval_ind
+  - nb_eval_ind
+  - nb_dependencia_eval_ind
+  - nb_coord_eval_ind
+  - procedimiento_contr_eval_ind
+  - costo_eval_ind
+  - link_eval_ind
+  - programa_eval_imp
+  - nb_eval_imp
+  - nb_dependencia_eval_imp
+  - nb_coord_eval_imp
+  - procedimiento_contr_eval_imp
+  - costo_eval_imp
+  - link_eval_imp
+  - metodologia_eval_imp
+  - grupos_eval_imp
+  - programa_eval_otra
+  - nb_eval_otra
+  - nb_dependencia_eval_otra
+  - nb_coord_eval_otra
+  - procedimiento_contr_eval_otra
+  - costo_eval_otra
+  - link_eval_otra
+  - tecnicas_eval_otra
+  - instr_eval_otra
+  - link_datos_eval_otra
+  - link_instr_eval_otra
+  - link_metod_eval_otra
+  - link_asm
+  - tasa_informacion
+  - clave_programa
+  - id_programa
 ipc_ciudades:
   LUIGI:
     INDEX: fecha
