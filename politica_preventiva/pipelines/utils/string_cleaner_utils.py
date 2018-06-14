@@ -10,7 +10,7 @@ import re
 
 def remove_extra_chars(x):
     x = remove_accent(x.lower().replace(" ",""))
-    x = re.sub('[%:*?<>\()]"','',x)
+    x = re.sub('[%:*¿?<>\()]"','',x)
     x += ""
     return x
 
