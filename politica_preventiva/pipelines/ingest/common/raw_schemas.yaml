@@ -2899,6 +2899,71 @@ insp:
   - cantidad
   - unidad
   - estatus
+inventario_coneval_estatales:
+  LUIGI:
+    INDEX: id_programa
+    SCHEMA:
+    - id_programa: Integer
+    - ciclo: Integer
+    - nb_ent: TEXT
+    - nb_programa: TEXT
+    - nb_dependencia_1: TEXT
+    - nb_dependencia_2: TEXT
+    - nb_dependencia_3: TEXT
+    - nb_dependencia_ent: TEXT
+    - objetivo: TEXT
+    - pres_egresos: TEXT
+    - cuenta_publica: TEXT
+    - informe_gob: TEXT
+    - doc_norma: TEXT
+    - anio_pub_norma: TEXT
+    - tipo_doc_norma: TEXT
+    - inventario_federal: TEXT
+    - der_social_directo: TEXT
+    - etapa_1: TEXT
+    - etapa_2: TEXT
+    - etapa_3: TEXT
+    - grupos_atencion_1: TEXT
+    - grupos_atencion_2: TEXT
+    - grupos_atencion_3: TEXT
+    - tipo_apoyo_1: TEXT
+    - tipo_apoyo_2: TEXT
+    - tipo_apoyo_3: TEXT
+    - apoyo_monetario: TEXT
+    - pres_original: TEXT
+    - pres_ejercido: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - id_programa
+  - ciclo
+  - nb_ent
+  - nb_programa
+  - nb_dependencia_1
+  - nb_dependencia_2
+  - nb_dependencia_3
+  - nb_dependencia_ent
+  - objetivo
+  - pres_egresos
+  - cuenta_publica
+  - informe_gob
+  - doc_norma
+  - anio_pub_norma
+  - tipo_doc_norma
+  - inventario_federal
+  - der_social_directo
+  - etapa_1
+  - etapa_2
+  - etapa_3
+  - grupos_atencion_1
+  - grupos_atencion_2
+  - grupos_atencion_3
+  - tipo_apoyo_1
+  - tipo_apoyo_2
+  - tipo_apoyo_3
+  - apoyo_monetario
+  - pres_original
+  - pres_ejercido
 inventario_coneval_federales:
   LUIGI:
     INDEX: id_programa
