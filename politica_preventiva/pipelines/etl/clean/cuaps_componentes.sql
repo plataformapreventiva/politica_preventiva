@@ -4,7 +4,7 @@ create temp table temp_tipo_apoyos
         tipo_pob_apo_txt TEXT
         )
 
-insert into temp_tipo_apoyos values 
+insert into temp_tipo_apoyos values
         (1, 'Personas')
         (2, 'Hogar')
         (3, 'Vivienda')
@@ -31,6 +31,6 @@ create table clean.cuaps_componentes as(
                 tipo_apoyo_*,
                 period_apoyo,
 
-        from raw.cuaps_componentes 
+        from raw.cuaps_componentes
         join temp_tipo_apoyos using (tipo_pob_apo)
 );
