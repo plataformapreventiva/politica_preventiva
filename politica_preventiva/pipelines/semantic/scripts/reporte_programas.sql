@@ -5,13 +5,17 @@
 
 drop table if exists semantic.reporte_programas cascade;
 
-CREATE TABLE semantic.reporte_programas_test AS (
+CREATE TABLE semantic.reporte_programas AS (
 SELECT * FROM (
     (SELECT * from tidy.cuaps_programas)
     UNION
     (SELECT * from tidy.cuaps_componentes)
     UNION
-    (SELECT * from tidy.cuaps_criterios)) AS cols
- RIGHT JOIN semantic.reporte_labels AS labels
- USING (plot, variable, categoria));
+    (SELECT * from tidy.cuaps_criterios)
+    UNION
+    (SELECT actualizacion_sedesol, data_date, categoria, valor, plot, variable, plot_prefix from tidy.inventario_coneval_federales)
+    UNION
+    (SELECT actualizacion_sedesol, data_date, categoria, valor, plot, variable, plot_prefix from tidy.inventario_coneval_estatales)) AS cols
+ LEFT JOIN semantic.reporte_programas_labels AS labels
+ USING (plot_prefix, variable, categoria));
 

@@ -83,8 +83,7 @@ tidy_count <- function(data, count_var, plotname, uncounted = c('actualizacion_s
                          data_date = pull_filler(data, 'data_date'))
 
   if ('orden_gob' %in% uncounted){
-    subset_values_filtered <- map_df(1:3, function(x) mutate(subset_values, orden_gob = as.character(x)))
-    tidy_count_data <- tidy_count_data %>% mutate_at(vars(orden_gob), as.character)
+    subset_values_filtered <- map_df(1:3, function(x) mutate(subset_values, orden_gob = x))
   } else {
       subset_values_filtered <- subset_values
     }
