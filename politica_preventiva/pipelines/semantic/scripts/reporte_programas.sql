@@ -15,7 +15,12 @@ SELECT * FROM (
     UNION
     (SELECT actualizacion_sedesol, data_date, categoria, valor, plot, variable, plot_prefix from tidy.inventario_coneval_federales)
     UNION
-    (SELECT actualizacion_sedesol, data_date, categoria, valor, plot, variable, plot_prefix from tidy.inventario_coneval_estatales)) AS cols
+    (SELECT actualizacion_sedesol, data_date, categoria, valor, plot, variable, plot_prefix from tidy.inventario_coneval_estatales)
+    UNION
+    (SELECT actualizacion_sedesol, data_date, categoria, sum(valor) as valor, plot_prefix as plot, variable, plot_prefix
+        from tidy.cuaps_programas
+        where plot_prefix = 's02_estados'
+        and variable = 'cve_ent',
+        group by categoria)) AS cols
  LEFT JOIN semantic.reporte_programas_labels AS labels
  USING (plot_prefix, variable, categoria));
-
