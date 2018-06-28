@@ -1,4 +1,4 @@
-n#!/bin/bash
+#!/bin/bash
 
 ##############################
 # CUIS VERIFICACION - ENCASEH
@@ -104,4 +104,4 @@ done
 
 cd $HOME"/Verif_dom/Anexo_DGIGAE_1432_2017"
 aws s3 cp ./temp s3://verificacion-raw/Verificaciones_2010_2014 --recursive
-  
+
