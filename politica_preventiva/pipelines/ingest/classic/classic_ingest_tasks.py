@@ -767,7 +767,7 @@ class earthquakes(TDockerTask):
         return " ".join(command_list)
 
 
-class prospera_verificacion(SourceIngestTask):
+class encaseh_familias(SourceIngestTask):
 
     def run(self):
 
@@ -778,7 +778,7 @@ class prospera_verificacion(SourceIngestTask):
         c_tipo_proc = extra_cmd[0]
 
         command_list = ['python', self.classic_task_scripts +
-                        "prospera_verificacion.py", 
+                        'encaseh_familias.py', 
                         '--data_date', self.data_date,
                         '--local_path', self.local_path, 
                         '--local_ingest_file',self.local_ingest_file,
