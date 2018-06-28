@@ -1,0 +1,97 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+wkt|geometría||||||2018-06-28 13:47:28.316180||2018-a
+cvegeo|Clave de la identificación geográfica|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clave de la identificación geográfica|2018-a
+vivtot|Total de viviendas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares habitadas, deshabitadas, de uso temporal y colectivas.
+Incluye a las viviendas particulares sin información de sus ocupantes."|2018-a
+tvivhab|Total de viviendas habitadas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares y colectivas habitadas.
+Incluye a las viviendas particulares sin información de sus ocupantes."|2018-a
+p_tvivhab|% Total de viviendas habitadas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir el total de viviendas habitadas entre el total de viviendas.|2018-a
+tvivpar|Total de viviendas particulares|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares habitadas, deshabitadas y de uso temporal.
+Incluye a las viviendas particulares sin información de ocupantes."|2018-a
+p_tvivpar|%Total de viviendas particulares|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas particulares entre el total de viviendas.|2018-a
+tvivparhab|Viviendas particulares habitadas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares habitadas, incluye viviendas móviles y refugios.
+Incluye a las viviendas particulares sin información de ocupantes."|2018-a
+pvivparhab|% Viviendas particulares habitadas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas particulares habitadas entre el total de viviendas particulares.|2018-a
+vivpar_des|Viviendas particulares deshabitadas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Viviendas particulares deshabitadas.|2018-a
+p_vivpar_d|% Viviendas particulares deshabitadas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas particulares deshabitadas entre el total de viviendas particulares.|2018-a
+vivpar_ut|Viviendas particulares de uso temporal|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Viviendas particulares de uso temporal.|2018-a
+p_vivpar_u|% Viviendas particulares de uso temporal|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas particulares de uso temporal entre el total de viviendas particulares.|2018-a
+vivnohab|Viviendas particulares no habitadas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Viviendas particulares deshabitadas y de uso temporal.|2018-a
+p_vivnohab|% Viviendas particulares de uso temporal|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas particulares no habitadasl entre el total de viviendas particulares.|2018-a
+vph_pisodt|Con recubrimiento en piso|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares habitadas con piso de cemento o firme, madera, mosaico u otro material. 
+Comprende las viviendas particulares con información de ocupantes.
+Excluye viviendas móviles y refugios."|2018-a
+p_v_pisodt|% Con recubrimiento en piso|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas con recubrimiento en piso entre las viviendas particulares habitadas.|2018-a
+vph_c_elec|Con energía eléctrica|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares habitadas que tienen luz eléctrica. 
+Comprende las viviendas particulares con información de ocupantes. Excluye viviendas móviles y refugios."|2018-a
+p_v_c_elec|% Con energía eléctrica|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas con energía eléctrica entre las viviendas particulares habitadas.|2018-a
+vph_aguadv|Con agua entubada|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares habitadas que tienen disponibilidad de agua entubada dentro de la vivienda, o fuera de la vivienda pero dentro del terreno. 
+Comprende las viviendas particulares con información de ocupantes. 
+Excluye viviendas móviles y refugios."|2018-a
+p_v_aguadv|% Con agua entubada|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas con agua entubada entre las viviendas particulares habitadas.|2018-a
+vph_drenaj|Con drenaje|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares habitadas que tienen drenaje conectado a la red pública, fosa séptica, barranca, grieta, río, lago o mar. 
+Comprende las viviendas particulares con información de ocupantes. 
+Excluye viviendas móviles y refugios. "|2018-a
+p_v_drenaj|% Con drenaje|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas con drenaje entre las viviendas particulares habitadas.|2018-a
+vph_excusa|Con servicio sanitario|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Viviendas particulares habitadas que tienen excusado, retrete, sanitario, letrina u hoyo negro. 
+Comprende las viviendas particulares con información de ocupantes. 
+Excluye viviendas móviles y refugios.  "|2018-a
+p_v_excusa|% Con servicio sanitario|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas con servicio sanitario entre las viviendas particulares habitadas.|2018-a
+v_3masocup|Viviendas con 3 o más ocupantes por cuarto|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Resultado de dividir el número de personas que residen en viviendas particulares habitadas entre el número de cuartos de esas viviendas y luego seleccionar a las viviendas particulares habitadas con 3 ó más ocupantes por cuarto. 
+Comprende las viviendas particulares con información de ocupantes. 
+Excluye viviendas móviles y refugios. "|2018-a
+p_3masocup|% Viviendas con 3 o más ocupantes por cuarto|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las viviendas con 3 o más ocupantes por cuarto entre las viviendas particulares habitadas.|2018-a
+proocup_c|Promedio de ocupantes por vivienda|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Resultado de dividir el número de personas que residen en viviendas particulares habitadas, entre el número de esas viviendas.|2018-a
+pobtot|Población total|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Total de personas que residen habitualmente en el país, entidad federativa, municipio, localidad y manzana. 
+Incluye la estimación del número de personas en viviendas particulares sin información de ocupantes. 
+Incluye a la población que no especificó su edad."|2018-a
+p0a14a|Población de 0 a 14 años|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Personas de 0 a 14 años de edad.|2018-a
+pp0a14a|% Población de 0 a 14 años|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las personas de 0 a 14 años de edad entre la población total.|2018-a
+p15a29a|Población de 15 a 29 años|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Personas de 15 a 29 años de edad.|2018-a
+pp15a29a|% Población de 15 a 29 años|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir  las personas de 15 a 29 años de edad entre la población total.|2018-a
+p30a59a|Población de 30 a 59 años|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Personas de 30 a 59 años de edad.|2018-a
+pp30a59a|% Población de 30 a 59 años|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las personas de 30 a 59 años de edad entre la población total.|2018-a
+p_60ymas|Población de 60 y más años|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Personas de 60 a 130 años de edad.|2018-a
+pp_60ymas|% Población de 60 y más años|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las personas de 60 a 130 años de edad entre la población total.|2018-a
+pcon_lim|Población con discapacidad|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Personas que tienen dificultad para el desempeño y/o realización de tareas en la vida cotidiana.|2018-a
+ppcon_lim|% Población con discapacidad|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Es el resultado de dividir las personas que tienen discapacidad entre la población total.|2018-a
+graproes|Promedio de escolaridad|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|"Resultado de dividir el monto de grados escolares aprobados por las personas de 15 a 130 años de edad entre las personas del mismo grupo de edad. 
+Excluye a las personas que no especificaron los grados aprobados."|2018-a
+acesoper_|Acceso de personas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que tienen acceso libre o restringido para personas. Libre en todas las vialidades  Restringido en alguna vialidad    Restringido en todas las vialidades No especificado Conjunto habitacional |2018-a
+acesoaut_|Acceso de automóviles|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que tienen acceso libre o restringido para automóviles. Libre en todas las vialidades  Restringido en alguna vialidad    Restringido en todas las vialidades No especificado Conjunto habitacional |2018-a
+recucall_|Pavimento de calles|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que cuentan con algún tipo de recubrimiento en las calles (asfalto, concreto, adoquines o piedras). Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+senaliza_|Letrero con nombre de la vialidad|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que cuentan con letrero con nombre.  Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+alumpub_|Alumbrado público|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que cuentan con alumbrado público. Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+telpub_|Teléfono público|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que cuentan con teléfono público. Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+banqueta_|Banqueta|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que cuentan con banqueta. Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+guarnici_|Guarnición|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que cuentan con guarnición. Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+arboles_|Plantas de ornato|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que cuentan con plantas de ornato. Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+rampas_|Rampa para silla de ruedas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que cuentan con rampa para silla de ruedas. Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+puessemi_|Presencia de comercio semifijo|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que presentan comercio semifijo. Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+puesambu_|Presencia de comercio ambulante|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clasificación de las manzanas de acuerdo a las vialidades que presentan comercio ambulante. Todas las vialidades Alguna vialidad Ninguna vialidad No especificado Conjunto habitacional |2018-a
+acesoper_c|Acceso de personas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+acesoaut_c|Acceso de automóviles|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+recucall_c|Pavimento de calles|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+senaliza_c|Letrero con nombre de la vialidad|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+alumpub_c|Alumbrado público|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+telpub_c|Teléfono público|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+banqueta_c|Banqueta|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+guarnici_c|Guarnición|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+arboles_c|Plantas de ornato|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+rampas_c|Rampa para silla de ruedas|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+puessemi_c|Presencia de comercio semifijo|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+puesambu_c|Presencia de comercio ambulante|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+ent|Clave de la Entidad Federativa|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clave de la Entidad Federativa|2018-a
+nom_ent|Nombre de la Entidad Federativa|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Nombre de la Entidad Federativa|2018-a
+mun|Clave del Municipio o Delegación|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clave del Municipio o Delegación|2018-a
+nom_mun|Nombre del Municipio|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Nombre del Municipio|2018-a
+loc|Clave de la Localidad|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clave de la Localidad|2018-a
+nom_loc|Nombre de la Localidad|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Nombre de la Localidad|2018-a
+ageb|AGEB|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clave del AGEB|2018-a
+mza|MANZANA|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|Clave de la Manzana|2018-a
+fecha_poli|Fecha de la última actualización del polígono |INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|2010 2012 2015 |2018-a
+fecha_inf|Fecha de la información |INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|2010 2012 2015 |2018-a
+fecha_ceu|Fecha del Cuestionario de Entorno Urbano |INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180|2010 2012 2015 |2018-a
+oid|Id – fuente|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+actualizacion_sedesol|fecha de actualización sedesol|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a
+data_date|fecha de dato|INEGI| http://www.beta.inegi.org.mx/app/mapa/inv/ |geometría|inventario vivenda||2018-06-28 13:47:28.316180||2018-a

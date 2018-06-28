@@ -3704,6 +3704,165 @@ insp:
   - cantidad
   - unidad
   - estatus
+inventario_vivienda_manzanas:
+  LUIGI:
+    INDEX: cvegeo
+    SCHEMA:
+    - wkt: TEXT
+    - cvegeo: TEXT
+    - vivtot: TEXT
+    - tvivhab: TEXT
+    - p_tvivhab: TEXT
+    - tvivpar: TEXT
+    - p_tvivpar: TEXT
+    - tvivparhab: TEXT
+    - pvivparhab: TEXT
+    - vivpar_des: TEXT
+    - p_vivpar_d: TEXT
+    - vivpar_ut: TEXT
+    - p_vivpar_u: TEXT
+    - vivnohab: TEXT
+    - p_vivnohab: TEXT
+    - vph_pisodt: TEXT
+    - p_v_pisodt: TEXT
+    - vph_c_elec: TEXT
+    - p_v_c_elec: TEXT
+    - vph_aguadv: TEXT
+    - p_v_aguadv: TEXT
+    - vph_drenaj: TEXT
+    - p_v_drenaj: TEXT
+    - vph_excusa: TEXT
+    - p_v_excusa: TEXT
+    - v_3masocup: TEXT
+    - p_3masocup: TEXT
+    - proocup_c: TEXT
+    - pobtot: TEXT
+    - p0a14a: TEXT
+    - pp0a14a: TEXT
+    - p15a29a: TEXT
+    - pp15a29a: TEXT
+    - p30a59a: TEXT
+    - pp30a59a: TEXT
+    - p_60ymas: TEXT
+    - pp_60ymas: TEXT
+    - pcon_lim: TEXT
+    - ppcon_lim: TEXT
+    - graproes: TEXT
+    - acesoper_: Integer
+    - acesoaut_: Integer
+    - recucall_: Integer
+    - senaliza_: Integer
+    - alumpub_: Integer
+    - telpub_: Integer
+    - banqueta_: Integer
+    - guarnici_: Integer
+    - arboles_: Integer
+    - rampas_: Integer
+    - puessemi_: Integer
+    - puesambu_: Integer
+    - acesoper_c: TEXT
+    - acesoaut_c: TEXT
+    - recucall_c: TEXT
+    - senaliza_c: TEXT
+    - alumpub_c: TEXT
+    - telpub_c: TEXT
+    - banqueta_c: TEXT
+    - guarnici_c: TEXT
+    - arboles_c: TEXT
+    - rampas_c: TEXT
+    - puessemi_c: TEXT
+    - puesambu_c: TEXT
+    - ent: Integer
+    - nom_ent: TEXT
+    - mun: Integer
+    - nom_mun: TEXT
+    - loc: Integer
+    - nom_loc: TEXT
+    - ageb: TEXT
+    - mza: Integer
+    - fecha_poli: Integer
+    - fecha_inf: Integer
+    - fecha_ceu: Integer
+    - oid: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - cvegeo
+  - vivtot
+  - tvivhab
+  - p_tvivhab
+  - tvivpar
+  - p_tvivpar
+  - tvivparhab
+  - pvivparhab
+  - vivpar_des
+  - p_vivpar_d
+  - vivpar_ut
+  - p_vivpar_u
+  - vivnohab
+  - p_vivnohab
+  - vph_pisodt
+  - p_v_pisodt
+  - vph_c_elec
+  - p_v_c_elec
+  - vph_aguadv
+  - p_v_aguadv
+  - vph_drenaj
+  - p_v_drenaj
+  - vph_excusa
+  - p_v_excusa
+  - v_3masocup
+  - p_3masocup
+  - proocup_c
+  - pobtot
+  - p0a14a
+  - pp0a14a
+  - p15a29a
+  - pp15a29a
+  - p30a59a
+  - pp30a59a
+  - p_60ymas
+  - pp_60ymas
+  - pcon_lim
+  - ppcon_lim
+  - graproes
+  - acesoper_
+  - acesoaut_
+  - recucall_
+  - senaliza_
+  - alumpub_
+  - telpub_
+  - banqueta_
+  - guarnici_
+  - arboles_
+  - rampas_
+  - puessemi_
+  - puesambu_
+  - acesoper_c
+  - acesoaut_c
+  - recucall_c
+  - senaliza_c
+  - alumpub_c
+  - telpub_c
+  - banqueta_c
+  - guarnici_c
+  - arboles_c
+  - rampas_c
+  - puessemi_c
+  - puesambu_c
+  - ent
+  - nom_ent
+  - mun
+  - nom_mun
+  - loc
+  - nom_loc
+  - ageb
+  - mza
+  - fecha_poli
+  - fecha_inf
+  - fecha_ceu
+  - oid
 ipc_ciudades:
   LUIGI:
     INDEX: fecha
