@@ -27,7 +27,8 @@ def check_server(host, port):
 @click.option('--workers', help='Número de workers en paralelo', type=click.INT, default=1)
 @click.option('--level', help='', default='ETLPipeline')
 @click.option('--server', help='', default='0.0.0.0')
-def main(server, port, luigi_cfg, workers, level):
+@click.option('--ptask', help='', default='auto')
+def main(server, port, luigi_cfg, workers, level, ptask):
     """
     Ejecuta el pipeline
     """
@@ -37,11 +38,11 @@ def main(server, port, luigi_cfg, workers, level):
                   '--scheduler-host', str(server),
                   '--scheduler-port', str(port),
                   'RunPipelines',
-                  # '--level', str(level),
                   # '--sleep', str(sleep),
                   '--workers', str(workers),
                   '--no-lock',
-                  '--level', str(level)]
+                  '--level', str(level),
+                  '--ptask', str(ptask)]
 
     # If the server is not running then it uses the local scheduler
     if not check_server(server, port):
