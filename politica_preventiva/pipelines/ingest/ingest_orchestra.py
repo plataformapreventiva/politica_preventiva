@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding: utf-8
 import ast
 import datetime
@@ -62,9 +63,12 @@ class IngestPipeline(luigi.WrapperTask):
     """
 
     current_date = luigi.DateParameter()
+    ptask = luigi.Parameter()
     pipelines = parse_cfg_list(conf.get("IngestPipeline", "pipelines"))
 
     def requires(self):
+        if self.ptask!='auto':
+            self.pipelines = [self.ptask]
 
         logger.info('Luigi is running the Ingest Pipeline on the date: {0}'.format(
                     self.current_date))

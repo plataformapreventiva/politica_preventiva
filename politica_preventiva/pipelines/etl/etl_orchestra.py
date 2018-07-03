@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding: utf-8
 
 import datetime
@@ -46,12 +47,16 @@ class ETLPipeline(luigi.WrapperTask):
 
     current_date = luigi.DateParameter()
     pipelines = luigi.parameter.ListParameter()
+    ptask = luigi.Parameter()
     client = S3Client()
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     historical = luigi.Parameter('DEFAULT')
 
     def requires(self):
+        if self.ptask!='auto':
+            self.pipelines = (self.ptask,)
+
         logger.info('Running the following pipelines: {0}'.format(self.pipelines))
         # loop through pipeline tasks and data dates
         set_pipelines = [(pipeline_task, final_dates(self.historical,
