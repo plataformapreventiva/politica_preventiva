@@ -74,32 +74,47 @@ if(length(opt) > 1){
   cuaps_programas <- tbl(con,  sql('select * from clean.cuaps_programas')) %>%
                          collect() %>%
                          mutate(dependencia = filter_values(chr_cve_dependencia,
-                                                            dependencias_federales))
+                                                            dependencias_federales),
+                                cve_entidad_federativa = str_pad(cve_entidad_federativa, 2, pad = '0')) %>%
+                         rename(cve_ent = cve_entidad_federativa)
 
 
-  varnames <- c('orden_gob', 'cve_entidad_federativa', 'dependencia', 'der_social')
-  plotnames <- c('s01_orden_gob', 's02_estados', 's03_dependencias', 's04_derechos')
+  varnames <- c('orden_gob', 'cve_ent', 'dependencia', 'der_social')
+  plotnames <- c('s01_orden_gob', 's02_estados', 's03_dependencias-federal', 's04_derechos')
   subsets <- list('orden_gob' = 1:3,
-                'cve_entidad_federativa' = as.character(1:32),
+                'cve_ent' = str_pad(as.character(1:32), 2, pad = '0'),
                 'dependencia' = dependencias_federales,
                 'der_social' = 1)
 
   names_df <- create_varnames_data(cuaps_programas, varnames, plotnames, subsets) %>%
                 filter(varname != 'der_social_ning')
 
-  coneval_added <- tibble(variable = 'coneval_orden_gob',
-                          plot = 's01_ordengob',
-                          categoria = as.character(1:3))
+  filtered_names_df <- names_df %>%
+                        filter(!(varname %in% c('orden_gob', 'dependencia')), plotname != 's03_dependencias-federal')
 
-  cuaps_programas_tidy <- map_df(1:nrow(names_df), function(x) tidy_count(data = cuaps_programas,
+  filtered_tidy <- map_df(1:nrow(filtered_names_df), function(x) tidy_count(data = cuaps_programas,
+                                                      count_var = filtered_names_df$varname[x],
+                                                      plotname = filtered_names_df$plotname[x],
+                                                      uncounted = c('actualizacion_sedesol', 'data_date', 'orden_gob'),
+                                                      subset = filtered_names_df$subset[[x]])) %>%
+                            filter(!(variable %in% c('chr_descripcion_dependencia', 'chr_cve_dependencia')), !is.na(orden_gob), !(plot %in% c('s02_estados-municipal', 's02_estados-federal'))) %>%
+                            mutate(plot = glue::glue('{plot}-{recode(orden_gob, "1"="federal", "2"="estatal", "3"="municipal")}')) %>%
+                            select(-orden_gob)
+
+  unfiltered_tidy <- map_df(1:nrow(names_df), function(x) tidy_count(data = cuaps_programas,
                                                      count_var = names_df$varname[x],
                                                      plotname = names_df$plotname[x],
                                                      subset = names_df$subset[[x]])) %>%
                             filter((!variable %in% c('chr_descripcion_dependencia', 'chr_cve_dependencia'))) %>%
-                            bind_rows(coneval_added) %>%
+                            bind_rows(tibble(variable = 'orden_gob',
+                                             plot = 's01_orden_gob',
+                                             categoria = '0',
+                                             valor = nrow(cuaps_programas))) %>%
                             replace_na(list(actualizacion_sedesol = pull_filler(cuaps_programas, 'actualizacion_sedesol'),
                                             data_date = pull_filler(cuaps_programas, 'data_date')))
 
+  cuaps_programas_tidy <- bind_rows(filtered_tidy, unfiltered_tidy) %>%
+                            mutate(plot_prefix = gsub('(s.*)(-.*)', '\\1', plot))
 
   copy_to(con, cuaps_programas_tidy,
           dbplyr::in_schema('tidy', 'cuaps_programas'),
@@ -109,4 +124,5 @@ if(length(opt) > 1){
   # disconnect from the database
   dbDisconnect(con)
 }
+
 

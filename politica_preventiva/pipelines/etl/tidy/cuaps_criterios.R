@@ -2,6 +2,7 @@
 library(optparse)
 library(dbplyr)
 library(rlang)
+library(glue)
 library(dplyr)
 library(purrr)
 library(stringr)
@@ -128,6 +129,8 @@ if(length(opt) > 1){
   criterios_territorios <- 22:29
 
   # Fetch data
+  orden_gob_df <- tbl(con, sql('select cuaps_folio, orden_gob from clean.cuaps_programas'))
+
   cuaps_criterios <- tbl(con, sql("select * from clean.cuaps_criterios")) %>%
       collect()
 
@@ -140,42 +143,39 @@ if(length(opt) > 1){
                                atiende_carencias = recode(filter_values(csc_configuracion_foc,
                                                                  names(criterios_carencias)),
                                                           !!! criterios_carencias),
-                               atiende_localidades = filter_values(csc_configuracion_foc,
-                                                                  criterios_localidades),
-                               atiende_zap = filter_values(csc_configuracion_foc,
-                                                           criterios_zap),
-                               atiende_marginacion_mun = filter_values(csc_configuracion_foc,
-                                                                   criterios_marginacion_mun),
-                               atiende_marginacion_loc = filter_values(csc_configuracion_foc,
-                                                                   criterios_marginacion_loc),
                                atiende_territorios = filter_values(padre,
-                                                                   criterios_territorios))
+                                                                   criterios_territorios)) %>%
+                      left_join(orden_gob_df, copy = TRUE)
 
 
   varnames <- c('atiende_grupos_vulnerables', 'atiende_pobreza',
-                          'atiende_carencias', 'atiende_localidades', 'atiende_zap',
-                          'atiende_marginacion_mun', 'atiende_marginacion_loc',
-                          'atiende_territorios')
+                          'atiende_carencias', 'atiende_territorios')
 
-  plotnames <- c('s09_grupos_vulnerables', 's08_pobreza', 's10_carencias',
-                           's11_2_localidades', 's11_4_zap', 's11_3_marginacion_mun',
-                           's11_3_marginacion_loc', 's11_1_territorios')
+  plotnames <- c('s09_grupos_vulnerables', 's08_pobreza', 's10_carencias', 's11_1_territorios')
 
   subsets <- list('atiende_grupos_vulnerables' = unique(unlist(criterios_grupos_vulnerables)),
                   'atiende_pobreza' = criterios_pobreza,
                   'atiende_carencias' = unique(unlist(criterios_carencias)),
-                  'atiende_localidades' = criterios_localidades,
-                  'atiende_zap' = criterios_zap,
-                  'atiende_marginacion_mun' = criterios_marginacion_mun,
-                  'atiende_marginacion_loc' = criterios_marginacion_loc,
                   'atiende_territorios' = criterios_territorios)
 
   names_df <- create_varnames_data(cuaps_criterios, varnames, plotnames, subsets)
 
-  cuaps_criterios_tidy <- map_df(1:nrow(names_df), function(x) tidy_count(data = cuaps_criterios,
+  filtered_tidy <- map_df(1:nrow(names_df), function(x) tidy_count(data = cuaps_criterios,
+                                                                  count_var = names_df$varname[x],
+                                                                  plotname = names_df$plotname[x],
+                                                                  uncounted = c('actualizacion_sedesol', 'data_date', 'orden_gob'),
+                                                                  subset = names_df$subset[[x]])) %>%
+  filter(!is.na(orden_gob)) %>%
+  mutate(plot = glue::glue('{plot}-{recode(orden_gob, "1"="federal", "2"="estatal", "3"="municipal")}')) %>%
+  select(-orden_gob)
+
+  unfiltered_tidy <- map_df(1:nrow(names_df), function(x) tidy_count(data = cuaps_criterios,
                                                                           count_var = names_df$varname[x],
                                                                           plotname = names_df$plotname[x],
                                                                           subset = names_df$subset[[x]]))
+
+  cuaps_criterios_tidy <- bind_rows(filtered_tidy, unfiltered_tidy) %>%
+                            mutate(plot_prefix = gsub('(s.*)(-.*)', '\\1', plot))
 
   copy_to(con, cuaps_criterios_tidy,
           dbplyr::in_schema('tidy', 'cuaps_criterios'),
