@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import re
 import csv
@@ -50,7 +51,7 @@ def download_df(bucket='', key=''):
     #pdb.set_trace()
     data = pd.read_csv(archivo)
     data2 = data.drop(["_NullFlags"], axis=1)
-    
+
     try:
         os.remove("aux.dbf")
     except OSError:
@@ -60,7 +61,7 @@ def download_df(bucket='', key=''):
 
 
 def regresa_llaves(base, data_date, cproc, formato):
-    
+
     llaves = []
 
     cadena = base + str(data_date) + '/' + cproc + '' + str(formato) + '/'
@@ -91,8 +92,8 @@ def append_data(bucket, iterador):
 
 
 def get_dataframe(local_ingest_file = '', data_date = '', cproc = ''):
-    
-    """ 
+
+    """
     Download dbf from S3 bucket as a dataframe.
     Saves Pandas dataframe, if the file is found
 
@@ -141,14 +142,13 @@ def get_dataframe(local_ingest_file = '', data_date = '', cproc = ''):
             procesos = ["Recertificacion","Reevaluacion","VPCS"]
         else:
             procesos = ['Identificacion']
-            
+
         df = pd.DataFrame()
         for cproc in procesos:
             llaves_aux = regresa_llaves(base='prospera_', data_date=data_date, cproc=cproc, formato='')
             iterador = iter(llaves_aux)
             dat = append_data(bucket, iterador)
-            pdb.set_trace()
-            df.append(dat)
+            df = df.append(dat, ignore_index=True)
 
         df = df.loc[:,~df.columns.duplicated()]
         df.to_csv(local_ingest_file, sep = '|', encoding = 'utf-8', index=False)
