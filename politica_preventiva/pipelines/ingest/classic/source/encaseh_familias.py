@@ -1,21 +1,54 @@
 import os
 import re
+import csv
 import pdb
 import argparse
 import boto3
 import urllib.request
 
+import pysal as ps
 import pandas as pd
 
-from dbfread import DBF
 from boto3 import client
+from simpledbf import Dbf5
+from dbfread import DBF
+from progress.bar import Bar # sudo pip install progress
+
 
 def download_df(bucket='', key=''):
+    """
+    Args:
+        dbfile  : DBF file - Input to be imported
+        upper   : Condition - If true, make column heads upper case
+    """
 
     conn = client('s3')
     conn.download_file(Bucket = bucket, Key = key, Filename = 'aux.dbf')
-    dbf = DBF('aux.dbf')
-    data = pd.DataFrame(iter(dbf))
+    print("Succesfully downloaded file!")
+
+    print("Converting DBF to csv \n\n")
+    table = DBF('aux.dbf')
+
+    archivo = key + ".csv"
+    archivo = archivo.replace('/','-')
+
+    with open(archivo, "w", encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        writer.writerow(table.field_names)
+
+        mm = len(table)
+        bar = Bar('Processing', max=mm, suffix='%(index)d/%(max)d - %(percent).1f%% - %(eta)ds')
+        for record in table:
+            writer.writerow(list(record.values()))
+            bar.next()
+        bar.finish()
+
+    # data = pd.DataFrame(iter(dbf))
+    # dbf = Dbf5('aux.dbf')
+    # data = dbf.to_dataframe()
+
+    #pdb.set_trace()
+    data = pd.read_csv(archivo)
     data2 = data.drop(["_NullFlags"], axis=1)
     
     try:
@@ -70,10 +103,6 @@ def get_dataframe(local_ingest_file = '', data_date = '', cproc = ''):
 
     """
 
-    #for k in conn.list_objects(Bucket=bucket)['Contents']:
-    #    print(k['Key'])
-
-
     bucket = 'verificacion-raw'
 
     if data_date == 2017:
@@ -109,19 +138,20 @@ def get_dataframe(local_ingest_file = '', data_date = '', cproc = ''):
         # Inicializamos lista de llaves
         # bajar también Reevaluación y VPCS (ligeros) si cproc = Recertificación
         if cproc == 'Recertificacion':
-            cadena = 'prospera_' + str(data_date) + '/' + '{cproc}' + '/' + '{tab}'
-
             procesos = ["Recertificacion","Reevaluacion","VPCS"]
-            df = pd.DataFrame()
-            for cproc in procesos:
-                llaves_aux = regresa_llaves(base='prospera_', data_date=data_date, cproc=cproc, formato='')
-                iterador = iter(llaves_aux)
-                pdb.set_trace()
-                dat = append_data(bucket, iterador)
-                df.append(dat)
+        else:
+            procesos = ['Identificacion']
+            
+        df = pd.DataFrame()
+        for cproc in procesos:
+            llaves_aux = regresa_llaves(base='prospera_', data_date=data_date, cproc=cproc, formato='')
+            iterador = iter(llaves_aux)
+            dat = append_data(bucket, iterador)
+            pdb.set_trace()
+            df.append(dat)
 
-            df = df.loc[:,~df.columns.duplicated()]
-            df.to_csv(local_ingest_file, sep = '|', encoding = 'utf-8', index=False)
+        df = df.loc[:,~df.columns.duplicated()]
+        df.to_csv(local_ingest_file, sep = '|', encoding = 'utf-8', index=False)
 
 
 if __name__ == '__main__':
