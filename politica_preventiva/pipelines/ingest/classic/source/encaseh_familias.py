@@ -77,18 +77,27 @@ def regresa_llaves(base, data_date, cproc, formato):
 
 def append_data(bucket, iterador):
 
-    data = []
+    data = pd.DataFrame()
 
     for llave in iterador:
         print('Downloading: {}'.format(llave))
         df = download_df(bucket=bucket, key=llave)
         print(df.shape)
-        data.append(df)
+        if len(data) == 0:
+            data = df
+        else:
+            data = pd.merge(data, df,
+                    on =['FOLIO', 'FOLIO_ENCA','FAMILIA_ID'],
+                    how = 'outer', suffixes=('', '_remove'))
+            cols = [c for c in data.columns if c.lower()[-6:] != 'remove']
+            data= data[cols].copy()
 
-    if len(data) >= 1:
-        dat_familia = pd.concat(data, axis=1)
+        #data.append(df)
 
-    return dat_familia
+    #if len(data) >= 1:
+    #    dat_familia = pd.concat(data, axis=1)
+
+    return data
 
 
 def get_dataframe(local_ingest_file = '', data_date = '', cproc = ''):
