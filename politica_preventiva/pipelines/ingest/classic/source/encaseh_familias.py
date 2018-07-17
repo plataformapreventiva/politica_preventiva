@@ -54,6 +54,7 @@ def download_df(bucket='', key=''):
 
     try:
         os.remove("aux.dbf")
+        os.remove(archivo)
     except OSError:
         pass
 
@@ -91,11 +92,6 @@ def append_data(bucket, iterador):
                     how = 'outer', suffixes=('', '_remove'))
             cols = [c for c in data.columns if c.lower()[-6:] != 'remove']
             data= data[cols].copy()
-
-        #data.append(df)
-
-    #if len(data) >= 1:
-    #    dat_familia = pd.concat(data, axis=1)
 
     return data
 
