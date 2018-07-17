@@ -3417,6 +3417,287 @@ encaseh_familias:
   - ent_vi_id1
   - ent_vi_id2
   - vial_post_
+encaseh_personas:
+  LUIGI:
+    INDEX: folio_enca
+    SCHEMA:
+    - programa: TEXT
+    - folio: TEXT
+    - folio_sede: TEXT
+    - ent_fed: TEXT
+    - munici: TEXT
+    - locali: TEXT
+    - folio_enca: TEXT
+    - tipo_encue: TEXT
+    - familia_id: TEXT
+    - int_id: TEXT
+    - num_per: TEXT
+    - nombre: TEXT
+    - ape_pat: TEXT
+    - ape_mat: TEXT
+    - con_res: TEXT
+    - edad: TEXT
+    - dia_nac: TEXT
+    - mes_nac: TEXT
+    - anio_nac: TEXT
+    - sexo: TEXT
+    - acta_nac: TEXT
+    - tie_curp: TEXT
+    - curp: TEXT
+    - lug_nac: TEXT
+    - reside: TEXT
+    - parentes: TEXT
+    - padre: TEXT
+    - madre: TEXT
+    - edo_civ: TEXT
+    - enf_art: TEXT
+    - enf_can: TEXT
+    - enf_cir: TEXT
+    - enf_ren: TEXT
+    - enf_dia: TEXT
+    - enf_cor: TEXT
+    - enf_pul: TEXT
+    - enf_vih: TEXT
+    - enf_def: TEXT
+    - enf_hip: TEXT
+    - enf_obe: TEXT
+    - discap1: TEXT
+    - discap2: TEXT
+    - discap3: TEXT
+    - discap4: TEXT
+    - discap5: TEXT
+    - discap6: TEXT
+    - discap7: TEXT
+    - discap9: TEXT
+    - discap10: TEXT
+    - gr_lim1: TEXT
+    - gr_lim2: TEXT
+    - gr_lim3: TEXT
+    - gr_lim4: TEXT
+    - gr_lim5: TEXT
+    - gr_lim6: TEXT
+    - gr_lim7: TEXT
+    - gr_lim9: TEXT
+    - gr_lim10: TEXT
+    - orig_dis1: TEXT
+    - orig_dis2: TEXT
+    - orig_dis3: TEXT
+    - orig_dis4: TEXT
+    - orig_dis5: TEXT
+    - orig_dis6: TEXT
+    - orig_dis7: TEXT
+    - orig_dis9: TEXT
+    - orig_dis10: TEXT
+    - inst_sal_a: TEXT
+    - inst_sal_b: TEXT
+    - afil_sal_a: TEXT
+    - afil_sal_b: TEXT
+    - aten_salud: TEXT
+    - desc_aten: TEXT
+    - habla_dia: TEXT
+    - desc_habla: TEXT
+    - habl_esp: TEXT
+    - indigena: TEXT
+    - leer_esc: TEXT
+    - ult_niv: TEXT
+    - ult_gra: TEXT
+    - asi_esc: TEXT
+    - aban_esc: TEXT
+    - otr_ab_esc: TEXT
+    - con_tra: TEXT
+    - ver_con_tr: TEXT
+    - pos_ocu: TEXT
+    - peri_tra: TEXT
+    - mot_notr: TEXT
+    - seg_soc_1: TEXT
+    - seg_soc_2: TEXT
+    - seg_soc_3: TEXT
+    - seg_soc_4: TEXT
+    - seg_soc_5: TEXT
+    - seg_soc_6: TEXT
+    - trab_sub: TEXT
+    - trab_ind: TEXT
+    - trab_no_re: TEXT
+    - monto: TEXT
+    - periodo: TEXT
+    - contr_vol1: TEXT
+    - contr_vol2: TEXT
+    - contr_vol3: TEXT
+    - contr_vol4: TEXT
+    - contr_vol5: TEXT
+    - jubilado: TEXT
+    - jubilado_1: TEXT
+    - jubilado_2: TEXT
+    - tar_inapam: TEXT
+    - pen_adm: TEXT
+    - pros_adm: TEXT
+    - otr_adm: TEXT
+    - id_corte: TEXT
+    - ab_mes: TEXT
+    - ab_anio: TEXT
+    - ab_edad: TEXT
+    - conyuge: TEXT
+    - embarazada: TEXT
+    - prob_salud: TEXT
+    - desc_prob: TEXT
+    - reci_salud: TEXT
+    - cau_salud: TEXT
+    - desc_causa: TEXT
+    - afromex: TEXT
+    - con_inac: TEXT
+    - locl_tra: TEXT
+    - dias_trab: TEXT
+    - seg_soc: TEXT
+    - ingre_a: TEXT
+    - ingre_b: TEXT
+    - mon_ing_a: TEXT
+    - per_ing_a: TEXT
+    - mon_ing_b: TEXT
+    - per_ing_b: TEXT
+    - mon_aport: TEXT
+    - per_aport: TEXT
+    - tra_temf: TEXT
+    - lug_traf: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - programa
+  - folio
+  - folio_sede
+  - ent_fed
+  - munici
+  - locali
+  - folio_enca
+  - tipo_encue
+  - familia_id
+  - int_id
+  - num_per
+  - nombre
+  - ape_pat
+  - ape_mat
+  - con_res
+  - edad
+  - dia_nac
+  - mes_nac
+  - anio_nac
+  - sexo
+  - acta_nac
+  - tie_curp
+  - curp
+  - lug_nac
+  - reside
+  - parentes
+  - padre
+  - madre
+  - edo_civ
+  - enf_art
+  - enf_can
+  - enf_cir
+  - enf_ren
+  - enf_dia
+  - enf_cor
+  - enf_pul
+  - enf_vih
+  - enf_def
+  - enf_hip
+  - enf_obe
+  - discap1
+  - discap2
+  - discap3
+  - discap4
+  - discap5
+  - discap6
+  - discap7
+  - discap9
+  - discap10
+  - gr_lim1
+  - gr_lim2
+  - gr_lim3
+  - gr_lim4
+  - gr_lim5
+  - gr_lim6
+  - gr_lim7
+  - gr_lim9
+  - gr_lim10
+  - orig_dis1
+  - orig_dis2
+  - orig_dis3
+  - orig_dis4
+  - orig_dis5
+  - orig_dis6
+  - orig_dis7
+  - orig_dis9
+  - orig_dis10
+  - inst_sal_a
+  - inst_sal_b
+  - afil_sal_a
+  - afil_sal_b
+  - aten_salud
+  - desc_aten
+  - habla_dia
+  - desc_habla
+  - habl_esp
+  - indigena
+  - leer_esc
+  - ult_niv
+  - ult_gra
+  - asi_esc
+  - aban_esc
+  - otr_ab_esc
+  - con_tra
+  - ver_con_tr
+  - pos_ocu
+  - peri_tra
+  - mot_notr
+  - seg_soc_1
+  - seg_soc_2
+  - seg_soc_3
+  - seg_soc_4
+  - seg_soc_5
+  - seg_soc_6
+  - trab_sub
+  - trab_ind
+  - trab_no_re
+  - monto
+  - periodo
+  - contr_vol1
+  - contr_vol2
+  - contr_vol3
+  - contr_vol4
+  - contr_vol5
+  - jubilado
+  - jubilado_1
+  - jubilado_2
+  - tar_inapam
+  - pen_adm
+  - pros_adm
+  - otr_adm
+  - id_corte
+  - ab_mes
+  - ab_anio
+  - ab_edad
+  - conyuge
+  - embarazada
+  - prob_salud
+  - desc_prob
+  - reci_salud
+  - cau_salud
+  - desc_causa
+  - afromex
+  - con_inac
+  - locl_tra
+  - dias_trab
+  - seg_soc
+  - ingre_a
+  - ingre_b
+  - mon_ing_a
+  - per_ing_a
+  - mon_ing_b
+  - per_ing_b
+  - mon_aport
+  - per_aport
+  - tra_temf
+  - lug_traf
 estancias:
   LUIGI:
     INDEX: id_est
