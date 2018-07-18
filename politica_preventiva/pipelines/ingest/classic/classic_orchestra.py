@@ -8,6 +8,7 @@ import tempfile
 import boto3
 import re
 import psycopg2
+import numpy as np
 
 from dotenv import find_dotenv
 from itertools import product

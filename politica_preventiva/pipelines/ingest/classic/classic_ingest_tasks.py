@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # coding: utf-8
+import datetime
 import luigi
 import logging
 import os
@@ -615,6 +617,7 @@ class declaratoria(TDockerTask):
 
         return " ".join(command_list)
 
+
 class insp(TDockerTask):
 
     @property
@@ -652,6 +655,7 @@ class estancias(TDockerTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
+
 class lecherias(TDockerTask):
     @property
     def cmd(self):
@@ -663,6 +667,7 @@ class lecherias(TDockerTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
+
 class sequia(IngestRTask):
     @property
     def cmd(self):
@@ -672,6 +677,7 @@ class sequia(IngestRTask):
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
 
+
 class geoms_red_carretera(TDockerTask):
     @property
     def cmd(self):
@@ -680,6 +686,7 @@ class geoms_red_carretera(TDockerTask):
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
+
 
 class conagua_temperaturas(TDockerTask):
     @property
@@ -691,6 +698,7 @@ class conagua_temperaturas(TDockerTask):
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
 
+
 class conagua_dirviento(TDockerTask):
     @property
     def cmd(self):
@@ -700,6 +708,7 @@ class conagua_dirviento(TDockerTask):
                         '--local_path', self.local_path + self.pipeline_task,
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
+
 
 class conagua_precipitacion(TDockerTask):
     @property
@@ -711,50 +720,6 @@ class conagua_precipitacion(TDockerTask):
                         '--local_ingest_file', self.local_ingest_file]
         return " ".join(command_list)
 
-class sifode_2013(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2013.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class sifode_2014(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2013.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class sifode_2015(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2015.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class sifode_2016(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2016.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
-
-class sifode_2017(TDockerTask):
-    @property
-    def cmd(self):
-       command_list = ['sh', self.classic_task_scripts +
-                       'sifode_2017.sh',
-                       self.local_path +
-                       self.pipeline_task, self.local_ingest_file]
-       return " ".join(command_list)
 
 class sifode_calificacion(TDockerTask):
   @property
@@ -765,6 +730,7 @@ class sifode_calificacion(TDockerTask):
                      self.pipeline_task, self.local_ingest_file]
      return " ".join(command_list)
 
+
 class sifode_domicilio(TDockerTask):
   @property
   def cmd(self):
@@ -773,3 +739,29 @@ class sifode_domicilio(TDockerTask):
                      self.local_path +
                      self.pipeline_task, self.local_ingest_file]
      return " ".join(command_list)
+
+
+class earthquakes(TDockerTask):
+    """ Earthquake source script
+    Args:
+        data_date (str):  Year and month of data date
+            separated by a "-"
+        classic_task_scripts (str): ingestion script path
+        local_path (str): output file name
+        local_ingest_file (str): full path of output file
+    """
+
+    @property
+    def cmd(self):
+        year = int(self.data_date.split("-")[0])
+        day = int(self.data_date.split("-")[1])
+        # Get day and month
+        date_datetime = datetime.date(year,1,1) + datetime.timedelta(day)
+        month_s = str(date_datetime.month).zfill(2)
+        day_s = str(date_datetime.day).zfill(2)
+        #day_s_t = str(date_datetime.day + 1).zfill(2)
+        command_list = ['sh', self.classic_task_scripts +
+                        'earthquakes.sh', str(year), month_s, day_s, # day_s_t,
+                        self.local_path +
+                        self.pipeline_task, self.local_ingest_file]
+        return " ".join(command_list)

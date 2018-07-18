@@ -1,10 +1,10 @@
-SHELL := /bin/bash 
+SHELL := /bin/bash
 PROJECT_NAME:=$(shell cat ../.project-name)
-DATA_DIRECTORY:=/data
+REPO_DIRECTORY:=$(CURDIR)/../
 IMAGES =  # docker-task
 
 run:
-	 @LUIGI_CONFIG_PATH=./pipelines/configs/luigi.cfg $(PROJECT_NAME) --server 0.0.0.0 --port 8082 --workers $(WORKERS) --level=$(level)
+	 @LUIGI_CONFIG_PATH=./pipelines/configs/luigi.cfg $(PROJECT_NAME) --server 0.0.0.0 --port 8082 --workers $(WORKERS) --level=$(level) --ptask=$(ptask)
 
 setup: .built .built-local-storage
 
@@ -18,7 +18,7 @@ restart: .clean
 
 .built-local-storage:
 	@if [ -z $(docker volume ls | grep $(PROJECT_NAME)_store) ]; then \
-      docker volume create --name $(PROJECT_NAME)_store --opt type=none --opt device=$(DATA_DIRECTORY) --opt o=bind ; \
+      docker volume create --name $(PROJECT_NAME)_store_repo --opt type=none --opt device=$(REPO_DIRECTORY) --opt o=bind ; \
    fi;
 	@touch .built-local-storage
 

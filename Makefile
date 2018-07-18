@@ -1,7 +1,7 @@
 ########################################
 # Makefile for pipeline
 # SEDESOL Version 0.1
-# Roberto Sánchez 
+# Roberto Sánchez
 # Tomado de Adolfo De Unánue - github @nanounanue
 ########################################
 
@@ -16,6 +16,7 @@ PROJECT_VERSION:=$(shell cat .project-version)
 PROJECT_USER:=$(shell cat .project-user)
 w=11
 p=ETLPipeline
+ptask=auto
 
 ## Python Version
 VERSION_PYTHON:=$(shell cat .python-version)
@@ -40,7 +41,7 @@ init: prepare ##@dependencias Prepara la computadora para el funcionamiento del 
 	$(source ./infraestructura/.env)
 	$(shell ./aws_ip_group.sh)
 
-prepare: deps 
+prepare: deps
 	#pyenv virtualenv ${PROJECT_NAME}_venv
 	#pyenv local ${PROJECT_NAME}_venv
 
@@ -93,10 +94,10 @@ stop: ##@infraestructure Stop Infrastructure
 restart: ##@infraestructure Restart Tasks Infastructure
 	$(MAKE) --directory=${PROJECT_NAME} restart
 
-status: ##@infraestructure Report the status of the infrastructure 
+status: ##@infraestructure Report the status of the infrastructure
 	$(MAKE) --directory=infraestructura status
 
-logs:   ##@infraestructure Displays the outputs of the infrastructure logs	
+logs:   ##@infraestructure Displays the outputs of the infrastructure logs
 	$(MAKE) --directory=infraestructura logs
 
 nuke: ##@infraestructure Destroy -F infrastructure and images
@@ -137,15 +138,15 @@ todo:         ##@docs ¿Qué falta por hacer?
 S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 
 #sync_from_s3: ##@data Sincroniza los datos del usuario desde AWS S3
-#	@aws s3 sync s3://$(S3_BUCKET)/user/$(PROJECT_USER) ./data/user/$(PROJECT_USER) 
+#	@aws s3 sync s3://$(S3_BUCKET)/user/$(PROJECT_USER) ./data/user/$(PROJECT_USER)
 
 
 ########################################
 ##         Project Tasks              ##
 ########################################
 
-run:       ##@project Run pipeline: make run w=10 p=(IngestPipeline|ETLPipeline|SemanticPipeline|ModelsPipeline) 
-	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(w) level=$(p)
+run:       ##@project Run pipeline: make run w=10 p=(IngestPipeline|ETLPipeline|SemanticPipeline|ModelsPipeline) ptask= 'pipeline_task'
+	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(w) level=$(p) ptask=$(ptask)
 
 setup: task_build install##@project Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
 

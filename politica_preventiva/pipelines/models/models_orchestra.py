@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding: utf-8
 
 import datetime
@@ -56,6 +57,7 @@ class ModelsPipeline(luigi.WrapperTask):
     current_date = luigi.DateParameter()
     models = parse_cfg_list(conf.get("ModelsPipeline", "pipelines"))
     client = S3Client()
+    ptask = luigi.Parameter()
 
     def requires(self):
         set_pipelines = [(model_task, final_dates(False,
