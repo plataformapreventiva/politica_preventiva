@@ -24,7 +24,8 @@ sed '1,2d' | \
 sed -e '1s/^\xEF\xBB\xBF//' | \
 sed -e 's/\(".*\)^\(.*"\)/\1\2/g' | \
 iconv -c -t 'utf-8' | \
-csvformat -d '^' -D '|' -v > $local_ingest_file
+csvformat -d '^' -D '|' -v | \
+awk -F'|' 'NF==91' > $local_ingest_file
 
 echo 'Written to: '$local_ingest_file
 
