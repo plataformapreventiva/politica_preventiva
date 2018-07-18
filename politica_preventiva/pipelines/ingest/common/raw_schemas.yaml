@@ -1528,13 +1528,13 @@ cuis_historico_domicilio:
     - longitud: TEXT
     - latitud: TEXT
     - c_entidad_federativa: TEXT
-    - cve_entidad_federativa: Integer
-    - nom_entidad_federativa: TEXT
-    - c_municipio: TEXT
-    - cve_municipio: Integer
-    - nom_municipio: TEXT
+    - cve_ent: Integer
+    - nom_ent: TEXT
+    - cve_mun: TEXT
+    - cve_muni: TEXT
+    - nom_mun: TEXT
     - c_localidad: TEXT
-    - cve_localidad: TEXT
+    - cve_locc: TEXT
     - nom_localidad: TEXT
     - c_codigo_postal: TEXT
     - cve_ageb: TEXT
