@@ -2612,19 +2612,6 @@ earthquakes:
   - status
   - locationsource
   - magsource
-eoms_estados:
-  LUIGI:
-    INDEX: cve_ent
-    SCHEMA:
-    - wkt: geometry
-    - cve_ent: TEXT
-    - nom_ent: TEXT
-    - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
-  RAW:
-  - wkt
-  - cve_ent
-  - nom_ent
 estancias:
   LUIGI:
     INDEX: id_est
