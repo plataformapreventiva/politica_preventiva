@@ -2756,27 +2756,31 @@ geoms_estados:
     - wkt: geometry
     - cve_ent: TEXT
     - nom_ent: TEXT
+    - cve_geo: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
   - wkt
   - cve_ent
   - nom_ent
+  - cve_geo
 geoms_municipios:
   LUIGI:
-    INDEX: cve_mun
+    INDEX: cve_muni
     SCHEMA:
     - wkt: geometry
     - cve_ent: TEXT
     - cve_mun: TEXT
-    - nom_mun: TEXT
+    - cve_muni: TEXT
+    - nom_muni: TEXT
     - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
+    - data_date: VARCHAR
   RAW:
   - wkt
   - cve_ent
   - cve_mun
-  - nom_mun
+  - cvegeo
+  - nomgeo
 geoms_red_carretera:
   LUIGI:
     INDEX: id_red
