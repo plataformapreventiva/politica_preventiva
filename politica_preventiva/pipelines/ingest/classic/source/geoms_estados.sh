@@ -1,12 +1,47 @@
 #!/bin/bash
-# Script para descargar geometrías de estados de Inegi-
+################################################
+# Script para descargar geometrías de Estados de Inegi
+################################################
 
-# Download geoms de inegi
-wget "http://internet.contenidos.inegi.org.mx/contenidos/Productos/prod_serv/contenidos/espanol/bvinegi/productos/geografia/marcogeo/889463142683_s.zip" -O $2/geoms_inegi.zip
-unzip -o $2/geoms_inegi.zip -d $2/ 
+year=$1
+local_path=$2
+local_ingest_file=$3
 
-# Convertir a CSV
-ogr2ogr -f CSV -t_srs EPSG:4326 $2/temp.csv $2/conjunto_de_datos/areas_geoestadisticas_estatales.shp  -lco GEOMETRY=AS_WKT
+if [ $year = '2018' ]; then
+    cve=889463526636_s.zip
+elif [ $year = '2017' ]; then
+    cve=889463171829_s.zip
+else
+    echo 'url not defined for the selected year'
+    exit 1
+fi
 
-# Limpiar formato
-csvformat -D '|' -z 99999999999 $2/temp.csv > $3
+mkdir $local_path/$year $local_path/$year/temp $local_path/$year/final
+
+## Download geoms de inegi
+#wget "http://internet.contenidos.inegi.org.mx/contenidos/Productos/prod_serv/contenidos/espanol/bvinegi/productos/geografia/marcogeo/"$cve"" -O $local_path/geom_inegi$year.zip
+#
+### Unzip folder principal
+#unzip -o $local_path/geom_inegi$year.zip -d $local_path/$year/
+#
+### Unzip folder por estado
+#for i in $local_path/$year/*.zip; do
+#  filename=$(basename -- "$i")
+#  filename="${filename%.*}"
+#  mkdir $filename
+#  unzip "$i" -d  $local_path/$year/$filename/
+#done
+#
+#mv $local_path/$year/*/*/*ent* $local_path/$year/temp/
+#for i in $local_path/$year/temp/*.shp; do
+#  filename=$(basename -- "$i")
+#  filename="${filename%.*}"
+#  ogr2ogr -f CSV -t_srs EPSG:4326 $local_path/$year/final/$filename.csv $i  -lco GEOMETRY=AS_WKT
+#done
+#
+# Concatenar y guardar
+nawk 'FNR==1 && NR!=1{next;}{print}'  $local_path/$year/final/*.csv > $local_path/$year/output.csv.file
+
+# Cambiar formato
+csvformat -D '|' -z 99999999999 $local_path/$year/output.csv.file > $local_ingest_file
+rm -Rf $local_path/$year/
