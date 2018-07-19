@@ -2762,6 +2762,21 @@ finanzas_publicas_municipales:
   - descripcion_categoria
   - valor
   - estatus
+geoms_estados:
+  LUIGI:
+    INDEX: cve_ent
+    SCHEMA:
+    - wkt: geometry
+    - cve_ent: TEXT
+    - nom_ent: TEXT
+    - cve_geo: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - wkt
+  - cve_ent
+  - nom_ent
+  - cve_geo
 geoms_municipios:
   LUIGI:
     INDEX: cve_muni
