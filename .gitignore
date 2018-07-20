@@ -155,7 +155,8 @@ site/
 .Rproj.user
 
 # Diccionarios
-!*/politica_preventiva/pipelines/ingest/common/dictionaries/
+!*_dic.csv
 
 # neo4j
 politica_preventiva/pipelines/ingest/common/neo4j/*
+!*_dic.csv

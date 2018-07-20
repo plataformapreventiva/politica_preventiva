@@ -6,6 +6,8 @@ import pdb
 import re
 import sys
 import yaml
+import boto3
+from io import StringIO
 
 from luigi import configuration
 from datetime import datetime
@@ -79,7 +81,11 @@ def header_test(path, task, common_path, suffix, new=True):
                 first_line = [remove_extra_chars(x)  for x in first_lines]
                 types = ['TEXT'] * len(first_line)
                 types.append("TIMESTAMP")
-                types.append('TEXT') 
+                types.append('TEXT')
+                initial_schema = first_line[:]
+                initial_schema.append("actualizacion_sedesol")
+                initial_schema.append("data_date")
+                initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
 
         except:
             # Otro error aún no reconocido
@@ -149,6 +155,10 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
         dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
+        csv_buffer = StringIO()
+        dictionary.to_csv(csv_buffer,sep='|')
+        s3_resource = boto3.resource('s3')
+        s3_resource.Object('dpa-plataforma-preventiva','commons/metadata/diccionarios/'+pipeline_task+'_dic.csv').put(Body=csv_buffer.getvalue())
 
     except:
         task_schema = header_d[pipeline_task]["LUIGI"]["SCHEMA"]

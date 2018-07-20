@@ -8,7 +8,7 @@
 # Se asume que se tiene acceso a la carpeta sedesol-lab, en el S3 del proyecto
 # Se toman como parámetros, en ese orden, el data date, el directorio de ingesta y el output path
 
-echo "Downloading surveys data.
+echo "Downloading surveys data. 
 Source: CUIS Histórico"
 
 year=$1
