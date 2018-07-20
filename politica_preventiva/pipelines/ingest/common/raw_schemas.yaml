@@ -2792,6 +2792,1092 @@ earthquakes:
   - status
   - locationsource
   - magsource
+encaseh_familias:
+  LUIGI:
+    INDEX: folio
+    SCHEMA:
+    - tipo_encue: TEXT
+    - programa: TEXT
+    - tipo_levan: TEXT
+    - folio: TEXT
+    - folio_sede: TEXT
+    - ent_fed: TEXT
+    - munici: TEXT
+    - locali: TEXT
+    - folio_enca: TEXT
+    - familia_id: TEXT
+    - doc_identi: TEXT
+    - folio_iden: TEXT
+    - doc_edad: TEXT
+    - folio_edad: TEXT
+    - per_viv: TEXT
+    - tot_hog: TEXT
+    - tot_per: TEXT
+    - per_gasto: TEXT
+    - per_alim: TEXT
+    - per_info: TEXT
+    - con_remesa: TEXT
+    - ut_cuida1: TEXT
+    - ut_cuida2: TEXT
+    - ut_volun1: TEXT
+    - ut_volun2: TEXT
+    - ut_repara1: TEXT
+    - ut_repara2: TEXT
+    - ut_limpia1: TEXT
+    - ut_limpia2: TEXT
+    - ut_acarre1: TEXT
+    - ut_acarre2: TEXT
+    - gas_alim: TEXT
+    - gas_vest: TEXT
+    - gas_educ: TEXT
+    - com_xdia: TEXT
+    - cereal: TEXT
+    - verduras: TEXT
+    - frutas: TEXT
+    - leguminosa: TEXT
+    - caryhue: TEXT
+    - lacteos: TEXT
+    - grasas: TEXT
+    - seg_alim_6: TEXT
+    - seg_alim_1: TEXT
+    - seg_alim_3: TEXT
+    - seg_alim_7: TEXT
+    - seg_alim_8: TEXT
+    - seg_alim_2: TEXT
+    - seg_alim_9: TEXT
+    - seg_alim_4: TEXT
+    - seg_alim10: TEXT
+    - seg_alim_5: TEXT
+    - seg_alim11: TEXT
+    - seg_alim12: TEXT
+    - desaynin: TEXT
+    - desay_lug: TEXT
+    - n_desay1: TEXT
+    - sit_viv: TEXT
+    - escritura1: TEXT
+    - escritura2: TEXT
+    - esp_nivele: TEXT
+    - esp_constr: TEXT
+    - esp_local: TEXT
+    - constr_med: TEXT
+    - local_med: TEXT
+    - cuart: TEXT
+    - cua_dor: TEXT
+    - coc_duer: TEXT
+    - piso_viv: TEXT
+    - condi_piso: TEXT
+    - cuar_pis_t: TEXT
+    - tech_viv: TEXT
+    - condi_tech: TEXT
+    - muro_viv: TEXT
+    - condi_muro: TEXT
+    - escusado: TEXT
+    - uso_exc: TEXT
+    - agua: TEXT
+    - agua_beb1: TEXT
+    - agua_beb2: TEXT
+    - agua_beb3: TEXT
+    - agua_beb4: TEXT
+    - agua_beb5: TEXT
+    - agua_beb6: TEXT
+    - agua_esp: TEXT
+    - con_dren: TEXT
+    - basura: TEXT
+    - combustibl: TEXT
+    - fogon_coc: TEXT
+    - ubic_fog: TEXT
+    - luz_ele: TEXT
+    - est_gas: TEXT
+    - sir_estgas: TEXT
+    - refri: TEXT
+    - sir_refr: TEXT
+    - micro: TEXT
+    - sir_micro: TEXT
+    - lavadora: TEXT
+    - sir_lava: TEXT
+    - tinaco: TEXT
+    - sir_tina: TEXT
+    - cal_agua: TEXT
+    - sir_cal: TEXT
+    - televis: TEXT
+    - sir_tv: TEXT
+    - televi_dig: TEXT
+    - sir_tvdig: TEXT
+    - ant_sky: TEXT
+    - sir_sky: TEXT
+    - videocas: TEXT
+    - sir_vid: TEXT
+    - telefon: TEXT
+    - sir_telef: TEXT
+    - celular: TEXT
+    - sir_cel: TEXT
+    - compu: TEXT
+    - sir_compu: TEXT
+    - clima: TEXT
+    - sir_clima: TEXT
+    - vehi: TEXT
+    - sir_vehi: TEXT
+    - internet: TEXT
+    - sir_inter: TEXT
+    - tie_agri: TEXT
+    - prop_tier1: TEXT
+    - prop_tier2: TEXT
+    - c_maiz: TEXT
+    - c_frij: TEXT
+    - c_cere: TEXT
+    - c_frut: TEXT
+    - c_cana: TEXT
+    - c_jito: TEXT
+    - c_chil: TEXT
+    - c_limn: TEXT
+    - c_papa: TEXT
+    - c_cafe: TEXT
+    - c_cate: TEXT
+    - c_forr: TEXT
+    - c_otro: TEXT
+    - cul_riego: TEXT
+    - cul_maquin: TEXT
+    - cul_anim: TEXT
+    - cul_ferorg: TEXT
+    - cul_ferqui: TEXT
+    - cul_plagui: TEXT
+    - uso_hid_tr: TEXT
+    - caballos: TEXT
+    - burros: TEXT
+    - bueyes: TEXT
+    - chivos: TEXT
+    - reses: TEXT
+    - gallinas: TEXT
+    - cerdos: TEXT
+    - conejos: TEXT
+    - proyecto: TEXT
+    - p_agri: TEXT
+    - p_manu: TEXT
+    - p_come: TEXT
+    - p_tran: TEXT
+    - p_prof: TEXT
+    - p_educ: TEXT
+    - p_sald: TEXT
+    - p_recr: TEXT
+    - p_aloj: TEXT
+    - p_comu: TEXT
+    - p_otro: TEXT
+    - p_proy_esp: TEXT
+    - fam_entr1: TEXT
+    - tot_entr1: TEXT
+    - ren_entr1: TEXT
+    - fam_entr2: TEXT
+    - tot_entr2: TEXT
+    - ren_entr2: TEXT
+    - fam_entr3: TEXT
+    - tot_entr3: TEXT
+    - ren_entr3: TEXT
+    - fam_entr4: TEXT
+    - tot_entr4: TEXT
+    - ren_entr4: TEXT
+    - fam_entr5: TEXT
+    - tot_entr5: TEXT
+    - ren_entr5: TEXT
+    - fam_entr6: TEXT
+    - tot_entr6: TEXT
+    - ren_entr6: TEXT
+    - id_corte: TEXT
+    - emigro: TEXT
+    - seg_jefa: TEXT
+    - tit_jefa: TEXT
+    - jornalero: TEXT
+    - tit_jorn: TEXT
+    - pet: TEXT
+    - tit_pet: TEXT
+    - leche: TEXT
+    - tit_lech: TEXT
+    - guarderia: TEXT
+    - tit_guard: TEXT
+    - est_infan: TEXT
+    - tit_estanc: TEXT
+    - procampo: TEXT
+    - tit_proc: TEXT
+    - desp_dif: TEXT
+    - tit_dif: TEXT
+    - pronabes: TEXT
+    - tit_prona: TEXT
+    - apoy_viv: TEXT
+    - tit_apoy: TEXT
+    - desp_ini: TEXT
+    - tit_ini: TEXT
+    - desa_esc: TEXT
+    - tit_desy: TEXT
+    - probecat: TEXT
+    - tit_prob: TEXT
+    - prog_opr: TEXT
+    - tit_pop: TEXT
+    - fonaes: TEXT
+    - tit_fona: TEXT
+    - bec_esc: TEXT
+    - tit_bec: TEXT
+    - bec_trans: TEXT
+    - tit_trans: TEXT
+    - mic_emp: TEXT
+    - tit_mic: TEXT
+    - otr_prog: TEXT
+    - tit_otrpr: TEXT
+    - desc_otrpr: TEXT
+    - gas_trans: TEXT
+    - gas_hig: TEXT
+    - piso_gub: TEXT
+    - escusa_gub: TEXT
+    - focos: TEXT
+    - gasto_luz: TEXT
+    - licuadora: TEXT
+    - sir_lic: TEXT
+    - fregadero: TEXT
+    - sir_freg: TEXT
+    - plancha: TEXT
+    - sir_plan: TEXT
+    - radio: TEXT
+    - sir_radio: TEXT
+    - compu_gub: TEXT
+    - tractor: TEXT
+    - sir_trac: TEXT
+    - pre_agri: TEXT
+    - ropa: TEXT
+    - zapatos: TEXT
+    - pan: TEXT
+    - fruta: TEXT
+    - verdura: TEXT
+    - oleche: TEXT
+    - huevos: TEXT
+    - carne: TEXT
+    - medicinas: TEXT
+    - util_esc: TEXT
+    - uni_esc: TEXT
+    - tra_esc: TEXT
+    - ahorrar: TEXT
+    - material: TEXT
+    - enseres: TEXT
+    - p_compra1: TEXT
+    - p_compra2: TEXT
+    - p_compra3: TEXT
+    - nin_s_beca: TEXT
+    - no_beca: TEXT
+    - no_beca1: TEXT
+    - no_beca2: TEXT
+    - otra_no: TEXT
+    - per_auto: TEXT
+    - per_noaut: TEXT
+    - vtot_cua: TEXT
+    - vcuarto_d: TEXT
+    - vcua_dor: TEXT
+    - vpiso_viv: TEXT
+    - vcua_pis_t: TEXT
+    - vtech_viv: TEXT
+    - vmuro_viv: TEXT
+    - vagua: TEXT
+    - vescusado: TEXT
+    - vuso_exc: TEXT
+    - vcon_dren: TEXT
+    - vluz_ele: TEXT
+    - vfocos: TEXT
+    - vestgas: TEXT
+    - vsir_est: TEXT
+    - vrefri: TEXT
+    - vsir_refr: TEXT
+    - vlicuadora: TEXT
+    - vsir_lic: TEXT
+    - vmicro: TEXT
+    - vsir_micro: TEXT
+    - vfregadero: TEXT
+    - vsir_freg: TEXT
+    - vlavadora: TEXT
+    - vsir_lava: TEXT
+    - vplancha: TEXT
+    - vsir_plan: TEXT
+    - vtinaco: TEXT
+    - vsir_tina: TEXT
+    - vcal_agua: TEXT
+    - vsir_cal: TEXT
+    - vradio: TEXT
+    - vsir_radio: TEXT
+    - vtelevis: TEXT
+    - vsir_tv: TEXT
+    - vtelev_dig: TEXT
+    - vsir_tvdig: TEXT
+    - vant_sky: TEXT
+    - vsir_sky: TEXT
+    - vvideocas: TEXT
+    - vsir_vid: TEXT
+    - vtelefon: TEXT
+    - vsir_telef: TEXT
+    - vcelular: TEXT
+    - vsir_cel: TEXT
+    - vcompu: TEXT
+    - vsir_compu: TEXT
+    - vclima: TEXT
+    - vsir_clima: TEXT
+    - vvehiculo: TEXT
+    - vsir_vehi: TEXT
+    - vtractor: TEXT
+    - vsir_trac: TEXT
+    - vinternet: TEXT
+    - vsir_inter: TEXT
+    - vtraduc: TEXT
+    - vverdad: TEXT
+    - vpobre: TEXT
+    - observa: TEXT
+    - entrevis: TEXT
+    - dia_1vis: TEXT
+    - mes_1vis: TEXT
+    - ani_1vis: TEXT
+    - hora_1ini: TEXT
+    - dia_uvis: TEXT
+    - mes_uvis: TEXT
+    - ani_uvis: TEXT
+    - hora_ini: TEXT
+    - info_adec: TEXT
+    - ageb: TEXT
+    - clave_mzna: TEXT
+    - ubic_ageb: TEXT
+    - ubic_mza: TEXT
+    - vial: TEXT
+    - carr_adm: TEXT
+    - carr_tran: TEXT
+    - carr_num: TEXT
+    - carr_tram: TEXT
+    - carr_km: TEXT
+    - carr_mts: TEXT
+    - cam_tipo: TEXT
+    - cam_tram: TEXT
+    - cam_marg: TEXT
+    - cam_km: TEXT
+    - cam_mts: TEXT
+    - tipo_vial: TEXT
+    - calle: TEXT
+    - num_ext: TEXT
+    - num_ext1: TEXT
+    - num_int: TEXT
+    - tipo_vial1: TEXT
+    - entre_ca1: TEXT
+    - tipo_vial2: TEXT
+    - entre_ca2: TEXT
+    - tipo_vial3: TEXT
+    - calle_atr: TEXT
+    - referencia: TEXT
+    - tipo_asen: TEXT
+    - colonia: TEXT
+    - cp: TEXT
+    - phone: TEXT
+    - num_phone: TEXT
+    - tipo_phone: TEXT
+    - mail: TEXT
+    - tipo_viv: TEXT
+    - res_entr: TEXT
+    - res_entr1: TEXT
+    - hora_1fin: TEXT
+    - hora_fin: TEXT
+    - coord_x: FLOAT
+    - coord_y: FLOAT
+    - duracion: TEXT
+    - loc_id: TEXT
+    - ageb_id: TEXT
+    - colonia_id: TEXT
+    - titular: TEXT
+    - punt_i: TEXT
+    - ing_est_i: TEXT
+    - punt_v: TEXT
+    - ing_est_v: TEXT
+    - res_encue: TEXT
+    - id_clasifi: TEXT
+    - incorporad: TEXT
+    - corte_inco: TEXT
+    - encuesta_i: TEXT
+    - elegible: TEXT
+    - vialidad_i: TEXT
+    - ent_vi_id1: TEXT
+    - ent_vi_id2: TEXT
+    - vial_post_: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - tipo_encue
+  - programa
+  - tipo_levan
+  - folio
+  - folio_sede
+  - ent_fed
+  - munici
+  - locali
+  - folio_enca
+  - familia_id
+  - doc_identi
+  - folio_iden
+  - doc_edad
+  - folio_edad
+  - per_viv
+  - tot_hog
+  - tot_per
+  - per_gasto
+  - per_alim
+  - per_info
+  - con_remesa
+  - ut_cuida1
+  - ut_cuida2
+  - ut_volun1
+  - ut_volun2
+  - ut_repara1
+  - ut_repara2
+  - ut_limpia1
+  - ut_limpia2
+  - ut_acarre1
+  - ut_acarre2
+  - gas_alim
+  - gas_vest
+  - gas_educ
+  - com_xdia
+  - cereal
+  - verduras
+  - frutas
+  - leguminosa
+  - caryhue
+  - lacteos
+  - grasas
+  - seg_alim_6
+  - seg_alim_1
+  - seg_alim_3
+  - seg_alim_7
+  - seg_alim_8
+  - seg_alim_2
+  - seg_alim_9
+  - seg_alim_4
+  - seg_alim10
+  - seg_alim_5
+  - seg_alim11
+  - seg_alim12
+  - desaynin
+  - desay_lug
+  - n_desay1
+  - sit_viv
+  - escritura1
+  - escritura2
+  - esp_nivele
+  - esp_constr
+  - esp_local
+  - constr_med
+  - local_med
+  - cuart
+  - cua_dor
+  - coc_duer
+  - piso_viv
+  - condi_piso
+  - cuar_pis_t
+  - tech_viv
+  - condi_tech
+  - muro_viv
+  - condi_muro
+  - escusado
+  - uso_exc
+  - agua
+  - agua_beb1
+  - agua_beb2
+  - agua_beb3
+  - agua_beb4
+  - agua_beb5
+  - agua_beb6
+  - agua_esp
+  - con_dren
+  - basura
+  - combustibl
+  - fogon_coc
+  - ubic_fog
+  - luz_ele
+  - est_gas
+  - sir_estgas
+  - refri
+  - sir_refr
+  - micro
+  - sir_micro
+  - lavadora
+  - sir_lava
+  - tinaco
+  - sir_tina
+  - cal_agua
+  - sir_cal
+  - televis
+  - sir_tv
+  - televi_dig
+  - sir_tvdig
+  - ant_sky
+  - sir_sky
+  - videocas
+  - sir_vid
+  - telefon
+  - sir_telef
+  - celular
+  - sir_cel
+  - compu
+  - sir_compu
+  - clima
+  - sir_clima
+  - vehi
+  - sir_vehi
+  - internet
+  - sir_inter
+  - tie_agri
+  - prop_tier1
+  - prop_tier2
+  - c_maiz
+  - c_frij
+  - c_cere
+  - c_frut
+  - c_cana
+  - c_jito
+  - c_chil
+  - c_limn
+  - c_papa
+  - c_cafe
+  - c_cate
+  - c_forr
+  - c_otro
+  - cul_riego
+  - cul_maquin
+  - cul_anim
+  - cul_ferorg
+  - cul_ferqui
+  - cul_plagui
+  - uso_hid_tr
+  - caballos
+  - burros
+  - bueyes
+  - chivos
+  - reses
+  - gallinas
+  - cerdos
+  - conejos
+  - proyecto
+  - p_agri
+  - p_manu
+  - p_come
+  - p_tran
+  - p_prof
+  - p_educ
+  - p_sald
+  - p_recr
+  - p_aloj
+  - p_comu
+  - p_otro
+  - p_proy_esp
+  - fam_entr1
+  - tot_entr1
+  - ren_entr1
+  - fam_entr2
+  - tot_entr2
+  - ren_entr2
+  - fam_entr3
+  - tot_entr3
+  - ren_entr3
+  - fam_entr4
+  - tot_entr4
+  - ren_entr4
+  - fam_entr5
+  - tot_entr5
+  - ren_entr5
+  - fam_entr6
+  - tot_entr6
+  - ren_entr6
+  - id_corte
+  - emigro
+  - seg_jefa
+  - tit_jefa
+  - jornalero
+  - tit_jorn
+  - pet
+  - tit_pet
+  - leche
+  - tit_lech
+  - guarderia
+  - tit_guard
+  - est_infan
+  - tit_estanc
+  - procampo
+  - tit_proc
+  - desp_dif
+  - tit_dif
+  - pronabes
+  - tit_prona
+  - apoy_viv
+  - tit_apoy
+  - desp_ini
+  - tit_ini
+  - desa_esc
+  - tit_desy
+  - probecat
+  - tit_prob
+  - prog_opr
+  - tit_pop
+  - fonaes
+  - tit_fona
+  - bec_esc
+  - tit_bec
+  - bec_trans
+  - tit_trans
+  - mic_emp
+  - tit_mic
+  - otr_prog
+  - tit_otrpr
+  - desc_otrpr
+  - gas_trans
+  - gas_hig
+  - piso_gub
+  - escusa_gub
+  - focos
+  - gasto_luz
+  - licuadora
+  - sir_lic
+  - fregadero
+  - sir_freg
+  - plancha
+  - sir_plan
+  - radio
+  - sir_radio
+  - compu_gub
+  - tractor
+  - sir_trac
+  - pre_agri
+  - ropa
+  - zapatos
+  - pan
+  - fruta
+  - verdura
+  - oleche
+  - huevos
+  - carne
+  - medicinas
+  - util_esc
+  - uni_esc
+  - tra_esc
+  - ahorrar
+  - material
+  - enseres
+  - p_compra1
+  - p_compra2
+  - p_compra3
+  - nin_s_beca
+  - no_beca
+  - no_beca1
+  - no_beca2
+  - otra_no
+  - per_auto
+  - per_noaut
+  - vtot_cua
+  - vcuarto_d
+  - vcua_dor
+  - vpiso_viv
+  - vcua_pis_t
+  - vtech_viv
+  - vmuro_viv
+  - vagua
+  - vescusado
+  - vuso_exc
+  - vcon_dren
+  - vluz_ele
+  - vfocos
+  - vestgas
+  - vsir_est
+  - vrefri
+  - vsir_refr
+  - vlicuadora
+  - vsir_lic
+  - vmicro
+  - vsir_micro
+  - vfregadero
+  - vsir_freg
+  - vlavadora
+  - vsir_lava
+  - vplancha
+  - vsir_plan
+  - vtinaco
+  - vsir_tina
+  - vcal_agua
+  - vsir_cal
+  - vradio
+  - vsir_radio
+  - vtelevis
+  - vsir_tv
+  - vtelev_dig
+  - vsir_tvdig
+  - vant_sky
+  - vsir_sky
+  - vvideocas
+  - vsir_vid
+  - vtelefon
+  - vsir_telef
+  - vcelular
+  - vsir_cel
+  - vcompu
+  - vsir_compu
+  - vclima
+  - vsir_clima
+  - vvehiculo
+  - vsir_vehi
+  - vtractor
+  - vsir_trac
+  - vinternet
+  - vsir_inter
+  - vtraduc
+  - vverdad
+  - vpobre
+  - observa
+  - entrevis
+  - dia_1vis
+  - mes_1vis
+  - ani_1vis
+  - hora_1ini
+  - dia_uvis
+  - mes_uvis
+  - ani_uvis
+  - hora_ini
+  - info_adec
+  - ageb
+  - clave_mzna
+  - ubic_ageb
+  - ubic_mza
+  - vial
+  - carr_adm
+  - carr_tran
+  - carr_num
+  - carr_tram
+  - carr_km
+  - carr_mts
+  - cam_tipo
+  - cam_tram
+  - cam_marg
+  - cam_km
+  - cam_mts
+  - tipo_vial
+  - calle
+  - num_ext
+  - num_ext1
+  - num_int
+  - tipo_vial1
+  - entre_ca1
+  - tipo_vial2
+  - entre_ca2
+  - tipo_vial3
+  - calle_atr
+  - referencia
+  - tipo_asen
+  - colonia
+  - cp
+  - phone
+  - num_phone
+  - tipo_phone
+  - mail
+  - tipo_viv
+  - res_entr
+  - res_entr1
+  - hora_1fin
+  - hora_fin
+  - coord_x
+  - coord_y
+  - duracion
+  - loc_id
+  - ageb_id
+  - colonia_id
+  - titular
+  - punt_i
+  - ing_est_i
+  - punt_v
+  - ing_est_v
+  - res_encue
+  - id_clasifi
+  - incorporad
+  - corte_inco
+  - encuesta_i
+  - elegible
+  - vialidad_i
+  - ent_vi_id1
+  - ent_vi_id2
+  - vial_post_
+encaseh_personas:
+  LUIGI:
+    INDEX: folio_enca
+    SCHEMA:
+    - programa: TEXT
+    - folio: TEXT
+    - folio_sede: TEXT
+    - ent_fed: TEXT
+    - munici: TEXT
+    - locali: TEXT
+    - folio_enca: TEXT
+    - tipo_encue: TEXT
+    - familia_id: TEXT
+    - int_id: TEXT
+    - num_per: TEXT
+    - nombre: TEXT
+    - ape_pat: TEXT
+    - ape_mat: TEXT
+    - con_res: TEXT
+    - edad: TEXT
+    - dia_nac: TEXT
+    - mes_nac: TEXT
+    - anio_nac: TEXT
+    - sexo: TEXT
+    - acta_nac: TEXT
+    - tie_curp: TEXT
+    - curp: TEXT
+    - lug_nac: TEXT
+    - reside: TEXT
+    - parentes: TEXT
+    - padre: TEXT
+    - madre: TEXT
+    - edo_civ: TEXT
+    - enf_art: TEXT
+    - enf_can: TEXT
+    - enf_cir: TEXT
+    - enf_ren: TEXT
+    - enf_dia: TEXT
+    - enf_cor: TEXT
+    - enf_pul: TEXT
+    - enf_vih: TEXT
+    - enf_def: TEXT
+    - enf_hip: TEXT
+    - enf_obe: TEXT
+    - discap1: TEXT
+    - discap2: TEXT
+    - discap3: TEXT
+    - discap4: TEXT
+    - discap5: TEXT
+    - discap6: TEXT
+    - discap7: TEXT
+    - discap9: TEXT
+    - discap10: TEXT
+    - gr_lim1: TEXT
+    - gr_lim2: TEXT
+    - gr_lim3: TEXT
+    - gr_lim4: TEXT
+    - gr_lim5: TEXT
+    - gr_lim6: TEXT
+    - gr_lim7: TEXT
+    - gr_lim9: TEXT
+    - gr_lim10: TEXT
+    - orig_dis1: TEXT
+    - orig_dis2: TEXT
+    - orig_dis3: TEXT
+    - orig_dis4: TEXT
+    - orig_dis5: TEXT
+    - orig_dis6: TEXT
+    - orig_dis7: TEXT
+    - orig_dis9: TEXT
+    - orig_dis10: TEXT
+    - inst_sal_a: TEXT
+    - inst_sal_b: TEXT
+    - afil_sal_a: TEXT
+    - afil_sal_b: TEXT
+    - aten_salud: TEXT
+    - desc_aten: TEXT
+    - habla_dia: TEXT
+    - desc_habla: TEXT
+    - habl_esp: TEXT
+    - indigena: TEXT
+    - leer_esc: TEXT
+    - ult_niv: TEXT
+    - ult_gra: TEXT
+    - asi_esc: TEXT
+    - aban_esc: TEXT
+    - otr_ab_esc: TEXT
+    - con_tra: TEXT
+    - ver_con_tr: TEXT
+    - pos_ocu: TEXT
+    - peri_tra: TEXT
+    - mot_notr: TEXT
+    - seg_soc_1: TEXT
+    - seg_soc_2: TEXT
+    - seg_soc_3: TEXT
+    - seg_soc_4: TEXT
+    - seg_soc_5: TEXT
+    - seg_soc_6: TEXT
+    - trab_sub: TEXT
+    - trab_ind: TEXT
+    - trab_no_re: TEXT
+    - monto: TEXT
+    - periodo: TEXT
+    - contr_vol1: TEXT
+    - contr_vol2: TEXT
+    - contr_vol3: TEXT
+    - contr_vol4: TEXT
+    - contr_vol5: TEXT
+    - jubilado: TEXT
+    - jubilado_1: TEXT
+    - jubilado_2: TEXT
+    - tar_inapam: TEXT
+    - pen_adm: TEXT
+    - pros_adm: TEXT
+    - otr_adm: TEXT
+    - id_corte: TEXT
+    - ab_mes: TEXT
+    - ab_anio: TEXT
+    - ab_edad: TEXT
+    - conyuge: TEXT
+    - embarazada: TEXT
+    - prob_salud: TEXT
+    - desc_prob: TEXT
+    - reci_salud: TEXT
+    - cau_salud: TEXT
+    - desc_causa: TEXT
+    - afromex: TEXT
+    - con_inac: TEXT
+    - locl_tra: TEXT
+    - dias_trab: TEXT
+    - seg_soc: TEXT
+    - ingre_a: TEXT
+    - ingre_b: TEXT
+    - mon_ing_a: TEXT
+    - per_ing_a: TEXT
+    - mon_ing_b: TEXT
+    - per_ing_b: TEXT
+    - mon_aport: TEXT
+    - per_aport: TEXT
+    - tra_temf: TEXT
+    - lug_traf: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - programa
+  - folio
+  - folio_sede
+  - ent_fed
+  - munici
+  - locali
+  - folio_enca
+  - tipo_encue
+  - familia_id
+  - int_id
+  - num_per
+  - nombre
+  - ape_pat
+  - ape_mat
+  - con_res
+  - edad
+  - dia_nac
+  - mes_nac
+  - anio_nac
+  - sexo
+  - acta_nac
+  - tie_curp
+  - curp
+  - lug_nac
+  - reside
+  - parentes
+  - padre
+  - madre
+  - edo_civ
+  - enf_art
+  - enf_can
+  - enf_cir
+  - enf_ren
+  - enf_dia
+  - enf_cor
+  - enf_pul
+  - enf_vih
+  - enf_def
+  - enf_hip
+  - enf_obe
+  - discap1
+  - discap2
+  - discap3
+  - discap4
+  - discap5
+  - discap6
+  - discap7
+  - discap9
+  - discap10
+  - gr_lim1
+  - gr_lim2
+  - gr_lim3
+  - gr_lim4
+  - gr_lim5
+  - gr_lim6
+  - gr_lim7
+  - gr_lim9
+  - gr_lim10
+  - orig_dis1
+  - orig_dis2
+  - orig_dis3
+  - orig_dis4
+  - orig_dis5
+  - orig_dis6
+  - orig_dis7
+  - orig_dis9
+  - orig_dis10
+  - inst_sal_a
+  - inst_sal_b
+  - afil_sal_a
+  - afil_sal_b
+  - aten_salud
+  - desc_aten
+  - habla_dia
+  - desc_habla
+  - habl_esp
+  - indigena
+  - leer_esc
+  - ult_niv
+  - ult_gra
+  - asi_esc
+  - aban_esc
+  - otr_ab_esc
+  - con_tra
+  - ver_con_tr
+  - pos_ocu
+  - peri_tra
+  - mot_notr
+  - seg_soc_1
+  - seg_soc_2
+  - seg_soc_3
+  - seg_soc_4
+  - seg_soc_5
+  - seg_soc_6
+  - trab_sub
+  - trab_ind
+  - trab_no_re
+  - monto
+  - periodo
+  - contr_vol1
+  - contr_vol2
+  - contr_vol3
+  - contr_vol4
+  - contr_vol5
+  - jubilado
+  - jubilado_1
+  - jubilado_2
+  - tar_inapam
+  - pen_adm
+  - pros_adm
+  - otr_adm
+  - id_corte
+  - ab_mes
+  - ab_anio
+  - ab_edad
+  - conyuge
+  - embarazada
+  - prob_salud
+  - desc_prob
+  - reci_salud
+  - cau_salud
+  - desc_causa
+  - afromex
+  - con_inac
+  - locl_tra
+  - dias_trab
+  - seg_soc
+  - ingre_a
+  - ingre_b
+  - mon_ing_a
+  - per_ing_a
+  - mon_ing_b
+  - per_ing_b
+  - mon_aport
+  - per_aport
+  - tra_temf
+  - lug_traf
 estancias:
   LUIGI:
     INDEX: id_est
