@@ -3811,6 +3811,33 @@ lecherias:
   - dvainilla
   - dchocolate
   - ltsbenmes
+listado_coneval_federales:
+  LUIGI:
+    INDEX: cd_programa
+    SCHEMA:
+    - ramo: TEXT
+    - nb_dependencia: TEXT
+    - modalidad: TEXT
+    - clave: Integer
+    - nb_programa: TEXT
+    - nb_programa_anterior: TEXT
+    - anio_inicio_prog: Integer
+    - anio_operacion_prog: Integer
+    - pres_original: FLOAT
+    - cd_programa: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ramo
+  - nb_dependencia
+  - modalidad
+  - clave
+  - nb_programa
+  - nb_programa_anterior
+  - anio_inicio_prog
+  - anio_operacion_prog
+  - pres_original
+  - cd_programa
 maiz_precios:
   LUIGI:
     INDEX: fecha
