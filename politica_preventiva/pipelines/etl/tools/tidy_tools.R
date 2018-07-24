@@ -82,8 +82,14 @@ tidy_count <- function(data, count_var, plotname, uncounted = c('actualizacion_s
                          actualizacion_sedesol = pull_filler(data, 'actualizacion_sedesol'),
                          data_date = pull_filler(data, 'data_date'))
 
+  if ('orden_gob' %in% uncounted){
+    subset_values_filtered <- map_df(1:3, function(x) mutate(subset_values, orden_gob = x))
+  } else {
+      subset_values_filtered <- subset_values
+    }
+
   tidy_count_data %>%
-      right_join(subset_values) %>%
+      right_join(subset_values_filtered) %>%
       replace_na(list(plot = plotname,
                       variable = count_var,
                       valor = 0))

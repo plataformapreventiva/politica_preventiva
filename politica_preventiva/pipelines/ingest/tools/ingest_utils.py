@@ -137,10 +137,10 @@ def look_for_end_date(pipeline, current_date):
 def current_quarter(dt):
     """
     This function returns a string with the year quarter
-        January, February and March (Q1); 
-        April, May and June (Q2); 
-        July, August and September (Q3); 
-        October, November and December (Q4). 
+        January, February and March (Q1);
+        April, May and June (Q2);
+        July, August and September (Q3);
+        October, November and December (Q4).
     """
     return int((dt.month  - 1) / 3 + 1)
 
@@ -391,3 +391,5 @@ def find_extension(path, pipeline_task):
                 return('Rscript', extension)
             else:
                 raise('Unknown file extension')
+
+

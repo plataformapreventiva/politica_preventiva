@@ -14,7 +14,6 @@ insert into temp_tipo_apoyos values
     (5, 'Área de atención social'),
     (6, 'Otro');
 
-
 create table clean.cuaps_componentes as
     select
         cuaps_folio,
