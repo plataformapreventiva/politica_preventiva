@@ -55,9 +55,11 @@ pull_filler <- function(data, varname){
   varname_string <- sym(varname)
   varname_quo <- quo(!! varname_string)
 
-  data %>%
-      pull( !! varname_quo) %>%
-      unique()
+  filler <- data %>%
+            pull( !! varname_quo) %>%
+            unique() %>%
+            sort(decreasing = TRUE)
+  return(filler[1])
 }
 
 tidy_count <- function(data, count_var, plotname, uncounted = c('actualizacion_sedesol', 'data_date'), subset = NULL){
@@ -110,3 +112,4 @@ get_varnames <- function(data, prefix, plot_title, subset_list){
 create_varnames_data <- function(data, varnames, plotnames, subset_list){
 map_df(1:length(varnames), function(x) get_varnames(data, varnames[x], plotnames[x], subset_list))
 }
+
