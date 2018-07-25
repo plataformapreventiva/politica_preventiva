@@ -21,6 +21,9 @@ SELECT * FROM (
         from tidy.cuaps_programas
         where plot_prefix = 's02_estados'
         and variable = 'cve_ent',
-        group by categoria)) AS cols
+        group by categoria)
+    UNION
+    (SELECT actualizacion_sedesol, data_date, categoria, valor, plot, variable, plot_prefix from tidy.listado_coneval_federales)
+) AS cols
  LEFT JOIN semantic.reporte_programas_labels AS labels
  USING (plot_prefix, variable, categoria));
