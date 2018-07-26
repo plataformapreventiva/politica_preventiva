@@ -109,7 +109,6 @@ class TDockerTask(SourceIngestTask):
             task = 'docker-task'
         elif self.extension == 'Rscript':
             task = 'r-task'
-
         cmd_docker = ['docker run', '--env-file $PWD/.env',
               '-it', '--rm', '-v $PWD:/politica_preventiva',
               '-v politica_preventiva_store:/data ',
