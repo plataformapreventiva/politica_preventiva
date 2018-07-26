@@ -1519,11 +1519,101 @@ cuis_39_9:
   - p_otro
   - tipo_proy_esp
   - tie_curp
-cuis_historico_domicilios:
+cuis_historico_domicilio:
   LUIGI:
     INDEX: llave_hogar_h
     SCHEMA:
     - llave_hogar_h: TEXT
+    - id_mdm_h: TEXT
+    - longitud: TEXT
+    - latitud: TEXT
+    - c_entidad_federativa: TEXT
+    - cve_ent: Integer
+    - nom_ent: TEXT
+    - cve_mun: TEXT
+    - cve_muni: TEXT
+    - nom_mun: TEXT
+    - c_localidad: TEXT
+    - cve_locc: TEXT
+    - nom_localidad: TEXT
+    - c_codigo_postal: TEXT
+    - cve_ageb: TEXT
+    - cve_manzana: TEXT
+    - c_tipo_vial: Integer
+    - c_vialidad: TEXT
+    - nombre_vial: TEXT
+    - cp: Integer
+    - c_tipo_asentamiento: Integer
+    - c_asentamiento: TEXT
+    - nombre_asen: TEXT
+    - nombre_entre_vial_1: TEXT
+    - c_vialidad_entre_1: TEXT
+    - c_tipo_entre_vial_1: Integer
+    - nombre_entre_vial_2: TEXT
+    - c_vialidad_entre_2: TEXT
+    - c_tipo_entre_vial_2: Integer
+    - nombre_vial_pos: TEXT
+    - c_vialidad_pos: TEXT
+    - c_tipo_vial_pos: Integer
+    - desc_ubic: TEXT
+    - dom_conocido: INT
+    - sin_num_ext: INT
+    - num_ext: TEXT
+    - letra_ext: TEXT
+    - num_ext_ant: TEXT
+    - sin_num_int: INT
+    - num_int: TEXT
+    - letra_int: TEXT
+    - c_termino_generico: Integer
+    - c_tipo_administracion: TEXT
+    - c_tipo_margen: TEXT
+    - codigo_carretera: TEXT
+    - c_tipo_transito: TEXT
+    - origen: TEXT
+    - destino: TEXT
+    - km_vial: TEXT
+    - m_vial: TEXT
+    - a_vigente: TEXT
+    - a_estatus: TEXT
+    - a_mov: TEXT
+    - a_fch_corte: TEXT
+    - s_longitud: TEXT
+    - s_latitud: TEXT
+    - s_origen_domicilio: TEXT
+    - s_cve_entidad_federativa: TEXT
+    - s_nom_entidad_federativa: TEXT
+    - s_cve_municipio: TEXT
+    - s_nom_municipio: TEXT
+    - s_cve_localidad: TEXT
+    - s_nom_localidad: TEXT
+    - s_tipoloc: TEXT
+    - s_c_tipo_vial: TEXT
+    - s_nombre_vial: TEXT
+    - s_carretera: TEXT
+    - s_camino: TEXT
+    - s_num_ext: TEXT
+    - s_letra_ext: TEXT
+    - numextnum2: TEXT
+    - s_num_int: TEXT
+    - s_letra_int: TEXT
+    - s_c_tipo_asentamiento: TEXT
+    - s_nombre_asentamiento: TEXT
+    - s_cp: TEXT
+    - s_c_tipo_entre_vial_1: TEXT
+    - s_nombre_entre_vial_1: TEXT
+    - s_c_tipo_entre_vial_2: TEXT
+    - s_nombre_entre_vial_2: TEXT
+    - s_c_tipo_vial_pos: TEXT
+    - s_nombre_vial_pos: TEXT
+    - s_desc_ubic: TEXT
+    - s_cve_ageb: TEXT
+    - s_cve_manzana: TEXT
+    - fch_creacion: TEXT
+    - usr_creacion: TEXT
+    - csc_hogar: INT
+    - carretera: TEXT
+    - camino: TEXT
+    - c_programa_social: TEXT
     - cve_entidad_federativa: TEXT
     - cve_municipio: TEXT
     - cve_localidad: TEXT
@@ -1531,6 +1621,96 @@ cuis_historico_domicilios:
     - data_date: TEXT
   RAW:
   - llave_hogar_h
+  - id_mdm_h
+  - longitud
+  - latitud
+  - c_entidad_federativa
+  - cve_entidad_federativa
+  - nom_entidad_federativa
+  - c_municipio
+  - cve_municipio
+  - nom_municipio
+  - c_localidad
+  - cve_localidad
+  - nom_localidad
+  - c_codigo_postal
+  - cve_ageb
+  - cve_manzana
+  - c_tipo_vial
+  - c_vialidad
+  - nombre_vial
+  - cp
+  - c_tipo_asentamiento
+  - c_asentamiento
+  - nombre_asen
+  - nombre_entre_vial_1
+  - c_vialidad_entre_1
+  - c_tipo_entre_vial_1
+  - nombre_entre_vial_2
+  - c_vialidad_entre_2
+  - c_tipo_entre_vial_2
+  - nombre_vial_pos
+  - c_vialidad_pos
+  - c_tipo_vial_pos
+  - desc_ubic
+  - dom_conocido
+  - sin_num_ext
+  - num_ext
+  - letra_ext
+  - num_ext_ant
+  - sin_num_int
+  - num_int
+  - letra_int
+  - c_termino_generico
+  - c_tipo_administracion
+  - c_tipo_margen
+  - codigo_carretera
+  - c_tipo_transito
+  - origen
+  - destino
+  - km_vial
+  - m_vial
+  - a_vigente
+  - a_estatus
+  - a_mov
+  - a_fch_corte
+  - s_longitud
+  - s_latitud
+  - s_origen_domicilio
+  - s_cve_entidad_federativa
+  - s_nom_entidad_federativa
+  - s_cve_municipio
+  - s_nom_municipio
+  - s_cve_localidad
+  - s_nom_localidad
+  - s_tipoloc
+  - s_c_tipo_vial
+  - s_nombre_vial
+  - s_carretera
+  - s_camino
+  - s_num_ext
+  - s_letra_ext
+  - numextnum2
+  - s_num_int
+  - s_letra_int
+  - s_c_tipo_asentamiento
+  - s_nombre_asentamiento
+  - s_cp
+  - s_c_tipo_entre_vial_1
+  - s_nombre_entre_vial_1
+  - s_c_tipo_entre_vial_2
+  - s_nombre_entre_vial_2
+  - s_c_tipo_vial_pos
+  - s_nombre_vial_pos
+  - s_desc_ubic
+  - s_cve_ageb
+  - s_cve_manzana
+  - fch_creacion
+  - usr_creacion
+  - csc_hogar
+  - carretera
+  - camino
+  - c_programa_social
   - cve_entidad_federativa
   - cve_municipio
   - cve_localidad
@@ -3842,27 +4022,31 @@ geoms_estados:
     - wkt: geometry
     - cve_ent: TEXT
     - nom_ent: TEXT
+    - cve_geo: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
   - wkt
   - cve_ent
   - nom_ent
+  - cve_geo
 geoms_municipios:
   LUIGI:
-    INDEX: cve_mun
+    INDEX: cve_muni
     SCHEMA:
     - wkt: geometry
     - cve_ent: TEXT
     - cve_mun: TEXT
-    - nom_mun: TEXT
+    - cve_muni: TEXT
+    - nom_muni: TEXT
     - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
+    - data_date: VARCHAR
   RAW:
   - wkt
   - cve_ent
   - cve_mun
-  - nom_mun
+  - cvegeo
+  - nomgeo
 geoms_red_carretera:
   LUIGI:
     INDEX: id_red
@@ -3944,6 +4128,54 @@ indesol:
     - edo_actividad: TEXT
     - informes: JSONB
     - actualizacion_sedesol: TIMESTAMP
+inegi_agentes_fiscales:
+  LUIGI:
+    INDEX: nom_ent
+    SCHEMA:
+    - nom_ent: TEXT
+    - indicador: TEXT
+    - '2010': TEXT
+    - '2011': TEXT
+    - '2012': FLOAT
+    - '2013': FLOAT
+    - '2014': FLOAT
+    - '2015': FLOAT
+    - '2016': FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidadfederativa
+  - indicador
+  - '2010'
+  - '2011'
+  - '2012'
+  - '2013'
+  - '2014'
+  - '2015'
+  - '2016'
+inegi_jueces:
+  LUIGI:
+    INDEX: nom_ent
+    SCHEMA:
+    - entidadfederativa: Integer
+    - '2010': TEXT
+    - '2011': FLOAT
+    - '2012': FLOAT
+    - '2013': FLOAT
+    - '2014': FLOAT
+    - '2015': FLOAT
+    - '2016': FLOAT
+    - actualizacion_sedesol: FLOAT
+    - data_date: TIMESTAMP
+  RAW:
+  - entidadfederativa
+  - '2010'
+  - '2011'
+  - '2012'
+  - '2013'
+  - '2014'
+  - '2015'
+  - '2016'
 insp:
   LUIGI:
     INDEX: clavegenerico
@@ -6208,6 +6440,71 @@ sifode_universos:
   - u_cc_voluntarias
   - u_cc_comensales_mas
   - u_cc_comensales_menos
+sistemas_alertas:
+  LUIGI:
+    INDEX: entidadfederativa
+    SCHEMA:
+    - entidadfederativa: TEXT
+    - resultadodelsistemadealertas: Integer
+    - indicador1deudapublicayobligacionessobreingresosdelibredisposicion: Integer
+    - indicador1: FLOAT
+    - indicador2serviciodeladeudaydeobligacionessobreingresosdelibredisposicion: Integer
+    - indicador2: FLOAT
+    - indicador3obligacionesacortoplazoyproveedoresycontratistassobreingresostotales: Integer
+    - indicador3: FLOAT
+    - deudayobligaciones: FLOAT
+    - subtotal: FLOAT
+    - deuda: FLOAT
+    - ocp: FLOAT
+    - app: FLOAT
+    - subtotal_2: FLOAT
+    - deuda_2: FLOAT
+    - app_2: FLOAT
+    - serviciodeladeudaypagodeinversion: FLOAT
+    - subtotal_3: FLOAT
+    - sd: FLOAT
+    - sd_2: FLOAT
+    - pi: FLOAT
+    - subtotal_4: FLOAT
+    - sd_3: FLOAT
+    - pi_2: FLOAT
+    - obligacionesacortoplazoyproveedoresycontratistas: FLOAT
+    - ocp_2: FLOAT
+    - pc: FLOAT
+    - ingresostotales: FLOAT
+    - ingresosdelibredisposicion: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidadfederativa
+  - resultadodelsistemadealertas
+  - indicador1deudapublicayobligacionessobreingresosdelibredisposicion(dyo/ild)
+  - indicador1
+  - indicador2serviciodeladeudaydeobligacionessobreingresosdelibredisposicion(sdypi/ild)
+  - indicador2
+  - indicador3obligacionesacortoplazoyproveedoresycontratistassobreingresostotales(ocpypc/it)
+  - indicador3
+  - deudayobligaciones(dyo)
+  - subtotal
+  - deuda
+  - ocp
+  - app
+  - subtotal
+  - deuda
+  - app
+  - serviciodeladeudaypagodeinversion(sdypi)
+  - subtotal
+  - sd(lp)
+  - sd(cp)
+  - pi
+  - subtotal
+  - sd
+  - pi
+  - obligacionesacortoplazoyproveedoresycontratistas(ocpypc)
+  - ocp
+  - pc
+  - ingresostotales(it)
+  - ingresosdelibredisposicion(ild)
 test:
   LUIGI:
     INDEX: variable1

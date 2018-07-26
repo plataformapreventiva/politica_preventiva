@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ###############
 # Transparencia Presupuestaria anual
 ###############
@@ -9,7 +10,10 @@ echo "Descarga cuenta publica 2016"
 # Save the cookie
 cookie=$(curl -c - 'http://transparenciapresupuestaria.gob.mx/es/PTP/Datos_Abiertos' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Connection: keep-alive' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: es-MX,es;q=0.8,es-419;q=0.6,en;q=0.4' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36' --compressed  | egrep -o 'cookiesession1(.*)' | sed 's/cookiesession1//g;s/ +//g' )
 
-if [ $1 = '2016' ]; then
+if [ $1 = '2017' ]; then
+    # (Ramos Administrativos, Ramos Generales, Ramos Autónomos y Entidades de Control Directo)
+    url='http://transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/BD_Cuenta_Publica/CSV/cuenta_publica_2017_gf_ecd_epe.csv'
+elif [ $1 = '2016' ]; then
     # (Ramos Administrativos, Ramos Generales, Ramos Autónomos y Entidades de Control Directo)
     url='http://transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/BD_Cuenta_Publica/CSV/cuenta_publica_2016_gf_ecd_epe.csv'
 elif [ $1 = '2015' ]; then
@@ -35,5 +39,5 @@ curl $url \
 echo "Changing encoding"
 # Remove header?
 # sed '1d' $2.temp > $2.temp2
-iconv -f iso-8859-1 -t utf-8 $3.temp | sed 's/"//g' | csvformat -D "|" > $3
-rm $3.temp; 
+iconv -f iso-8859-1 -t utf-8 $3.temp | sed 's/|/-/g' | csvformat -D "|" > $3
+rm $3.temp;
