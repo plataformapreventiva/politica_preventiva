@@ -10,7 +10,7 @@
 # El script asume que se tiene acceso a la carpeta sifode-raw, en el S3 del proyecto.
 # Se toman como parámetros, en ese orden, el data day, el directorio de ingesta y el output path
 
-echo "Downloading CUIS data. 
+echo "Downloading CUIS data.
 Source: SIFODE"
 
 year=$1

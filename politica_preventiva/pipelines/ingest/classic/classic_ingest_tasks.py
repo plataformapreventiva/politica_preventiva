@@ -109,7 +109,6 @@ class TDockerTask(SourceIngestTask):
             task = 'docker-task'
         elif self.extension == 'Rscript':
             task = 'r-task'
-
         cmd_docker = ['docker run', '--env-file $PWD/.env',
               '-it', '--rm', '-v $PWD:/politica_preventiva',
               '-v politica_preventiva_store:/data ',
@@ -765,3 +764,45 @@ class earthquakes(TDockerTask):
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
         return " ".join(command_list)
+
+
+class encaseh_familias(SourceIngestTask):
+
+    def run(self):
+
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        extra_cmd = self.extra.split('--')
+        c_tipo_proc = extra_cmd[0]
+
+        command_list = ['python', self.classic_task_scripts +
+                        'encaseh_familias.py', 
+                        '--data_date', self.data_date,
+                        '--local_path', self.local_path, 
+                        '--local_ingest_file',self.local_ingest_file,
+                        '--c_tipo_proc',c_tipo_proc]
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)
+
+
+class encaseh_personas(SourceIngestTask):
+
+    def run(self):
+
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        extra_cmd = self.extra.split('--')
+        c_tipo_proc = extra_cmd[0]
+
+        command_list = ['python', self.classic_task_scripts +
+                        'encaseh_personas.py', 
+                        '--data_date', self.data_date,
+                        '--local_path', self.local_path, 
+                        '--local_ingest_file',self.local_ingest_file,
+                        '--c_tipo_proc',c_tipo_proc]
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)

@@ -10,7 +10,7 @@ ipak <- function(pkg){
 
 
 packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'lubridate',
-	      'readxl', 'RPostgres', 'aws.s3')
+	      'readxl', 'RPostgres', 'aws.s3', 'gsubfn')
 
 ipak(packages)
 
