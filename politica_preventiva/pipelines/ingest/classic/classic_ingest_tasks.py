@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # coding: utf-8
+import datetime
 import luigi
 import logging
 import os
@@ -107,7 +109,6 @@ class TDockerTask(SourceIngestTask):
             task = 'docker-task'
         elif self.extension == 'Rscript':
             task = 'r-task'
-
         cmd_docker = ['docker run', '--env-file $PWD/.env',
               '-it', '--rm', '-v $PWD:/politica_preventiva',
               '-v politica_preventiva_store:/data ',
@@ -751,18 +752,57 @@ class earthquakes(TDockerTask):
 
     @property
     def cmd(self):
-        year = self.data_date.split("-")[0]
-        # Get last month number
-        month = int(self.data_date.split("-")[1]) - 1
-        month = str(month).zfill(2)
-        # If it's the first month of the year, take last month
-        # of previous year
-        if month == 0:
-            month = 12
-            year = year - 1
+        year = int(self.data_date.split("-")[0])
+        day = int(self.data_date.split("-")[1])
+        # Get day and month
+        date_datetime = datetime.date(year,1,1) + datetime.timedelta(day)
+        month_s = str(date_datetime.month).zfill(2)
+        day_s = str(date_datetime.day).zfill(2)
+        #day_s_t = str(date_datetime.day + 1).zfill(2)
         command_list = ['sh', self.classic_task_scripts +
-                        'earthquakes.sh', year, month,
+                        'earthquakes.sh', str(year), month_s, day_s, # day_s_t,
                         self.local_path +
                         self.pipeline_task, self.local_ingest_file]
-
         return " ".join(command_list)
+
+
+class encaseh_familias(SourceIngestTask):
+
+    def run(self):
+
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        extra_cmd = self.extra.split('--')
+        c_tipo_proc = extra_cmd[0]
+
+        command_list = ['python', self.classic_task_scripts +
+                        'encaseh_familias.py', 
+                        '--data_date', self.data_date,
+                        '--local_path', self.local_path, 
+                        '--local_ingest_file',self.local_ingest_file,
+                        '--c_tipo_proc',c_tipo_proc]
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)
+
+
+class encaseh_personas(SourceIngestTask):
+
+    def run(self):
+
+        if not os.path.exists(self.local_path + self.pipeline_task):
+            os.makedirs(self.local_path + self.pipeline_task)
+
+        extra_cmd = self.extra.split('--')
+        c_tipo_proc = extra_cmd[0]
+
+        command_list = ['python', self.classic_task_scripts +
+                        'encaseh_personas.py', 
+                        '--data_date', self.data_date,
+                        '--local_path', self.local_path, 
+                        '--local_ingest_file',self.local_ingest_file,
+                        '--c_tipo_proc',c_tipo_proc]
+        cmd = " ".join(command_list)
+        print(cmd)
+        return subprocess.call([cmd], shell=True)

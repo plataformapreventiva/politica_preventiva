@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding: utf-8
 
 import datetime
@@ -50,6 +51,7 @@ class SemanticPipeline(luigi.WrapperTask):
     semantics = parse_cfg_list(conf.get("SemanticPipeline", "pipelines"))
     current_date = luigi.DateParameter()
     client = S3Client()
+    ptask = luigi.Parameter()
 
     def requires(self):
         return [UpdateSemanticDB(semantic_task, self.current_date)
