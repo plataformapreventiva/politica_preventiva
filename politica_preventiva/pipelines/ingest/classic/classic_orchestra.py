@@ -132,7 +132,7 @@ class UpdateRawDB(postgres.CopyToTable):
         response = s3.head_object(Bucket='dpa-plataforma-preventiva', Key=keyname)
         # If the file is greater than 5 gb, ingest line per line
         # TODO append B as a list to respect the data type
-        if response['ContentLength'] > 100: # 5368709120:
+        if response['ContentLength'] > 10000: #5368709120:
             with self.input().open('r') as fobj:
                 check = True
                 for line in fobj:
@@ -190,13 +190,11 @@ class UpdateRawDB(postgres.CopyToTable):
             sys.exit()
 
         index = header_d[self.pipeline_task]['LUIGI']["INDEX"]
-
         # Create temporary table temp
-        cmd = "CREATE TEMPORARY TABLE tmp  ({0});ANALYZE tmp;".\
+        cmd = "CREATE TEMPORARY TABLE tmp  ({0}); ANALYZE tmp; ".\
             format(create_sql)
         cmd += 'CREATE INDEX IF NOT EXISTS {0}_index ON\
          tmp ({0});'.format(index, self.pipeline_task)
-
         cursor.execute(cmd)
         # Copy to TEMP table
         cursor.copy_from(file, "tmp", null=r'\\N', sep=self.column_separator,
@@ -204,15 +202,13 @@ class UpdateRawDB(postgres.CopyToTable):
 
         # Check if raw table exists if not create and build index
         # (defined in common/pg_raw_schemas)
-        cmd = "CREATE TABLE IF NOT EXISTS {0}  ({1}) ;".format(self.table,
-                                                               create_sql, unique_sql)
-        cmd += 'CREATE INDEX IF NOT EXISTS {0}_index ON {1} ({0});'.\
-            format(index, self.table)
+        cmd = "CREATE TABLE IF NOT EXISTS {0} ({1}); ".format(self.table, create_sql)
+        cmd += 'CREATE INDEX IF NOT EXISTS {0}_index ON {1} ({0});'.format(index, self.table)
 
         # SET except from TEMP to raw table ordered
         cmd += "INSERT INTO {0} \
-            SELECT {1} FROM tmp;".\
-            format(self.table, unique_sql, index)
+            (SELECT {1} FROM tmp);".\
+            format(self.table, unique_sql)
             # EXCEPT SELECT {1} FROM {0} ;".\
         cursor.execute(cmd)
         connection.commit()
@@ -223,12 +219,12 @@ class UpdateRawDB(postgres.CopyToTable):
  
         if not (self.table and self.columns):
             raise Exception("table and columns need to be specified")
+        
         connection = self.output().connect()
         tmp_dir = luigi.configuration.get_config().get('postgres',
                                                        'local-tmp-dir', None)
         tmp_file = tempfile.TemporaryFile(dir=tmp_dir)
         n = 0
-
         for row in self.rows():
             n += 1
             rowstr = self.column_separator.join(
@@ -302,7 +298,6 @@ class Concatenation(luigi.Task):
 
     def requires(self):
         extra = extras(self.pipeline_task)
-
         if extra[0] == 'spark':
 
             emr_task = eval(self.pipeline_task + 'EMR')
@@ -313,11 +308,13 @@ class Concatenation(luigi.Task):
                             id_name=self.pipeline_task + '_' + self.data_date)
 
         else:
+            returns = []
             for extra_p in extra:
-                return Preprocess(pipeline_task=self.pipeline_task,
+                returns.append(Preprocess(pipeline_task=self.pipeline_task,
                                   current_date=self.current_date,
                                   extra=extra_p, data_date=self.data_date,
-                                  suffix=self.suffix)
+                                  suffix=self.suffix))
+            return returns
 
     def run(self):
 
