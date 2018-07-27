@@ -232,46 +232,6 @@ def cuis_39_9(data_date, s3_file, extra_h, out_key):
     return True
 
 
-def inegi_jueces_prep(data_date, s3_file, extra_h, out_key):
-    """
-    Preprocessing function for inegi_jueces: reads df from s3,
-    turns wide-format df to a long-format df, and uploads to s3
-    """
-    bucket = 'dpa-plataforma-preventiva'
-    df = pputils.check_empty_dataframe(bucket, 'etl/' + s3_file, out_key)
-    if df is not None: 
-        columns = ['Nacional', 'Aguascalientes', 'Baja California', 'Baja California Sur',
-                   'Campeche', 'Coahuila de Zaragoza', 'Colima', 'Chiapas', 'Chihuahua', 
-                   'Ciudad de México', 'Durango', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco',
-                   'México', 'Michoacán de Ocampo', 'Morelos', 'Nayarit', 'Nuevo León', 'Oaxaca',
-                   'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 
-                   'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz de Ignacio de la Llave',
-                   'Yucatán', 'Zacatecas']
-        df = pputils.gather(df,'entidad', 'anio', columns) 
-        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
-    return True
-
-
-def inegi_agentes_fiscales_prep(data_date, s3_file, extra_h, out_key):
-    """
-    Preprocessing function for inegi_jueces: reads df from s3,
-    turns wide-format df to a long-format df, and uploads to s3
-    """
-    bucket = 'dpa-plataforma-preventiva'
-    df = pputils.check_empty_dataframe(bucket, 'etl/' + s3_file, out_key) 
-    if df is not None:
-        columns = ['Nacional', 'Aguascalientes', 'Baja California', 'Baja California Sur',
-                   'Campeche', 'Coahuila de Zaragoza', 'Colima', 'Chiapas', 'Chihuahua', 
-                   'Ciudad de México', 'Durango', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco'
-                   'México', 'Michoacán de Ocampo', 'Morelos', 'Nayarit','Nuevo León', 'Oaxaca',
-                   'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 
-                   'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz de Ignacio de la Llave',
-                   'Yucatán', 'Zacatecas']
-        df = pputils.gather(df,'entidad', 'anio', columns) 
-        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
-        return True
-
-
 def no_preprocess_method(data_date, s3_file, extra_h, out_key):
    bucket = 'dpa-plataforma-preventiva'
    pputils.no_preprocess_method(bucket, 'etl/' + s3_file, out_key)
