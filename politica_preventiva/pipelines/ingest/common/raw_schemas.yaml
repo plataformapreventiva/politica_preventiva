@@ -4155,27 +4155,17 @@ inegi_agentes_fiscales:
   - '2016'
 inegi_jueces:
   LUIGI:
-    INDEX: nom_ent
+    INDEX: entidadfederativa
     SCHEMA:
     - entidadfederativa: Integer
-    - '2010': TEXT
-    - '2011': FLOAT
-    - '2012': FLOAT
-    - '2013': FLOAT
-    - '2014': FLOAT
-    - '2015': FLOAT
-    - '2016': FLOAT
+    - anio: TEXT
+    - num_jueces: Integer
     - actualizacion_sedesol: FLOAT
     - data_date: TIMESTAMP
   RAW:
   - entidadfederativa
-  - '2010'
-  - '2011'
-  - '2012'
-  - '2013'
-  - '2014'
-  - '2015'
-  - '2016'
+  - anio
+  - num_jueces
 insp:
   LUIGI:
     INDEX: clavegenerico
