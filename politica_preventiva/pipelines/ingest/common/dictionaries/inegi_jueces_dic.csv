@@ -1,0 +1,6 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+entidadfederativa|NOMBRE DE LA ENTIDAD FEDERATIVA|Mexico Evalua||Capacidades|Acceso a la Justicia|2010-2016|07:12.4||na-fixed
+anio|ANIO|Mexico Evalua||Capacidades|Acceso a la Justicia|2010-2017|07:12.4||na-fixed
+num_jueces|NUMERO DE JUECES POR CADA MIL HABITANTES|Mexico Evalua||Capacidades|Acceso a la Justicia|2010-2018|07:12.4||na-fixed
+actualizacion_sedesol|ACTUALIZACION SEDESOL||||||07:12.4||na-fixed
+data_date|DATA DATE||||||07:12.4||na-fixed
