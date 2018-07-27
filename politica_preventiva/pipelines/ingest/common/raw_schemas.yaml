@@ -4130,29 +4130,19 @@ indesol:
     - actualizacion_sedesol: TIMESTAMP
 inegi_agentes_fiscales:
   LUIGI:
-    INDEX: nom_ent
+    INDEX: entidad_federativa
     SCHEMA:
-    - nom_ent: TEXT
+    - entidad_federativa: TEXT
     - indicador: TEXT
-    - '2010': TEXT
-    - '2011': TEXT
-    - '2012': FLOAT
-    - '2013': FLOAT
-    - '2014': FLOAT
-    - '2015': FLOAT
-    - '2016': FLOAT
+    - anio: Integer
+    - num_agentes_fiscales: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
-  - entidadfederativa
+  - entidad_federativa
   - indicador
-  - '2010'
-  - '2011'
-  - '2012'
-  - '2013'
-  - '2014'
-  - '2015'
-  - '2016'
+  - anio
+  - num_agentes_fiscales
 inegi_jueces:
   LUIGI:
     INDEX: entidadfederativa
