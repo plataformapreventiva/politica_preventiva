@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-########################
+################################################
 # CUAPS: component-level
-########################
+################################################
 
 # Este script ingesta los datos del CUAPS (Cuestionario Único de Aplicación a Programas)  a nivel apoyo. Uno o más apoyos pueden integrar una componente de algún programa.i
-# El script asume que se tiene acceso a la carpeta sifode-raw, en el S3 del proyecto 
+# El script asume que se tiene acceso a la carpeta sifode-raw, en el S3 del proyecto
 
 # Se toman como parámetros, en ese orden, el data day, el directorio de ingesta y el output path.
 
@@ -15,13 +15,15 @@ local_ingest_file=$3
 
 echo 'Downloading CUAPS:component-level data'
 
-aws s3 cp s3://sedesol-lab/CUAPS-PROGRAMAS/BDCUAPS_APOCOMP_3.xlsx $local_path/cuaps_componentes.xlsx
+aws s3 cp s3://sedesol-lab/CUAPS-PROGRAMAS/BDCUAPS_APOCOMP_5.xlsx $local_path/cuaps_componentes.xlsx
 
 echo 'Ingesting CSV file for period: '$period
 
 in2csv --sheet 'BDCUAPS_APOCOMP' $local_path/cuaps_componentes.xlsx | \
 csvformat -D '|' | \
 sed -e '1 s/\./_/g' | \
+awk -F '|' '{while (NF<61) {getline more; $0 = $0 " " more};print}' | \
+cut -d '|' -f 1-61 | \
 sed -e 's/"^M"//g ; s/True/1/g ; s/False/0/g' > $local_ingest_file
 
 echo 'Written to: '$local_ingest_file
