@@ -109,7 +109,6 @@ class TDockerTask(SourceIngestTask):
             task = 'docker-task'
         elif self.extension == 'Rscript':
             task = 'r-task'
-
         cmd_docker = ['docker run', '--env-file $PWD/.env',
               '-it', '--rm', '-v $PWD:/politica_preventiva',
               '-v politica_preventiva_store:/data ',
@@ -123,7 +122,7 @@ class TDockerTask(SourceIngestTask):
 
 class general_ingest(TDockerTask):
     """
-    This general ingest tasks looks for a script in 
+    This general ingest tasks looks for a script in
     classic_task_scripts with the pipeline task name.
     """
     @property
@@ -342,7 +341,7 @@ class distance_to_services(luigi.Task):
         # "gas_station","university","subway_station","police"]
         for keyword in ["Hospital", "bank", "university", "police"]:
             print("looking for nearest {0}".format(keyword))
-            vector_dic = rows.apply(lambda x: 
+            vector_dic = rows.apply(lambda x:
                                     info_to_google_services(x["lat"],
                                                             x["long"],
                                                             keyword),
@@ -434,7 +433,7 @@ class donatarias_sat(SourceIngestTask):
 
 class cuaps_sedesol(SourceIngestTask):
     """
-    Task que descarga el diccionario de programas CUAPS 
+    Task que descarga el diccionario de programas CUAPS
     desarrollado por SEDESOL
     """
     def run(self):

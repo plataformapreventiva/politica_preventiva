@@ -4128,6 +4128,34 @@ indesol:
     - edo_actividad: TEXT
     - informes: JSONB
     - actualizacion_sedesol: TIMESTAMP
+inegi_agentes_fiscales:
+  LUIGI:
+    INDEX: entidad_federativa
+    SCHEMA:
+    - entidad_federativa: TEXT
+    - indicador: TEXT
+    - anio: Integer
+    - num_agentes_fiscales: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad_federativa
+  - indicador
+  - anio
+  - num_agentes_fiscales
+inegi_jueces:
+  LUIGI:
+    INDEX: entidadfederativa
+    SCHEMA:
+    - entidadfederativa: Integer
+    - anio: TEXT
+    - num_jueces: Integer
+    - actualizacion_sedesol: FLOAT
+    - data_date: TIMESTAMP
+  RAW:
+  - entidadfederativa
+  - anio
+  - num_jueces
 insp:
   LUIGI:
     INDEX: clavegenerico
@@ -6392,6 +6420,71 @@ sifode_universos:
   - u_cc_voluntarias
   - u_cc_comensales_mas
   - u_cc_comensales_menos
+sistemas_alertas:
+  LUIGI:
+    INDEX: entidadfederativa
+    SCHEMA:
+    - entidadfederativa: TEXT
+    - resultadodelsistemadealertas: Integer
+    - indicador1deudapublicayobligacionessobreingresosdelibredisposicion: Integer
+    - indicador1: FLOAT
+    - indicador2serviciodeladeudaydeobligacionessobreingresosdelibredisposicion: Integer
+    - indicador2: FLOAT
+    - indicador3obligacionesacortoplazoyproveedoresycontratistassobreingresostotales: Integer
+    - indicador3: FLOAT
+    - deudayobligaciones: FLOAT
+    - subtotal: FLOAT
+    - deuda: FLOAT
+    - ocp: FLOAT
+    - app: FLOAT
+    - subtotal_2: FLOAT
+    - deuda_2: FLOAT
+    - app_2: FLOAT
+    - serviciodeladeudaypagodeinversion: FLOAT
+    - subtotal_3: FLOAT
+    - sd: FLOAT
+    - sd_2: FLOAT
+    - pi: FLOAT
+    - subtotal_4: FLOAT
+    - sd_3: FLOAT
+    - pi_2: FLOAT
+    - obligacionesacortoplazoyproveedoresycontratistas: FLOAT
+    - ocp_2: FLOAT
+    - pc: FLOAT
+    - ingresostotales: FLOAT
+    - ingresosdelibredisposicion: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidadfederativa
+  - resultadodelsistemadealertas
+  - indicador1deudapublicayobligacionessobreingresosdelibredisposicion(dyo/ild)
+  - indicador1
+  - indicador2serviciodeladeudaydeobligacionessobreingresosdelibredisposicion(sdypi/ild)
+  - indicador2
+  - indicador3obligacionesacortoplazoyproveedoresycontratistassobreingresostotales(ocpypc/it)
+  - indicador3
+  - deudayobligaciones(dyo)
+  - subtotal
+  - deuda
+  - ocp
+  - app
+  - subtotal
+  - deuda
+  - app
+  - serviciodeladeudaypagodeinversion(sdypi)
+  - subtotal
+  - sd(lp)
+  - sd(cp)
+  - pi
+  - subtotal
+  - sd
+  - pi
+  - obligacionesacortoplazoyproveedoresycontratistas(ocpypc)
+  - ocp
+  - pc
+  - ingresostotales(it)
+  - ingresosdelibredisposicion(ild)
 test:
   LUIGI:
     INDEX: variable1
