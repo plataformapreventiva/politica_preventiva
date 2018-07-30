@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import luigi
 import logging
@@ -108,7 +109,7 @@ class UpdateRawDB(postgres.CopyToTable):
                 "{", "(").replace("}", ")").replace(":", ",")
             return ast.literal_eval(temp)
        except:
-           logger.exception("Please define the schema and variable types"+ 
+           logger.exception("Please define the schema and variable types"+
                          "for this table  pipeline_task  {0} -"+
                          "data_date-{1}-suffix-{2}".format(
                 self.pipeline_task, self.data_date, self.suffix))
@@ -216,10 +217,10 @@ class UpdateRawDB(postgres.CopyToTable):
         return True
 
     def run(self):
- 
+
         if not (self.table and self.columns):
             raise Exception("table and columns need to be specified")
-        
+
         connection = self.output().connect()
         tmp_dir = luigi.configuration.get_config().get('postgres',
                                                        'local-tmp-dir', None)
