@@ -4549,7 +4549,6 @@ inventario_coneval_federales:
   - tasa_informacion
   - clave_programa
   - id_programa
-=======
 inventario_vivienda_manzanas:
   LUIGI:
     INDEX: cvegeo

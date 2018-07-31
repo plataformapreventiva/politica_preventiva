@@ -50,7 +50,7 @@ create table clean.cuaps_programas as
         cop_npart_3,
         cop_npart_4,
         cop_npart_5,
-        cop_npart_otros,
+        cop_npartotros,
         cop_ordgob_1,
         cop_ordgob_2,
         cop_ordgob_3,
