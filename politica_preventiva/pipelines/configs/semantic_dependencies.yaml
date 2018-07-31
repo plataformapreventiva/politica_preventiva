@@ -6,7 +6,6 @@ cuenta_publica:
 - cuenta_publica_trimestral
 pub_agrupaciones:
 - pub_agrupaciones
-geoms_municipios:
+catalogo_ubicaciones:
 - geoms_municipios
-geoms_estados:
 - geoms_estados

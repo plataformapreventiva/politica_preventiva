@@ -1,5 +1,5 @@
 
-drop table if exists clean.cuaps_componentes cascade;
+drop table if exists clean.cuaps_apoyos cascade;
 
 create temp table temp_tipo_apoyos (
     tipo_pob_apo_cod INT,
@@ -14,7 +14,7 @@ insert into temp_tipo_apoyos values
     (5, 'Área de atención social'),
     (6, 'Otro');
 
-create table clean.cuaps_componentes as
+create table clean.cuaps_apoyos as
     select
         cuaps_folio,
         chr_nombre_programa_cuaps,
@@ -75,6 +75,6 @@ create table clean.cuaps_componentes as
         instru_socioe_cual,
         actualizacion_sedesol,
         data_date
-    from raw.cuaps_componentes
+    from raw.cuaps_apoyos
     join temp_tipo_apoyos using (tipo_pob_apo_cod)
 ;

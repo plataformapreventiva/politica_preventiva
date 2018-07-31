@@ -1,10 +1,10 @@
-SHELL := /bin/bash 
+SHELL := /bin/bash
 PROJECT_NAME:=$(shell cat ../.project-name)
 REPO_DIRECTORY:=$(CURDIR)/../
-IMAGES =  # docker-task
+IMAGES =  r-task
 
 run:
-	 @LUIGI_CONFIG_PATH=./pipelines/configs/luigi.cfg $(PROJECT_NAME) --server 0.0.0.0 --port 8082 --workers $(WORKERS) --level=$(level)
+	 @LUIGI_CONFIG_PATH=./pipelines/configs/luigi.cfg $(PROJECT_NAME) --server 0.0.0.0 --port 8082 --workers $(WORKERS) --level=$(level) --ptask=$(ptask)
 
 setup: .built .built-local-storage
 
