@@ -1,0 +1,22 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+cuaps_folio|Folio CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+csc_estatus_cuaps_fk|Estatus CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:'Exitoso', 2:'Captura Incompleta'}|na-fixed
+chr_nombre_programa_cuaps|Nombre del Programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+id_componente|Identificador del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Id en función del orden de captura|na-fixed
+nombre_componente|Nombre del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+id_apoyo|Identificador del apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Id en función del orden de captura|na-fixed
+nombre_apoyo|Nombre del apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+orden|Orden de numeración que ocupa el criterio|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Id en función del orden de captura|na-fixed
+csc_nivel_0|Criterios de elegibilidad C1 a C9|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{C01-C09}|na-fixed
+chr_descripcion|Descripción del código Criterios de elegibilidad C1 a C9|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+padre|ID de registro que antecede|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Id en función del orden de captura|na-fixed
+csc_configuracion_foc|ID del criterio|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{}|na-fixed
+descripc|Descripción del criterio|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+chr_otra_descripcion|Descripción de otro criterio|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+valor1|Edad mínima|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
+valor2|Edad máxima|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
+mg|Matriz de Gestión|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+sinx|Sintáxis SIFODE|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text to parse|na-fixed
+condicion|Condición: conector lógico entre un criterio y el padre|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{Y:'and', O:'or'}|na-fixed
+actualizacion_sedesol|Actualización SEDESOL|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Timestamp|na-fixed
+data_date|Data date|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Data date|na-fixed

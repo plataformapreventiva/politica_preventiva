@@ -1,0 +1,91 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+cuaps_folio|Folio CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+fh_levantamiento|Fecha de inicio de levantamiento|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Timestamp|na-fixed
+fh_fin_levantamiento|Fecha de fin de levantamiento|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Timestamp|na-fixed
+chr_usuario|Correo electrónico del usuario titular del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+csc_estatus_cuaps_fk|Estatus CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:'Exitoso', 2:'Captura Incompleta'}|na-fixed
+chr_nombre_programa_cuaps|Nombre del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+chr_clave_prespupuestal_pro|Clave presupuestal del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{}|na-fixed
+chr_descripcion_dependencia|Nombre de la dependencia responsable|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+chr_cve_dependencia|Clave de la dependencia responsable|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{}|na-fixed
+chr_unidad_administrativa_cuaps|Nombre de la unidad administrativa |CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+chr_cve_unidad_adm_cuaps|Clave de la unidad administrativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{}|na-fixed
+orden_gob|Orden de gobierno responsable del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:'Federal', 2:'Estatal', 3:'Municipal'}|na-fixed
+part_ua|Forma de participación de la unidad administrativa en el programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{}|na-fixed
+tua_nombre|Nombre del titular de la unidad administrativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+tua_primer_ap|Primer apellido del titular de la unidad administrativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+tua_segundo_ap|Segundo apellido del titular de la unidad administrativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+tua_cargo|Cargo del titular de la unidad administrativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+tua_tel|Teléfono del titular de la unidad administrativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Bigint|na-fixed
+tua_ext|Extensión del titular de la unidad administrativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
+tua_correo|Correo electrónico institucional del titular de la unidad administrativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+rp_nombre|Nombre del titular del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+rp_primer_ap|Primer apellido del titular del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+rp_segundo_ap|Segundo apellido del titular del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+rp_cargo|Cargo del titular del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+rp_tel|Teléfono del titular del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Bigint|na-fixed
+rp_ext|Extensión del titular del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
+rp_correo|Correo electrónico institucional del titular del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+ep_nombre|Nombre del enlace del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+ep_primer_ap|Primer apellido del enlace del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+ep_segundo_ap|Segundo apellido del enlace del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+ep_cargo|Cargo del enlace del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+ep_tel|Teléfono del enlace del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Bigint|na-fixed
+ep_ext|Extensión del enlace del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
+ep_correo|Correo electrónico del enlace del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+anio_inicio_prog|Año de inicio de operación del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
+doc_norma|El programa cuenta con algún documento normativo que rija su operación|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+doc_supweb|Existe algún sitio web donde se detalle la información del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+nom_doc_norma|Nombre completo del documento normativo vigente que rige la operación del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+sitio_web|El documento normativo se encuentra disponible en algún sitio web|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+chr_doc_norma|Nombre del archivo del documento normativo que se adjunta al CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+csc_archivo|Llave Archivo PDF que se adjunta|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+sitio_web_esp|Enlace electrónico directo del documento normativo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+obj_gral_prog|Objetivo general del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+obj_esp_prog_1|Objetivo específico del programa 1|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+obj_esp_prog_2|Objetivo específico del programa 2|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+obj_esp_prog_3|Objetivo específico del programa 3|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+obj_esp_prog_4|Objetivo específico del programa 4|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+obj_esp_prog_5|Objetivo específico del programa 5|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+obj_esp_prog_6|Objetivo específico del programa 6|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+obj_esp_prog_7|Objetivo específico del programa 7|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+pob_obj_prog|Población objetivo del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cobertura_geo|Cobertura geográfica del programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{'Nacional', 'Estatal', 'Municipal'}|na-fixed
+cve_entidad_federativa|Clave de la entidad federativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
+nom_entidad_federativa|Nombre de la entidad federativa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cve_municipio|Clave del municipio|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
+nom_municipio|Nombre del municipio|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+pob_poten|Cuantificación de la población potencial|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Bigint|na-fixed
+pob_poten_um|Unidad de medida de la cuantificación de la población potencial|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+num_pob_objet|Cuantificación de la población objetivo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Bigint|na-fixed
+pob_objet_um|Unidad de medida de la cuantificación de la población objetivo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+pob_aten_efa|Población atendida en el ejercicio fiscal anterior|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Bigint|na-fixed
+pob_aten_efa_um|Unidad de medida de la población atendida en el ejercicio fiscal anterior|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+pres_anter|Monto presupuestal ejercido en el ejercicio fiscal inmediato anterior|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Bigint|na-fixed
+pres_vigen|Monto presupuestado para el ejercicio fiscal vigente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+coparticipacion|Se tienen previstos esquemas de coparticipación con otros programas, instancias de gobierno, instituciones, asociaciones y/o beneficiarios|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+cop_tipart_1|Tipo de participación 1|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cop_tipart_2|Tipo de participación 2|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cop_tipart_3|Tipo de participación 3|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cop_npart_1|Nombre del coparticipante 1|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cop_npart_2|Nombre del coparticipante 2|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cop_npart_3|Nombre del coparticipante 3|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cop_ordgob_1|Orden de gobierno del coparticipante 1|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{'Federal', 'Estatal', 'Municipal'}|na-fixed
+cop_ordgob_2|Orden de gobierno del coparticipante 2|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{'Federal', 'Estatal', 'Municipal'}|na-fixed
+cop_ordgob_3|Orden de gobierno del coparticipante 3|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{'Federal', 'Estatal', 'Municipal'}|na-fixed
+cop_tipint_1|Coparticipante 1|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cop_tipint_2|Coparticipante 2|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+cop_tipint_3|Coparticipante 3|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
+der_social_edu|El programa contribuye al derecho social a la Educación|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_sal|El programa contribuye al derecho social a la Salud|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_alim|El programa contribuye al derecho social a la Alimentación|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_viv|El programa contribuye al derecho social a la Vivienda|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_mam|El programa contribuye al derecho social al Medio Ambiente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_tra|El programa contribuye al derecho social al Trabajo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_segsoc|El programa contribuye al derecho social a la Seguridad Social|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_nodis|El programa contribuye al derecho social a la No Discriminación|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_beco|El programa contribuye al derecho social al Bienestar Económico|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+der_social_ning|El programa no contribuye a ningún derecho social|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+tiene_componentes|El programa cuenta con componentes|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
+actualizacion_sedesol|Actualización SEDESOL|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Timestamp|na-fixed
+data_date|Data date|CUAPS|www.gob.mx/sedesol|Programas|Cuestionarios|Anual|2018-07-31 18:34:50.955489|Data date|na-fixed
