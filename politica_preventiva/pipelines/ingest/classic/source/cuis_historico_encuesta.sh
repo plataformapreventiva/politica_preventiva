@@ -20,7 +20,7 @@ aws s3 cp s3://sedesol-lab/CUIS-HISTORICO/encuesta.zip $local_path/encuesta.zip
 echo 'Decompressing zip file'
 
 unzip -c $local_path/encuesta.zip | \
-sed '1,2d' | 
+sed '1,2d' |
 csvformat -d '^' -D '|' -v > $local_ingest_file
 
 echo 'Written to: '$local_ingest_file
