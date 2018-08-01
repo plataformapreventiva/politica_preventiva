@@ -7,6 +7,7 @@ library(purrr)
 library(rlang)
 library(stringr)
 library(tidyr)
+library(RPostgres)
 source("pipelines/etl/tools/tidy_tools.R")
 
 option_list = list(
@@ -117,12 +118,13 @@ if(length(opt) > 1){
                             mutate(plot_prefix = gsub('(s.*)(-.*)', '\\1', plot))
 
   copy_to(con, cuaps_programas_tidy,
-          dbplyr::in_schema('tidy', 'cuaps_programas'),
+          name = dbplyr::in_schema('tidy', 'cuaps_programas'),
           temporary = FALSE, overwrite = TRUE)
 
 
   # disconnect from the database
   dbDisconnect(con)
 }
+
 
 
