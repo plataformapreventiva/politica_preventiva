@@ -5123,6 +5123,301 @@ pub_agrupaciones:
     - suma_importe: FLOAT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
+recursos_hospitales:
+  LUIGI:
+    INDEX: clavemunicipio
+    SCHEMA:
+    - clues: TEXT
+    - claveentidad: Integer
+    - entidad: TEXT
+    - clavemunicipio: Integer
+    - municipio: TEXT
+    - clavelocalidad: Integer
+    - localidad: TEXT
+    - tipodeestablecimiento: TEXT
+    - tipologia: TEXT
+    - nombredelestablecimiento: TEXT
+    - unidades: INT
+    - e13: Integer
+    - c1301: Integer
+    - c1302: Integer
+    - c1303: Integer
+    - c1304: Integer
+    - c1305: Integer
+    - c1306: Integer
+    - c1307: INT
+    - c1308: Integer
+    - c1309: INT
+    - c1310: Integer
+    - c1311: INT
+    - c1312: Integer
+    - c1313: Integer
+    - c1314: Integer
+    - c1315: INT
+    - c1316: Integer
+    - c1317: Integer
+    - c1318: INT
+    - c1319: Integer
+    - c1320: INT
+    - c1321: Integer
+    - e14: Integer
+    - c1400: Integer
+    - c1401: Integer
+    - c1402: Integer
+    - c1403: Integer
+    - c1404: Integer
+    - c1405: Integer
+    - c1406: Integer
+    - c1408: Integer
+    - e15: Integer
+    - c1501: Integer
+    - c1502: Integer
+    - c1504: Integer
+    - c1505: Integer
+    - c1506: Integer
+    - c1507: Integer
+    - c1508: Integer
+    - c1509: Integer
+    - c1601: Integer
+    - c1602: Integer
+    - c1701: Integer
+    - c1702: Integer
+    - e1819: Integer
+    - c1801: Integer
+    - c1803: Integer
+    - c1804: Integer
+    - c1805: Integer
+    - c1806: Integer
+    - c1807: Integer
+    - c1808: Integer
+    - c1809: Integer
+    - c1810: Integer
+    - c1811: Integer
+    - c1812: Integer
+    - c1813: Integer
+    - c1814: INT
+    - c1815: Integer
+    - c1816: Integer
+    - c1817: Integer
+    - c1818: Integer
+    - c1819: Integer
+    - c1820: Integer
+    - c1821: Integer
+    - c1822: Integer
+    - c1823: Integer
+    - c1824: INT
+    - c1825: Integer
+    - c1826: Integer
+    - c1901: Integer
+    - c1902: Integer
+    - c1903: Integer
+    - c1904: Integer
+    - e20: Integer
+    - c2001: Integer
+    - c2002: Integer
+    - c2003: Integer
+    - c2004: Integer
+    - c2005: Integer
+    - e21: Integer
+    - c2101: Integer
+    - c2102: Integer
+    - c2103: Integer
+    - c2104: Integer
+    - e22: Integer
+    - c2201: Integer
+    - c2202: Integer
+    - c2204: Integer
+    - e23: Integer
+    - c2301: Integer
+    - c2302: Integer
+    - c2303: INT
+    - c2304: Integer
+    - c2305: Integer
+    - c2306: Integer
+    - c2308: Integer
+    - e24: Integer
+    - c2401: INT
+    - c2402: Integer
+    - c2403: Integer
+    - c2404: Integer
+    - c2405: Integer
+    - c2406: Integer
+    - c2407: Integer
+    - c2408: INT
+    - c2409: Integer
+    - c2410: Integer
+    - c2411: Integer
+    - c2412: Integer
+    - c2413: Integer
+    - c2414: Integer
+    - c2415: Integer
+    - e25: Integer
+    - c2501: Integer
+    - c2502: Integer
+    - c2503: Integer
+    - c2504: Integer
+    - c2506: Integer
+    - c1706: INT
+    - c1707: Integer
+    - c1710: Integer
+    - c1711: INT
+    - c1725: Integer
+    - c1729: INT
+    - c1735: INT
+    - c1738: INT
+    - c1744: INT
+    - c1745: INT
+    - c1746: Integer
+    - c1747: Integer
+    - c1749: INT
+    - c1750: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - clues
+  - claveentidad
+  - entidad
+  - clavemunicipio
+  - municipio
+  - clavelocalidad
+  - localidad
+  - tipodeestablecimiento
+  - tipologia
+  - nombredelestablecimiento
+  - unidades
+  - e13
+  - c1301
+  - c1302
+  - c1303
+  - c1304
+  - c1305
+  - c1306
+  - c1307
+  - c1308
+  - c1309
+  - c1310
+  - c1311
+  - c1312
+  - c1313
+  - c1314
+  - c1315
+  - c1316
+  - c1317
+  - c1318
+  - c1319
+  - c1320
+  - c1321
+  - e14
+  - c1400
+  - c1401
+  - c1402
+  - c1403
+  - c1404
+  - c1405
+  - c1406
+  - c1408
+  - e15
+  - c1501
+  - c1502
+  - c1504
+  - c1505
+  - c1506
+  - c1507
+  - c1508
+  - c1509
+  - c1601
+  - c1602
+  - c1701
+  - c1702
+  - e1819
+  - c1801
+  - c1803
+  - c1804
+  - c1805
+  - c1806
+  - c1807
+  - c1808
+  - c1809
+  - c1810
+  - c1811
+  - c1812
+  - c1813
+  - c1814
+  - c1815
+  - c1816
+  - c1817
+  - c1818
+  - c1819
+  - c1820
+  - c1821
+  - c1822
+  - c1823
+  - c1824
+  - c1825
+  - c1826
+  - c1901
+  - c1902
+  - c1903
+  - c1904
+  - e20
+  - c2001
+  - c2002
+  - c2003
+  - c2004
+  - c2005
+  - e21
+  - c2101
+  - c2102
+  - c2103
+  - c2104
+  - e22
+  - c2201
+  - c2202
+  - c2204
+  - e23
+  - c2301
+  - c2302
+  - c2303
+  - c2304
+  - c2305
+  - c2306
+  - c2308
+  - e24
+  - c2401
+  - c2402
+  - c2403
+  - c2404
+  - c2405
+  - c2406
+  - c2407
+  - c2408
+  - c2409
+  - c2410
+  - c2411
+  - c2412
+  - c2413
+  - c2414
+  - c2415
+  - e25
+  - c2501
+  - c2502
+  - c2503
+  - c2504
+  - c2506
+  - c1706
+  - c1707
+  - c1710
+  - c1711
+  - c1725
+  - c1729
+  - c1735
+  - c1738
+  - c1744
+  - c1745
+  - c1746
+  - c1747
+  - c1749
+  - c1750
 red_carretera:
   LUIGI:
     INDEX: nombre
