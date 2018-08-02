@@ -81,7 +81,11 @@ def header_test(path, task, common_path, suffix, new=True):
                 first_line = [remove_extra_chars(x)  for x in first_lines]
                 types = ['TEXT'] * len(first_line)
                 types.append("TIMESTAMP")
-                types.append('TEXT') 
+                types.append('TEXT')
+                initial_schema = first_line[:]
+                initial_schema.append("actualizacion_sedesol")
+                initial_schema.append("data_date")
+                initial_schema = [{a:str(b)} for a,b in zip(initial_schema,types)]
 
         except:
             # Otro error aún no reconocido
