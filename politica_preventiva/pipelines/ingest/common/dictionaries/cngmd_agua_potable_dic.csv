@@ -1,0 +1,6 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+aps_folio|Folio|INEGI CNGMD|http://www.beta.inegi.org.mx/contenidos/proyectos/censosgobierno/municipal/cngmd/2017/microdatos/m5/Serv_agua_red_cngmd2017_dbf.zip|Capacidades|Sistema de Gesti?n Municipal|2017|2018-08-03 22:47:00.336923||na-fixed
+aps_entidad|Entidad Federativa|INEGI CNGMD|http://www.beta.inegi.org.mx/contenidos/proyectos/censosgobierno/municipal/cngmd/2017/microdatos/m5/Serv_agua_red_cngmd2017_dbf.zip|Capacidades|Sistema de Gesti?n Municipal|2017|2018-08-03 22:47:00.336923||na-fixed
+sa_agua_serv|Servicio de agua potable|INEGI CNGMD|http://www.beta.inegi.org.mx/contenidos/proyectos/censosgobierno/municipal/cngmd/2017/microdatos/m5/Serv_agua_red_cngmd2017_dbf.zip|Capacidades|Sistema de Gesti?n Municipal|2017|2018-08-03 22:47:00.336923||na-fixed
+actualizacion_sedesol||INEGI CNGMD|http://www.beta.inegi.org.mx/contenidos/proyectos/censosgobierno/municipal/cngmd/2017/microdatos/m5/Serv_agua_red_cngmd2017_dbf.zip|Capacidades|Sistema de Gesti?n Municipal|2017|2018-08-03 22:47:00.336923||na-fixed
+data_date||INEGI CNGMD|http://www.beta.inegi.org.mx/contenidos/proyectos/censosgobierno/municipal/cngmd/2017/microdatos/m5/Serv_agua_red_cngmd2017_dbf.zip|Capacidades|Sistema de Gesti?n Municipal|2017|2018-08-03 22:47:00.336923||na-fixed
