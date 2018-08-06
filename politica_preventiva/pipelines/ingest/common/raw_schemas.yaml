@@ -242,6 +242,19 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+cngmd_agua_potable:
+  LUIGI:
+    INDEX: aps_entidad
+    SCHEMA:
+    - aps_folio: Integer
+    - aps_entidad: Integer
+    - sa_agua_serv: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - aps_folio
+  - aps_entidad
+  - sa_agua_serv
 comedores:
   LUIGI:
     INDEX: id_com
