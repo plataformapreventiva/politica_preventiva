@@ -242,6 +242,42 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+cngmd_drenaje:
+  LUIGI:
+    INDEX: aps_entidad
+    SCHEMA:
+    - aps_folio: Integer
+    - aps_entidad: Integer
+    - sd_dren_serv: Integer
+    - sd_dren_cab: FLOAT
+    - sd_dren_resto: FLOAT
+    - sd_dren_pluvial: Integer
+    - sd_dren_ext_kms: Integer
+    - sd_dren_red: INT
+    - sd_dren_lugr_planta_trat: Integer
+    - sd_dren_lugr_laguna_oxi: Integer
+    - sd_dren_lugr_cuerp_agua: Integer
+    - sd_dren_lugr_otro: Integer
+    - sd_dren_lugr_cuerp_agua_esp: TEXT
+    - sd_dren_lugr_otro_esp: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - aps_folio
+  - aps_entidad
+  - sd_dren_serv
+  - sd_dren_cab
+  - sd_dren_resto
+  - sd_dren_pluvial
+  - sd_dren_ext_kms
+  - sd_dren_red
+  - sd_dren_lugr_planta_trat
+  - sd_dren_lugr_laguna_oxi
+  - sd_dren_lugr_cuerp_agua
+  - sd_dren_lugr_otro
+  - sd_dren_lugr_cuerp_agua_esp
+  - sd_dren_lugr_otro_esp
+
 cngmd_agua_potable:
   LUIGI:
     INDEX: aps_entidad
@@ -255,6 +291,7 @@ cngmd_agua_potable:
   - aps_folio
   - aps_entidad
   - sa_agua_serv
+  
 comedores:
   LUIGI:
     INDEX: id_com
