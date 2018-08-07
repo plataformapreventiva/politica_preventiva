@@ -242,6 +242,65 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+cngmd_transparencia:
+  LUIGI:
+    INDEX: ubic_geo
+    SCHEMA:
+    - ubic_geo: Integer
+    - inf_publ: Integer
+    - nd_nsnn1_x: INT
+    - nd_frecu_x: Integer
+    - meaccm1_x: TEXT
+    - meaccm2_x: TEXT
+    - meaccm3_x: TEXT
+    - meaccm4_x: TEXT
+    - meaccm5_x: TEXT
+    - meaccm6_x: TEXT
+    - meaccm7_x: TEXT
+    - meaccm8_x: TEXT
+    - totalca1: TEXT
+    - no_aplic: INT
+    - mec_tran: Integer
+    - infpuesp: Integer
+    - nd_nsnn1_y: Integer
+    - nd_frecu_y: Integer
+    - meaccm1_y: TEXT
+    - meaccm2_y: TEXT
+    - meaccm3_y: TEXT
+    - meaccm4_y: TEXT
+    - meaccm5_y: TEXT
+    - meaccm6_y: TEXT
+    - meaccm7_y: TEXT
+    - meaccm8_y: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ubic_geo
+  - inf_publ
+  - nd_nsnn1.x
+  - nd_frecu.x
+  - meaccm1.x
+  - meaccm2.x
+  - meaccm3.x
+  - meaccm4.x
+  - meaccm5.x
+  - meaccm6.x
+  - meaccm7.x
+  - meaccm8.x
+  - totalca1
+  - no_aplic
+  - mec_tran
+  - infpuesp
+  - nd_nsnn1.y
+  - nd_frecu.y
+  - meaccm1.y
+  - meaccm2.y
+  - meaccm3.y
+  - meaccm4.y
+  - meaccm5.y
+  - meaccm6.y
+  - meaccm7.y
+  - meaccm8.y
 cngmd_drenaje:
   LUIGI:
     INDEX: aps_entidad
