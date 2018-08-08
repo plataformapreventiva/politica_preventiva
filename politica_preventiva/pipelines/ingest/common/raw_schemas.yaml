@@ -242,6 +242,23 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+cngmd_predial:
+  LUIGI:
+    INDEX: ubic_geo
+    SCHEMA:
+    - ubic_geo: Integer
+    - aut_cobr: Integer
+    - edo_cta: Integer
+    - res_nss1: TEXT
+    - totalpo1: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ubic_geo
+  - aut_cobr
+  - edo_cta
+  - res_nss1
+  - totalpo1
 comedores:
   LUIGI:
     INDEX: id_com
