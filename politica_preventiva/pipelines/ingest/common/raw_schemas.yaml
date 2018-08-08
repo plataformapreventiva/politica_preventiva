@@ -241,8 +241,7 @@ cfe:
   - septiembre
   - octubre
   - noviembre
-  - diciembre
-
+  - diciembre 
 cngmd_predial:
   LUIGI:
     INDEX: ubic_geo
@@ -295,7 +294,6 @@ cngmd_drenaje:
   - sd_dren_lugr_otro
   - sd_dren_lugr_cuerp_agua_esp
   - sd_dren_lugr_otro_esp
-
 cngmd_agua_potable:
   LUIGI:
     INDEX: aps_entidad
@@ -367,8 +365,7 @@ cngmd_transparencia:
   - meaccm5.y
   - meaccm6.y
   - meaccm7.y
-  - meaccm8.y  
-  
+  - meaccm8.y    
 comedores:
   LUIGI:
     INDEX: id_com
