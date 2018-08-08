@@ -27,3 +27,4 @@ SELECT * FROM (
 ) AS cols
  LEFT JOIN semantic.reporte_programas_labels AS labels
  USING (plot_prefix, variable, categoria));
+
