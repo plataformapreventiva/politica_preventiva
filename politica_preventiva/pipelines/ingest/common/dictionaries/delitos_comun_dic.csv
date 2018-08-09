@@ -1,0 +1,14 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+anio|Año de averiguación|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+cve_ent|Clave de entidad federativa|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+nom_ent|Nombre de entidad federativa|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+cve_muni|Clave de municipio|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+nom_muni|Nombre de municipio|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+bienjuridicoafectado|Bien jurídico afectado|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+tipodedelito|Tipo de delito|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+subtipodedelito|Subtipo de delito|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+modalidad|Modalidad|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+mes|Mes de averiguación|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+incidencia_delictiva|Total de averiguaciones previas en el mes|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+actualizacion_sedesol|Actualización SEDESOL|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m
+data_date|Data date|SENSP|secretariadoejecutivo.gob.mx|crimen|delitos del fuero común|2015-2018|2018-08-08 00:00:28.461915||2018-6-m

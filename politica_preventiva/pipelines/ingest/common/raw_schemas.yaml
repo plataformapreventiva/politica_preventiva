@@ -2824,6 +2824,45 @@ defunciones_generales:
   - loc_ocules
   - razon_m
   - dis_re_oax
+delitos_comun:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - anio: Integer
+    - cve_ent: TEXT
+    - nom_ent: TEXT
+    - cve_muni: TEXT
+    - nom_muni: TEXT
+    - bienjuridicoafectado: TEXT
+    - tipodedelito: TEXT
+    - subtipodedelito: TEXT
+    - modalidad: TEXT
+    - mes: TEXT
+    - incidencia_delictiva: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ano
+  - clave_ent
+  - entidad
+  - cve.municipio
+  - municipio
+  - bienjuridicoafectado
+  - tipodedelito
+  - subtipodedelito
+  - modalidad
+  - enero
+  - febrero
+  - marzo
+  - abril
+  - mayo
+  - junio
+  - julio
+  - agosto
+  - septiembre
+  - octubre
+  - noviembre
+  - diciembre
 denue:
   LUIGI:
     INDEX: d_llave
