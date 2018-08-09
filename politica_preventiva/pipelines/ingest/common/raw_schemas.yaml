@@ -242,6 +242,93 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+cngmd_agua_potable:
+  LUIGI:
+    INDEX: aps_entidad
+    SCHEMA:
+    - aps_folio: Integer
+    - aps_entidad: Integer
+    - sa_agua_serv: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - aps_folio
+  - aps_entidad
+  - sa_agua_serv
+cngmd_drenaje:
+  LUIGI:
+    INDEX: aps_entidad
+    SCHEMA:
+    - aps_folio: Integer
+    - aps_entidad: Integer
+    - sd_dren_serv: Integer
+    - sd_dren_cab: FLOAT
+    - sd_dren_resto: FLOAT
+    - sd_dren_pluvial: Integer
+    - sd_dren_ext_kms: Integer
+    - sd_dren_red: INT
+    - sd_dren_lugr_planta_trat: Integer
+    - sd_dren_lugr_laguna_oxi: Integer
+    - sd_dren_lugr_cuerp_agua: Integer
+    - sd_dren_lugr_otro: Integer
+    - sd_dren_lugr_cuerp_agua_esp: TEXT
+    - sd_dren_lugr_otro_esp: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - aps_folio
+  - aps_entidad
+  - sd_dren_serv
+  - sd_dren_cab
+  - sd_dren_resto
+  - sd_dren_pluvial
+  - sd_dren_ext_kms
+  - sd_dren_red
+  - sd_dren_lugr_planta_trat
+  - sd_dren_lugr_laguna_oxi
+  - sd_dren_lugr_cuerp_agua
+  - sd_dren_lugr_otro
+  - sd_dren_lugr_cuerp_agua_esp
+  - sd_dren_lugr_otro_esp
+cngmd_proteccion_civil:
+  LUIGI:
+    INDEX: ubic_geo
+    SCHEMA:
+    - ubic_geo: Integer
+    - nd_nsnn1: Integer
+    - nd_nsnn2: Integer
+    - nd_spnn1: Integer
+    - nd_nsnn3: Integer
+    - nd_nsnn4: Integer
+    - nd_nsnn5: Integer
+    - nd_nsnn6: Integer
+    - nd_nsnn7: Integer
+    - nd_nsnn8: Integer
+    - nd_nsnn9: Integer
+    - ndnsnn10: Integer
+    - ndnsnn11: Integer
+    - totalca1: TEXT
+    - totalca2: TEXT
+    - totalca3: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ubic_geo
+  - nd_nsnn1
+  - nd_nsnn2
+  - nd_spnn1
+  - nd_nsnn3
+  - nd_nsnn4
+  - nd_nsnn5
+  - nd_nsnn6
+  - nd_nsnn7
+  - nd_nsnn8
+  - nd_nsnn9
+  - ndnsnn10
+  - ndnsnn11
+  - totalca1
+  - totalca2
+  - totalca3
 cngmd_transparencia:
   LUIGI:
     INDEX: ubic_geo
@@ -301,56 +388,6 @@ cngmd_transparencia:
   - meaccm6.y
   - meaccm7.y
   - meaccm8.y
-cngmd_drenaje:
-  LUIGI:
-    INDEX: aps_entidad
-    SCHEMA:
-    - aps_folio: Integer
-    - aps_entidad: Integer
-    - sd_dren_serv: Integer
-    - sd_dren_cab: FLOAT
-    - sd_dren_resto: FLOAT
-    - sd_dren_pluvial: Integer
-    - sd_dren_ext_kms: Integer
-    - sd_dren_red: INT
-    - sd_dren_lugr_planta_trat: Integer
-    - sd_dren_lugr_laguna_oxi: Integer
-    - sd_dren_lugr_cuerp_agua: Integer
-    - sd_dren_lugr_otro: Integer
-    - sd_dren_lugr_cuerp_agua_esp: TEXT
-    - sd_dren_lugr_otro_esp: TEXT
-    - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
-  RAW:
-  - aps_folio
-  - aps_entidad
-  - sd_dren_serv
-  - sd_dren_cab
-  - sd_dren_resto
-  - sd_dren_pluvial
-  - sd_dren_ext_kms
-  - sd_dren_red
-  - sd_dren_lugr_planta_trat
-  - sd_dren_lugr_laguna_oxi
-  - sd_dren_lugr_cuerp_agua
-  - sd_dren_lugr_otro
-  - sd_dren_lugr_cuerp_agua_esp
-  - sd_dren_lugr_otro_esp
-
-cngmd_agua_potable:
-  LUIGI:
-    INDEX: aps_entidad
-    SCHEMA:
-    - aps_folio: Integer
-    - aps_entidad: Integer
-    - sa_agua_serv: INT
-    - actualizacion_sedesol: TIMESTAMP
-    - data_date: TEXT
-  RAW:
-  - aps_folio
-  - aps_entidad
-  - sa_agua_serv
-  
 comedores:
   LUIGI:
     INDEX: id_com
