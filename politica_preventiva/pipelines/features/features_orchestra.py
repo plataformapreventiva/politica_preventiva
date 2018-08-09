@@ -59,7 +59,6 @@ class FeaturesPipeline(luigi.WrapperTask):
 
 class UpdateFeaturesDB(postgres.PostgresQuery):
 
-
     features_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     client = S3Client()
@@ -100,18 +99,16 @@ class UpdateFeaturesDB(postgres.PostgresQuery):
     def requires(self):
         # Check table dependencies
         feature_tables = set([*composition]) & \
-                set(composition[self.model_task]['dependencies'])
-        clean_tables = set(composition[self.model_task]['dependencies']) - \
+                set(composition[self.features_task]['dependencies'])
+        clean_tables = set(composition[self.features_task]['dependencies']) - \
                 set([*composition])
 
-        yield [UpdateCleanDB(current_date=self.current_date,
-                             pipeline_task=pipeline_task,
-                             data_date=self.data_date)
+        yield [ETLPipeline(current_date=self.current_date,
+                             pipelines=pipeline_task)
                for pipeline_task in clean_tables]
 
-        yield [RunModel(current_Date=self.current_date,
-                        feature_task=feature_task,
-                        data_date=self.data_date)
+        yield [FeaturesPipeline(current_Date=self.current_date,
+                                feature_task=feature_task)
                for feature_task in feature_tables]
 
     def output(self):
