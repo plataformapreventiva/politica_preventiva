@@ -98,18 +98,23 @@ class UpdateFeaturesDB(postgres.PostgresQuery):
 
     def requires(self):
         # Check table dependencies
-        feature_tables = set([*composition]) & \
-                set(composition[self.features_task]['dependencies'])
-        clean_tables = set(composition[self.features_task]['dependencies']) - \
-                set([*composition])
+        dep_types = [dt for dt in composition[self.features_task].keys()]
 
-        yield [ETLPipeline(current_date=self.current_date,
-                             pipelines=pipeline_task)
-               for pipeline_task in clean_tables]
+        for dt in dep_types:
+            if 'features_dependencies' in dep_types:
+                features_tables = composition[self.features_task]['features_dependencies']
+                yield [FeaturesPipeline(current_Date=self.current_date,
+                    feature_task=feature_task) for feature_task in features_tables]
 
-        yield [FeaturesPipeline(current_Date=self.current_date,
-                                feature_task=feature_task)
-               for feature_task in feature_tables]
+            if 'clean_dependencies' in dep_types:
+                clean_tables = composition[self.clean_task]['clean_dependencies']
+                yield [ETLPipeline(current_date=self.current_date,
+                    pipelines=pipeline_task) for pipeline_task in clean_tables]
+
+            if 'model_dependencies' in dep_types:
+                models_tables = composition[self.models_task]['models_dependencies']
+                yield [ModelsPipeline(current_date=self.current_date,
+                    pipelines=pipeline_task) for pipeline_task in models_tables]
 
     def output(self):
         return PostgresTarget(host=self.host,

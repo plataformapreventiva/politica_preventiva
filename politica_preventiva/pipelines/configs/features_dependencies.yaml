@@ -1,3 +1,9 @@
+# YAML file indicating feature task dependencies.
+# Dependencies are to be listed according to the schema
+# their PostgreSQL table is located in:
+# clean_dependencies: "clean"
+# features_dependencies: "features"
+# models_dependencies: "models"
 cuis_carencias:
     clean_dependencies:
         - cuis_historico_integrante
