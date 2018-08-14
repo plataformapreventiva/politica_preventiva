@@ -1,0 +1,10 @@
+id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
+ciclo|A?o|SHCP|"http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Entidades_Federativas/ici_historico.xlsx"""|Capacidades|Administrativa/Operativa|2014-2018|2018-08-14 17:34:35.222457||na-fixed
+trimestre|Trimestre|SHCP|"http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Entidades_Federativas/ici_historico.xlsx"""|Capacidades|Administrativa/Operativa|2014-2019|2018-08-14 17:34:35.222457||na-fixed
+id_entidad_federativa|Clave de la entidad federativa|SHCP|"http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Entidades_Federativas/ici_historico.xlsx"""|Capacidades|Administrativa/Operativa|2014-2020|2018-08-14 17:34:35.222457||na-fixed
+entidad_federativa|Nombre del municipio|SHCP|"http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Entidades_Federativas/ici_historico.xlsx"""|Capacidades|Administrativa/Operativa|2014-2021|2018-08-14 17:34:35.222457||na-fixed
+id_tipo_valoracion_ici|Clave de los componentes|SHCP|"http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Entidades_Federativas/ici_historico.xlsx"""|Capacidades|Administrativa/Operativa|2014-2022|2018-08-14 17:34:35.222457|"{""1-global""|""2-proyectos""|""3-financiero""|""4-indicadores""}'"|na-fixed
+tipo_valoracion_ici|Valoraciones de los componentes|SHCP|"http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Entidades_Federativas/ici_historico.xlsx"""|Capacidades|Administrativa/Operativa|2014-2023|2018-08-14 17:34:35.222457|"'{""1-global""|""2-proyectos""|""3-financiero""|""4-indicadores""}'"|na-fixed
+valor_ici|Resultado del c?lculo por componente|SHCP|"http://www.transparenciapresupuestaria.gob.mx/work/models/PTP/DatosAbiertos/Entidades_Federativas/ici_historico.xlsx"""|Capacidades|Administrativa/Operativa|2014-2024|2018-08-14 17:34:35.222457||na-fixed
+actualizacion_sedesol|||||||2018-08-14 17:34:35.222457||na-fixed
+data_date|||||||2018-08-14 17:34:35.222457||na-fixed

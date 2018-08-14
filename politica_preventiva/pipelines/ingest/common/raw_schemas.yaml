@@ -241,7 +241,7 @@ cfe:
   - septiembre
   - octubre
   - noviembre
-  - diciembre 
+  - diciembre
 cngmd_agua_potable:
   LUIGI:
     INDEX: aps_entidad
@@ -5822,6 +5822,27 @@ sequia:
   - cve_conc
   - fecha
   - declaratoria
+shcp_ici_estados:
+  LUIGI:
+    INDEX: id_entidad_federativa
+    SCHEMA:
+    - ciclo: Integer
+    - trimestre: Integer
+    - id_entidad_federativa: Integer
+    - entidad_federativa: TEXT
+    - id_tipo_valoracion_ici: Integer
+    - tipo_valoracion_ici: TEXT
+    - valor_ici: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ciclo
+  - trimestre
+  - id_entidad_federativa
+  - entidad_federativa
+  - id_tipo_valoracion_ici
+  - tipo_valoracion_ici
+  - valor_ici
 sifode:
   LUIGI:
     INDEX: llave_hogar_h
