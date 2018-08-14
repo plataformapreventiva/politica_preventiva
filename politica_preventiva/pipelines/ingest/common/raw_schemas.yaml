@@ -346,6 +346,181 @@ cngmd_proteccion_civil:
   - totalca1
   - totalca2
   - totalca3
+cngmd_recoleccion_basura:
+  LUIGI:
+    INDEX: rsu_cve_ent
+    SCHEMA:
+    - rsu_folio: Integer
+    - rsu_cve_ent: Integer
+    - rsu_recl_serv: Integer
+    - basura_cant_ton: FLOAT
+    - basura_cant_kgs: Integer
+    - basura_porcent_cab: FLOAT
+    - basura_metodo_med: Integer
+    - basura_metodo_med_esp: TEXT
+    - basura_recl_sis: Integer
+    - basura_recl_sis_otr_esp: TEXT
+    - rsu_recl_vehi_tot: Integer
+    - rsu_vehi_tip_01: Integer
+    - rsu_vehi_num_01: Integer
+    - rsu_vehi_tip_02: Integer
+    - rsu_vehi_num_02: Integer
+    - rsu_vehi_tip_03: Integer
+    - rsu_vehi_num_03: Integer
+    - rsu_vehi_tip_04: Integer
+    - rsu_vehi_num_04: Integer
+    - rsu_vehi_tip_05: Integer
+    - rsu_vehi_num_05: Integer
+    - rsu_vehi_tip_06: Integer
+    - rsu_vehi_num_06: Integer
+    - rsu_vehi_tip_07: Integer
+    - rsu_vehi_num_07: Integer
+    - rsu_vehi_tip_08: Integer
+    - rsu_vehi_num_08: Integer
+    - rsu_vehi_tip_09: Integer
+    - rsu_vehi_num_09: Integer
+    - rsu_vehi_tip_10: Integer
+    - rsu_vehi_num_10: Integer
+    - rsu_vehi_tip_11: Integer
+    - rsu_vehi_num_11: Integer
+    - rsu_vehi_tip_12: Integer
+    - rsu_vehi_num_12: Integer
+    - rsu_vehi_tip_13: Integer
+    - rsu_vehi_num_13: Integer
+    - rsu_vehi_tip_14: Integer
+    - rsu_vehi_num_14: Integer
+    - rsu_vehi_tip_15: Integer
+    - rsu_vehi_num_15: INT
+    - rsu_vehi_tip_15_esp: TEXT
+    - rsu_vehi_tip_16_esp: TEXT
+    - rsu_vehi_tip_17_esp: TEXT
+    - basura_sep: Integer
+    - basura_sep_esq: Integer
+    - basura_sep_esq_otr_esp: TEXT
+    - basura_sep_cant_ton: FLOAT
+    - basura_sep_cant_kgs: FLOAT
+    - sep_org_tot: FLOAT
+    - sep_org_compost: Integer
+    - sep_org_sdf: Integer
+    - sep_org_otro01_esp: TEXT
+    - sep_org_otro01: Integer
+    - sep_org_otro02_esp: TEXT
+    - sep_org_otro02: INT
+    - sep_inorg_tot: FLOAT
+    - sep_inorg_vnta: Integer
+    - sep_inorg_inter: Integer
+    - sep_inorg_sdf: Integer
+    - sep_inorg_otro01_esp: TEXT
+    - sep_inorg_otro01: Integer
+    - sep_inorg_otro02_esp: TEXT
+    - sep_inorg_otro02: INT
+    - sep_tot: FLOAT
+    - esta_trns: Integer
+    - esta_trns_num: Integer
+    - aco: Integer
+    - aco_tot: Integer
+    - aco_recibe: Integer
+    - aco_papel_cant: FLOAT
+    - aco_pet_cant: FLOAT
+    - aco_aluminio_cant: FLOAT
+    - aco_fe_lm_acero_cant: FLOAT
+    - aco_cu_brnce_pb_cant: FLOAT
+    - aco_vidrio_cant: FLOAT
+    - aco_electronico_cant: FLOAT
+    - aco_plasticos_cant: FLOAT
+    - aco_otro01_esp: TEXT
+    - aco_otro01_cant: FLOAT
+    - aco_otro02_esp: TEXT
+    - aco_otro02_cant: FLOAT
+    - aco_otro03_esp: TEXT
+    - aco_otro03_cant: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - rsu_folio
+  - rsu_cve_ent
+  - rsu_recl_serv
+  - basura_cant_ton
+  - basura_cant_kgs
+  - basura_porcent_cab
+  - basura_metodo_med
+  - basura_metodo_med_esp
+  - basura_recl_sis
+  - basura_recl_sis_otr_esp
+  - rsu_recl_vehi_tot
+  - rsu_vehi_tip_01
+  - rsu_vehi_num_01
+  - rsu_vehi_tip_02
+  - rsu_vehi_num_02
+  - rsu_vehi_tip_03
+  - rsu_vehi_num_03
+  - rsu_vehi_tip_04
+  - rsu_vehi_num_04
+  - rsu_vehi_tip_05
+  - rsu_vehi_num_05
+  - rsu_vehi_tip_06
+  - rsu_vehi_num_06
+  - rsu_vehi_tip_07
+  - rsu_vehi_num_07
+  - rsu_vehi_tip_08
+  - rsu_vehi_num_08
+  - rsu_vehi_tip_09
+  - rsu_vehi_num_09
+  - rsu_vehi_tip_10
+  - rsu_vehi_num_10
+  - rsu_vehi_tip_11
+  - rsu_vehi_num_11
+  - rsu_vehi_tip_12
+  - rsu_vehi_num_12
+  - rsu_vehi_tip_13
+  - rsu_vehi_num_13
+  - rsu_vehi_tip_14
+  - rsu_vehi_num_14
+  - rsu_vehi_tip_15
+  - rsu_vehi_num_15
+  - rsu_vehi_tip_15_esp
+  - rsu_vehi_tip_16_esp
+  - rsu_vehi_tip_17_esp
+  - basura_sep
+  - basura_sep_esq
+  - basura_sep_esq_otr_esp
+  - basura_sep_cant_ton
+  - basura_sep_cant_kgs
+  - sep_org_tot
+  - sep_org_compost
+  - sep_org_sdf
+  - sep_org_otro01_esp
+  - sep_org_otro01
+  - sep_org_otro02_esp
+  - sep_org_otro02
+  - sep_inorg_tot
+  - sep_inorg_vnta
+  - sep_inorg_inter
+  - sep_inorg_sdf
+  - sep_inorg_otro01_esp
+  - sep_inorg_otro01
+  - sep_inorg_otro02_esp
+  - sep_inorg_otro02
+  - sep_tot
+  - esta_trns
+  - esta_trns_num
+  - aco
+  - aco_tot
+  - aco_recibe
+  - aco_papel_cant
+  - aco_pet_cant
+  - aco_aluminio_cant
+  - aco_fe_lm_acero_cant
+  - aco_cu_brnce_pb_cant
+  - aco_vidrio_cant
+  - aco_electronico_cant
+  - aco_plasticos_cant
+  - aco_otro01_esp
+  - aco_otro01_cant
+  - aco_otro02_esp
+  - aco_otro02_cant
+  - aco_otro03_esp
+  - aco_otro03_cant
 cngmd_transparencia:
   LUIGI:
     INDEX: ubic_geo
