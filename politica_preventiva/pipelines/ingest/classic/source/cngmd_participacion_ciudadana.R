@@ -21,4 +21,5 @@ db5 <- data.frame(read.dbf("Bases_Datos/PROPUREC.DBF"))
 db6 <- data.frame(read.dbf("Bases_Datos/TIPOAUTO.DBF"))
 db <- join_all(list(db1,db2,db3,db4,db6,db6), by = "UBIC_GEO",type = "left")
 rm(db1,db2,db3,db4,db5,db6)
+
 write_delim(x = db, path = args[3], delim='|')
