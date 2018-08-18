@@ -57,7 +57,7 @@ The general process of the pipeline is:
 [ph-monzalo14]: https://avatars1.githubusercontent.com/u/16139907?v=3&s=180
 [gh-monzalo14]: https://github.com/monzalo14
 
-[ph-abrownr]: https://avatars0.githubusercontent.com/u/6656278?v=3&s=180
+[ph-abrownr]: https://avatars1.githubusercontent.com/u/9919?s=180&v=3
 [gh-abrownr]: https://github.com/abrownr
 
 [ph-ollin18]: https://avatars0.githubusercontent.com/u/5835469?v=3&s=180
