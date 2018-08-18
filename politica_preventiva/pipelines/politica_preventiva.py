@@ -28,11 +28,14 @@ from politica_preventiva.pipelines.semantic.semantic_orchestra import\
         SemanticPipeline
 from politica_preventiva.pipelines.models.models_orchestra import\
         ModelsPipeline
+from politica_preventiva.pipelines.features.features_orchestra import\
+        FeaturesPipeline
 
 
-configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_models.cfg') 
-configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_etl.cfg') 
-configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_ingest.cfg') 
+configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_models.cfg')
+configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_etl.cfg')
+configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_ingest.cfg')
+configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_features.cfg')
 
 # from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
 logging_conf = configuration.get_config().get("core", "logging_conf_file")

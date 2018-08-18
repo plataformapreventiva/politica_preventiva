@@ -20,7 +20,7 @@ from luigi.contrib.postgres import PostgresTarget, PostgresQuery
 
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string,\
         download_dir
-from politica_preventiva.tasks.pipeline_task import DockerTask
+from politica_preventiva.tasks.pipeline_task import DockerTask, PgRTask
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
@@ -57,12 +57,13 @@ class FeaturesPipeline(luigi.WrapperTask):
         return [UpdateFeaturesDB(features_task, self.current_date)
                 for features_task in self.features]
 
-class UpdateFeaturesDB(postgres.PostgresQuery):
+class UpdateFeaturesDB(PgRTask):
 
     features_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     client = S3Client()
-    features_scripts = luigi.Parameter()
+    features_scripts = parse_cfg_list(conf.get("FeaturesPipeline",
+        "features_scripts"))
 
     # AWS RDS
     database = os.environ.get("PGDATABASE")
@@ -94,7 +95,6 @@ class UpdateFeaturesDB(postgres.PostgresQuery):
                         '--host', self.host]
         cmd = " ".join(command_list)
         return cmd
-    @property
 
     def requires(self):
         # Check table dependencies
@@ -107,14 +107,14 @@ class UpdateFeaturesDB(postgres.PostgresQuery):
                     feature_task=feature_task) for feature_task in features_tables]
 
             if 'clean_dependencies' in dep_types:
-                clean_tables = composition[self.clean_task]['clean_dependencies']
+                clean_tables = composition[self.features_task]['clean_dependencies']
                 yield [ETLPipeline(current_date=self.current_date,
-                    pipelines=pipeline_task) for pipeline_task in clean_tables]
+                    pipelines=pipeline_task, ptask='auto') for pipeline_task in clean_tables]
 
             if 'model_dependencies' in dep_types:
-                models_tables = composition[self.models_task]['models_dependencies']
+                models_tables = composition[self.features_task]['models_dependencies']
                 yield [ModelsPipeline(current_date=self.current_date,
-                    pipelines=pipeline_task) for pipeline_task in models_tables]
+                    models=pipeline_task, ptask='auto') for pipeline_task in models_tables]
 
     def output(self):
         return PostgresTarget(host=self.host,
