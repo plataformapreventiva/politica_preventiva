@@ -26,7 +26,10 @@ coneval_data <-dbrsocial::load_table(con,raw,coneval_municipios) %>% dbrsocial::
 # Compute Hierarchical Clustering
 ```{r}
 data("df_mxmunicipio")
-coneval_complete <- coneval_data %>% select(starts_with("ic_"), cve_muni) %>% drop_na()
+coneval_complete <- coneval_data %>% select(cve_muni,
+                                            starts_with("ic_"),
+                                            plb_m_porcentaje,
+                                            plb_porcentaje) %>% drop_na()
 res.hc <- coneval_complete %>% 
   select(ends_with('porcentaje')) %>%
   dist(method = "euclidean") %>% # Compute dissimilarity matrix
@@ -39,25 +42,35 @@ coneval_complete$cluster.h <- res.hc
 
 # Plot Map
 ```{r}
+coneval_complete %>% group_by(cluster.h) %>%
+  summarise(n=n())
+
 coneval_complete %>% group_by(cluster.h) %>% 
   summarise_all(mean) %>%
-  arrange(ic_rezedu_porcentaje)
+  arrange(ic_rezedu_porcentaje) %>% select(cluster.h, ends_with("porcentaje")) %>% write_csv("temp.csv")
 
 df_mxmunicipio <- left_join(df_mxmunicipio, coneval_complete, by=c("region"="cve_muni"))
 
 df_mxmunicipio$value <-  as.character(df_mxmunicipio$cluster.h)
 
-df_mxmunicipio$value <- ordered(df_mxmunicipio$value, levels = c("1","2","4","3","5"),
+df_mxmunicipio$value <- ordered(df_mxmunicipio$value, levels = c("1","2","3","4","5"),
                                 labels =  c("Muy Bajo", "Bajo", "Medio", "Alto", "Muy Alto"))
 
- cols <- c("Muy Bajo"= "#1a9641", 
-           "Bajo"= "#a6d96a", 
+
+ 
+```
+
+
+```{r}
+ cols <- c("Muy Bajo"= "#84b274", 
+           "Bajo"= "#CCCC99", 
            "Medio"= "#ffffbf", 
            "Alto"= "#fdae61", 
            "Muy Alto"= "#d7191c")
 
- 
-map<-mxmunicipio_choropleth(df_mxmunicipio, num_colors = 5) +
+map<-mxmunicipio_choropleth(df_mxmunicipio %>% drop_na(value)) +
   scale_fill_manual(values=cols, name="Cluster de \n Carencias")
+
+map
 ```
 
