@@ -38,9 +38,9 @@ The general process of the pipeline is:
 |        [javurena7][gh-javurena7]           |         [rsanchezavalos][gh-rsanchez]         |          [andreanr][gh-andreanr]       |          [andreuboada][gh-andreuboada]            | 
 
 
-| [![monzalo14][ph-monzalo14]][gh-monzalo14] | [![abrownr][ph-abrownr]][gh-abrownr] | [![ollin18][ph-ollin18]][gh-ollin18] |
+| [![monzalo14][ph-monzalo14]][gh-monzalo14] | [![abrownrb][ph-abrownrb]][gh-abrownrb] | [![ollin18][ph-ollin18]][gh-ollin18] |
 |                 :--:                       |                 :--:                 |                 :--:                 |
-|       [monzalo14][gh-monzalo14]            |        [abrownr][gh-abrownr]         |        [ollin18][gh-ollin18]         |
+|       [monzalo14][gh-monzalo14]            |        [abrownrb][gh-abrownrb]         |        [ollin18][gh-ollin18]         |
 
 [ph-javurena7]: https://avatars2.githubusercontent.com/u/14095871?v=3&s=180
 [gh-javurena7]: https://github.com/javurena7
@@ -57,8 +57,8 @@ The general process of the pipeline is:
 [ph-monzalo14]: https://avatars1.githubusercontent.com/u/16139907?v=3&s=180
 [gh-monzalo14]: https://github.com/monzalo14
 
-[ph-abrownr]: https://avatars1.githubusercontent.com/u/9919?s=180&v=3
-[gh-abrownr]: https://github.com/abrownr
+[ph-abrownrb]: https://avatars0.githubusercontent.com/u/29579851?s=180&v=3
+[gh-abrownrb]: https://github.com/abrownrb
 
 [ph-ollin18]: https://avatars0.githubusercontent.com/u/5835469?v=3&s=180
 [gh-ollin18]: https://github.com/ollin18
