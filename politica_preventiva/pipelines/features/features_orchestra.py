@@ -48,22 +48,21 @@ with open("pipelines/configs/features_dependencies.yaml", "r") as file:
 
 class FeaturesPipeline(luigi.WrapperTask):
 
-    features = parse_cfg_list(conf.get("FeaturesPipeline", "pipelines"))
+    pipelines = luigi.parameter.ListParameter()
     current_date = luigi.DateParameter()
     client = S3Client()
     ptask = luigi.Parameter()
 
     def requires(self):
         return [UpdateFeaturesDB(features_task, self.current_date)
-                for features_task in self.features]
+                for features_task in self.pipelines]
 
 class UpdateFeaturesDB(PgRTask):
 
     features_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     client = S3Client()
-    features_scripts = parse_cfg_list(conf.get("FeaturesPipeline",
-        "features_scripts"))
+    features_scripts = luigi.Parameter()
 
     # AWS RDS
     database = os.environ.get("PGDATABASE")

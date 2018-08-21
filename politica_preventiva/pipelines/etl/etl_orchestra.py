@@ -59,6 +59,7 @@ class ETLPipeline(luigi.WrapperTask):
 
         logger.info('Running the following pipelines: {0}'.format(self.pipelines))
         # loop through pipeline tasks and data dates
+        pdb.set_trace()
         set_pipelines = [(pipeline_task, final_dates(self.historical,
                                                      pipeline_task,
                                                      self.current_date)) for
