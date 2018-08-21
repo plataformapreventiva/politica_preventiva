@@ -46,7 +46,7 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 class ETLPipeline(luigi.WrapperTask):
 
     current_date = luigi.DateParameter()
-    pipelines = luigi.parameter.ListParameter()
+    pipelines = luigi.Parameter()
     ptask = luigi.Parameter()
     client = S3Client()
     common_path = luigi.Parameter('DEFAULT')
@@ -59,7 +59,6 @@ class ETLPipeline(luigi.WrapperTask):
 
         logger.info('Running the following pipelines: {0}'.format(self.pipelines))
         # loop through pipeline tasks and data dates
-        pdb.set_trace()
         set_pipelines = [(pipeline_task, final_dates(self.historical,
                                                      pipeline_task,
                                                      self.current_date)) for
