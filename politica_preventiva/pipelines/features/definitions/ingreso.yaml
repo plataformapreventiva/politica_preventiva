@@ -1,0 +1,593 @@
+# ------------------------------------------
+# Educacion
+# ------------------------------------------
+
+educacion:
+    # Nivel de escolaridad alcanzada del jefe del hogar
+    - name: jefe_escolaridad
+      condition: 'max(aprobo_ultnivel, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        filter: 'parentesco == 1 | parentesco == 2'
+        groupby: [fecha_creacion, hogar_id]
+    # Escolaridad del jefe y del conyugue con primaria completa y secundaria incompleta
+    - name: p_esc3
+      condition: 'jefe_escolaridad >= 6 & jefe_escolaridad < 9'
+      transmute:
+          fun: getDummy
+    # Escolaridad del jefe y del conyugue  con secundaria completa o mas
+    - name: p_esc5
+      condition: 'jefe_escolaridad >= 9'
+      transmute:
+          fun: getDummy
+    # Número de niños de 5 a 15 años que no asisten a la escuela.
+    - name: num_asiste_escuela_5a15
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'asiste_escuela == 0 & edad >= 5 & edad <= 15'
+        groupby: [fecha_creacion, hogar_id]
+
+
+condicion_laboral:
+    # Edad del jefe del hogar.
+    - name: jefe_edad
+      condition: 'max(edad, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        filter: 'parentesco == 1'
+        groupby: hogar_id
+    # Número de trabajadores subordinados en el hogar.
+    - name: num_trabaja_subor
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'trabaja_subord == 1'
+        groupby: [fecha_creacion, hogar_id]
+    # Número de trabajadores independientes en el hogar.
+    - name: num_trabaja_indep
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'trabaja_indep == 1'
+        groupby: [fecha_creacion, hogar_id]
+    # Identifica si el jefe del hogar tiene un trabajo donde es subordinado.
+    - name: jefe_subord
+      condition: 'parentesco == 1 & trabaja_subord == 1 & !is.na(trabaja_subord)'
+      transmute:
+        fun: getDummy
+    # Identifica si el jefe del hogar tiene un trabajo donde no es subordinado y trabaja por su cuenta.
+    - name: jefe_indep
+      condition: 'parentesco == 1 & trabaja_indep == 1 & !is.na(trabaja_subord)'
+      transmute:
+        fun: getDummy
+    # Número de trabajadores que no reciben pago por su trabajo.
+    - name: num_trabaja_sin_pago
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'con_sueldo == 0 | tipo_pago == 3 | tipo_pago == 2'
+        groupby: [fecha_creacion, hogar_id]
+    # Número de hombres que trabajan
+    - name: num_hombres_trabajan
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'sexo == 1 & trabajo == 1'
+          groupby: [fecha_creacion, hogar_id]
+    # Número de mujeres que trabajan
+    - name: num_mujeres_trabajan
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'sexo == 2 & trabajo == 1'
+          groupby: [fecha_creacion, hogar_id]
+    # Si solo hombres trabajan
+    - name: hombres_trabajan_excl
+      condition: 'num_hombres_trabajan >= 1 & num_mujeres_trabajan == 0'
+      transmute:
+          fun: getDummy
+    # Número de menores de entre 12 y 15 años que trabajan.
+    - name: num_menores_trabaja
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'edad >= 12 & edad <= 15 & trabajo == 1'
+        groupby: [fecha_creacion, hogar_id]
+    # Número de menores de entre 16 y 18 años que trabajan
+    - name: num_adol_trabaja
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'edad >= 16 & edad <= 18 & trabajo == 1'
+        groupby: [fecha_creacion, hogar_id]
+    # Número de personas que trabajan
+    - name: num_trabajan
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'trabajo == 1'
+        groupby: [fecha_creacion, hogar_id]
+    # Número de personas que no trabajan
+    - name: num_no_trabajan
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'trabajo == 0'
+        groupby: [fecha_creacion, hogar_id]
+    # Cociente entre la población que no trabaja y la población que trabaja
+    - name: depen_cociente
+      condition: 'num_trabajan / num_no_trabajan'
+      transmute:
+        fun: getFunc
+        filter: 'num_no_trabajan > 0'
+    # Número de personas que perciben ingresos por su trabajo principal
+    - name: num_con_sueldo
+      condition: 'n_distinct(person_id)'
+      transmute:
+        fun: getFunc
+        filter: 'con_sueldo == 1 & id_trabajo == 1'
+        groupby: [fecha_creacion, hogar_id]
+
+
+seguridad_social:
+    # hogares donde al menos un integrante reportó estar afiliado o inscrito al IMSS, ISSSTE, PEMEX, Defensa o Marina o alguna otra clínica u hospital privado para recibir servicios de salud
+    - name: con_servicios_salud
+      condition: '(am_imss == 1 & !is.na(am_imss)) |
+                  (am_issste == 1 & !is.na(am_issste)) |
+                  (am_issste_estatal == 1 & !is.na(am_issste_estatal)) |
+                  (am_pemex == 1 & !is.na(am_pemex)) |
+                  (inscrito_contratacion == 1 & !is.na(inscrito_contratacion))'
+      transmute:
+        fun: getDummy
+    # Número de integrantes con acceso al Seguro Popular
+    - name: num_seguro_popular
+      condition: sum(seguro_popular, na.rm = TRUE)
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, hogar_id]
+    # hogares donde al menos un integrante reportó estar afiliado o inscrito al Seguro Popular.
+    - name: con_seguro_popular
+      condition: 'seguro_popular == 1 & !is.na(seguro_popular)'
+      transmute:
+        fun: getDummy
+    # Jefe del hogar con trabajo independiente y al menos una persona con acceso a servicio médico por su trabajo
+    - name: ssjtrabind
+      condition: '(am_imss == 1 & !is.na(am_imss)) |
+                  (am_issste == 1 & !is.na(am_issste)) |
+                  (am_issste_estatal == 1 & !is.na(am_issste_estatal)) |
+                  (am_pemex == 1 & !is.na(am_pemex)) |
+                  (inscrito_contratacion == 1 & !is.na(inscrito_contratacion))'
+      transmute:
+        fun: getDummy
+        filter: 'parentesco == 1 & trabaja_indep == 1 & !is.na(trabaja_subord) & !is.na(trabaja_indep)'
+
+condiciones_vivienda:
+    # Hogares cuya vivienda tiene mayoritariamente piso de tierra.
+    - name: piso_tierra
+      condition: 'material_pisos == 1'
+      transmute:
+        fun: getDummy
+    # Hogares cuya vivienda tiene mayoritariamente piso firme
+    - name: piso_firme
+      condition: 'material_pisos >= 2'
+      transmute:
+          fun: getDummy
+    # Hogares donde la mayor parte de la vivienda posee piso con recubrimiento
+    - name: piso_rec
+      condition: 'material_pisos == 3'
+      transmute:
+          fun: getDummy
+    # Hogares cuya vivienda tiene mayoritariamente techos de desecho, cartón, lámina o palma.
+    - name: techo_blando
+      condition: 'material_techos <= 6'
+      transmute:
+        fun: getDummy
+    # Hogares cuya vivienda tiene mayoritariamente paredes de desecho, cartón, lámina, carrizo o embarro.
+    - name: pared_blando
+      condition: 'material_muros <= 5'
+      transmute:
+        fun: getDummy
+    # Hogares sin agua dentro de la vivienda o el terreno.
+    - name: sin_agua
+      condition: 'servicio_agua <= 5'
+      transmute:
+        fun: getDummy
+    # Hogares que no usan un sistema de recolección o contenedores de basura, o no la desechan en un basurero público.
+    - name: sin_basurero
+      condition: 'elimina_basura <= 5'
+      transmute:
+          fun: getDummy
+    # Hogares que no disponen de una instalación sanitaria en la vivienda (CUIS y ENCASEH)
+    - name: no_sanitario
+      condition: 'tipo_escusado == 1'
+      transmute:
+          fun: getDummy
+    # Hogares sin instalacacion sanitaria en la vivienda
+    - name: sin_sanitario
+      condition: 'no_sanitario == 1'
+      transmute:
+          fun: getDummy
+    # Identifica hogares que disponen de un baño o escusado con conexión directa al agua (solo CUIS y ENCASEH)
+    - name: sanitario_cagua
+      condition: 'tipo_escusado == 5'
+      transmute:
+          fun: getDummy
+    # Identifica hogares que disponen de un baño o escusado con conexión directa al agua y uso exclusivo
+    - name: sanitario_cagua_excl
+      condition: 'sanitario_cagua == 1 & escusado_exclusivo == 1'
+      transmute:
+          fun: getDummy
+    # hogares que usan leña o carbón para cocinar
+    - name: sin_combustible
+      condition: 'fuente_combustible == 1'
+      transmute:
+          fun: getDummy
+    # hogares con posesión de la vivienda por algún integrante del hogar
+    - name: viv_propia_integrante
+      condition: 'tenencia %in% c(2,5,6)'
+      transmute:
+          fun: getDummy
+    # Identifica los hogares con vivienda propia, aun si la están pagando.
+    - name: tenencia_propia
+      condition: 'tenencia >= 5'
+      transmute:
+          fun: getDummy
+    # Identifica los hogares con vivienda rentada.
+    - name: viv_renta
+      condition: 'tenencia == 4'
+      transmute:
+          fun: getDummy
+    # Contabiliza el número de cuartos independientemente de su uso.
+    - name: total_cuartosdor
+      condition: 'total_cuartosdor'
+      transmute:
+          fun: getFunc
+    # Piso de tierra + Techo blando o endeble
+    - name: int_techo_piso
+      condition: 'piso_tierra * techo_blando'
+      transmute:
+          fun: getFunc
+
+condiciones_demograficas1:
+    # Contabiliza el total de personas en el hogar.
+    - name: total_personas
+      condition: 'total_personas'
+      transmute:
+          fun: getFunc
+    # Hogares unipersonales
+    - name: unipersonales
+      condition: 'total_personas == 1'
+      transmute:
+          fun: getDummy
+    # Logaritmo del total de personas en el hogar.
+    - name: log_total_personas
+      condition: 'log(total_personas)'
+      transmute:
+          fun: getFunc
+    # Variable que contabiliza el número de dormitorios
+    - name: cuartos_dormir
+      condition: 'total_cuartosdor'
+      transmute:
+          fun: getFunc
+    # Cociente de número de personas en el hogar entre el número de dormitorios (cuartos sin contar cocina baño y pasillos).
+    - name: hacinamiento
+      condition: 'total_personas / (cuartos_dormir * 1.0)'
+      transmute:
+          fun: getFunc
+          filter: 'cuartos_dormir > 0'
+
+condiciones_demograficas2:
+    # Numero de personas dependientes
+    - name: num_dependientes
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'edad <= 15 | edad >= 65'
+          groupby: [fecha_creacion, hogar_id]
+    # Numero de personas independientes
+    - name: num_independientes
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'edad >= 16 & edad <= 64'
+          groupby: [fecha_creacion, hogar_id]
+    # Cociente entre la población demográficamente dependiente (menores o iguales a 15 años o mayores o iguales de 65) y la población demográficamente independiente (16 a 64 años de edad).
+    - name: dependientes_cociente
+      condition: 'num_dependientes / num_independientes'
+      transmute:
+          fun: getFunc
+          filter: 'num_independientes > 0'
+    # Número de mujeres
+    - name: num_mujeres
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'sexo == 2'
+          groupby: [fecha_creacion, hogar_id]
+    - name: num_hombres
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'sexo == 1'
+          groupby: [fecha_creacion, hogar_id]
+    # Más mujeres que hombres
+    - name: mas_mujeres
+      condition: 'num_mujeres > num_hombres'
+      transmute:
+          fun: getDummy
+    # Hogares de exclusivamente mujeres
+    - name: solo_mujeres
+      condition: 'num_mujeres >= 1 & num_hombres == 0'
+      transmute:
+          fun: getDummy
+    # Número de mujeres de 15 a 49 años en el hogar
+    - name: num_mujeres_15a49
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'sexo == 2 & edad >= 15 & edad <= 49'
+          groupby: [fecha_creacion, hogar_id]
+    # Número de niños de 0 a 5 años
+    - name: num_edad0a5
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'edad <= 5'
+          groupby: [fecha_creacion, hogar_id]
+    # Hogar con niños de 0 a 5 años
+    - name: con_edad0a5
+      condition: 'num_edad0a5 == 1'
+      transmute:
+          fun: getDummy
+    # Número de adultos mayores
+    - name: num_adultos_mayores
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'edad >= 65'
+          groupby: [fecha_creacion, hogar_id]
+    # Habla lengua indigena (solo CUIS y ENCASEH)
+    - name: habla_lenguaind
+      condition: 'lengua_indigena > 0'
+      transmute:
+          fun: getDummy
+    # Número de hablantes exclusivamente de lengua indígena
+    - name: num_exc_lengua_indigena
+      condition: 'n_distinct(person_id)'
+      transmute:
+          fun: getFunc
+          filter: 'habla_lenguaind == 1 & habla_espanol == 0'
+          groupby: [fecha_creacion, hogar_id]
+    # Al menos una persona habla exclusivamente lengua indígena
+    - name: exc_lengua_indigena
+      condition: 'habla_lenguaind == 1 & habla_espanol == 0'
+      transmute:
+          fun: getDummy
+    # Jefe del hogar mayor de 40 años en el hogar
+    - name: jefe_mayor40
+      condition: 'parentesco == 1 & edad >= 40'
+      transmute:
+          fun: getDummy
+    # Jefatura femenina
+    - name: jefatura_femenina
+      condition: 'parentesco == 1 &  sexo == 2'
+      transmute:
+          fun: getDummy
+    # Dummy remesas (solo ENIGH)
+    - name: recibe_remesas
+      condition: 'remesas > 0'
+      transmute:
+          fun: getDummy
+    # Recepción de dinero proveniente de otros países
+    - name: con_remesa
+      condition: 'recibe_remesas == 1'
+      transmute:
+          fun: getDummy
+    # con almenos un integrante con algun tipo de discapacidad
+    - name: c_discapacidad
+      condition: '(disc1 != 8 & !is.na(disc1) ) |
+                  ( !is.na(disc2) ) | ( !is.na(disc3)) |
+                  ( !is.na(disc4) ) | ( !is.na(disc5)) |
+                  ( !is.na(disc6) ) | ( !is.na(disc7)) '
+      transmute:
+          fun: getDummy
+
+enseres_hogar:
+    # Dummy Refrigerador (solo ENIGH)
+    - name: refrigerador
+      condition: 'num_refri >= 1'
+      transmute:
+          fun: getDummy
+    # Sirve el refrigerador (solo ENIGH)
+    - name: refrigerador_sirve
+      condition: 'refrigerador == 1'
+      transmute:
+          fun: getDummy
+    # Tiene y sirve (solo ENIGH y ENCASEH)
+    - name: ts_refrigerador
+      condition: 'refrigerador == 1 & refrigerador_sirve == 1 ~ 3,
+                  refrigerador == 1 & refrigerador_sirve == 0 ~ 2,
+                  refrigerador == 0 ~ 1'
+      transmute:
+          fun: getCases
+    # Hogares que no tienen refrigerador o no sirve.
+    - name: sin_refrigerador
+      condition: 'ts_refrigerador == 1'
+      transmute:
+          fun: getDummy
+    # Dummy Vehiculo (solo ENIGH)
+    - name: vehiculo
+      condition: 'num_auto >= 1 | num_van >= 1 | num_pickup >= 1'
+      transmute:
+          fun: getDummy
+    # Sirve el vehiculo (solo ENIGH)
+    - name: vehiculo_sirve
+      condition: 'vehiculo == 1'
+      transmute:
+          fun: getDummy
+    # Tiene y sirve (solo ENIGH y ENCASEH)
+    - name: ts_vehiculo
+      condition: 'vehiculo == 1 & vehiculo_sirve == 1 ~ 3,
+                  vehiculo == 1 & vehiculo_sirve == 0 ~ 2,
+                  vehiculo == 0 ~ 1'
+      transmute:
+          fun: getCases
+    # Hogares que no tienen vehículo o no sirve.
+    - name: sin_vehiculo
+      condition: 'ts_vehiculo == 1'
+      transmute:
+          fun: getDummy
+    # Dummy Videocasetera, dvd o Blue-Ray (solo ENIGH)
+    - name: videocas
+      condition: 'num_video >= 1'
+      transmute:
+          fun: getDummy
+    # Sirve la videocasetera (solo ENIGH)
+    - name: videocas_sirve
+      condition: 'videocas == 1'
+      transmute:
+          fun: getDummy
+    # Tiene y sirve (solo ENIGH y ENCASEH)
+    - name: ts_videocas
+      condition: 'videocas == 1 & videocas_sirve == 1 ~ 3,
+                  videocas == 1 & videocas_sirve == 0 ~ 2,
+                  videocas == 0 ~ 1'
+      transmute:
+          fun: getCases
+    # Hogares que no tienen videocasetera, dvd o Blu-Ray o no sirven.
+    - name: sin_videocas
+      condition: 'ts_videocas == 1'
+      transmute:
+          fun: getDummy
+    # Dummy computadora (solo ENIGH)
+    - name: computadora
+      condition: 'num_compu >= 1'
+      transmute:
+          fun: getDummy
+    # Sirve la computadora (solo ENIGH)
+    - name: computadora_sirve
+      condition: 'computadora == 1'
+      transmute:
+          fun: getDummy
+    # Tiene y sirve (solo ENIGH y ENCASEH)
+    - name: ts_computadora
+      condition: 'computadora == 1 & computadora_sirve == 1 ~ 3,
+                  computadora == 1 & computadora_sirve == 0 ~ 2,
+                  computadora == 0 ~ 1'
+      transmute:
+          fun: getCases
+    # Hogares que no tienen computadora o no sirve
+    - name: sin_computadora
+      condition: 'ts_computadora == 1'
+      transmute:
+          fun: getDummy
+    # Dummy Horno (solo ENIGH)
+    - name: horno
+      condition: 'num_micro >= 1'
+      transmute:
+          fun: getDummy
+    # Sirve el horno (solo ENIGH)
+    - name: horno_sirve
+      condition: 'horno == 1'
+      transmute:
+          fun: getDummy
+    # Tiene y sirve (solo ENIGH y ENCASEH)
+    - name: ts_horno
+      condition: 'horno == 1 & horno_sirve == 1 ~ 3,
+                  horno == 1 & horno_sirve == 0 ~ 2,
+                  horno == 0 ~ 1'
+      transmute:
+          fun: getCases
+    # hogares que no tienen horno o no sirve (En el CUIS se considera dentro de la pregunta de horno tanto el eléctrico como el de microondas, en la ENIGH-MCS solo se considera el de microondas)
+    - name: sin_horno
+      condition: 'ts_horno == 1'
+      transmute:
+          fun: getDummy
+    # Dummy lavadora (solo ENIGH)
+    - name: lavadora
+      condition: 'num_lavad >= 1'
+      transmute:
+          fun: getDummy
+    # Sirve lavadora (solo ENIGH)
+    - name: lavadora_sirve
+      condition: 'lavadora == 1'
+      transmute:
+          fun: getDummy
+    # Tiene y sirve (solo ENIGH y ENCASEH)
+    - name: ts_lavadora
+      condition: 'lavadora == 1 & lavadora_sirve == 1 ~ 3,
+                  lavadora == 1 & lavadora_sirve == 0 ~ 2,
+                  lavadora == 0 ~ 1'
+      transmute:
+          fun: getCases
+    # hogares que no tienen lavadora o no sirve.
+    - name: sin_lavadora
+      condition: 'ts_lavadora == 1'
+      transmute:
+          fun: getDummy
+    # Dummy estufa (solo ENIGH)
+    - name: estufa
+      condition: 'num_estuf >= 1'
+      transmute:
+          fun: getDummy
+    # Sirve estufa (solo ENIGH)
+    - name: estufa_sirve
+      condition: 'estufa == 1'
+      transmute:
+          fun: getDummy
+    # Tiene y sirve (solo ENIGH y ENCASEH)
+    - name: ts_estufa
+      condition: 'estufa == 1 & estufa_sirve == 1 ~ 3,
+                  estufa == 1 & estufa_sirve == 0 ~ 2,
+                  estufa == 0 ~ 1'
+      transmute:
+          fun: getCases
+    # Identifica los hogares que no tienen estufa de gas o no sirve.
+    - name: sin_estufa
+      condition: 'ts_estufa == 1'
+      transmute:
+          fun: getDummy
+    # Sirve telefono (solo ENIGH)
+    - name: telefono_sirve
+      condition: 'telefono == 1'
+      transmute:
+          fun: getDummy
+    # Tiene y sirve (solo ENIGH y ENCASEH)
+    - name: ts_telefono
+      condition: 'telefono == 1 & telefono_sirve == 1 ~ 3,
+                  telefono == 1 & telefono_sirve == 0 ~ 2,
+                  telefono == 0 ~ 1'
+      transmute:
+          fun: getCases
+    # hogares que no tienen teléfono fijo o no sirve.
+    - name: sin_telefono
+      condition: 'ts_telefono == 1'
+      transmute:
+          fun: getDummy
+    # Sin video o DVD + sin horno
+    - name: int_videocas_horno
+      condition: 'sin_videocas * sin_horno'
+      transmute:
+          fun: getFunc
+
+seguridad_alimentaria:
+    # Identifica los hogares en que al menos algún integrante mayor de 18 años dejó de desayunar, comer o cenar por falta de recursos.
+    - name: inseg_alim
+      condition: 'alim_dejocomida == 1 & !is.na(alim_dejocomida)'
+      transmute:
+          fun: getDummy
+    # Identifica los hogares en que al menos algún integrante mayor de 18 años dejó de desayunar, comer o cenar por falta de recursos o si algún mayor de 18 años comió una vez al día o dejó de comer todo un día.
+    - name: sin_alim
+      condition: '(alim_dejocomida == 1 & !is.na(alim_dejocomida)) |
+                  (alim_comiouna == 1 & !is.na(alim_comiouna)) '
+      transmute:
+          fun: getDummy
+    # Indica si alguna persona del hogar mayor de 18 años en los últimos tres meses sólo comió una vez al día o dejó de comer todo el día, o dejó de
+    # desayunar, comer, o cenar por falta de dinero o recursos.
+    - name: seg_alim_a
+      condition: '(alim_comiouna == 1 & !is.na(alim_comiouna)) |
+                  (alim_dejocomida == 1 & !is.na(alim_dejocomida)) |
+                  (alim_nocomio == 1 & !is.na(alim_nocomio))'
+      transmute:
+          fun: getDummy
