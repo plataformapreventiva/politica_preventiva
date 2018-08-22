@@ -69,10 +69,12 @@ class ETLPipeline(luigi.WrapperTask):
                              suffix=pipeline[1][1])
                 for pipeline in set_pipelines for dates in pipeline[1][0]]
 
-class UpdateCleanDB(postgres.PostgresQuery):
+class UpdateCleanDB(PgRTask):
+
     """
     This Task runs the Clean script in clean folder for
-    the pipeline_task, if it doesn't exists then it only updates
+    the pipeline_task, using a wrapper script in order to do clean and recode
+    in one process. If there is no clean script to be run, it updates
     with the last raw table
     """
 
@@ -81,13 +83,28 @@ class UpdateCleanDB(postgres.PostgresQuery):
     client = S3Client()
     data_date = luigi.Parameter()
     suffix = luigi.Parameter()
-
     clean_scripts = luigi.Parameter()
+    clean_wrapper = luigi.Parameter()
+
     # RDS
     database = os.environ.get("PGDATABASE")
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+
+    @property
+    def cmd(self):
+        command_list = ['Rscript', clean_wrapper,
+                        '--data_date', self.data_date,
+                        '--database', self.database,
+                        '--user', self.user,
+                        '--password', "'{}'".format(self.password),
+                        '--host', self.host,
+                        '--pipeline_task', self.pipeline_task,
+                        '--scripts_dir', self.clean_scripts]
+        cmd = " ".join(command_list)
+        pdb.set_trace()
+        return cmd
 
     @property
     def update_id(self):
@@ -97,22 +114,6 @@ class UpdateCleanDB(postgres.PostgresQuery):
     @property
     def table(self):
         return "clean." + self.pipeline_task
-
-    @property
-    def query(self):
-        # Read sql command
-        path = self.clean_scripts + self.pipeline_task + '.sql'
-
-        try:
-            sqlfile = open(path, 'r')
-            query = sqlfile.read()
-
-        except:
-            query = """DROP TABLE IF EXISTS {0};
-            CREATE TABLE {0} AS (SELECT * FROM
-                                 raw.{1});""".format(self.table,
-                                                     self.pipeline_task)
-        return query
 
     def requires(self):
         return UpdateLineage(current_date=self.current_date,

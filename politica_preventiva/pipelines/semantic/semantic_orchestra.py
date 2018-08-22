@@ -181,5 +181,3 @@ class UpdateTidyDB(PgRTask):
                               password=self.password,
                               table=self.table,
                               update_id=self.update_id)
-
-

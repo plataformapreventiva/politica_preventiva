@@ -71,12 +71,16 @@ if(length(opt) > 1){
   source("pipelines/features/tools/features_tools.R")
 
 
+  crimen <- tbl(con, dbplyr::in_schema('raw', 'delitos_comun'))
+
   selected_crimes <- c('Homicidio', 'Secuestro', 'Feminicidio',
                        'Violencia familiar', 'Robo',
                        'Daño a la propiedad')
-  crimen <- tbl(con, dbplyr::in_schema('raw', 'delitos_comun'))
 
+  tasa_crimenes <- crimen %>%
+                    dplyr::filter(tipodedelito %in% selected_crimes)
 
-  tasa_crimenes <- crimen
+  # TODO: tabla de población, hacer cleans de esto
+  poblacion <- tbl(con, dbplyr::in_schema('raw', 'intercensal'))
 
 
