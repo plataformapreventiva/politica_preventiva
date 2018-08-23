@@ -94,7 +94,7 @@ class UpdateCleanDB(PgRTask):
 
     @property
     def cmd(self):
-        command_list = ['Rscript', clean_wrapper,
+        command_list = ['Rscript', self.clean_wrapper,
                         '--data_date', self.data_date,
                         '--database', self.database,
                         '--user', self.user,
@@ -102,8 +102,8 @@ class UpdateCleanDB(PgRTask):
                         '--host', self.host,
                         '--pipeline_task', self.pipeline_task,
                         '--scripts_dir', self.clean_scripts]
-        cmd = " ".join(command_list)
         pdb.set_trace()
+        cmd = " ".join(command_list)
         return cmd
 
     @property

@@ -3,7 +3,7 @@
 library(optparse)
 library(dbplyr)
 library(dplyr)
-library(dbrsocial)
+#library(dbrsocial)
 library(DBI)
 source("pipelines/etl/tools/recode_tools.R")
 
@@ -72,8 +72,8 @@ if(length(opt) > 1){
   pipeline_task <- opt$pipeline_task
   scripts_dir <- opt$scripts_dir
   temp_name <- glue::glue('temp_{pipeline_task}')
-  rfile <- glue::glue('{scripts_dir}/{pipeline_task}.R')
-  sqlfile <- glue::glue('{scripts_dir}/{pipeline_task}.sql')
+  rfile <- glue::glue('{scripts_dir}{pipeline_task}.R')
+  sqlfile <- glue::glue('{scripts_dir}{pipeline_task}.sql')
 
   # Create clean table as a lazy query to the raw table
   if( file.exists(rfile) ){
@@ -86,8 +86,7 @@ if(length(opt) > 1){
     clean_table <- tbl(con, sql(query))
 
   } else {
-    query <- 'DROP TABLE IF EXISTS clean.{pipeline_task};
-    CREATE TEMP TABLE {temp_name} AS (SELECT * FROM raw.{pipeline_task});'
+    query <- glue::glue('SELECT * FROM raw.{pipeline_task}')
     clean_table <- tbl(con, sql(query))
 
   }

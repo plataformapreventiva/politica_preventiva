@@ -8,7 +8,7 @@ library(dplyr)
 
 #source('setup.R')
 #source('connect.R')
-source('pipeline_utils.R')
+source('pipelines/etl/tools/clean_tools.R')
 
 
 get_table_name <- function(table_name){

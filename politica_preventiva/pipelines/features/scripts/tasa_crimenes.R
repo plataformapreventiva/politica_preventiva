@@ -1,11 +1,9 @@
 #!/usr/bin/env Rscript
 library(optparse)
-library(dbrsocial)
 library(dbplyr)
 library(dplyr)
 library(DBI)
 library(yaml)
-#source("recode_utils.R")
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -70,17 +68,18 @@ if(length(opt) > 1){
 
   source("pipelines/features/tools/features_tools.R")
 
-
-  crimen <- tbl(con, dbplyr::in_schema('raw', 'delitos_comun'))
-
   selected_crimes <- c('Homicidio', 'Secuestro', 'Feminicidio',
                        'Violencia familiar', 'Robo',
                        'Daño a la propiedad')
 
-  tasa_crimenes <- crimen %>%
-                    dplyr::filter(tipodedelito %in% selected_crimes)
+  crimen <- tbl(con, dbplyr::in_schema('clean', 'delitos_comun')) %>%
+            dplyr::filter(tipodedelito %in% selected_crimes)
 
-  # TODO: tabla de población, hacer cleans de esto
-  poblacion <- tbl(con, dbplyr::in_schema('raw', 'intercensal'))
+  poblacion <- tbl(con, dbplyr::in_schema('public', 'poblacion_intercensal_mun_2015'))
+
+  crimenes_tasas <- crimen %>%
+                    dplyr::left_join(poblacion) %>%
+                    dplyr::mutate(tasa = incidencia_delictiva/poblacion)
+
 
 
