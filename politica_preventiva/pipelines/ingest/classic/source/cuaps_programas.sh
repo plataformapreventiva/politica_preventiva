@@ -4,7 +4,7 @@
 # CUAPS: program-level
 ########################
 
-# Este script ingesta los datos del CUAPS (Cuestionario Único de Aplicación a Programas) a nivel programa. 
+# Este script ingesta los datos del CUAPS (Cuestionario Único de Aplicación a Programas) a nivel programa.
 
 # Se asume que se tiene acceso a la carpeta sifode-raw, en el S3 del proyecto
 # Se toman como parámetros, en ese orden, el data day, el directorio de ingesta y el output path.
