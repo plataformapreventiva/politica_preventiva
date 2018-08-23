@@ -804,6 +804,59 @@ conagua_temperaturas:
   - tmin
   - tobs
   - fecha
+conapo_marginacion:
+  LUIGI:
+    INDEX: cve_mun
+    SCHEMA:
+    - cve_ent: TEXT
+    - nom_ent: TEXT
+    - cve_mun: TEXT
+    - nom_mun: TEXT
+    - poblacion_total: Integer
+    - viviendas_particulares: TEXT
+    - analfabetismo: TEXT
+    - sin_primaria: TEXT
+    - sin_drenaje_exc: TEXT
+    - sin_electricidad: TEXT
+    - sin_agua_entubada: TEXT
+    - hacinamiento: TEXT
+    - piso_tierra: TEXT
+    - loc_menor_5000: TEXT
+    - menos_2sm: TEXT
+    - sin_drenaje: TEXT
+    - sin_drenaje_ss: TEXT
+    - indice_marginacion: FLOAT
+    - grado_marginacion: TEXT
+    - ind0a100: TEXT
+    - lug_nac: Integer
+    - lugar_est: TEXT
+    - anio: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cve_ent
+  - ent
+  - cve_mun
+  - mun
+  - pob_tot
+  - vp
+  - analf
+  - sprim
+  - ovsde
+  - ovsee
+  - ovsae
+  - vhac
+  - ovpt
+  - pl<5000
+  - po2sm
+  - ovsd
+  - ovsdse
+  - im
+  - gm
+  - ind0a100
+  - lug_nac
+  - lugar_est
+  - ano
 coneval_estados:
   LUIGI:
     INDEX: folioviv
