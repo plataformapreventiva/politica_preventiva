@@ -538,7 +538,7 @@ cngmd_transparencia:
     - meaccm7_x: TEXT
     - meaccm8_x: TEXT
     - totalca1: TEXT
-    - no_aplic: INT
+    - no_aplic: TEXT
     - mec_tran: Integer
     - infpuesp: Integer
     - nd_nsnn1_y: Integer
