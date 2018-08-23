@@ -27,8 +27,8 @@ ipak <- function(pkg){
 }
 
 
-packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'lubridate',
-	      'readxl', 'aws.s3', 'gsubfn')
+packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'data.table',
+              'lubridate', 'readxl', 'aws.s3', 'gsubfn')
 
 ipak(packages)
 
@@ -44,3 +44,4 @@ dev_pak <- function(github_path){
 
 github_packages <- c('gaborcsardi/dotenv')
 dev_pak(github_packages)
+
