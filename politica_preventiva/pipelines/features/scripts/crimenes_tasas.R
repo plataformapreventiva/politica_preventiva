@@ -68,12 +68,18 @@ if(length(opt) > 1){
 
   source("pipelines/features/tools/features_tools.R")
 
-  selected_crimes <- c('Homicidio', 'Secuestro', 'Feminicidio',
-                       'Violencia familiar', 'Robo',
+  selected_crimes <- c('Homicidio doloso',
+                       'Homicidio culposo',
+                       'Secuestro',
+                       'Feminicidio',
+                       'Violencia familiar',
+                       'Robo de vehículo automotor',
                        'Daño a la propiedad')
 
   crimen <- tbl(con, dbplyr::in_schema('clean', 'delitos_comun')) %>%
-            dplyr::filter(tipodedelito %in% selected_crimes)
+            dplyr::filter(subtipodedelito %in% selected_crimes)
+
+# TODO: jalar ecea_primaria, ecea_mediasuperior
 
   poblacion <- tbl(con, dbplyr::in_schema('public', 'poblacion_intercensal_mun_2015'))
 
@@ -83,3 +89,7 @@ if(length(opt) > 1){
 
 
 
+  copy_to(con, crimenes_tasas,
+          dbplyr::in_schema("features",'crimenes_tasas'),
+          temporary = FALSE, overwrite = TRUE)
+  dbDisconnect(con)
