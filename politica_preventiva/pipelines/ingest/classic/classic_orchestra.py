@@ -133,7 +133,7 @@ class UpdateRawDB(postgres.CopyToTable):
         response = s3.head_object(Bucket='dpa-plataforma-preventiva', Key=keyname)
         # If the file is greater than 5 gb, ingest line per line
         # TODO append B as a list to respect the data type
-        if response['ContentLength'] > 10000: #5368709120:
+        if response['ContentLength'] > 10: #5368709120:
             with self.input().open('r') as fobj:
                 check = True
                 for line in fobj:
