@@ -5403,11 +5403,11 @@ inegi_jueces:
   LUIGI:
     INDEX: entidadfederativa
     SCHEMA:
-    - entidadfederativa: Integer
-    - anio: TEXT
-    - num_jueces: Integer
-    - actualizacion_sedesol: FLOAT
-    - data_date: TIMESTAMP
+    - entidadfederativa: TEXT
+    - anio: Integer
+    - num_jueces: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
   - entidadfederativa
   - anio
