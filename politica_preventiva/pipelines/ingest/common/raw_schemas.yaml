@@ -3222,6 +3222,832 @@ earthquakes:
   - status
   - locationsource
   - magsource
+ecea_mediasuperior:
+  LUIGI:
+    INDEX: fol_est
+    SCHEMA:
+    - fol_est: FLOAT
+    - fol_esc: Integer
+    - id_sub: Integer
+    - sub: TEXT
+    - e01: TEXT
+    - e02: TEXT
+    - e03: TEXT
+    - e04: TEXT
+    - e05: TEXT
+    - e06: TEXT
+    - e07a: TEXT
+    - e07b: TEXT
+    - e07c: TEXT
+    - e07d: TEXT
+    - e07e: TEXT
+    - e07f: TEXT
+    - e07g: TEXT
+    - e07h: TEXT
+    - e07i: TEXT
+    - e07j: TEXT
+    - e08a: TEXT
+    - e08b: TEXT
+    - e08c: TEXT
+    - e08d: TEXT
+    - e08e: TEXT
+    - e08f: TEXT
+    - e08g: TEXT
+    - e08h: TEXT
+    - e08i: TEXT
+    - e08j: TEXT
+    - e09a: TEXT
+    - e09b: TEXT
+    - e09c: TEXT
+    - e09d: TEXT
+    - e09e: TEXT
+    - e10a: TEXT
+    - e10b: TEXT
+    - e10c: TEXT
+    - e10d: TEXT
+    - e11a: TEXT
+    - e11b: TEXT
+    - e11c: TEXT
+    - e11d: TEXT
+    - e11e: TEXT
+    - e11f: TEXT
+    - e12: TEXT
+    - e13a: TEXT
+    - e13b: TEXT
+    - e13c: TEXT
+    - e13d: TEXT
+    - e13e: TEXT
+    - e14a: TEXT
+    - e14b: TEXT
+    - e14c: TEXT
+    - e14d: TEXT
+    - e14e: TEXT
+    - e15: TEXT
+    - e16a: TEXT
+    - e16b: TEXT
+    - e16c: TEXT
+    - e16d: TEXT
+    - e16e: TEXT
+    - e17: TEXT
+    - e18: TEXT
+    - e19: TEXT
+    - e20: TEXT
+    - e21: TEXT
+    - e22: TEXT
+    - e23: TEXT
+    - e24: TEXT
+    - e25: TEXT
+    - e26: TEXT
+    - e27: TEXT
+    - e28: TEXT
+    - e29: TEXT
+    - e30: TEXT
+    - e31: TEXT
+    - e32a: TEXT
+    - e32b: TEXT
+    - e32c: TEXT
+    - e33: TEXT
+    - e34a: TEXT
+    - e34b: TEXT
+    - e34c: TEXT
+    - e34d: TEXT
+    - e34e: TEXT
+    - e35: TEXT
+    - e36a: TEXT
+    - e36b: TEXT
+    - e36c: TEXT
+    - e37a: TEXT
+    - e37b: TEXT
+    - e37c: TEXT
+    - e38a: TEXT
+    - e38b: TEXT
+    - e38c: TEXT
+    - e38d: TEXT
+    - e38e: TEXT
+    - e38f: TEXT
+    - e38g: TEXT
+    - e38h: TEXT
+    - e38i: TEXT
+    - e38j: TEXT
+    - e39: TEXT
+    - e40: TEXT
+    - e41: TEXT
+    - e42a: TEXT
+    - e42b: TEXT
+    - e42c: TEXT
+    - e42d: TEXT
+    - e42e: TEXT
+    - e42f: TEXT
+    - e43: TEXT
+    - e44a: TEXT
+    - e44b: TEXT
+    - e44c: TEXT
+    - e44d: TEXT
+    - e44e: TEXT
+    - e44f: TEXT
+    - e44g: TEXT
+    - e45a: TEXT
+    - e45b: TEXT
+    - e45c: TEXT
+    - e45d: TEXT
+    - e45e: TEXT
+    - e45f: TEXT
+    - e46a: TEXT
+    - e46b: TEXT
+    - e46c: TEXT
+    - e46d: TEXT
+    - e46e: TEXT
+    - e46f: TEXT
+    - e47a: TEXT
+    - e47b: TEXT
+    - e47c: TEXT
+    - e47d: TEXT
+    - e47e: TEXT
+    - e47f: TEXT
+    - e48a: TEXT
+    - e48b: TEXT
+    - e48c: TEXT
+    - e48d: TEXT
+    - e48e: TEXT
+    - e48f: TEXT
+    - e48g: TEXT
+    - e48h: TEXT
+    - e49: TEXT
+    - e50a: TEXT
+    - e50b: TEXT
+    - e50c: TEXT
+    - e50d: TEXT
+    - e50e: TEXT
+    - e50f: TEXT
+    - e51a: TEXT
+    - e51b: TEXT
+    - e51c: TEXT
+    - e51d: TEXT
+    - e51e: TEXT
+    - e51f: TEXT
+    - e51g: TEXT
+    - e51h: TEXT
+    - e52a: TEXT
+    - e52b: TEXT
+    - e52c: TEXT
+    - e52d: TEXT
+    - e52e: TEXT
+    - e52f: TEXT
+    - e52g: TEXT
+    - e52h: TEXT
+    - e52i: TEXT
+    - e52j: TEXT
+    - e53a: TEXT
+    - e53b: TEXT
+    - e53c: TEXT
+    - e53d: TEXT
+    - e53e: TEXT
+    - e53f: TEXT
+    - e53g: TEXT
+    - e53h: TEXT
+    - e53i: TEXT
+    - e53j: TEXT
+    - e54: TEXT
+    - e55a: TEXT
+    - e55b: TEXT
+    - e55c: TEXT
+    - e55d: TEXT
+    - e55e: TEXT
+    - e55f: TEXT
+    - e55g: TEXT
+    - e55h: TEXT
+    - e55i: TEXT
+    - e55j: TEXT
+    - e56a: TEXT
+    - e56b: TEXT
+    - e56c: TEXT
+    - e56d: TEXT
+    - e56e: TEXT
+    - e56f: TEXT
+    - e57: TEXT
+    - e58: TEXT
+    - e59a: TEXT
+    - e59b: TEXT
+    - e59c: TEXT
+    - e59d: TEXT
+    - e59e: TEXT
+    - e59f: TEXT
+    - e59g: TEXT
+    - e59h: TEXT
+    - e59i: TEXT
+    - e60: TEXT
+    - e61: TEXT
+    - e62: TEXT
+    - e63: TEXT
+    - e64: TEXT
+    - e65: TEXT
+    - e66: TEXT
+    - e67: TEXT
+    - e68: TEXT
+    - e69: TEXT
+    - e70: TEXT
+    - e71: TEXT
+    - e71t: TEXT
+    - e72: TEXT
+    - e73: TEXT
+    - e74: TEXT
+    - w_est: FLOAT
+    - w_fscr1: FLOAT
+    - w_fscr2: FLOAT
+    - w_fscr3: FLOAT
+    - w_fscr4: FLOAT
+    - w_fscr5: FLOAT
+    - w_fscr6: FLOAT
+    - w_fscr7: FLOAT
+    - w_fscr8: FLOAT
+    - w_fscr9: FLOAT
+    - w_fscr10: FLOAT
+    - w_fscr11: FLOAT
+    - w_fscr12: FLOAT
+    - w_fscr13: FLOAT
+    - w_fscr14: FLOAT
+    - w_fscr15: FLOAT
+    - w_fscr16: FLOAT
+    - w_fscr17: FLOAT
+    - w_fscr18: FLOAT
+    - w_fscr19: FLOAT
+    - w_fscr20: FLOAT
+    - w_fscr21: FLOAT
+    - w_fscr22: FLOAT
+    - w_fscr23: FLOAT
+    - w_fscr24: FLOAT
+    - w_fscr25: FLOAT
+    - w_fscr26: FLOAT
+    - w_fscr27: FLOAT
+    - w_fscr28: FLOAT
+    - w_fscr29: FLOAT
+    - w_fscr30: FLOAT
+    - w_fscr31: FLOAT
+    - w_fscr32: FLOAT
+    - w_fscr33: FLOAT
+    - w_fscr34: FLOAT
+    - w_fscr35: FLOAT
+    - w_fscr36: FLOAT
+    - w_fscr37: FLOAT
+    - w_fscr38: FLOAT
+    - w_fscr39: FLOAT
+    - w_fscr40: FLOAT
+    - w_fscr41: FLOAT
+    - w_fscr42: FLOAT
+    - w_fscr43: FLOAT
+    - w_fscr44: FLOAT
+    - w_fscr45: FLOAT
+    - w_fscr46: FLOAT
+    - w_fscr47: FLOAT
+    - w_fscr48: FLOAT
+    - w_fscr49: FLOAT
+    - w_fscr50: FLOAT
+    - w_fscr51: FLOAT
+    - w_fscr52: FLOAT
+    - w_fscr53: FLOAT
+    - w_fscr54: FLOAT
+    - w_fscr55: FLOAT
+    - w_fscr56: FLOAT
+    - w_fscr57: FLOAT
+    - w_fscr58: FLOAT
+    - w_fscr59: FLOAT
+    - w_fscr60: FLOAT
+    - w_fscr61: FLOAT
+    - w_fscr62: FLOAT
+    - w_fscr63: FLOAT
+    - w_fscr64: FLOAT
+    - w_fscr65: FLOAT
+    - w_fscr66: FLOAT
+    - w_fscr67: FLOAT
+    - w_fscr68: FLOAT
+    - w_fscr69: FLOAT
+    - w_fscr70: FLOAT
+    - w_fscr71: FLOAT
+    - w_fscr72: FLOAT
+    - w_fscr73: FLOAT
+    - w_fscr74: FLOAT
+    - w_fscr75: FLOAT
+    - w_fscr76: FLOAT
+    - w_fscr77: FLOAT
+    - w_fscr78: FLOAT
+    - w_fscr79: FLOAT
+    - w_fscr80: FLOAT
+    - w_fscr81: FLOAT
+    - w_fscr82: FLOAT
+    - w_fscr83: FLOAT
+    - w_fscr84: FLOAT
+    - w_fscr85: FLOAT
+    - w_fscr86: FLOAT
+    - w_fscr87: FLOAT
+    - w_fscr88: FLOAT
+    - w_fscr89: FLOAT
+    - w_fscr90: FLOAT
+    - w_fscr91: FLOAT
+    - w_fscr92: FLOAT
+    - w_fscr93: FLOAT
+    - w_fscr94: FLOAT
+    - w_fscr95: FLOAT
+    - w_fscr96: FLOAT
+    - w_fscr97: FLOAT
+    - w_fscr98: FLOAT
+    - w_fscr99: FLOAT
+    - w_fscr100: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - fol_est
+  - fol_esc
+  - id_sub
+  - sub
+  - e01
+  - e02
+  - e03
+  - e04
+  - e05
+  - e06
+  - e07a
+  - e07b
+  - e07c
+  - e07d
+  - e07e
+  - e07f
+  - e07g
+  - e07h
+  - e07i
+  - e07j
+  - e08a
+  - e08b
+  - e08c
+  - e08d
+  - e08e
+  - e08f
+  - e08g
+  - e08h
+  - e08i
+  - e08j
+  - e09a
+  - e09b
+  - e09c
+  - e09d
+  - e09e
+  - e10a
+  - e10b
+  - e10c
+  - e10d
+  - e11a
+  - e11b
+  - e11c
+  - e11d
+  - e11e
+  - e11f
+  - e12
+  - e13a
+  - e13b
+  - e13c
+  - e13d
+  - e13e
+  - e14a
+  - e14b
+  - e14c
+  - e14d
+  - e14e
+  - e15
+  - e16a
+  - e16b
+  - e16c
+  - e16d
+  - e16e
+  - e17
+  - e18
+  - e19
+  - e20
+  - e21
+  - e22
+  - e23
+  - e24
+  - e25
+  - e26
+  - e27
+  - e28
+  - e29
+  - e30
+  - e31
+  - e32a
+  - e32b
+  - e32c
+  - e33
+  - e34a
+  - e34b
+  - e34c
+  - e34d
+  - e34e
+  - e35
+  - e36a
+  - e36b
+  - e36c
+  - e37a
+  - e37b
+  - e37c
+  - e38a
+  - e38b
+  - e38c
+  - e38d
+  - e38e
+  - e38f
+  - e38g
+  - e38h
+  - e38i
+  - e38j
+  - e39
+  - e40
+  - e41
+  - e42a
+  - e42b
+  - e42c
+  - e42d
+  - e42e
+  - e42f
+  - e43
+  - e44a
+  - e44b
+  - e44c
+  - e44d
+  - e44e
+  - e44f
+  - e44g
+  - e45a
+  - e45b
+  - e45c
+  - e45d
+  - e45e
+  - e45f
+  - e46a
+  - e46b
+  - e46c
+  - e46d
+  - e46e
+  - e46f
+  - e47a
+  - e47b
+  - e47c
+  - e47d
+  - e47e
+  - e47f
+  - e48a
+  - e48b
+  - e48c
+  - e48d
+  - e48e
+  - e48f
+  - e48g
+  - e48h
+  - e49
+  - e50a
+  - e50b
+  - e50c
+  - e50d
+  - e50e
+  - e50f
+  - e51a
+  - e51b
+  - e51c
+  - e51d
+  - e51e
+  - e51f
+  - e51g
+  - e51h
+  - e52a
+  - e52b
+  - e52c
+  - e52d
+  - e52e
+  - e52f
+  - e52g
+  - e52h
+  - e52i
+  - e52j
+  - e53a
+  - e53b
+  - e53c
+  - e53d
+  - e53e
+  - e53f
+  - e53g
+  - e53h
+  - e53i
+  - e53j
+  - e54
+  - e55a
+  - e55b
+  - e55c
+  - e55d
+  - e55e
+  - e55f
+  - e55g
+  - e55h
+  - e55i
+  - e55j
+  - e56a
+  - e56b
+  - e56c
+  - e56d
+  - e56e
+  - e56f
+  - e57
+  - e58
+  - e59a
+  - e59b
+  - e59c
+  - e59d
+  - e59e
+  - e59f
+  - e59g
+  - e59h
+  - e59i
+  - e60
+  - e61
+  - e62
+  - e63
+  - e64
+  - e65
+  - e66
+  - e67
+  - e68
+  - e69
+  - e70
+  - e71
+  - e71t
+  - e72
+  - e73
+  - e74
+  - w_est
+  - w_fscr1
+  - w_fscr2
+  - w_fscr3
+  - w_fscr4
+  - w_fscr5
+  - w_fscr6
+  - w_fscr7
+  - w_fscr8
+  - w_fscr9
+  - w_fscr10
+  - w_fscr11
+  - w_fscr12
+  - w_fscr13
+  - w_fscr14
+  - w_fscr15
+  - w_fscr16
+  - w_fscr17
+  - w_fscr18
+  - w_fscr19
+  - w_fscr20
+  - w_fscr21
+  - w_fscr22
+  - w_fscr23
+  - w_fscr24
+  - w_fscr25
+  - w_fscr26
+  - w_fscr27
+  - w_fscr28
+  - w_fscr29
+  - w_fscr30
+  - w_fscr31
+  - w_fscr32
+  - w_fscr33
+  - w_fscr34
+  - w_fscr35
+  - w_fscr36
+  - w_fscr37
+  - w_fscr38
+  - w_fscr39
+  - w_fscr40
+  - w_fscr41
+  - w_fscr42
+  - w_fscr43
+  - w_fscr44
+  - w_fscr45
+  - w_fscr46
+  - w_fscr47
+  - w_fscr48
+  - w_fscr49
+  - w_fscr50
+  - w_fscr51
+  - w_fscr52
+  - w_fscr53
+  - w_fscr54
+  - w_fscr55
+  - w_fscr56
+  - w_fscr57
+  - w_fscr58
+  - w_fscr59
+  - w_fscr60
+  - w_fscr61
+  - w_fscr62
+  - w_fscr63
+  - w_fscr64
+  - w_fscr65
+  - w_fscr66
+  - w_fscr67
+  - w_fscr68
+  - w_fscr69
+  - w_fscr70
+  - w_fscr71
+  - w_fscr72
+  - w_fscr73
+  - w_fscr74
+  - w_fscr75
+  - w_fscr76
+  - w_fscr77
+  - w_fscr78
+  - w_fscr79
+  - w_fscr80
+  - w_fscr81
+  - w_fscr82
+  - w_fscr83
+  - w_fscr84
+  - w_fscr85
+  - w_fscr86
+  - w_fscr87
+  - w_fscr88
+  - w_fscr89
+  - w_fscr90
+  - w_fscr91
+  - w_fscr92
+  - w_fscr93
+  - w_fscr94
+  - w_fscr95
+  - w_fscr96
+  - w_fscr97
+  - w_fscr98
+  - w_fscr99
+  - w_fscr100
+ecea_primaria:
+  LUIGI:
+    INDEX: fol_est
+    SCHEMA:
+    - no_esc: Integer
+    - fol_est: Integer
+    - ent: TEXT
+    - tipo_escue: Integer
+    - turno: TEXT
+    - grado: Integer
+    - aplicado: TEXT
+    - w_stdn: Integer
+    - e01: Integer
+    - e02: Integer
+    - e03: Integer
+    - e04: Integer
+    - e05: Integer
+    - e06: Integer
+    - e07: Integer
+    - e08: Integer
+    - e09: Integer
+    - e10: Integer
+    - e11: Integer
+    - e12: Integer
+    - e13: Integer
+    - e14: Integer
+    - e15: Integer
+    - e16: Integer
+    - e17: Integer
+    - e18: Integer
+    - e19: Integer
+    - e20: Integer
+    - e21a: Integer
+    - e21b: Integer
+    - e22: Integer
+    - e23: Integer
+    - e24: Integer
+    - e25: Integer
+    - e26: Integer
+    - e27: Integer
+    - e28a: Integer
+    - e28b: Integer
+    - e28c: Integer
+    - e28d: Integer
+    - e29a: Integer
+    - e29b: Integer
+    - e29c: Integer
+    - e30a: Integer
+    - e30b: Integer
+    - e30c: Integer
+    - e30d: Integer
+    - e30e: Integer
+    - e30f: Integer
+    - e31a: Integer
+    - e31b: Integer
+    - e31c: Integer
+    - e31d: Integer
+    - e31e: Integer
+    - e31f: Integer
+    - e31g: Integer
+    - e31h: Integer
+    - e32a: Integer
+    - e32b: Integer
+    - e32c: Integer
+    - e32d: Integer
+    - e32e: Integer
+    - e33a: Integer
+    - e33b: Integer
+    - e33c: Integer
+    - e33d: Integer
+    - e33e: Integer
+    - e34: Integer
+    - e35: Integer
+    - e36: Integer
+    - e37: Integer
+    - e38: Integer
+    - e39: Integer
+    - e40: Integer
+    - e41: Integer
+    - e42: Integer
+    - e43: Integer
+    - e44: Integer
+    - e45: Integer
+    - e46: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - no_esc
+  - fol_est
+  - ent
+  - tipo_escue
+  - turno
+  - grado
+  - aplicado
+  - w_stdn
+  - e01
+  - e02
+  - e03
+  - e04
+  - e05
+  - e06
+  - e07
+  - e08
+  - e09
+  - e10
+  - e11
+  - e12
+  - e13
+  - e14
+  - e15
+  - e16
+  - e17
+  - e18
+  - e19
+  - e20
+  - e21a
+  - e21b
+  - e22
+  - e23
+  - e24
+  - e25
+  - e26
+  - e27
+  - e28a
+  - e28b
+  - e28c
+  - e28d
+  - e29a
+  - e29b
+  - e29c
+  - e30a
+  - e30b
+  - e30c
+  - e30d
+  - e30e
+  - e30f
+  - e31a
+  - e31b
+  - e31c
+  - e31d
+  - e31e
+  - e31f
+  - e31g
+  - e31h
+  - e32a
+  - e32b
+  - e32c
+  - e32d
+  - e32e
+  - e33a
+  - e33b
+  - e33c
+  - e33d
+  - e33e
+  - e34
+  - e35
+  - e36
+  - e37
+  - e38
+  - e39
+  - e40
+  - e41
+  - e42
+  - e43
+  - e44
+  - e45
+  - e46
 encaseh_familias:
   LUIGI:
     INDEX: folio
@@ -4627,6 +5453,368 @@ insp:
   - cantidad
   - unidad
   - estatus
+intercensal_personas_2015:
+  LUIGI:
+    INDEX: mun
+    SCHEMA:
+    - id_viv: TEXT
+    - id_persona: bigint
+    - ent: Integer
+    - nom_ent: TEXT
+    - mun: Integer
+    - nom_mun: TEXT
+    - loc50k: Integer
+    - nom_loc: TEXT
+    - cobertura: Integer
+    - estrato: TEXT
+    - upm: Integer
+    - factor: Integer
+    - numper: Integer
+    - sexo: Integer
+    - edad: Integer
+    - parent: Integer
+    - parent_otro_c: Integer
+    - ident_madre: Integer
+    - ident_padre: Integer
+    - sersalud: Integer
+    - afrodes: Integer
+    - acta_nac: Integer
+    - dhsersal1: Integer
+    - dhsersal2: Integer
+    - perte_indigena: Integer
+    - ent_pais_nac: Integer
+    - nacionalidad: Integer
+    - hlengua: Integer
+    - qdialect_c: TEXT
+    - qdialect_inali: TEXT
+    - hespanol: TEXT
+    - elengua: Integer
+    - asisten: Integer
+    - mun_asi: Integer
+    - nom_mun_asi: TEXT
+    - ent_pais_asi: Integer
+    - tie_traslado_escu: Integer
+    - med_traslado_esc1: Integer
+    - med_traslado_esc2: Integer
+    - med_traslado_esc3: TEXT
+    - escolari: Integer
+    - nivacad: Integer
+    - alfabet: Integer
+    - escoacum: Integer
+    - mun_res10: Integer
+    - nom_mun_res10: TEXT
+    - ent_pais_res10: Integer
+    - situa_conyugal: Integer
+    - ident_pareja: Integer
+    - conact: Integer
+    - ocupacion_c: Integer
+    - situacion_trab: Integer
+    - aguinaldo: Integer
+    - vacaciones: Integer
+    - servicio_medico: Integer
+    - utilidades: Integer
+    - incap_sueldo: Integer
+    - sar_afore: Integer
+    - credito_vivienda: Integer
+    - ingtrmen: Integer
+    - actividades_c: Integer
+    - mun_trab: Integer
+    - nom_mun_trab: TEXT
+    - ent_pais_trab: Integer
+    - tie_traslado_trab: Integer
+    - med_traslado_trab1: Integer
+    - med_traslado_trab2: Integer
+    - med_traslado_trab3: Integer
+    - acti_sin_pago1: Integer
+    - acti_sin_pago2: Integer
+    - acti_sin_pago3: Integer
+    - acti_sin_pago4: Integer
+    - acti_sin_pago5: Integer
+    - acti_sin_pago6: Integer
+    - acti_sin_pago7: Integer
+    - acti_sin_pago8: Integer
+    - hijos_nac_vivos: Integer
+    - hijos_fallecidos: Integer
+    - hijos_sobreviv: Integer
+    - fecha_nac_m: Integer
+    - fecha_nac_a: Integer
+    - sobrevivencia: Integer
+    - edad_morir_d: Integer
+    - edad_morir_m: TEXT
+    - edad_morir_a: TEXT
+    - tamloc: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - id_viv
+  - id_persona
+  - ent
+  - nom_ent
+  - mun
+  - nom_mun
+  - loc50k
+  - nom_loc
+  - cobertura
+  - estrato
+  - upm
+  - factor
+  - numper
+  - sexo
+  - edad
+  - parent
+  - parent_otro_c
+  - ident_madre
+  - ident_padre
+  - sersalud
+  - afrodes
+  - acta_nac
+  - dhsersal1
+  - dhsersal2
+  - perte_indigena
+  - ent_pais_nac
+  - nacionalidad
+  - hlengua
+  - qdialect_c
+  - qdialect_inali
+  - hespanol
+  - elengua
+  - asisten
+  - mun_asi
+  - nom_mun_asi
+  - ent_pais_asi
+  - tie_traslado_escu
+  - med_traslado_esc1
+  - med_traslado_esc2
+  - med_traslado_esc3
+  - escolari
+  - nivacad
+  - alfabet
+  - escoacum
+  - mun_res10
+  - nom_mun_res10
+  - ent_pais_res10
+  - situa_conyugal
+  - ident_pareja
+  - conact
+  - ocupacion_c
+  - situacion_trab
+  - aguinaldo
+  - vacaciones
+  - servicio_medico
+  - utilidades
+  - incap_sueldo
+  - sar_afore
+  - credito_vivienda
+  - ingtrmen
+  - actividades_c
+  - mun_trab
+  - nom_mun_trab
+  - ent_pais_trab
+  - tie_traslado_trab
+  - med_traslado_trab1
+  - med_traslado_trab2
+  - med_traslado_trab3
+  - acti_sin_pago1
+  - acti_sin_pago2
+  - acti_sin_pago3
+  - acti_sin_pago4
+  - acti_sin_pago5
+  - acti_sin_pago6
+  - acti_sin_pago7
+  - acti_sin_pago8
+  - hijos_nac_vivos
+  - hijos_fallecidos
+  - hijos_sobreviv
+  - fecha_nac_m
+  - fecha_nac_a
+  - sobrevivencia
+  - edad_morir_d
+  - edad_morir_m
+  - edad_morir_a
+  - tamloc
+intercensal_viviendas_2015:
+  LUIGI:
+    INDEX: mun
+    SCHEMA:
+    - id_viv: TEXT
+    - ent: Integer
+    - nom_ent: TEXT
+    - mun: Integer
+    - nom_mun: TEXT
+    - loc50k: Integer
+    - nom_loc: TEXT
+    - cobertura: Integer
+    - estrato: TEXT
+    - upm: Integer
+    - factor: Integer
+    - clavivp: Integer
+    - paredes: Integer
+    - techos: Integer
+    - pisos: Integer
+    - cuadorm: Integer
+    - totcuart: Integer
+    - cocina: Integer
+    - lugar_cocina: Integer
+    - combustible: Integer
+    - estufa: Integer
+    - electricidad: Integer
+    - focos: Integer
+    - focos_ahorra: Integer
+    - agua_entubada: Integer
+    - aba_agua_entu: Integer
+    - aba_agua_no_entu: Integer
+    - tinaco: Integer
+    - cisterna: Integer
+    - bomba_agua: Integer
+    - regadera: Integer
+    - boiler: Integer
+    - calentador_solar: Integer
+    - aire_acon: Integer
+    - panel_solar: Integer
+    - sersan: Integer
+    - conagua: Integer
+    - usoexc: Integer
+    - drenaje: Integer
+    - destino_basura: Integer
+    - separa_basura: Integer
+    - separa_ali: Integer
+    - separa_abo: Integer
+    - separa_ven: Integer
+    - refrigerador: Integer
+    - lavadora: Integer
+    - horno: Integer
+    - autoprop: Integer
+    - radio: Integer
+    - televisor: Integer
+    - televisor_pp: Integer
+    - computadora: Integer
+    - telefono: Integer
+    - celular: Integer
+    - internet: Integer
+    - serv_tv_paga: Integer
+    - tenencia: Integer
+    - num_due_viv1: Integer
+    - num_due_viv2: Integer
+    - escrituras_viv: Integer
+    - forma_adqui: Integer
+    - financiamiento: Integer
+    - deuda: Integer
+    - numpers: Integer
+    - ingr_perotropais: Integer
+    - ingr_perdentpais: Integer
+    - ingr_ayugob: Integer
+    - ingr_jubpen: Integer
+    - terreno_agrope: Integer
+    - terreno_vivero: Integer
+    - num_due_terr: Integer
+    - alim_adu1: Integer
+    - alim_adu2: Integer
+    - alim_adu3: Integer
+    - ing_alim_adu1: Integer
+    - ing_alim_adu2: Integer
+    - ing_alim_adu3: Integer
+    - alim_men1: Integer
+    - alim_men2: Integer
+    - alim_men3: Integer
+    - ing_alim_men1: Integer
+    - ing_alim_men2: Integer
+    - ing_alim_men3: Integer
+    - tamloc: Integer
+    - tipohog: Integer
+    - jefe_sexo: Integer
+    - jefe_edad: Integer
+    - ingtrhog: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - id_viv
+  - ent
+  - nom_ent
+  - mun
+  - nom_mun
+  - loc50k
+  - nom_loc
+  - cobertura
+  - estrato
+  - upm
+  - factor
+  - clavivp
+  - paredes
+  - techos
+  - pisos
+  - cuadorm
+  - totcuart
+  - cocina
+  - lugar_cocina
+  - combustible
+  - estufa
+  - electricidad
+  - focos
+  - focos_ahorra
+  - agua_entubada
+  - aba_agua_entu
+  - aba_agua_no_entu
+  - tinaco
+  - cisterna
+  - bomba_agua
+  - regadera
+  - boiler
+  - calentador_solar
+  - aire_acon
+  - panel_solar
+  - sersan
+  - conagua
+  - usoexc
+  - drenaje
+  - destino_basura
+  - separa_basura
+  - separa_ali
+  - separa_abo
+  - separa_ven
+  - refrigerador
+  - lavadora
+  - horno
+  - autoprop
+  - radio
+  - televisor
+  - televisor_pp
+  - computadora
+  - telefono
+  - celular
+  - internet
+  - serv_tv_paga
+  - tenencia
+  - num_due_viv1
+  - num_due_viv2
+  - escrituras_viv
+  - forma_adqui
+  - financiamiento
+  - deuda
+  - numpers
+  - ingr_perotropais
+  - ingr_perdentpais
+  - ingr_ayugob
+  - ingr_jubpen
+  - terreno_agrope
+  - terreno_vivero
+  - num_due_terr
+  - alim_adu1
+  - alim_adu2
+  - alim_adu3
+  - ing_alim_adu1
+  - ing_alim_adu2
+  - ing_alim_adu3
+  - alim_men1
+  - alim_men2
+  - alim_men3
+  - ing_alim_men1
+  - ing_alim_men2
+  - ing_alim_men3
+  - tamloc
+  - tipohog
+  - jefe_sexo
+  - jefe_edad
+  - ingtrhog
 inventario_vivienda_manzanas:
   LUIGI:
     INDEX: cvegeo
