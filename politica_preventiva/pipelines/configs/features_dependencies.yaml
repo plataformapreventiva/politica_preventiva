@@ -30,3 +30,6 @@ enigh_ingreso:
         - enigh_poblacion
         - enigh_trabajos
         - enigh_viviendas
+crimenes_tasas:
+    clean_dependencies:
+        - delitos_comun

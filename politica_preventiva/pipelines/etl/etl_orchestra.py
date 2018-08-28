@@ -51,7 +51,6 @@ class ETLPipeline(luigi.WrapperTask):
     client = S3Client()
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
-    historical = luigi.Parameter('DEFAULT')
 
     def requires(self):
         if self.ptask!='auto':
@@ -59,8 +58,7 @@ class ETLPipeline(luigi.WrapperTask):
 
         logger.info('Running the following pipelines: {0}'.format(self.pipelines))
         # loop through pipeline tasks and data dates
-        set_pipelines = [(pipeline_task, final_dates(self.historical,
-                                                     pipeline_task,
+        set_pipelines = [(pipeline_task, final_dates(pipeline_task,
                                                      self.current_date)) for
                          pipeline_task in self.pipelines]
         return [UpdateCleanDB(current_date=self.current_date,
@@ -75,7 +73,7 @@ class UpdateCleanDB(PgRTask):
     This Task runs the Clean script in clean folder for
     the pipeline_task, using a wrapper script in order to do clean and recode
     in one process. If there is no clean script to be run, it updates
-    with the last raw table
+    with the last (recoded) raw table
     """
 
     current_date = luigi.DateParameter()
@@ -102,7 +100,6 @@ class UpdateCleanDB(PgRTask):
                         '--host', self.host,
                         '--pipeline_task', self.pipeline_task,
                         '--scripts_dir', self.clean_scripts]
-        pdb.set_trace()
         cmd = " ".join(command_list)
         return cmd
 

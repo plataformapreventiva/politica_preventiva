@@ -15,11 +15,7 @@ option_list = list(
   make_option(c("--password"), type="character", default="",
               help="password for datbase user", metavar="character"),
   make_option(c("--host"), type="character", default="",
-              help="database host name", metavar="character"),
-  make_option(c("--pipeline_task"), type="character", default="",
-              help="pipeline taks", metavar="character"),
-  make_option(c("--scripts_dir"), type="character", default="",
-              help="scripts directory", metavar="character")
+              help="database host name", metavar="character")
 )
 
 opt_parser <- OptionParser(option_list=option_list)
@@ -62,11 +58,21 @@ if(length(opt) > 1){
                         host = PGHOST,
                         port = PGPORT,
                         dbname = PGDATABASE,
-                        user = PGHOST,
+                        user = POSTGRES_USER,
                         password = POSTGRES_PASSWORD
   )
 
+  if(opt$data_date == ""){
+  stop("Did not receive a valid data date, stopping", call.=FALSE)
+  }else{
+    data_date <- opt$data_date
+  }
+
   source("pipelines/features/tools/features_tools.R")
+
+  print('Pulling datasets')
+
+  poblacion <- tbl(con, dbplyr::in_schema('public', 'poblacion_intercensal_mun_2015'))
 
   selected_crimes <- c('Homicidio doloso',
                        'Homicidio culposo',
@@ -76,20 +82,26 @@ if(length(opt) > 1){
                        'Robo de vehículo automotor',
                        'Daño a la propiedad')
 
-  crimen <- tbl(con, dbplyr::in_schema('clean', 'delitos_comun')) %>%
-            dplyr::filter(subtipodedelito %in% selected_crimes)
-
-# TODO: jalar ecea_primaria, ecea_mediasuperior
-
-  poblacion <- tbl(con, dbplyr::in_schema('public', 'poblacion_intercensal_mun_2015'))
-
-  crimenes_tasas <- crimen %>%
+  crimenes_tasas <- tbl(con, dbplyr::in_schema('clean', 'delitos_comun')) %>%
+                    dplyr::filter(subtipodedelito %in% selected_crimes) %>%
                     dplyr::left_join(poblacion) %>%
-                    dplyr::mutate(tasa = incidencia_delictiva/poblacion)
-
-
+                    dplyr::mutate(tasa = incidencia_delictiva/poblacion) %>%
+                    dplyr::select(anio, mes, cve_muni, subtipodedelito, tasa) %>%
+                    spread_db(., 'subtipodedelito', 'tasa') %>%
+                    dplyr::rename(danio_prop = `Daño a la propiedad`,
+                                  feminicidio = `Feminicidio`,
+                                  homicidio_culposo = `Homicidio culposo`,
+                                  homicidio_doloso = `Homicidio doloso`,
+                                  secuestro = `Secuestro`,
+                                  violencia_familiar = `Violencia familiar`,
+                                  robo_vehiculos = `Robo de vehículo automotor`) %>%
+                    dplyr::mutate(data_date = data_date,
+                                  actualizacion_sedesol = lubridate::today())
 
   copy_to(con, crimenes_tasas,
           dbplyr::in_schema("features",'crimenes_tasas'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
+
+  print('Features written to: features.crimenes_tasas')
+}

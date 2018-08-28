@@ -48,19 +48,36 @@ with open("pipelines/configs/features_dependencies.yaml", "r") as file:
 
 class FeaturesPipeline(luigi.WrapperTask):
 
+    """
+    This Task programs the features creation for each missing data date, for a
+    given set of pipelines.
+    """
     pipelines = luigi.parameter.ListParameter()
     current_date = luigi.DateParameter()
     client = S3Client()
     ptask = luigi.Parameter()
 
     def requires(self):
-        return [UpdateFeaturesDB(features_task, self.current_date)
-                for features_task in self.pipelines]
+        set_pipelines = [(pipeline_task, final_dates(pipeline_task,
+                                                     self.current_date)) for
+                         pipeline_task in self.pipelines]
+        return [UpdateFeaturesDB(features_task=pipeline[0],
+                                 current_date=self.current_date,
+                                 data_date = dates,
+                                 suffix=pipeline[1][1])
+                for pipeline in set_pipelines for dates in pipeline[1][0]]
 
 class UpdateFeaturesDB(PgRTask):
 
+    """
+    This Task runs the feature creation script for a given set of features.
+    All the feature creation processes are currently run through R scripts,
+    which receive DB connection settings and a data date as input parameters.
+    """
     features_task = luigi.Parameter()
     current_date = luigi.DateParameter()
+    data_date = luigi.Parameter()
+    suffix = luigi.Parameter()
     client = S3Client()
     features_scripts = luigi.Parameter()
 
@@ -72,7 +89,8 @@ class UpdateFeaturesDB(PgRTask):
 
     @property
     def update_id(self):
-        return str(self.features_task) + '_features'
+        return str(self.features_task) + str(self.data_date) +\
+                str(self.suffix) + '_features'
 
     @property
     def table(self):
@@ -88,6 +106,7 @@ class UpdateFeaturesDB(PgRTask):
             return
 
         command_list = ['Rscript', features_script,
+                        '--data_date', self.data_date,
                         '--database', self.database,
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
