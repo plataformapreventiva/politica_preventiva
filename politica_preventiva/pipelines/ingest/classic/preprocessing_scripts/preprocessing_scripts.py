@@ -231,6 +231,33 @@ def cuis_39_9(data_date, s3_file, extra_h, out_key):
         pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
     return True
 
+def delitos_comun_prep(data_date, s3_file, extra_h, out_key):
+    """
+    Preprocessing function for delitos_comun data: reads df from s3
+    and uploads to S3
+    """
+    bucket = 'dpa-plataforma-preventiva'
+    df = pputils.check_empty_dataframe(bucket,'etl/' + s3_file, out_key)
+
+    if df is not None:
+        df = pputils.gather(df=df,
+                key='mes',
+                value='incidencia_delictiva',
+                cols=['Enero', 'Febrero', 'Marzo',
+                    'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre',
+                    'Octubre', 'Noviembre', 'Diciembre'])
+        df['Año'] = df['Año'].astype(int)
+        df['Clave_Ent'] = df['Clave_Ent'].\
+                        astype(int).\
+                        apply(lambda x: str(x).zfill(2))
+        df['Cve. Municipio'] = df['Cve. Municipio'].\
+                        astype(int).\
+                        apply(lambda x: str(x).zfill(5))
+        pandas_to_s3(df, 'dpa-plataforma-preventiva', out_key)
+    return True
+
+
 
 def no_preprocess_method(data_date, s3_file, extra_h, out_key):
    bucket = 'dpa-plataforma-preventiva'

@@ -242,6 +242,344 @@ cfe:
   - octubre
   - noviembre
   - diciembre
+cngmd_agua_potable:
+  LUIGI:
+    INDEX: aps_entidad
+    SCHEMA:
+    - aps_folio: Integer
+    - aps_entidad: Integer
+    - sa_agua_serv: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - aps_folio
+  - aps_entidad
+  - sa_agua_serv
+cngmd_drenaje:
+  LUIGI:
+    INDEX: aps_entidad
+    SCHEMA:
+    - aps_folio: Integer
+    - aps_entidad: Integer
+    - sd_dren_serv: Integer
+    - sd_dren_cab: FLOAT
+    - sd_dren_resto: FLOAT
+    - sd_dren_pluvial: Integer
+    - sd_dren_ext_kms: Integer
+    - sd_dren_red: INT
+    - sd_dren_lugr_planta_trat: Integer
+    - sd_dren_lugr_laguna_oxi: Integer
+    - sd_dren_lugr_cuerp_agua: Integer
+    - sd_dren_lugr_otro: Integer
+    - sd_dren_lugr_cuerp_agua_esp: TEXT
+    - sd_dren_lugr_otro_esp: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - aps_folio
+  - aps_entidad
+  - sd_dren_serv
+  - sd_dren_cab
+  - sd_dren_resto
+  - sd_dren_pluvial
+  - sd_dren_ext_kms
+  - sd_dren_red
+  - sd_dren_lugr_planta_trat
+  - sd_dren_lugr_laguna_oxi
+  - sd_dren_lugr_cuerp_agua
+  - sd_dren_lugr_otro
+  - sd_dren_lugr_cuerp_agua_esp
+  - sd_dren_lugr_otro_esp
+cngmd_predial:
+  LUIGI:
+    INDEX: ubic_geo
+    SCHEMA:
+    - ubic_geo: Integer
+    - aut_cobr: Integer
+    - edo_cta: Integer
+    - res_nss1: TEXT
+    - totalpo1: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ubic_geo
+  - aut_cobr
+  - edo_cta
+  - res_nss1
+  - totalpo1
+cngmd_proteccion_civil:
+  LUIGI:
+    INDEX: ubic_geo
+    SCHEMA:
+    - ubic_geo: Integer
+    - nd_nsnn1: Integer
+    - nd_nsnn2: Integer
+    - nd_spnn1: Integer
+    - nd_nsnn3: Integer
+    - nd_nsnn4: Integer
+    - nd_nsnn5: Integer
+    - nd_nsnn6: Integer
+    - nd_nsnn7: Integer
+    - nd_nsnn8: Integer
+    - nd_nsnn9: Integer
+    - ndnsnn10: Integer
+    - ndnsnn11: Integer
+    - totalca1: TEXT
+    - totalca2: TEXT
+    - totalca3: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ubic_geo
+  - nd_nsnn1
+  - nd_nsnn2
+  - nd_spnn1
+  - nd_nsnn3
+  - nd_nsnn4
+  - nd_nsnn5
+  - nd_nsnn6
+  - nd_nsnn7
+  - nd_nsnn8
+  - nd_nsnn9
+  - ndnsnn10
+  - ndnsnn11
+  - totalca1
+  - totalca2
+  - totalca3
+cngmd_recoleccion_basura:
+  LUIGI:
+    INDEX: rsu_cve_ent
+    SCHEMA:
+    - rsu_folio: Integer
+    - rsu_cve_ent: Integer
+    - rsu_recl_serv: Integer
+    - basura_cant_ton: FLOAT
+    - basura_cant_kgs: Integer
+    - basura_porcent_cab: FLOAT
+    - basura_metodo_med: Integer
+    - basura_metodo_med_esp: TEXT
+    - basura_recl_sis: Integer
+    - basura_recl_sis_otr_esp: TEXT
+    - rsu_recl_vehi_tot: Integer
+    - rsu_vehi_tip_01: Integer
+    - rsu_vehi_num_01: Integer
+    - rsu_vehi_tip_02: Integer
+    - rsu_vehi_num_02: Integer
+    - rsu_vehi_tip_03: Integer
+    - rsu_vehi_num_03: Integer
+    - rsu_vehi_tip_04: Integer
+    - rsu_vehi_num_04: Integer
+    - rsu_vehi_tip_05: Integer
+    - rsu_vehi_num_05: Integer
+    - rsu_vehi_tip_06: Integer
+    - rsu_vehi_num_06: Integer
+    - rsu_vehi_tip_07: Integer
+    - rsu_vehi_num_07: Integer
+    - rsu_vehi_tip_08: Integer
+    - rsu_vehi_num_08: Integer
+    - rsu_vehi_tip_09: Integer
+    - rsu_vehi_num_09: Integer
+    - rsu_vehi_tip_10: Integer
+    - rsu_vehi_num_10: Integer
+    - rsu_vehi_tip_11: Integer
+    - rsu_vehi_num_11: Integer
+    - rsu_vehi_tip_12: Integer
+    - rsu_vehi_num_12: Integer
+    - rsu_vehi_tip_13: Integer
+    - rsu_vehi_num_13: Integer
+    - rsu_vehi_tip_14: Integer
+    - rsu_vehi_num_14: Integer
+    - rsu_vehi_tip_15: Integer
+    - rsu_vehi_num_15: INT
+    - rsu_vehi_tip_15_esp: TEXT
+    - rsu_vehi_tip_16_esp: TEXT
+    - rsu_vehi_tip_17_esp: TEXT
+    - basura_sep: Integer
+    - basura_sep_esq: Integer
+    - basura_sep_esq_otr_esp: TEXT
+    - basura_sep_cant_ton: FLOAT
+    - basura_sep_cant_kgs: FLOAT
+    - sep_org_tot: FLOAT
+    - sep_org_compost: Integer
+    - sep_org_sdf: Integer
+    - sep_org_otro01_esp: TEXT
+    - sep_org_otro01: Integer
+    - sep_org_otro02_esp: TEXT
+    - sep_org_otro02: INT
+    - sep_inorg_tot: FLOAT
+    - sep_inorg_vnta: Integer
+    - sep_inorg_inter: Integer
+    - sep_inorg_sdf: Integer
+    - sep_inorg_otro01_esp: TEXT
+    - sep_inorg_otro01: Integer
+    - sep_inorg_otro02_esp: TEXT
+    - sep_inorg_otro02: INT
+    - sep_tot: FLOAT
+    - esta_trns: Integer
+    - esta_trns_num: Integer
+    - aco: Integer
+    - aco_tot: Integer
+    - aco_recibe: Integer
+    - aco_papel_cant: FLOAT
+    - aco_pet_cant: FLOAT
+    - aco_aluminio_cant: FLOAT
+    - aco_fe_lm_acero_cant: FLOAT
+    - aco_cu_brnce_pb_cant: FLOAT
+    - aco_vidrio_cant: FLOAT
+    - aco_electronico_cant: FLOAT
+    - aco_plasticos_cant: FLOAT
+    - aco_otro01_esp: TEXT
+    - aco_otro01_cant: FLOAT
+    - aco_otro02_esp: TEXT
+    - aco_otro02_cant: FLOAT
+    - aco_otro03_esp: TEXT
+    - aco_otro03_cant: INT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - rsu_folio
+  - rsu_cve_ent
+  - rsu_recl_serv
+  - basura_cant_ton
+  - basura_cant_kgs
+  - basura_porcent_cab
+  - basura_metodo_med
+  - basura_metodo_med_esp
+  - basura_recl_sis
+  - basura_recl_sis_otr_esp
+  - rsu_recl_vehi_tot
+  - rsu_vehi_tip_01
+  - rsu_vehi_num_01
+  - rsu_vehi_tip_02
+  - rsu_vehi_num_02
+  - rsu_vehi_tip_03
+  - rsu_vehi_num_03
+  - rsu_vehi_tip_04
+  - rsu_vehi_num_04
+  - rsu_vehi_tip_05
+  - rsu_vehi_num_05
+  - rsu_vehi_tip_06
+  - rsu_vehi_num_06
+  - rsu_vehi_tip_07
+  - rsu_vehi_num_07
+  - rsu_vehi_tip_08
+  - rsu_vehi_num_08
+  - rsu_vehi_tip_09
+  - rsu_vehi_num_09
+  - rsu_vehi_tip_10
+  - rsu_vehi_num_10
+  - rsu_vehi_tip_11
+  - rsu_vehi_num_11
+  - rsu_vehi_tip_12
+  - rsu_vehi_num_12
+  - rsu_vehi_tip_13
+  - rsu_vehi_num_13
+  - rsu_vehi_tip_14
+  - rsu_vehi_num_14
+  - rsu_vehi_tip_15
+  - rsu_vehi_num_15
+  - rsu_vehi_tip_15_esp
+  - rsu_vehi_tip_16_esp
+  - rsu_vehi_tip_17_esp
+  - basura_sep
+  - basura_sep_esq
+  - basura_sep_esq_otr_esp
+  - basura_sep_cant_ton
+  - basura_sep_cant_kgs
+  - sep_org_tot
+  - sep_org_compost
+  - sep_org_sdf
+  - sep_org_otro01_esp
+  - sep_org_otro01
+  - sep_org_otro02_esp
+  - sep_org_otro02
+  - sep_inorg_tot
+  - sep_inorg_vnta
+  - sep_inorg_inter
+  - sep_inorg_sdf
+  - sep_inorg_otro01_esp
+  - sep_inorg_otro01
+  - sep_inorg_otro02_esp
+  - sep_inorg_otro02
+  - sep_tot
+  - esta_trns
+  - esta_trns_num
+  - aco
+  - aco_tot
+  - aco_recibe
+  - aco_papel_cant
+  - aco_pet_cant
+  - aco_aluminio_cant
+  - aco_fe_lm_acero_cant
+  - aco_cu_brnce_pb_cant
+  - aco_vidrio_cant
+  - aco_electronico_cant
+  - aco_plasticos_cant
+  - aco_otro01_esp
+  - aco_otro01_cant
+  - aco_otro02_esp
+  - aco_otro02_cant
+  - aco_otro03_esp
+  - aco_otro03_cant
+cngmd_transparencia:
+  LUIGI:
+    INDEX: ubic_geo
+    SCHEMA:
+    - ubic_geo: Integer
+    - inf_publ: Integer
+    - nd_nsnn1_x: INT
+    - nd_frecu_x: Integer
+    - meaccm1_x: TEXT
+    - meaccm2_x: TEXT
+    - meaccm3_x: TEXT
+    - meaccm4_x: TEXT
+    - meaccm5_x: TEXT
+    - meaccm6_x: TEXT
+    - meaccm7_x: TEXT
+    - meaccm8_x: TEXT
+    - totalca1: TEXT
+    - no_aplic: TEXT
+    - mec_tran: Integer
+    - infpuesp: Integer
+    - nd_nsnn1_y: Integer
+    - nd_frecu_y: Integer
+    - meaccm1_y: TEXT
+    - meaccm2_y: TEXT
+    - meaccm3_y: TEXT
+    - meaccm4_y: TEXT
+    - meaccm5_y: TEXT
+    - meaccm6_y: TEXT
+    - meaccm7_y: TEXT
+    - meaccm8_y: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ubic_geo
+  - inf_publ
+  - nd_nsnn1.x
+  - nd_frecu.x
+  - meaccm1.x
+  - meaccm2.x
+  - meaccm3.x
+  - meaccm4.x
+  - meaccm5.x
+  - meaccm6.x
+  - meaccm7.x
+  - meaccm8.x
+  - totalca1
+  - no_aplic
+  - mec_tran
+  - infpuesp
+  - nd_nsnn1.y
+  - nd_frecu.y
+  - meaccm1.y
+  - meaccm2.y
+  - meaccm3.y
+  - meaccm4.y
+  - meaccm5.y
+  - meaccm6.y
+  - meaccm7.y
+  - meaccm8.y
 comedores:
   LUIGI:
     INDEX: id_com
@@ -466,6 +804,59 @@ conagua_temperaturas:
   - tmin
   - tobs
   - fecha
+conapo_marginacion:
+  LUIGI:
+    INDEX: cve_mun
+    SCHEMA:
+    - cve_ent: TEXT
+    - nom_ent: TEXT
+    - cve_mun: TEXT
+    - nom_mun: TEXT
+    - poblacion_total: Integer
+    - viviendas_particulares: TEXT
+    - analfabetismo: TEXT
+    - sin_primaria: TEXT
+    - sin_drenaje_exc: TEXT
+    - sin_electricidad: TEXT
+    - sin_agua_entubada: TEXT
+    - hacinamiento: TEXT
+    - piso_tierra: TEXT
+    - loc_menor_5000: TEXT
+    - menos_2sm: TEXT
+    - sin_drenaje: TEXT
+    - sin_drenaje_ss: TEXT
+    - indice_marginacion: FLOAT
+    - grado_marginacion: TEXT
+    - ind0a100: TEXT
+    - lug_nac: Integer
+    - lugar_est: TEXT
+    - anio: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - cve_ent
+  - ent
+  - cve_mun
+  - mun
+  - pob_tot
+  - vp
+  - analf
+  - sprim
+  - ovsde
+  - ovsee
+  - ovsae
+  - vhac
+  - ovpt
+  - pl<5000
+  - po2sm
+  - ovsd
+  - ovsdse
+  - im
+  - gm
+  - ind0a100
+  - lug_nac
+  - lugar_est
+  - ano
 coneval_estados:
   LUIGI:
     INDEX: folioviv
@@ -2661,6 +3052,45 @@ defunciones_generales:
   - loc_ocules
   - razon_m
   - dis_re_oax
+delitos_comun:
+  LUIGI:
+    INDEX: cve_muni
+    SCHEMA:
+    - anio: Integer
+    - cve_ent: TEXT
+    - nom_ent: TEXT
+    - cve_muni: TEXT
+    - nom_muni: TEXT
+    - bienjuridicoafectado: TEXT
+    - tipodedelito: TEXT
+    - subtipodedelito: TEXT
+    - modalidad: TEXT
+    - mes: TEXT
+    - incidencia_delictiva: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ano
+  - clave_ent
+  - entidad
+  - cve.municipio
+  - municipio
+  - bienjuridicoafectado
+  - tipodedelito
+  - subtipodedelito
+  - modalidad
+  - enero
+  - febrero
+  - marzo
+  - abril
+  - mayo
+  - junio
+  - julio
+  - agosto
+  - septiembre
+  - octubre
+  - noviembre
+  - diciembre
 denue:
   LUIGI:
     INDEX: d_llave
@@ -6808,6 +7238,27 @@ sequia:
   - cve_conc
   - fecha
   - declaratoria
+shcp_ici_estados:
+  LUIGI:
+    INDEX: id_entidad_federativa
+    SCHEMA:
+    - ciclo: Integer
+    - trimestre: Integer
+    - id_entidad_federativa: Integer
+    - entidad_federativa: TEXT
+    - id_tipo_valoracion_ici: Integer
+    - tipo_valoracion_ici: TEXT
+    - valor_ici: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ciclo
+  - trimestre
+  - id_entidad_federativa
+  - entidad_federativa
+  - id_tipo_valoracion_ici
+  - tipo_valoracion_ici
+  - valor_ici
 sifode:
   LUIGI:
     INDEX: llave_hogar_h

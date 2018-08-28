@@ -1,5 +1,23 @@
 #!/usr/bin/env Rscript
-# Install
+
+####### Dependency hotfix
+
+install_oldpak <- function(package_name, older_version){
+    if (!(package_name %in% installed.packages()[, "Package"] & older_version %in% installed.packages()[,"Version"])) {
+        devtools::install_version(package_name,
+                                  version = older_version,
+                                  repos = "http://cran.us.r-project.org")
+    }
+require(package_name, character.only=TRUE)
+}
+
+older_packages <- list('DBI' = '0.8', 'RPostgres' = '1.0-3')
+
+sapply(1:length(older_packages),
+       function(x) install_oldpak(package_name = names(older_packages)[x],
+                                  older_version = unname(older_packages[[x]])))
+
+# Install regular CRAN packages
 
 ipak <- function(pkg){
   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
@@ -9,10 +27,12 @@ ipak <- function(pkg){
 }
 
 
-packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'lubridate',
-	      'readxl', 'RPostgres', 'aws.s3', 'gsubfn')
+packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'data.table',
+              'lubridate', 'readxl', 'aws.s3', 'gsubfn')
 
 ipak(packages)
+
+# Install Github packages
 
 dev_pak <- function(github_path){
   package <- gsub('.*/(.*)', '\\1', github_path)
@@ -24,3 +44,4 @@ dev_pak <- function(github_path){
 
 github_packages <- c('gaborcsardi/dotenv')
 dev_pak(github_packages)
+
