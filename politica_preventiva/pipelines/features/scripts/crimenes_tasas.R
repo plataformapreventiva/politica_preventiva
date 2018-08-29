@@ -90,7 +90,7 @@ if(length(opt) > 1){
                                                              na.rm = TRUE)) %>%
                     dplyr::left_join(poblacion) %>%
                     dplyr::mutate(tasa = incidencia_total/poblacion) %>%
-                    dplyr::select(-poblacion)
+                    dplyr::select(-poblacion) %>%
                     spread_db(., 'subtipodedelito', 'tasa') %>%
                     dplyr::rename(danio_prop = `Daño a la propiedad`,
                                   feminicidio = `Feminicidio`,
