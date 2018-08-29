@@ -54,6 +54,12 @@ if(length(opt) > 1){
     PGPORT <- "5432"
   }
 
+  if(opt$data_date == ""){
+  stop("Did not receive a valid data date, stopping", call.=FALSE)
+  }else{
+    data_date <- opt$data_date
+  }
+
   con <- DBI::dbConnect(RPostgres::Postgres(),
                         host = PGHOST,
                         port = PGPORT,
@@ -62,17 +68,12 @@ if(length(opt) > 1){
                         password = POSTGRES_PASSWORD
   )
 
-  if(opt$data_date == ""){
-  stop("Did not receive a valid data date, stopping", call.=FALSE)
-  }else{
-    data_date <- opt$data_date
-  }
-
   source("pipelines/features/tools/features_tools.R")
 
   print('Pulling datasets')
 
-  poblacion <- tbl(con, dbplyr::in_schema('public', 'poblacion_intercensal_mun_2015'))
+  poblacion <- tbl(con, dbplyr::in_schema('public',
+                                          'poblacion_intercensal_mun_2015'))
 
   selected_crimes <- c('Homicidio doloso',
                        'Homicidio culposo',
@@ -84,9 +85,12 @@ if(length(opt) > 1){
 
   crimenes_tasas <- tbl(con, dbplyr::in_schema('clean', 'delitos_comun')) %>%
                     dplyr::filter(subtipodedelito %in% selected_crimes) %>%
+                    dplyr::group_by(anio, mes, cve_muni, subtipodedelito) %>%
+                    dplyr::summarise(incidencia_total =  sum(incidencia_delictiva,
+                                                             na.rm = TRUE)) %>%
                     dplyr::left_join(poblacion) %>%
-                    dplyr::mutate(tasa = incidencia_delictiva/poblacion) %>%
-                    dplyr::select(anio, mes, cve_muni, subtipodedelito, tasa) %>%
+                    dplyr::mutate(tasa = incidencia_total/poblacion) %>%
+                    dplyr::select(-poblacion)
                     spread_db(., 'subtipodedelito', 'tasa') %>%
                     dplyr::rename(danio_prop = `Daño a la propiedad`,
                                   feminicidio = `Feminicidio`,
