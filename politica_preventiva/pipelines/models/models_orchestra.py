@@ -154,9 +154,8 @@ class ModelDependencies(luigi.Task):
         dep_tables = set(composition[self.model_task]['dependencies']) - \
                 set([*composition])
 
-        yield [UpdateCleanDB(current_date=self.current_date,
-                             pipeline_task=pipeline_task,
-                             data_date=self.data_date)
+        yield [ETLPipeline(current_date=self.current_date,
+                             pipeline_task=pipeline_task)
                for pipeline_task in dep_tables]
 
         yield [RunModel(current_Date=self.current_date,

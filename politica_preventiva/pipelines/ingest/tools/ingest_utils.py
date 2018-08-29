@@ -137,10 +137,10 @@ def look_for_end_date(pipeline, current_date):
 def current_quarter(dt):
     """
     This function returns a string with the year quarter
-        January, February and March (Q1); 
-        April, May and June (Q2); 
-        July, August and September (Q3); 
-        October, November and December (Q4). 
+        January, February and March (Q1);
+        April, May and June (Q2);
+        July, August and September (Q3);
+        October, November and December (Q4).
     """
     return int((dt.month  - 1) / 3 + 1)
 
@@ -249,7 +249,7 @@ def dates_list(pipeline, end_date, periodicity):
         return [end_date]
 
 
-def final_dates(historical, pipeline_task, current_date):
+def final_dates(pipeline_task, current_date):
     periodicity = configuration.get_config().get(pipeline_task,
                                                  'periodicity')
     if periodicity == 'None':
@@ -257,22 +257,13 @@ def final_dates(historical, pipeline_task, current_date):
         suffix = 'fixed'
         return (dates, suffix)
 
-    elif historical in ['True', 'T', '1', 'TRUE']:
+    else:
         logger.info('Preparing to get historic data for the pipeline_task: {0}'.\
                     format(pipeline_task))
         dates, suffix = dates_list(pipeline_task,
                                         current_date,
                                         periodicity)
         logger.debug('Pipeline task {pipeline} has historic dates {hdates}'.\
-                     format(pipeline=pipeline_task, hdates=dates))
-    else:
-        logger.info('Preparing to get current data for'+ \
-                    ' the pipeline_task: {0}'.format(pipeline_task))
-        dates, suffix = dates_list(pipeline_task,
-                                        current_date,
-                                        periodicity)
-        dates = dates[-2:]
-        logger.debug('Pipeline task {pipeline} has dates {hdates}'.\
                      format(pipeline=pipeline_task, hdates=dates))
 
     try:

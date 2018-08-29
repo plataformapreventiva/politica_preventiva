@@ -35,12 +35,12 @@ The general process of the pipeline is:
 
 | [![javurena7][ph-javurena7]][gh-javurena7] | [![rsanchezavalos][ph-rsanchez]][gh-rsanchez] | [![andreanr][ph-andreanr]][gh-andreanr]| [![andreuboada ][ph-andreuboada]][gh-andreuboada] |
 |                 :--:                       |                     :--:                      |                     :--:               |                     :--:                          |
-|        [javurena7][gh-javurena7]           |         [rsanchezavalos][gh-rsanchez]         |          [andreanr][gh-andreanr]       |          [andreuboada][gh-andreuboada]            | 
+|        [javurena7][gh-javurena7]           |         [rsanchezavalos][gh-rsanchez]         |          [andreanr][gh-andreanr]       |          [andreuboada][gh-andreuboada]            |
 
 
 | [![monzalo14][ph-monzalo14]][gh-monzalo14] | [![abrownrb][ph-abrownrb]][gh-abrownrb] | [![ollin18][ph-ollin18]][gh-ollin18] |
-|                 :--:                       |                 :--:                 |                 :--:                 |
-|       [monzalo14][gh-monzalo14]            |        [abrownrb][gh-abrownrb]         |        [ollin18][gh-ollin18]         |
+|                 :--:                       |                 :--:                    |                 :--:                 |
+|       [monzalo14][gh-monzalo14]            |        [abrownrb][gh-abrownrb]          |        [ollin18][gh-ollin18]         |
 
 [ph-javurena7]: https://avatars2.githubusercontent.com/u/14095871?v=3&s=180
 [gh-javurena7]: https://github.com/javurena7

@@ -1,0 +1,35 @@
+# YAML file indicating feature task dependencies.
+# Dependencies are to be listed according to the schema
+# their PostgreSQL table is located in:
+# clean_dependencies: "clean"
+# features_dependencies: "features"
+# models_dependencies: "models"
+cuis_carencias:
+    clean_dependencies:
+        - cuis_historico_integrante
+        - cuis_historico_se_integrante
+        - cuis_historico_se_vivienda
+        - cuis_historico_vivienda
+cuis_ingreso:
+    clean_dependencies:
+        - cuis_historico_integrante
+        - cuis_historico_se_integrante
+        - cuis_historico_se_vivienda
+        - cuis_historico_vivienda
+enigh_carencias:
+    clean_dependencies:
+        - enigh_hogares
+        - enigh_ingresos
+        - enigh_poblacion
+        - enigh_trabajos
+        - enigh_viviendas
+enigh_ingreso:
+    clean_dependencies:
+        - enigh_hogares
+        - enigh_ingresos
+        - enigh_poblacion
+        - enigh_trabajos
+        - enigh_viviendas
+crimenes_tasas:
+    clean_dependencies:
+        - delitos_comun

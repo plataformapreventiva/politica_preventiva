@@ -98,11 +98,10 @@ class IngestDates(luigi.WrapperTask):
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
-    historical = luigi.Parameter('DEFAULT')
 
     @property
     def dates(self):
-        dates, self.suffix = final_dates(self.historical, self.pipeline_task,
+        dates, self.suffix = final_dates(self.pipeline_task,
                                          self.current_date)
 
         return dates
@@ -144,7 +143,6 @@ class UpdateLineage(luigi.Task):
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
-    historical = luigi.Parameter('DEFAULT')
 
     def requires(self):
         return UpdateDictionary(current_date=self.current_date,
@@ -263,7 +261,6 @@ class UpdateDictionary(postgres.CopyToTable):
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
-    historical = luigi.Parameter('DEFAULT')
 
     # RDS
     database = os.environ.get("PGDATABASE")

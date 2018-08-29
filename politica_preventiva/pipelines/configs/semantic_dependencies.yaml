@@ -9,3 +9,10 @@ pub_agrupaciones:
 catalogo_ubicaciones:
 - geoms_municipios
 - geoms_estados
+reporte_programas:
+- cuaps_programas
+- cuaps_apoyos
+- cuaps_criterios
+- inventario_coneval_estatales
+- inventario_coneval_federales
+- listado_coneval_federales

@@ -1,0 +1,555 @@
+# ---------------------------------------------------
+# Rezago educativo
+# ---------------------------------------------------
+
+rezago_educativo:
+    # Variable auxiliar para CUIS
+    - name: antec_esc
+      condition: '1'
+      transmute:
+        fun: getFunc
+    # Nivel Educativo
+    - name: nivel_edu
+      condition: 'aprobo_ultnivel < 2 | (aprobo_ultnivel == 2 & aprobo_ultgrado < 6) ~ 0,
+                 (aprobo_ultnivel == 2 & aprobo_ultgrado == 6) | (aprobo_ultnivel == 3 & aprobo_ultgrado < 3) |
+                 (aprobo_ultnivel == 5 | aprobo_ultnivel == 6) & aprobo_ultgrado < 3 & antec_esc == 1 ~ 1,
+                 (aprobo_ultnivel == 3 & aprobo_ultgrado == 3) | (aprobo_ultnivel == 4) |
+                  (aprobo_ultnivel == 5 & antec_esc == 1 & aprobo_ultgrado >= 3) | (aprobo_ultnivel == 6 & antec_esc == 1 & aprobo_ultgrado >= 3) |
+                  (aprobo_ultnivel == 5 & antec_esc >= 2) | (aprobo_ultnivel == 6 & antec_esc >= 2) | (aprobo_ultnivel >= 7) ~ 2'
+      transmute:
+        fun: getCases
+    # año nacimiento
+    - name: a_nacimiento
+      condition: 'anio-edad'
+      transmute:
+        fun: getFunc
+
+    ## Carencia por rezago Educativo
+    # 1. Entre los 3 y 5 años y no ha terminado la educación obligatoria (secundaria terminada) y no siste a la escuela
+    # 2. Nació antes de 1982 y no cuenta con el nivel de educación obligatoria vigente en el momento en que debía haberla cursado (primaria completa).
+    # 3. Nació a partir de 1982, es mayor de 15 años y no cuenta con el nivel de educación obligatoria (secundaria completa).
+    - name: ic_rezago_educativo
+      condition: '( (edad >= 3 & edad <= 15) & (asiste_escuela == 0 & (nivel_edu == 0 | nivel_edu ==1)) ) |
+                  ( edad >= 16 & a_nacimiento >= 1982 & (nivel_edu == 0 | nivel_edu == 1) ) |
+                  ( edad >= 16 & a_nacimiento <= 1981 & nivel_edu == 0 )'
+      transmute:
+        fun: getDummy
+
+# ---------------------------------------------------
+# Carencia por Acceso a los Servicios Básicos en la Vivienda
+# ---------------------------------------------------
+
+carencia_servicios:
+    # Indicadora por servicio de agua
+    - name: ic_servicio_agua
+      condition: 'servicio_agua <= 3 | !is.na(servicio_agua)'
+      transmute:
+        fun: getDummy
+    # Indicadora por servicio de drenaje
+    - name: ic_servicio_drenaje
+      condition: 'servicio_drenaje <= 3'
+      transmute:
+        fun: getDummy
+    # Indicadora por servicio de electricidad
+    - name: ic_servicio_electricidad
+      condition: 'servicio_elect == 1'
+      transmute:
+        fun: getDummy
+    # Indicadora por servicio de combustible
+    - name: ic_combustible
+      condition: '(fuente_combustible == 1) & (estufa_sinchimenea == 1)'
+      transmute:
+        fun: getDummy
+
+    ## Indicador de Carencia por servicios básicos
+    # 1. Indicador de carencia por servicio de agua
+    # 2. Indicador de carencia de servicio de drenaje
+    # 3. Indicador de carencia de servicios de electricidad
+    # 4. Indicador de combustible
+    - name: ic_servicios_basicos
+      condition: 'ic_servicio_agua == 1 | ic_servicio_drenaje == 1 | ic_servicio_electricidad == 1 | ic_combustible == 1'
+      transmute:
+        fun: getDummy
+
+# ---------------------------------------------------
+# Carencia en Calidad y Espacios en la Vivienda
+# ---------------------------------------------------
+
+carencia_vivienda:
+    # Índice de hacinamiento
+    - name: indice_hacinamiento
+      condition: 'total_personas / total_cuartosdor'
+      transmute:
+        fun: getFunc
+    # Indicadora de hacinamiento
+    - name: ic_hacinamiento
+      condition: 'indice_hacinamiento > 2.5'
+      transmute:
+        fun: getDummy
+    # Indicadora de carencia por material de pisos
+    - name: ic_material_piso
+      condition: 'material_pisos == 1'
+      transmute:
+        fun: getDummy
+    # Indicadora de carencia por material de muros
+    - name: ic_material_muros
+      condition: 'material_muros <= 5'
+      transmute:
+        fun: getDummy
+    # Indicador de carencia por material de techos de la vivienda
+    - name: ic_material_techos
+      condition: 'material_techos <= 2'
+      transmute:
+        fun: getDummy
+    ## Indicador de Carencia por Calidad de Vivienda
+    # 1. Indicador de carencia por índice de hacinamiento
+    # 2. Indicador de carencia por material de piso de la vivienda
+    # 3. Indicador de carencia por material de techos de la vivienda
+    # 4. Indicador de carencia por material de muros de la vivienda
+    - name: ic_vivienda
+      condition: '(ic_hacinamiento == 1) | (ic_material_piso == 1) | (ic_material_techos == 1) | (ic_material_muros == 1)'
+      transmute:
+        fun: getDummy
+
+# ---------------------------------------------------
+# Carencia Alimentaria
+# ---------------------------------------------------
+
+carencia_alimentaria:
+    - name: min_edad
+      condition: 'min(edad, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, hogar_id]
+    # hogares menores de 18 años
+    - name: i_menores18
+      condition: 'min_edad >= 0 & min_edad <= 17'
+      transmute:
+        fun: getDummy
+    # Para hogares sin menores de edad:
+    # 1. Algún adulto tuvo una alimentacion basada en muy poca variedad de alimentos?
+    # 2. Algún adulto deja de desayunar, comer o cenar?
+    # 3. Algún adulto comio menos de lo que debia comer?
+    # 4. El hogar se quedó sin comida?
+    # 5. Algun adulto sintio hambre pero no comio?
+    # 6.  Algun adulto sintio hambre pero no comio?
+
+    # Para hogares con menores de edad:
+    # 1. Alguien de 0 a 17 anios tuvo una alimentacion basada en muy poca variedad de alimentos?
+    # 2. Alguien de 0 a 17 anios comio menos de lo que debia?
+    # 3. Se tuvo que disminuir la cantidad servida en las comidas a alguien de 0 a 17 anios?
+    # 4. Alguien de 0 a 17 anios sintio hambre pero no comio?
+    # 5. Alguien de 0 a 17 anios se acosto con hambre?
+    # 6. Alguien de 0 a 17 anios comio una vez al dia o dejo de comer todo un dia?
+
+    # escala total
+    - name: total_ia
+      condition: 'alim_pocavar + alim_dejocomida + alim_comiomenos +
+                  alim_sincomida + alim_nocomio + alim_comiouna +
+                  alim_menor_pocavar + alim_menor_comiomenos + alim_menor_disminuyo +
+                  alim_menor_nocomio + alim_menor_acosto + alim_menor_comiouna'
+      transmute:
+        fun: getFunc
+    # grado inseguridad alimentaria
+    - name: inseguridad_alimentaria
+      condition: 'total_ia == 0 ~ 0,
+                total_ia == 1 | total_ia == 2 | (total_ia == 3 & i_menores18 ==1) ~ 1,
+                (i_menores18 == 0 & (total_ia == 3 | total_ia == 4 )) | (i_menores18 == 1 & (total_ia==4 | total_ia==5 |total_ia==6 |total_ia==7)) ~ 2,
+                (i_menores18 == 0 & (total_ia == 5 | total_ia == 6)) | total_ia >= 8 ~ 3'
+      transmute:
+        fun: getCases
+
+    ## Indicador de Carencia por inseguridad alimentaria
+    # Presente inseguridad alimentaria moderada o severa
+    - name: ic_alimentacion
+      condition: "(inseguridad_alimentaria == '2') | (inseguridad_alimentaria == '3')"
+      transmute:
+        fun: getDummy
+
+# ---------------------------------------------------
+# Carencia por Acceso a Servicios de Salud
+# ---------------------------------------------------
+
+trabajo_enigh:
+    # población económicamente activa
+    - name: pea
+      condition: "trabajo == 1 & edad >= 16 & !is.na(edad) & is.na(act_pnea1) == TRUE & is.na(act_pnea2) == TRUE ~ 1,
+                  edad >= 16 & !is.na(edad) &
+                  ((act_pnea1 == 1 & !is.na(act_pnea1)) | (act_pnea2 == 1 & !is.na(act_pnea2))) ~ 2,
+                  (edad >= 16 & !is.na(edad)) &
+                  ((act_pnea2 >= 2 & act_pnea2 <= 6 & !is.na(act_pnea2)) |
+                  (act_pnea1 >= 2 & act_pnea1 <= 6 & !is.na(act_pnea1))) ~ 0"
+      transmute:
+        fun: getCases
+    # Tipo de trabajo: subordinado, indep que recibe pago o indep que no recibe pago
+    - name: tipo_trab
+      condition: 'is.na(trabaja_subord) trabaja_subord == 1 ~ 1,
+                   ((trabaja_subord == 0 & !is.na(trabaja_subord) & trabaja_indep == 1 & !is.na(trabaja_indep)) &
+                       ((con_sueldo == 1 & !is.na(con_sueldo)) | (tipo_pago == 1 & !is.na(tipo_pago)))) ~ 2,
+                    ((trabaja_subord == 0 & !is.na(trabaja_subord)) &
+                  ( (trabaja_indep == 1 & con_sueldo == 0 & !is.na(trabaja_indep) & !is.na(con_sueldo)) |
+                    (trabaja_indep == 0 & !is.na(trabaja_indep) & !is.na(tipo_pago) & (tipo_pago == 2 | tipo_pago == 3)))) ~ 3'
+      transmute:
+        fun: getCases
+    # Jubilados o pensionados
+    # si no trabajo el mes pasado y es pensionado o jubilado
+    - name: jubilado
+      condition: 'trabajo == 0 & !is.na(trabajo) & ((act_pnea1 == 2 & !is.na(act_pnea1)) | (act_pnea2 == 2 & !is.na(act_pnea2)))'
+      transmute:
+        fun: getDummy
+# Definición de variables relacionadas al trabajo para tablas de CUIS
+trabajo_cuis:
+    # Realiza actividad laboral, de acuerdo al CUIS
+    - name: trabajo
+      condition: "(!is.na(realiza_act_lab) & (realiza_act_lab <= 3))|(!is.na(realiza_act_nolab) & (realiza_act_nolab <= 4))"
+      transmute:
+        fun: getDummy
+    # Población Económicamente Activa (población incorporada al mercado de trabajo, ya sea ocupada o desocupada y en búsqueda de una actividad laboral
+    - name: pea
+      condition: "edad >= 16 & (!is.na(trabajo) & trabajo == 1) ~ 1,
+                  edad >= 16 & (!is.na(realiza_act_lab) & (realiza_act_lab == 5 | realiza_act_lab == 6)) & (!is.na(realiza_act_nolab) & realiza_act_nolab <= 4) ~ 2,
+                  edad >= 16 & (!is.na(realiza_act_nolab) & (realiza_act_nolab == 5 | realiza_act_nolab == 6)) & (!is.na(realiza_act_lab) & realiza_act_lab == 5) ~ 0"
+      transmute:
+        fun: getCases
+    # Tipo de trabajo: subordinado, indep que recibe pago o indep que no recibe pago
+    - name: tipo_trab
+      condition: "!is.na(trabaja_subord) & trabaja_subord == 1 ~ 1,
+                  (!is.na(trabaja_indep) & trabaja_indep == 1) | (!is.na(realiza_act_nolab) & realiza_act_nolab <= 4) & (!is.na(con_sueldo) & con_sueldo == 1) ~ 2,
+                  (!is.na(trabaja_indep) & trabaja_indep == 1) & (!is.na(con_sueldo) & con_sueldo == 0) ~ 3"
+      transmute:
+        fun: getCases
+    - name: jubilado
+      condition: "jubilado == 1"
+      transmute:
+        fun: getDummy
+carencia_salud:
+    # Prestaciones laborales (servicios medicos)
+    # Personas ocupadas que están afiliadas o inscritas a alguna institución que proporciona atención médica:
+    # IMSS o ISSSTE o ISSSTE estatal o Institución de PEMEX por medio de una prestación en el trabajo
+    - name: atencion_medica
+      condition: '!is.na(c_instsal_a) & c_instsal_a == 99'
+      transmute:
+        fun: getDummy
+    - name: seguro_popular
+      condition: '!is.na(c_instsal_a) & c_instsal_a == 1'
+      transmute:
+        fun: getDummy
+    # Inscrito al IMSS
+    - name: am_imss
+      condition: '(!is.na(c_instsal_a) & c_instsal_a == 2) | (!is.na(c_instsal_b) & c_instsal_b == 2)'
+      transmute:
+        fun: getDummy
+    - name: am_issste
+      condition: '(!is.na(c_instsal_a) & c_instsal_a == 3) | (!is.na(c_instsal_b) & c_instsal_b == 3)'
+      transmute:
+        fun: getDummy
+    - name: am_issste_estatal
+      condition: '0'
+      transmute:
+        fun: getFunc
+    - name: am_pemex
+      condition: '(!is.na(c_instsal_a) & c_instsal_a == 4) | (!is.na(c_instsal_b) & c_instsal_b == 4)'
+      transmute:
+        fun: getDummy
+    - name: am_imss_prospera
+      condition: '(!is.na(c_salud_hoga) & c_salud_hoga == 3) | (!is.na(c_salud_hogb) & c_salud_hogb == 3)'
+      transmute:
+        fun: getDummy
+    - name: am_otra
+      condition: '(!is.na(c_instsal_a) & c_instsal_a == 5) | (!is.na(c_salud_hoga) & (c_salud_hoga == 6 | c_salud_hoga == 7)) | (!is.na(c_salud_hogb) & (c_salud_hogb == 6 | c_salud_hogb == 7)'
+      transmute:
+        fun: getDummy
+    - name: inscrito_prestacion_lab
+      condition: '(!is.na(c_afilsal_a) & c_afilsal_a == 1) | (!is.na(c_afilsal_b) & c_afilsal_b == 1)'
+      transmute:
+        fun: getDummy
+    - name: inscrito_jubilacion
+      condition: '(!is.na(c_afilsal_a) & (c_afilsal_a == 2 | c_afilsal_a == 3)) | (!is.na(c_afilsal_b) & (c_afilsal_b == 2 | c_afilsal_b == 3))'
+      transmute:
+        fun: getDummy
+    - name: inscrito_familiar
+      condition: '(!is.na(c_afilsal_a) & c_afilsal_a == 4) | (!is.na(c_afilsal_b) & c_afilsal_b == 4)'
+      transmute:
+        fun: getDummy
+    - name: inscrito_muerte_aseg
+      condition: '(!is.na(c_afilsal_a) & c_afilsal_a == 5) | (!is.na(c_afilsal_b) & c_afilsal_b == 5)'
+      transmute:
+        fun: getDummy
+    - name: inscrito_estudiante
+      condition: '(!is.na(c_afilsal_a) & c_afilsal_a == 6) | (!is.na(c_afilsal_b) & c_afilsal_b == 6)'
+      transmute:
+        fun: getDummy
+    - name: inscrito_contratacion
+      condition: '(!is.na(c_afilsal_a) & c_afilsal_a == 7) | (!is.na(c_afilsal_b) & c_afilsal_b == 7)'
+      transmute:
+        fun: getDummy
+    - name: inscrito_familiar_otro
+      condition: '(!is.na(c_afilsal_a) & c_afilsal_a == 8) | (!is.na(c_afilsal_b) & c_afilsal_b == 8)'
+      transmute:
+        fun: getDummy
+    - name: sm_lab
+      condition: 'trabajo == 1 & atencion_medica == 1 & (am_imss == 1 | am_issste == 1 | !is.na(am_issste_estatal) & am_issste_estatal == 1 | am_pemex == 1) & (inscrito_prestacion_lab == 1)'
+      transmute:
+        fun: getDummy
+    # contratacion voluntaria: servicios medicos
+    # Personas que están afiliadas o inscritas a alguna institución que proporciona atención médica:
+    # IMSS o ISSSTE o ISSSTE estatal o Institución de PEMEX inscritos por contratacion propia
+    - name: sm_cv
+      condition: 'atencion_medica == 1 &
+                 (am_imss == 1 | am_issste == 1 | am_issste_estatal == 1 | am_pemex == 1) & (inscrito_contratacion == 1) & (edad >= 12)'
+      transmute:
+        fun: getDummy
+    # acceso directo a servicios de salud
+    # suboridinado con prestacion laboral o
+    # independiente que recibe pago con prestación o voluntario o
+    # independiente sin pago con prestacion o voluntario
+    - name: salud_dir
+      condition: '(tipo_trab == 1 & sm_lab == 1) |
+                  (tipo_trab == 2 & (sm_lab == 1 | sm_cv == 1)) |
+                  (tipo_trab == 3 & (sm_lab == 1 | sm_cv == 1))'
+      transmute:
+        fun: getDummy
+    # Jefe del hogar con acceso directo
+    # excepto contrataciones propias del ISSSTE o ISSSTE estatal
+    # que no este inscrito a otra ni por ningún otro medio
+    - name: jefe_sm
+      condition: '(parentesco == 1 & salud_dir == 1) &
+                  !(((am_issste == 1 | am_issste_estatal == 1) & inscrito_contratacion == 1) &
+                  (is.na(am_imss) == TRUE & is.na(am_pemex) == TRUE & is.na(am_otra) == TRUE) &
+                  (is.na(inscrito_prestacion_lab) == TRUE & is.na(inscrito_jubilacion) == TRUE & is.na(inscrito_familiar) == TRUE &
+                  is.na(inscrito_muerte_aseg) == TRUE & is.na(inscrito_estudiante) == TRUE & is.na(inscrito_familiar_otro) == TRUE))'
+      transmute:
+        fun: getDummy
+    # Conyugue del hogar con acceso directo
+    # excepto contrataciones propias del ISSSTE o ISSSTE estatal
+    # que no este inscrito a otra ni por ningún otro medio
+    - name: cony_sm
+      condition: '(parentesco == 2 & salud_dir == 1) &
+                  !(((am_issste == 1 | am_issste_estatal == 1) & inscrito_contratacion == 1) &
+                  (is.na(am_imss) == TRUE & is.na(am_pemex) == TRUE & is.na(am_otra) == TRUE) &
+                  (is.na(inscrito_prestacion_lab) == TRUE & is.na(inscrito_jubilacion) == TRUE & is.na(inscrito_familiar) == TRUE &
+                  is.na(inscrito_muerte_aseg) == TRUE & is.na(inscrito_estudiante) == TRUE & is.na(inscrito_familiar_otro) == TRUE))'
+      transmute:
+        fun: getDummy
+    # Hijo del hogar con acceso directo
+    # excepto contrataciones propias del ISSSTE o ISSSTE estatal
+    # que no este inscrito a otra ni por ningún otro medio
+    - name: hijo_sm
+      condition: '(parentesco == 3 & salud_dir == 1) &
+                  !(((am_issste == 1 | am_issste_estatal == 1) & inscrito_contratacion == 1) &
+                  (is.na(am_imss) == TRUE & is.na(am_pemex) == TRUE & is.na(am_otra) == TRUE) &
+                  (is.na(inscrito_prestacion_lab) == TRUE & is.na(inscrito_jubilacion) == TRUE & is.na(inscrito_familiar) == TRUE &
+                  is.na(inscrito_muerte_aseg) == TRUE & is.na(inscrito_estudiante) == TRUE & is.na(inscrito_familiar_otro) == TRUE))'
+      transmute:
+        fun: getDummy
+    # Acceso directo a los servicios de salud de la jefatura del hogar
+    - name: acceso_jefe_sm
+      condition: 'max(jefe_sm, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, hogar_id]
+    # Acceso directo a los servicios de salud de conyuge de la jefatura del hogar
+    - name: acceso_cony_sm
+      condition: 'max(cony_sm, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, hogar_id]
+    # Acceso directo a los servicios de salud de hijos(as) de la jefatura del hogar
+    - name: acceso_hijo_sm
+      condition: 'max(hijo_sm, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, hogar_id]
+    # Otros nucleos familiares:
+    # Personas que están afiliadas o inscritas a alguna institución que proporciona atención médica:
+    # IMSS o ISSSTE o ISSSTE estatal o institucion PEMEX, e inscritas por:
+    # familiar en el hogar o muerte del asegurado o algun otro familiar
+    - name: acceso_otros_sm
+      condition: 'atencion_medica == 1 & (am_imss == 1 | am_issste == 1 | am_issste_estatal == 1 | am_pemex == 1) &
+                  (inscrito_familiar == 1 | inscrito_muerte_aseg == 1 | inscrito_familiar_otro == 1) &
+                   !is.na(atencion_medica)'
+      transmute:
+        fun: getDummy
+    # Indicador de Carencia de Servicios de Salud
+    # No se encuentra afiliada o inscrita al Seguro Popular o alguna institución
+    # que proporcione servicios médicos, ya sea por prestación laboral,
+    # contratación voluntaria o afiliación de un familiar por parentesco directo
+    # O sin acceso reportado con seguro popular o seguro popular y atención médica o Seguro voluntario de gastos médicos
+    - name: asalud
+      condition: ' (salud_dir == 1) |
+                  (parentesco == 1 & acceso_cony_sm == 1 ) | (parentesco == 1 & pea == 0 & acceso_hijo_sm == 1) |
+                  (parentesco == 2 & acceso_jefe_sm == 1) | (parentesco == 2 & pea == 0 & acceso_hijo_sm == 1) |
+                  (parentesco == 3 & edad < 16 & (acceso_jefe_sm == 1 | acceso_cony_sm == 1)) |
+                  (parentesco == 3 & edad >= 16 & edad <= 25 & asiste_escuela == 1 & (acceso_jefe_sm == 1 | acceso_cony_sm == 1)) |
+                  (parentesco == 4 & pea == 0 & (acceso_jefe_sm == 1 | acceso_cony_sm == 1)) |
+                  (acceso_otros_sm == 1) |
+                  (seguro_popular == 1 | (seguro_popular == 0 & atencion_medica == 1 &
+                    (am_imss == 1 | am_issste == 2 | am_issste_estatal == 1 | am_pemex == 1 | am_imss_prospera == 1 | am_otra == 6)) | segvol_medico == 1)'
+      transmute:
+        fun: getDummy
+    - name: ic_asalud
+      condition: ' asalud == 0 | is.na(asalud)'
+      transmute:
+        fun: getDummy
+
+# ---------------------------------------------------
+# Carencia por seguridad social
+# ---------------------------------------------------
+
+ingresos_enigh:
+    # Suma de ingresos de pam
+    - name: ingreso_pam_temp
+      condition: '(ing_1 + ing_2 + ing_3 + ing_4 + ing_5 + ing_6) / 6'
+      transmute:
+        fun: getFunc
+        filter: "clave == 'P044' | clave == 'P045'"
+    - name: ingreso_pam
+      condition: 'sum(ingreso_pam_temp, na.rm=TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, person_id]
+    # Programas sociales de pensiones para adultos mayores
+    - name: pam
+      condition: 'edad >= 65 & ingreso_pam > 0 & !is.na(ingreso_pam)'
+      transmute:
+        fun: getDummy
+    # Suma de ingresos de pension
+    - name: ingreso_pens_temp
+      condition: '(ing_1 + ing_2 + ing_3 + ing_4 + ing_5 + ing_6) / 6'
+      transmute:
+        fun: getFunc
+        filter: "clave == 'P032' | clave == 'P033'"
+    - name: ingreso_pens
+      condition: 'sum(ingreso_pens_temp, na.rm=TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, person_id]
+
+ingresos_cuis:
+    - name: pam
+      condition: '(!is.na(am_a) & am_a == 1) | (!is.na(am_b) & am_b == 1) | (!is.na(am_c) & am_c == 1)'
+      transmute:
+        fun: getDummy
+    - name: ingreso_pens
+      condition: '0'
+      transmute:
+        fun: getFunc
+
+carencia_seguridad_social:
+    # Prestaciones basicas:
+    # Prestaciones laborales (Servicios medicos): IMSS, ISSSTE, ISSSTE estatal o inst PEMEX por prestacion laboral
+    - name: sm_lab
+      condition: 'trabajo == 1 & atencion_medica == 1  &
+                  (am_imss == 1 | am_issste == 1 | am_issste_estatal == 1 | am_pemex == 1) & (inscrito_prestacion_lab == 1)'
+      transmute:
+        fun: getDummy
+    # Contratacion voluntaria: servicios medicos y SAR o Afore
+    # servicios médicos: IMSS, ISSSTE, ISSSTE estatal o inst PEMEX por contratacion propia
+    - name: jubilado
+      condition: ' jubilado == 1 | (ingreso_pens > 0 & !is.na(ingreso_pens)) |
+                        (inscrito_jubilacion == 1 & !is.na(inscrito_jubilacion))'
+      transmute:
+        fun: getDummy
+    - name: sm_cv
+      condition: 'atencion_medica == 1 &
+                 (am_imss == 1 | am_issste == 1 | am_issste_estatal == 1 | am_pemex == 1) & (inscrito_contratacion == 1) & (edad >= 12)'
+      transmute:
+        fun: getDummy
+    # Seguro voluntario SAR, AFORE
+    - name: afore_cv
+      condition: 'segvol_afore == 1 & edad >= 12'
+      transmute:
+        fun: getDummy
+    # Acceso directo a la seguridad social
+    - name: ss_dir
+      condition: '(tipo_trab == 1 & !is.na(tipo_trab) &
+                    (sm_lab == 1 & !is.na(sm_lab) & prestacion_incapacidad == 1 & !is.na(prestacion_incapacidad) &
+                    prestacion_afore == 1 & !is.na(prestacion_afore) )) |
+                     ( tipo_trab == 2 & !is.na(tipo_trab) &
+                      ( (sm_lab == 1 & !is.na(sm_lab)) | (sm_cv == 1 & !is.na(sm_cv))) &
+                      ( (prestacion_afore == 1 & !is.na(prestacion_afore)) | (afore_cv == 1 & !is.na(afore_cv)))) |
+                  (tipo_trab == 3 & !is.na(tipo_trab) &
+                  ((( sm_lab == 1 & !is.na(sm_lab)) | (sm_cv == 1 & !is.na(sm_cv))) & afore_cv == 1 & !is.na(afore_cv))) |
+                  (jubilado == 1)'
+      transmute:
+        fun: getDummy
+    # Jefe con acceso directo a seguridad social
+    # excepto contrataciones propias del ISSSTE o ISSSTE estatal
+    # que no este inscrito a otra ni por ningún otro medio
+    - name: jefe_ss
+      condition: 'parentesco == 1 & ss_dir == 1 &
+                  !(((am_issste == 1 | am_issste_estatal == 3) & inscrito_contratacion == 1) & (is.na(am_imss) == TRUE &
+                  is.na(am_pemex) == TRUE & is.na(am_otra) == TRUE) & (is.na(inscrito_prestacion_lab) == TRUE & is.na(inscrito_jubilacion) == TRUE &
+                  is.na(inscrito_familiar) == TRUE & is.na(inscrito_muerte_aseg) == TRUE & is.na(inscrito_estudiante) == TRUE & is.na(inscrito_familiar_otro) == TRUE))'
+      transmute:
+        fun: getDummy
+    # Conyugye con acceso directo a seguridad social
+    # excepto contrataciones propias del ISSSTE o ISSSTE estatal
+    # que no este inscrito a otra ni por ningún otro medio
+    - name: cony_ss
+      condition: 'parentesco == 2 & ss_dir == 1 &
+                  !(((am_issste == 1 | am_issste_estatal == 3) & inscrito_contratacion == 1) & (is.na(am_imss) == TRUE &
+                  is.na(am_pemex) == TRUE & is.na(am_otra) == TRUE) & (is.na(inscrito_prestacion_lab) == TRUE & is.na(inscrito_jubilacion) == TRUE &
+                  is.na(inscrito_familiar) == TRUE & is.na(inscrito_muerte_aseg) == TRUE & is.na(inscrito_estudiante) == TRUE & is.na(inscrito_familiar_otro) == TRUE))'
+      transmute:
+        fun: getDummy
+    # Hijo con acceso directo a seguridad social
+    # excepto contrataciones propias del ISSSTE o ISSSTE estatal
+    # que no este inscrito a otra ni por ningún otro medio
+    - name: hijo_ss
+      condition: '(parentesco == 3 & ss_dir == 1 & (jubilado == 0 | (jubilado == 1 & edad > 25))) &
+                  !(((am_issste == 1 | am_issste_estatal == 3) & inscrito_contratacion == 1) & (is.na(am_imss) == TRUE &
+                  is.na(am_pemex) == TRUE & is.na(am_otra) == TRUE) & (is.na(inscrito_prestacion_lab) == TRUE & is.na(inscrito_jubilacion) == TRUE &
+                  is.na(inscrito_familiar) == TRUE & is.na(inscrito_muerte_aseg) == TRUE & is.na(inscrito_estudiante) == TRUE & is.na(inscrito_familiar_otro) == TRUE))'
+      transmute:
+        fun: getDummy
+    # Acceso directo a la seguridad social de la jefatura del hogar
+    - name: acceso_jefe_ss
+      condition: 'max(jefe_ss, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, hogar_id]
+    # Acceso directo a la seguridad social de conyuge de la jefatura del hogar
+    - name: acceso_cony_ss
+      condition: 'max(cony_ss, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, hogar_id]
+    # Acceso directo a la seguridad social de hijos(as) de la jefatura del hogar
+    - name: acceso_hijo_ss
+      condition: 'max(hijo_ss, na.rm = TRUE)'
+      transmute:
+        fun: getFunc
+        groupby: [fecha_creacion, hogar_id]
+    # Otros nucleos familiares
+    - name: acceso_otros_ss
+      condition: 'atencion_medica == 1 & (am_imss == 1 | am_issste == 1 | am_issste_estatal == 1 | am_pemex == 1) &
+                 (inscrito_familiar == 1 | inscrito_muerte_aseg == 1 | inscrito_contratacion == 1 | inscrito_familiar_otro == 1)'
+      transmute:
+        fun: getDummy
+    ## Indicador carencia por inseguridad social
+    # 1. PEA: servicio médico, SAR o AFORE e incapacidad laboral con goce de sueldo
+    # 2. poblacion trabajadora no asalariada o independiente tenga: servicios médicos, SAR o AFORE
+    # 3. reciba jubilación o pensión, independientemente de su edad
+    # 4. programa de adultos mayores
+    # 5. por parentezco directo reciban servicios médicos
+    # 6. Las personas que gozan de alguna jubilación, pensión o que reciben servicios médicos en el IMSS, ISSSTE, ISSSTE estatal o PEMEX por parte de algún familiar, o consecuencia de muerte  de una persona asegurada o por contratación propia.
+    - name: seguridad_social
+      condition: '( (ss_dir == 1) |
+                     (parentesco == 1 & (acceso_cony_ss == 1 | (pea == 0 & !is.na(pea) & acceso_hijo_ss == 1))) |
+                     (parentesco == 2 & (acceso_jefe_ss == 1 | (pea == 0 & !is.na(pea) & acceso_hijo_ss == 1))) |
+                     (parentesco == 3 & (( edad < 16 & acceso_jefe_ss == 1) | (edad < 16 & acceso_cony_ss == 1) |
+                                ( edad >= 16 & edad <= 25 & asiste_escuela == 1 & !is.na(asiste_escuela) & acceso_jefe_ss == 1) |
+                                (edad >= 16 & edad <= 25 & asiste_escuela == 1 & !is.na(asiste_escuela) &  acceso_cony_ss == 1))) |
+                    (parentesco == 4 & pea == 0 & !is.na(pea) & acceso_jefe_ss == 1) |
+                    (parentesco == 5 & pea == 0 & !is.na(pea) & acceso_cony_ss == 1) |
+                    (acceso_otros_ss == 1) |
+                    (pam == 1 & !is.na(pam)))'
+      transmute:
+        fun: getDummy
+    - name: ic_seguridad_social
+      condition: 'seguridad_social == 0 & !is.na(seguridad_social)'
+      transmute:
+        fun: getDummy
+
+
