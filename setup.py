@@ -11,7 +11,7 @@ politica_preventiva-pipeline: Pipeline politica_preventiva
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README.md')) as f:    
+with open(path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(

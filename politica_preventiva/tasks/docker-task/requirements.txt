@@ -17,3 +17,4 @@ lxml
 xmltodict
 awscli
 smart_open
+pyxlsb

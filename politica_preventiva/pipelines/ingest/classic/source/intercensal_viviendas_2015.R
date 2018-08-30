@@ -105,7 +105,11 @@ viviendas_32 <- s3read_using(read_csv,
                              object = "VULNERABILIDADES-INFORM/Intercensal/Viviendas/TR_VIVIENDA32.CSV",
                              bucket = "sedesol-lab")
 
-viviendas <- list(viviendas_01, viviendas_02, viviendas_03) %>% 
+viviendas <- list(viviendas_01, viviendas_02, viviendas_03, viviendas_04, viviendas_05, viviendas_06, viviendas_07, 
+                 viviendas_08, viviendas_09, viviendas_10, viviendas_11, viviendas_12, viviendas_13, viviendas_14, 
+                 viviendas_15, viviendas_16, viviendas_17, viviendas_18, viviendas_19, viviendas_20, viviendas_21, 
+                 viviendas_22, viviendas_23, viviendas_24, viviendas_25, viviendas_26, viviendas_27, viviendas_28, 
+                 viviendas_29, viviendas_30, viviendas_31, viviendas_32 %>% 
   rbindlist(., fill = TRUE) %>% as_tibble()
 
 viviendas$NOM_MUN <- stri_trans_general(viviendas$NOM_MUN, "latin-ascii")
