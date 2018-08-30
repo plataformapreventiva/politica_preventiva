@@ -15,6 +15,5 @@ recursos_hospitales <- read_excel(paste0(local_path, "/CIERRES_ANUALES_SINERHIAS
   mutate_all(funs(str_replace(., "\r", ""))) %>% 
   mutate_all(funs(str_replace(., "\n", ""))) 
 
-
 write_delim(x = recursos_hospitales, path = args[3], delim='|',na = '"NAN"')
 
