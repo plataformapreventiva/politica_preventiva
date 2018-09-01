@@ -33,3 +33,6 @@ enigh_ingreso:
 crimenes_tasas:
     clean_dependencies:
         - delitos_comun
+hospitales_densidades:
+    clean_dependencies:
+        - recursos_hospitales
