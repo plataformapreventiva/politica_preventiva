@@ -5356,6 +5356,31 @@ geoms_red_carretera:
   - ancho
   - fecha_act
   - calirepr
+imco_periodistas:
+  LUIGI:
+    INDEX: entidad_federativa
+    SCHEMA:
+    - entidad_federativa: TEXT
+    - agresiones_a_periodistas_2008: Integer
+    - agresiones_a_periodistas_2009: Integer
+    - agresiones_a_periodistas_2010: Integer
+    - agresiones_a_periodistas_2011: Integer
+    - agresiones_a_periodistas_2012: Integer
+    - agresiones_a_periodistas_2013: Integer
+    - agresiones_a_periodistas_2014: Integer
+    - agresiones_a_periodistas_2015: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad_federativa
+  - agresiones_a_periodistas_2008
+  - agresiones_a_periodistas_2009
+  - agresiones_a_periodistas_2010
+  - agresiones_a_periodistas_2011
+  - agresiones_a_periodistas_2012
+  - agresiones_a_periodistas_2013
+  - agresiones_a_periodistas_2014
+  - agresiones_a_periodistas_2015
 indesol:
   LUIGI:
     INDEX: cluni
