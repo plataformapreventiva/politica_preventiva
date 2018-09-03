@@ -5356,6 +5356,37 @@ geoms_red_carretera:
   - ancho
   - fecha_act
   - calirepr
+imco_equidad_congreso:
+  LUIGI:
+    INDEX: entidad_federativa
+    SCHEMA:
+    - entidad_federativa: TEXT
+    - participacion_mujeres_julio_2014: FLOAT
+    - numero_diputados_julio_2015: Integer
+    - diputados_2015: Integer
+    - diputadas_2015: Integer
+    - porcen_diputados_2015: FLOAT
+    - porcen_diputadas_2015: FLOAT
+    - numero_diputados_julio_2016: Integer
+    - diputados_2016: Integer
+    - diputadas_2016: Integer
+    - porcen_diputados_2016: FLOAT
+    - porcen_diputadas_2016: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad_federativa
+  - participacion_mujeres_julio_2014
+  - numero_diputados_julio_2015
+  - diputados
+  - diputadas
+  - porcen_diputados
+  - porcen_diputadas
+  - numero_diputados_julio_2016
+  - diputados
+  - diputadas
+  - porcen_diputados
+  - porcen_diputadas
 imco_periodistas:
   LUIGI:
     INDEX: entidad_federativa
