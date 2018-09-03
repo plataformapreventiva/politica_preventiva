@@ -5525,6 +5525,19 @@ imco_equidad_congreso:
   - diputadas
   - porcen_diputados
   - porcen_diputadas
+imco_info_publica:
+  LUIGI:
+    INDEX: entidad
+    SCHEMA:
+    - entidad: Integer
+    - acc_info_est: Integer
+    - acc_info_est__1: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad
+  - acc_info_est
+  - acc_info_est__1
 imco_periodistas:
   LUIGI:
     INDEX: entidad_federativa
