@@ -5356,6 +5356,69 @@ geoms_red_carretera:
   - ancho
   - fecha_act
   - calirepr
+imco_corrupcion_estatal:
+  LUIGI:
+    INDEX: entidad_federativa
+    SCHEMA:
+    - entidad_federativa: TEXT
+    - poblacion_18_mas_2011: Integer
+    - poblacion_18_mas_2013: TEXT
+    - poblacion_18_mas_2015: TEXT
+    - muy_frecuente_absoluto_2011: Integer
+    - muy_frecuente_realtivo_2011: FLOAT
+    - frecuente_absoluto_2011: Integer
+    - frecuente_relativo_2011: FLOAT
+    - poco_frecuente_absoluto_2011: Integer
+    - poco_frecuente_relativo_2011: FLOAT
+    - nunca_absoluto_2011: Integer
+    - nunca_relativo_2011: FLOAT
+    - muy_frecuente_absoluto_2013: TEXT
+    - muy_frecuente_realtivo_2013: TEXT
+    - frecuente_absoluto_2013: TEXT
+    - frecuente_relativo_2013: TEXT
+    - poco_frecuente_absoluto_2013: TEXT
+    - poco_frecuente_relativo_2013: TEXT
+    - nunca_absoluto_2013: TEXT
+    - nunca_relativo_2013: TEXT
+    - muy_frecuente_absoluto_2015: TEXT
+    - muy_frecuente_realtivo_2015: TEXT
+    - frecuente_absoluto_2015: TEXT
+    - frecuente_relativo_2015: TEXT
+    - poco_frecuente_absoluto_2015: TEXT
+    - poco_frecuente_relativo_2015: TEXT
+    - nunca_absoluto_2015: TEXT
+    - nunca_relativo_2015: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad_federativa
+  - poblacion_18_mas_2011
+  - poblacion_18_mas_2013
+  - poblacion_18_mas_2015
+  - muy_frecuente_absoluto_2011
+  - muy_frecuente_realtivo_2011
+  - frecuente_absoluto_2011
+  - frecuente_relativo_2011
+  - poco_frecuente_absoluto_2011
+  - poco_frecuente_relativo_2011
+  - nunca_absoluto_2011
+  - nunca_relativo_2011
+  - muy_frecuente_absoluto_2013
+  - muy_frecuente_realtivo_2013
+  - frecuente_absoluto_2013
+  - frecuente_relativo_2013
+  - poco_frecuente_absoluto_2013
+  - poco_frecuente_relativo_2013
+  - nunca_absoluto_2013
+  - nunca_relativo_2013
+  - muy_frecuente_absoluto_2015
+  - muy_frecuente_realtivo_2015
+  - frecuente_absoluto_2015
+  - frecuente_relativo_2015
+  - poco_frecuente_absoluto_2015
+  - poco_frecuente_relativo_2015
+  - nunca_absoluto_2015
+  - nunca_relativo_2015
 imco_corrupcion_partidos:
   LUIGI:
     INDEX: entidadfederativa
