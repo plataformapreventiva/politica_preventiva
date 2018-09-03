@@ -5538,6 +5538,25 @@ imco_info_publica:
   - entidad
   - acc_info_est
   - acc_info_est__1
+imco_matrimonio_igualitario:
+  LUIGI:
+    INDEX: estado
+    SCHEMA:
+    - estado: TEXT
+    - legislacion_reconoce_matrimonio_igualitario: INT
+    - fundamento_articulo: TEXT
+    - cita: TEXT
+    - fuente: TEXT
+    - link: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estado
+  - legislacion_reconoce_matrimonio_igualitario
+  - fundamento_articulo
+  - cita
+  - fuente
+  - link
 imco_periodistas:
   LUIGI:
     INDEX: entidad_federativa
