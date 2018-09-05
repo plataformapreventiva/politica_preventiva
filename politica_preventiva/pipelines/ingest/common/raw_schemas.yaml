@@ -5356,6 +5356,232 @@ geoms_red_carretera:
   - ancho
   - fecha_act
   - calirepr
+imco_corrupcion_estatal:
+  LUIGI:
+    INDEX: entidad_federativa
+    SCHEMA:
+    - entidad_federativa: TEXT
+    - poblacion_18_mas_2011: Integer
+    - poblacion_18_mas_2013: TEXT
+    - poblacion_18_mas_2015: TEXT
+    - muy_frecuente_absoluto_2011: Integer
+    - muy_frecuente_realtivo_2011: FLOAT
+    - frecuente_absoluto_2011: Integer
+    - frecuente_relativo_2011: FLOAT
+    - poco_frecuente_absoluto_2011: Integer
+    - poco_frecuente_relativo_2011: FLOAT
+    - nunca_absoluto_2011: Integer
+    - nunca_relativo_2011: FLOAT
+    - muy_frecuente_absoluto_2013: TEXT
+    - muy_frecuente_realtivo_2013: TEXT
+    - frecuente_absoluto_2013: TEXT
+    - frecuente_relativo_2013: TEXT
+    - poco_frecuente_absoluto_2013: TEXT
+    - poco_frecuente_relativo_2013: TEXT
+    - nunca_absoluto_2013: TEXT
+    - nunca_relativo_2013: TEXT
+    - muy_frecuente_absoluto_2015: TEXT
+    - muy_frecuente_realtivo_2015: TEXT
+    - frecuente_absoluto_2015: TEXT
+    - frecuente_relativo_2015: TEXT
+    - poco_frecuente_absoluto_2015: TEXT
+    - poco_frecuente_relativo_2015: TEXT
+    - nunca_absoluto_2015: TEXT
+    - nunca_relativo_2015: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad_federativa
+  - poblacion_18_mas_2011
+  - poblacion_18_mas_2013
+  - poblacion_18_mas_2015
+  - muy_frecuente_absoluto_2011
+  - muy_frecuente_realtivo_2011
+  - frecuente_absoluto_2011
+  - frecuente_relativo_2011
+  - poco_frecuente_absoluto_2011
+  - poco_frecuente_relativo_2011
+  - nunca_absoluto_2011
+  - nunca_relativo_2011
+  - muy_frecuente_absoluto_2013
+  - muy_frecuente_realtivo_2013
+  - frecuente_absoluto_2013
+  - frecuente_relativo_2013
+  - poco_frecuente_absoluto_2013
+  - poco_frecuente_relativo_2013
+  - nunca_absoluto_2013
+  - nunca_relativo_2013
+  - muy_frecuente_absoluto_2015
+  - muy_frecuente_realtivo_2015
+  - frecuente_absoluto_2015
+  - frecuente_relativo_2015
+  - poco_frecuente_absoluto_2015
+  - poco_frecuente_relativo_2015
+  - nunca_absoluto_2015
+  - nunca_relativo_2015
+imco_corrupcion_partidos:
+  LUIGI:
+    INDEX: entidadfederativa
+    SCHEMA:
+    - entidadfederativa: TEXT
+    - secciones_2006: Integer
+    - casillas_2006: Integer
+    - pan_2006: Integer
+    - pri_2006: Integer
+    - prd_2006: Integer
+    - pvem_2006: Integer
+    - pt_2006: Integer
+    - movimientociudadano_2006: Integer
+    - nuevaalianza_2006: Integer
+    - coalicionpripvem_2006: Integer
+    - coalicionprdptmc_2006: Integer
+    - coalicionprdpt_2006: Integer
+    - coalicionprdmc_2006: Integer
+    - coalicionptmc_2006: Integer
+    - noregistrados_2006: Integer
+    - nulos_2006: Integer
+    - total_2006: Integer
+    - listanominal_2006: Integer
+    - participacion_2006: TEXT
+    - observaciones_2006: TEXT
+    - secciones_2012: Integer
+    - casillas_2012: Integer
+    - pan_2012: Integer
+    - alianzapormexico_2012: Integer
+    - porelbiendetodos_2012: Integer
+    - nuevaalianza_2012: Integer
+    - alternativa_2012: Integer
+    - noregistrados_2012: Integer
+    - validos_2012: Integer
+    - nulos_2012: Integer
+    - total_2012: Integer
+    - listanominal_2012: Integer
+    - participacion_2012: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidadfederativa
+  - secciones_2006
+  - casillas_2006
+  - pan_2006
+  - pri_2006
+  - prd_2006
+  - pvem_2006
+  - pt_2006
+  - movimientociudadano_2006
+  - nuevaalianza_2006
+  - coalicionpripvem_2006
+  - coalicionprdptmc_2006
+  - coalicionprdpt_2006
+  - coalicionprdmc_2006
+  - coalicionptmc_2006
+  - noregistrados_2006
+  - nulos_2006
+  - total_2006
+  - listanominal_2006
+  - participacion_2006
+  - observaciones_2006
+  - secciones_2012
+  - casillas_2012
+  - pan_2012
+  - alianzapormexico_2012
+  - porelbiendetodos_2012
+  - nuevaalianza_2012
+  - alternativa_2012
+  - noregistrados_2012
+  - validos_2012
+  - nulos_2012
+  - total_2012
+  - listanominal_2012
+  - participacion_2012
+imco_equidad_congreso:
+  LUIGI:
+    INDEX: entidad_federativa
+    SCHEMA:
+    - entidad_federativa: TEXT
+    - participacion_mujeres_julio_2014: FLOAT
+    - numero_diputados_julio_2015: Integer
+    - diputados_2015: Integer
+    - diputadas_2015: Integer
+    - porcen_diputados_2015: FLOAT
+    - porcen_diputadas_2015: FLOAT
+    - numero_diputados_julio_2016: Integer
+    - diputados_2016: Integer
+    - diputadas_2016: Integer
+    - porcen_diputados_2016: FLOAT
+    - porcen_diputadas_2016: FLOAT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad_federativa
+  - participacion_mujeres_julio_2014
+  - numero_diputados_julio_2015
+  - diputados
+  - diputadas
+  - porcen_diputados
+  - porcen_diputadas
+  - numero_diputados_julio_2016
+  - diputados
+  - diputadas
+  - porcen_diputados
+  - porcen_diputadas
+imco_info_publica:
+  LUIGI:
+    INDEX: entidad
+    SCHEMA:
+    - entidad: Integer
+    - acc_info_est: Integer
+    - acc_info_est__1: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad
+  - acc_info_est
+  - acc_info_est__1
+imco_matrimonio_igualitario:
+  LUIGI:
+    INDEX: estado
+    SCHEMA:
+    - estado: TEXT
+    - legislacion_reconoce_matrimonio_igualitario: INT
+    - fundamento_articulo: TEXT
+    - cita: TEXT
+    - fuente: TEXT
+    - link: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - estado
+  - legislacion_reconoce_matrimonio_igualitario
+  - fundamento_articulo
+  - cita
+  - fuente
+  - link
+imco_periodistas:
+  LUIGI:
+    INDEX: entidad_federativa
+    SCHEMA:
+    - entidad_federativa: TEXT
+    - agresiones_a_periodistas_2008: Integer
+    - agresiones_a_periodistas_2009: Integer
+    - agresiones_a_periodistas_2010: Integer
+    - agresiones_a_periodistas_2011: Integer
+    - agresiones_a_periodistas_2012: Integer
+    - agresiones_a_periodistas_2013: Integer
+    - agresiones_a_periodistas_2014: Integer
+    - agresiones_a_periodistas_2015: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - entidad_federativa
+  - agresiones_a_periodistas_2008
+  - agresiones_a_periodistas_2009
+  - agresiones_a_periodistas_2010
+  - agresiones_a_periodistas_2011
+  - agresiones_a_periodistas_2012
+  - agresiones_a_periodistas_2013
+  - agresiones_a_periodistas_2014
+  - agresiones_a_periodistas_2015
 indesol:
   LUIGI:
     INDEX: cluni

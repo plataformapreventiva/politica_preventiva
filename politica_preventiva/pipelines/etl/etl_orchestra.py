@@ -46,12 +46,11 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 class ETLPipeline(luigi.WrapperTask):
 
     current_date = luigi.DateParameter()
-    pipelines = luigi.parameter.ListParameter()
+    pipelines = luigi.Parameter()
     ptask = luigi.Parameter()
     client = S3Client()
     common_path = luigi.Parameter('DEFAULT')
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
-    historical = luigi.Parameter('DEFAULT')
 
     def requires(self):
         if self.ptask!='auto':
@@ -59,23 +58,22 @@ class ETLPipeline(luigi.WrapperTask):
 
         logger.info('Running the following pipelines: {0}'.format(self.pipelines))
         # loop through pipeline tasks and data dates
-        set_pipelines = [(pipeline_task, final_dates(self.historical,
-                                                     pipeline_task,
+        set_pipelines = [(pipeline_task, final_dates(pipeline_task,
                                                      self.current_date)) for
                          pipeline_task in self.pipelines]
-        return [UpdateTidyDB(current_date=self.current_date,
+        return [UpdateCleanDB(current_date=self.current_date,
                              pipeline_task=pipeline[0],
                              data_date=dates,
                              suffix=pipeline[1][1])
                 for pipeline in set_pipelines for dates in pipeline[1][0]]
 
-
-class UpdateTidyDB(PgRTask):
+class UpdateCleanDB(PgRTask):
 
     """
-    This Task runs the tidy script in tidy folder for
-    the pipeline_task, if it doesn't exists then it runs
-    the no_tidy.R script from the same folder.
+    This Task runs the Clean script in clean folder for
+    the pipeline_task, using a wrapper script in order to do clean and recode
+    in one process. If there is no clean script to be run, it updates
+    with the last (recoded) raw table
     """
 
     current_date = luigi.DateParameter()
@@ -83,7 +81,8 @@ class UpdateTidyDB(PgRTask):
     client = S3Client()
     data_date = luigi.Parameter()
     suffix = luigi.Parameter()
-    tidy_scripts = luigi.Parameter()
+    clean_scripts = luigi.Parameter()
+    clean_wrapper = luigi.Parameter()
 
     # RDS
     database = os.environ.get("PGDATABASE")
@@ -93,67 +92,16 @@ class UpdateTidyDB(PgRTask):
 
     @property
     def cmd(self):
-        tidy_file = self.tidy_scripts +\
-                self.pipeline_task + '.R'
-
-        if os.path.isfile(tidy_file):
-            pass
-        else:
-            tidy_file = self.tidy_scripts + 'no_tidy.R'
-
-        command_list = ['Rscript', tidy_file,
+        command_list = ['Rscript', self.clean_wrapper,
                         '--data_date', self.data_date,
                         '--database', self.database,
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host,
-                        '--pipeline', self.pipeline_task]
+                        '--pipeline_task', self.pipeline_task,
+                        '--scripts_dir', self.clean_scripts]
         cmd = " ".join(command_list)
         return cmd
-
-    @property
-    def update_id(self):
-        return str(self.pipeline_task) + '_' + str(self.data_date) +\
-                str(self.suffix) + '_tidy'
-
-    @property
-    def table(self):
-        return "tidy." + self.pipeline_task
-
-    def requires(self):
-        return UpdateCleanDB(current_date=self.current_date,
-                             pipeline_task=self.pipeline_task,
-                             data_date=self.data_date,
-                             suffix=self.suffix)
-
-    def output(self):
-        return PostgresTarget(host=self.host,
-                              database=self.database,
-                              user=self.user,
-                              password=self.password,
-                              table=self.table,
-                              update_id=self.update_id)
-
-
-class UpdateCleanDB(postgres.PostgresQuery):
-    """
-    This Task runs the Clean script in clean folder for
-    the pipeline_task, if it doesn't exists then it only updates
-    with the last raw table
-    """
-
-    current_date = luigi.DateParameter()
-    pipeline_task = luigi.Parameter()
-    client = S3Client()
-    data_date = luigi.Parameter()
-    suffix = luigi.Parameter()
-
-    clean_scripts = luigi.Parameter()
-    # RDS
-    database = os.environ.get("PGDATABASE")
-    user = os.environ.get("POSTGRES_USER")
-    password = os.environ.get("POSTGRES_PASSWORD")
-    host = os.environ.get("PGHOST")
 
     @property
     def update_id(self):
@@ -163,22 +111,6 @@ class UpdateCleanDB(postgres.PostgresQuery):
     @property
     def table(self):
         return "clean." + self.pipeline_task
-
-    @property
-    def query(self):
-        # Read sql command
-        path = self.clean_scripts + self.pipeline_task + '.sql'
-
-        try:
-            sqlfile = open(path, 'r')
-            query = sqlfile.read()
-
-        except:
-            query = """DROP TABLE IF EXISTS {0};
-            CREATE TABLE {0} AS (SELECT * FROM
-                                 raw.{1});""".format(self.table,
-                                                     self.pipeline_task)
-        return query
 
     def requires(self):
         return UpdateLineage(current_date=self.current_date,
