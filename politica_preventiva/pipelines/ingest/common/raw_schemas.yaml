@@ -290,6 +290,19 @@ cngmd_drenaje:
   - sd_dren_lugr_otro
   - sd_dren_lugr_cuerp_agua_esp
   - sd_dren_lugr_otro_esp
+cngmd_participacion_ciudadana:
+  LUIGI:
+    INDEX: ubic_geo
+    SCHEMA:
+    - ubic_geo: TEXT
+    - tem_pciu: Integer
+    - nd_nsnn1: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - ubic_geo
+  - tem_pciu
+  - nd_nsnn1
 cngmd_predial:
   LUIGI:
     INDEX: ubic_geo
