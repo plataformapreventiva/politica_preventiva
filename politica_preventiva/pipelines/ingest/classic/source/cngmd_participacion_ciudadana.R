@@ -17,4 +17,3 @@ db <- data.frame(read.dbf("Bases_Datos/CONS_CIU.DBF"))
 db <- mutate_all(db, function(x) gsub('NA','',x))
 
 write_delim(x = db, path = args[3], delim='|', na = "")
-
