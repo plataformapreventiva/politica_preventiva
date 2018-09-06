@@ -5395,6 +5395,21 @@ imco_barreras_candidatos:
   - gobernador_3
   - diputados_3
   - ayuntamiento_3
+imco_competencia_electoral:
+  LUIGI:
+    INDEX: claveinegi
+    SCHEMA:
+    - claveinegi: Integer
+    - entidad: TEXT
+    - anodelprocesoelectoral: TEXT
+    - url: TEXT
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - claveinegi
+  - entidad
+  - anodelprocesoelectoral
+  - url
 imco_corrupcion_estatal:
   LUIGI:
     INDEX: entidad_federativa
