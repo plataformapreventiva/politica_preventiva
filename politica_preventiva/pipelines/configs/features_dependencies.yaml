@@ -36,3 +36,6 @@ crimenes_tasas:
 hospitales_densidades:
     clean_dependencies:
         - recursos_hospitales
+intercensal_viviendas_2015:
+    clean_dependencies:
+        - recursos_hospitales
