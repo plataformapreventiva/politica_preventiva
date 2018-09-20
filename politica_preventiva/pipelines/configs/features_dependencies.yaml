@@ -38,4 +38,7 @@ recursos_hospitales:
         - recursos_hospitales
 intercensal_viviendas_2015:
     clean_dependencies:
-        - recursos_hospitales
+        - intercensal_viviendas_2015
+intercensal_personas_2015:
+    clean_dependencies:
+        - intercensal_personas_2015
