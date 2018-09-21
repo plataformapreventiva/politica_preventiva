@@ -29,10 +29,11 @@ NAMES = ["folioviv","foliohog","ubica_geo","ageb","tam_loc","est_socio","est_dis
 def read_file(year):
     path = 'http://www.beta.inegi.org.mx/contenidos/proyectos/enchogares/regulares/enigh/nc/'
     renames = {}
+    pdb.set_trace()
     if year == '2016':
         name_file = '2016/microdatos/enigh2016_ns_concentradohogar_csv.zip'
         name_csv = 'concentradohogar.csv'
-        renames = {'factor':'factor_hogar'}
+        renames = {'factor':'factor_hog'}
     elif year == '2014':
         name_file = '2014/microdatos/NCV_Concentrado_2014_concil_2010_csv.zip'
         name_csv = 'ncv_concentrado_2014_concil_2010.csv'
