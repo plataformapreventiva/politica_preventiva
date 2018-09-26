@@ -5,9 +5,14 @@ library(tidyverse)
 float_columns <- c('num_jueces')
 text_columns <- c('nom_ent')
 
-query <- 'SELECT REPLACE(REPLACE(\'entidad_federativa\',\'Ciudad de México\',\'Distrito Federal\'),
-        \'Querétaro\',\'Querétaro de Arteaga\') as nom_ent, num_jueces
-        FROM raw.inegi_jueces'
+query <- 'SELECT CASE entidadfederativa WHEN \'Ciudad de México\'
+                THEN \'Distrito Federal\'
+                WHEN \'Querétaro\'
+                THEN \'Querétaro de Arteaga\'
+                ELSE entidad_federativa
+            END as nom_ent,
+            num_jueces
+            FROM raw.inegi_jueces' 
 
 make_clean <- function(pipeline_task, con){
   df <- tbl(con, sql(query))
