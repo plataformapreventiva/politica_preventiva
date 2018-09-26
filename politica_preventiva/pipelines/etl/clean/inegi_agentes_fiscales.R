@@ -2,17 +2,17 @@
 library(rlang)
 library(tidyverse)
 
-float_columns <- c('num_jueces')
+float_columns <- c('num_agentes_fiscales')
 text_columns <- c('nom_ent')
 
-query <- 'SELECT CASE entidadfederativa WHEN \'Ciudad de México\'
+query <- 'SELECT CASE entidad_federativa WHEN \'Ciudad de México\'
                                           THEN \'Distrito Federal\'
                                           WHEN \'Querétaro\'
                                           THEN \'Querétaro de Arteaga\'
-                                          ELSE entidadfederativa
+                                          ELSE entidad_federativa
                   END as nom_ent, 
-                  num_jueces
-                  FROM raw.inegi_jueces'
+          num_agentes_fiscales
+          FROM raw.inegi_agentes_fiscales'
 
 make_clean <- function(pipeline_task, con){
   df <- tbl(con, sql(query))
