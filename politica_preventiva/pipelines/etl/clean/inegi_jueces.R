@@ -11,8 +11,8 @@ query <- 'SELECT CASE entidadfederativa WHEN \'Ciudad de México\'
                                           THEN \'Querétaro de Arteaga\'
                                           ELSE entidadfederativa
                   END as nom_ent, 
-          num_jueces
-          FROM raw.inegi_jueces'
+                  num_jueces
+                  FROM raw.inegi_jueces'
 
 make_clean <- function(pipeline_task, con){
   df <- tbl(con, sql(query))
