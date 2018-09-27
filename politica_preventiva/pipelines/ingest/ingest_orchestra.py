@@ -213,7 +213,8 @@ class UpdateLineage(luigi.Task):
                             relation = Relationship(column, 'with_tag', tag)
                             graph.merge(relation)
                         except:
-                            pdb.set_trace()
+                            #pdb.set_trace()
+                            logger.info('Node with Tag: {tag} already exists.'.format(row['tipo']))
                 except:
                     pass
                     # logger.debug('Your variabel ´ç'.format(row['tipo']))

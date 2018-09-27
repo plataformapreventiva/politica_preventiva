@@ -154,6 +154,7 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
                 value_counts().index[0]!=True, "Your dictionary is not complete."
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
+        dictionary = dictionary.where((pd.notnull(dictionary)), None)
         dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
         csv_buffer = StringIO()
         dictionary.to_csv(csv_buffer,sep='|')
