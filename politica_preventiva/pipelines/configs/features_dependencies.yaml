@@ -42,3 +42,8 @@ intercensal_viviendas_2015:
 intercensal_personas_2015:
     clean_dependencies:
         - intercensal_personas_2015
+imco_info_publica:
+    clean_dependencies:
+        - imco_info_publica
+    raw_dependencies:
+        - geom_estados
