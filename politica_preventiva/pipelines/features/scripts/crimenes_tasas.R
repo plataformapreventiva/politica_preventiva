@@ -3,6 +3,7 @@ library(optparse)
 library(dbplyr)
 library(dplyr)
 library(DBI)
+library(lubridate)
 library(yaml)
 
 option_list = list(
@@ -83,24 +84,52 @@ if(length(opt) > 1){
                        'Robo de vehículo automotor',
                        'Daño a la propiedad')
 
-  crimenes_tasas <- tbl(con, dbplyr::in_schema('clean', 'delitos_comun')) %>%
+  crimenes_data <- tbl(con, dbplyr::in_schema('clean', 'delitos_comun')) %>%
                     dplyr::filter(subtipodedelito %in% selected_crimes) %>%
                     dplyr::group_by(anio, mes, cve_muni, subtipodedelito) %>%
                     dplyr::summarise(incidencia_total =  sum(incidencia_delictiva,
                                                              na.rm = TRUE)) %>%
                     dplyr::left_join(poblacion) %>%
-                    dplyr::mutate(tasa = incidencia_total/poblacion) %>%
+                    dplyr::mutate(tasa = incidencia_total*100000/poblacion) %>%
                     dplyr::select(-poblacion) %>%
-                    spread_db(., 'subtipodedelito', 'tasa') %>%
-                    dplyr::rename(danio_prop = `Daño a la propiedad`,
-                                  feminicidio = `Feminicidio`,
-                                  homicidio_culposo = `Homicidio culposo`,
-                                  homicidio_doloso = `Homicidio doloso`,
-                                  secuestro = `Secuestro`,
-                                  violencia_familiar = `Violencia familiar`,
-                                  robo_vehiculos = `Robo de vehículo automotor`) %>%
+                    dplyr::collect()
+
+  incidencia_total <- crimenes_data %>%
+                    dplyr::select(-tasa) %>%
+                    tidyr::spread(subtipodedelito, incidencia_total) %>%
+                    dplyr::rename(danio_prop_total = `Daño a la propiedad`,
+                                  feminicidio_total = `Feminicidio`,
+                                  homicidio_culposo_total = `Homicidio culposo`,
+                                  homicidio_doloso_total = `Homicidio doloso`,
+                                  secuestro_total = `Secuestro`,
+                                  violencia_familiar_total = `Violencia familiar`,
+                                  robo_vehiculos_total = `Robo de vehículo automotor`) %>%
+                    dplyr::ungroup()
+
+  tasa_crimenes <- crimenes_data %>%
+                    dplyr::select(-incidencia_total) %>%
+                    tidyr::spread(subtipodedelito, tasa) %>%
+                    dplyr::rename(danio_prop_tasa = `Daño a la propiedad`,
+                                  feminicidio_tasa = `Feminicidio`,
+                                  homicidio_culposo_tasa = `Homicidio culposo`,
+                                  homicidio_doloso_tasa = `Homicidio doloso`,
+                                  secuestro_tasa = `Secuestro`,
+                                  violencia_familiar_tasa = `Violencia familiar`,
+                                  robo_vehiculos_tasa = `Robo de vehículo automotor`) %>%
+                    dplyr::ungroup()
+
+  crimenes_tasas <- dplyr::left_join(tasa_crimenes, incidencia_total) %>%
                     dplyr::mutate(data_date = data_date,
-                                  actualizacion_sedesol = lubridate::today())
+                                  actualizacion_sedesol = lubridate::today(),
+                                  fecha = lubridate::parse_date_time(paste0('01 ', tolower(mes), anio),
+                                                                     orders = 'd b Y',
+                                                                     locale = 'es_ES.UTF-8'),
+                                  data_date_text = paste0('01 ', gsub('([0-9]{4})-([0-9]+)(.*)', '\\1 \\2', data_date)),
+                                  data_date_parsed = lubridate::parse_date_time(data_date_text,
+                                                                             orders = 'd Y m',
+                                                                             locale = 'es_ES.UTF-8')) %>%
+                    dplyr::filter(fecha <= data_date_parsed) %>%
+                    dplyr::select(-fecha, -data_date_text, -data_date_parsed)
 
   copy_to(con, crimenes_tasas,
           dbplyr::in_schema("features",'crimenes_tasas'),
