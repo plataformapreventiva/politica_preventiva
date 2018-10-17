@@ -4,7 +4,7 @@ library(tidyverse)
 library(dbplyr)
 library(stringr)
 library(DBI)
-source("pipelines/etl/tools/tidy_tools.R")
+source("pipelines/semantic/tools/tidy_tools.R")
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -67,7 +67,7 @@ if(length(opt) > 1){
 
   cenapred <- tbl(con, sql("select cve_muni,data_date,gp_bajaste,gp_ciclnes,
                           gp_granizo,gp_inundac,gp_nevadas,gp_sequia2,gp_sismico,
-                          gp_susinfl,gp_sustox,gp_tormele,gp_tsunami,gp_ondasca, 
+                          gp_susinfl,gp_sustox,gp_tormele,gp_tsunami,gp_ondasca,
                           actualizacion_sedesol
                           from clean.cenapred"))
 
@@ -87,3 +87,4 @@ if(length(opt) > 1){
   # disconnect from the database
   dbDisconnect(con)
 }
+
