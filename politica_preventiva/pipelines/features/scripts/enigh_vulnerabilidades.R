@@ -91,8 +91,7 @@ if(length(opt) > 1){
   
   pob_ent <- left_join(poblacion,concentrados, by=c("ent","folioviv", "foliohog")) %>% 
       select(ent, folioviv, factor_hog, personas_hogar) %>% 
-      mutate(folioviv = as.character(folioviv),
-             personas = as.numeric(factor_hog)*personas_hogar) %>% 
+      mutate(personas = as.numeric(factor_hog)*personas_hogar) %>% 
       select(ent, personas) %>% 
       group_by(ent) %>% 
       summarise_all(sum)
@@ -100,14 +99,15 @@ if(length(opt) > 1){
   #Población discapacitados
   
   poblacion_disc <- poblacion %>% 
-    mutate(disc_int = ifelse(disc1 %in% c(6) | disc2 %in% c(6) | disc3 %in% c(6) | disc4 %in% c(6) | disc5 %in% c(6) | 
-                               disc6 %in% c(6) | disc7 %in% c(6), 1, 0),
-           disc_fis = ifelse(disc1 %in% c(1,5) | disc2 %in% c(1,5) | disc3 %in% c(1,5) | 
-                               disc4 %in% c(1,5) | disc5 %in% c(1,5) | disc6 %in% c(1,5) | disc7 %in% c(1,5), 1, 0),
-           disc_sens = ifelse(disc1 %in% c(2:4) | disc2 %in% c(2:4) | disc3 %in% c(2:4) | 
-                                disc4 %in% c(2:4) | disc5 %in% c(2:4) | disc6 %in% c(2:4) | disc7 %in% c(2:4), 1, 0),
-           disc_men = ifelse(disc1 %in% c(7) | disc2 %in% c(7) | disc3 %in% c(7) | disc4 %in% c(7) | disc5 %in% c(7) | 
-                               disc6 %in% c(7) | disc7 %in% c(7), 1, 0)) %>% 
+    select(folioviv,foliohog,ent,disc1,disc2,disc3,disc4,disc5,disc6,disc7) %>% 
+    mutate(disc_int = ifelse(disc1 ==6 | disc2 ==6 | disc3 ==6 | disc4 ==6 | disc5 ==6| 
+                               disc6 ==6 | disc7 ==6, 1, 0),
+           disc_fis = ifelse(disc1 % in %c(1,5)  | disc2 % in %c(1,5) | disc3% in %c(1,5)  | 
+                               disc4 % in %c(1,5)  | disc5 % in %c(1,5)  | disc6 % in % c(1,5) , 1, 0),
+           disc_sens = ifelse(disc1 % in %c(2:4) | disc2 % in %c(2:4) | disc3 % in %c(2:4) | 
+                                disc4 % in %c(2:4) | disc5 % in %c(2:4) | disc6 % in %c(2:4) | disc7 % in %c(2:4), 1, 0),
+           disc_men = ifelse(disc1 ==7 | disc2 ==7 | disc3 ==7 | disc4 ==7 | disc5 ==7 | 
+                               disc6 ==7 | disc7 ==7, 1, 0)) %>% 
     select(folioviv,foliohog,ent, disc_int, disc_fis, disc_sens, disc_men) %>% 
     group_by(folioviv, foliohog,ent) %>% 
     summarise_all(sum) %>% left_join(concentrados, by=c("ent","folioviv", "foliohog")) %>% 
@@ -127,19 +127,19 @@ if(length(opt) > 1){
 #Acceso a guarderías
   
  query3 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as ent,
-            folioviv, foliohog, numren, pres_6, data_date
+            folioviv, foliohog, numren, pres_6
             FROM clean.enigh_trabajos
             WHERE data_date like \'2016-a\''
   
-  guarderias <- tbl(con, sql(query3)) 
-    mutate(ac_guar = ifelse(pres_6 %in% c(6), 1, 0)) %>%
-    filter(ac_guar == 1) %>% 
+ guarderias <- tbl(con, sql(query3)) %>%
+    mutate(ac_guar = ifelse(pres_6==6, 1, 0)) %>%
     group_by(ent,folioviv, foliohog) %>% 
-    summarise(personas_guar_hogar =n()) %>% left_join(concentrados,by=c('ent','foliohog')) %>% 
-    select(ent,foliohog, factor_hog, personas_guar_hogar)  %>% 
+    summarise(personas_guar_hogar =n()) %>%
+    left_join(concentrados,by=c('ent','folioviv','foliohog')) %>% 
+    select(ent,foliohog, folioviv, factor_hog, personas_guar_hogar)  %>% 
     mutate(tot_hog_guar = factor_hog*foliohog) %>%  
     select(ent, tot_hog_guar) %>% 
-    group_by(ent) %>% summarise_all(sum) %>% left_join(pob_ent,by='ent') %>% 
+    group_by(ent) %>% summarise_all(sum)%>% left_join(pob_ent,by='ent') %>% 
    mutate(proporcion_guar=tot_hog_guar/personas) %>% 
    select(ent, proporcion_guar)
   
@@ -165,7 +165,7 @@ if(length(opt) > 1){
    summarise(media_salario_h = mean(ing_1, na.rm = T))
  
   brecha_salarial <- left_join(ingresos_m,ingresos_h, by = c("ent")) %>% 
-    mutate(brecha_salario_mensual = media_salario_h-media_salario_m) %>% 
+    mutate(brecha_salario_mensual = media_salario_m/media_salario_h) %>% 
     select(ent,brecha_salario_mensual)
   
 enigh_vulnerabilidades <- left_join(poblacion_disc,guarderias,by='ent') %>%
