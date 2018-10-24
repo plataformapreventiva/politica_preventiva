@@ -48,3 +48,8 @@ enigh_vulnerabilidades:
         - enigh_ingresos
         - enigh_poblacion
         - enigh_concentrados
+imco_info_publica:
+    clean_dependencies:
+        - imco_info_publica
+    raw_dependencies:
+        - geom_estados
