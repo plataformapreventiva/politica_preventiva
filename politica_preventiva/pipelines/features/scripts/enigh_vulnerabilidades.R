@@ -166,7 +166,7 @@ if(length(opt) > 1){
  
   brecha_salarial <- left_join(ingresos_m,ingresos_h, by = c("ent")) %>% 
     mutate(brecha_salario_mensual = media_salario_m/media_salario_h) %>% 
-    select(ent,brecha_salario_mensual)
+    select(ent,brecha_salario_mensual,media_salario_m,media_salario_h)
   
 enigh_vulnerabilidades <- left_join(poblacion_disc,guarderias,by='ent') %>%
   left_join(brecha_salarial,by='ent') %>%
