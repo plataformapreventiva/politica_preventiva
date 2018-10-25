@@ -141,7 +141,7 @@ if(length(opt) > 1){
   
   brecha_horas_cuidados <- left_join(hombres, mujeres, by = 'cve_muni') %>% 
     mutate(brecha_horas_cuidados = ifelse(total_horas_h == 0,total_horas_m,total_horas_m/total_horas_h)) %>% 
-    select(cve_muni, brecha_horas_cuidados)
+    select(cve_muni, brecha_horas_cuidados,total_horas_h,total_horas_m)
   
 # HOMBRES Y MUJERES EN EL MERCADO LABORAL
   ocupadas <- intercensal %>% 
@@ -167,7 +167,7 @@ if(length(opt) > 1){
   
   brecha_tasa_ocupados <- left_join(ocupadas,ocupados, by='cve_muni') %>%
     mutate(brecha_tasa_ocupados = ifelse(proporcion_hombres_ocupados == 0,proporcion_mujeres_ocupadas,proporcion_mujeres_ocupadas / proporcion_hombres_ocupados)) %>% 
-    select(cve_muni, brecha_tasa_ocupados)
+    select(cve_muni, brecha_tasa_ocupados,proporcion_hombres_ocupados,proporcion_mujeres_ocupadas)
   
   # JOIN 
   intercensal_personas_2015 <- left_join(poblacion_flotante_esc,poblacion_flotante_trab, by= 'cve_muni') %>%
