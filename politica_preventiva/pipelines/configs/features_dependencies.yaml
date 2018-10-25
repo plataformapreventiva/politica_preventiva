@@ -42,6 +42,12 @@ intercensal_viviendas_2015:
 intercensal_personas_2015:
     clean_dependencies:
         - intercensal_personas_2015
+enigh_vulnerabilidades:
+    clean_dependencies:
+        - enigh_trabajos
+        - enigh_ingresos
+        - enigh_poblacion
+        - enigh_concentrados
 imco_info_publica:
     clean_dependencies:
         - imco_info_publica
