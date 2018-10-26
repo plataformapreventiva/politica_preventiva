@@ -53,6 +53,7 @@ class SemanticPipeline(luigi.WrapperTask):
     current_date = luigi.DateParameter()
     client = S3Client()
     ptask = luigi.Parameter()
+    pipelines = luigi.Parameter()
 
     def requires(self):
         return [UpdateSemanticDB(semantic_task, self.current_date)
@@ -60,12 +61,13 @@ class SemanticPipeline(luigi.WrapperTask):
 
 class UpdateSemanticDB(postgres.PostgresQuery):
 
-
     semantic_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     client = S3Client()
     semantic_scripts = luigi.Parameter()
     historical = luigi.Parameter('DEFAULT')
+    plot_oriented = configuration.get_config().get(semantic_task,
+                                                  'plot_oriented')
 
     # RDS
     database = os.environ.get("PGDATABASE")
@@ -102,7 +104,6 @@ class UpdateSemanticDB(postgres.PostgresQuery):
                                                      pipeline_task,
                                                      self.current_date)) for
                          pipeline_task in composition[self.semantic_task]]
-        pdb.set_trace()
         return [UpdateTidyDB(current_date=self.current_date,
                           pipeline_task=pipeline[0],
                           data_date=dates,
@@ -117,12 +118,11 @@ class UpdateSemanticDB(postgres.PostgresQuery):
                               table=self.table,
                               update_id=self.update_id)
 
-
 class UpdateTidyDB(PgRTask):
 
     """
     This Task runs the tidy script in tidy folder for
-    the pipeline_task, if it doesn't exists then it runs
+    the pipeline_task, if it doesn't exist then it runs
     the no_tidy.R script from the same folder.
     """
 

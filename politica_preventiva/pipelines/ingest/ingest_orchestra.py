@@ -297,7 +297,7 @@ class UpdateDictionary(postgres.CopyToTable):
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
                   i in range(len(self.columns))]
-        path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
+        path = self.common_path + "dictionaries/" + self.pipeline_task + "_dic.csv"
         data = classic_tests.dictionary_test(self.pipeline_task, path,
                                              header_d, header,
                                              self.actualizacion,
