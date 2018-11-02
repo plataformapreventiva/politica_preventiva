@@ -53,3 +53,10 @@ imco_info_publica:
         - imco_info_publica
     raw_dependencies:
         - geom_estados
+capacidad_infraestructura_mun:
+    clean_dependencies:
+        - cngmd_drenaje
+        - cngmd_recoleccion_basura
+        - cfe
+    features_dependencies:
+        - recursos_hospitales
