@@ -53,6 +53,16 @@ imco_info_publica:
         - imco_info_publica
     raw_dependencies:
         - geom_estados
+inegi_jueces:
+    clean_dependencies:
+        - inegi_jueces
+    raw_dependencies:
+        - geom_estados
+inegi_agentes_fiscales:
+    clean_dependencies:
+        - inegi_agentes_fiscales
+    raw_dependencies:
+        - geom_estados
 inform_mun:
     clean_dependencies:
         - cenapred_app_municipios
