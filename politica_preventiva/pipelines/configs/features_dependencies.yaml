@@ -76,3 +76,8 @@ inform_mun:
         - crimenes_tasas
         - intercensal_personas_2015
         - intercensal_viviendas_2015
+sistema_alertas:
+    raw_dependencies:
+        - geom_estados
+    clean_dependencies:
+        - sistemas_alertas
