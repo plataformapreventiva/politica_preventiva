@@ -53,3 +53,16 @@ imco_info_publica:
         - imco_info_publica
     raw_dependencies:
         - geom_estados
+inform_mun:
+    clean_dependencies:
+        - cenapred_app_municipios
+        - cngmd_proteccion_civil
+        - cngmd_predial
+        - cngmd_drenaje
+        - cngmd_recoleccion_basura
+        - cfe
+        - coneval_municipios
+    features_dependencies:
+        - crimenes_tasas
+        - intercensal_personas_2015
+        - intercensal_viviendas_2015
