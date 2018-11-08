@@ -55,5 +55,18 @@ imco_info_publica:
         - geom_estados
 mortalidad_tasas:
     clean_dependencies:
-        - intercensal_personas_2015
         - defunciones_generales
+        - intercensal_personas_2015
+inform_mun:
+    clean_dependencies:
+        - cenapred_app_municipios
+        - cngmd_proteccion_civil
+        - cngmd_predial
+        - cngmd_drenaje
+        - cngmd_recoleccion_basura
+        - cfe
+        - coneval_municipios
+    features_dependencies:
+        - crimenes_tasas
+        - intercensal_personas_2015
+        - intercensal_viviendas_2015

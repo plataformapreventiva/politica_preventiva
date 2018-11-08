@@ -78,14 +78,26 @@ if(length(opt) > 1){
     group_by(cve_muni) %>% 
     summarise(factor=as.numeric(sum(factor)))
   
-  defunciones <- tbl(con, dbplyr::in_schema('clean', 'defunciones_generales')) %>%
+query <- 'SELECT cve_muni, sum(CASE 
+                                            WHEN CAST(edad as integer) < 4000
+                                            THEN 1 
+                                            ELSE 0 
+                                            END) as infant, 
+                                            sum(CASE 
+                                            WHEN causa_def LIKE \'O%\'
+                                            THEN 1 
+                                            ELSE 0 
+                                            END) as materna
+                                            FROM clean.defunciones_generales
+                                            GROUP BY cve_muni'
+mortalidad_tasas <- tbl(con, sql(query)) %>%
     dplyr::left_join(poblacion, by='cve_muni') %>%
     dplyr::mutate(mortalidad_materna = materna/factor) %>%
-    dplyr::mutate(mortalidad_infantil = infantil/factor) %>%
+    dplyr::mutate(mortalidad_infantil = infant/factor) %>%
     dplyr::select(cve_muni,mortalidad_materna,mortalidad_infantil) %>%
     dplyr::mutate(actualizacion_sedesol = lubridate::today())
   
-  copy_to(con, crimenes_tasas,
+  copy_to(con, mortalidad_tasas,
           dbplyr::in_schema("features",'mortalidad_tasas'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
