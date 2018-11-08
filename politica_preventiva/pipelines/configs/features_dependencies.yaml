@@ -53,6 +53,10 @@ imco_info_publica:
         - imco_info_publica
     raw_dependencies:
         - geom_estados
+mortalidad_tasas:
+    clean_dependencies:
+        - defunciones_generales
+        - intercensal_personas_2015
 inegi_jueces:
     clean_dependencies:
         - inegi_jueces
