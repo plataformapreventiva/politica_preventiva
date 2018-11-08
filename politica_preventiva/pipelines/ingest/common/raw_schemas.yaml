@@ -7619,13 +7619,11 @@ ipc_ciudades:
     - otro: FLOAT
     - cmae_1: FLOAT
     - cmae_2: FLOAT
-    - cmae_2_1: FLOAT
+    - cmae_3: FLOAT
     - scian_1: FLOAT
     - scian_2: FLOAT
     - scian_3: FLOAT
     - ciudad: TEXT
-    - month: INT
-    - year: INT
     - actualizacion_sedesol: TIMESTAMP
   RAW:
   - fecha
@@ -7650,7 +7648,7 @@ ipc_ciudades:
   - otro
   - cmae_1
   - cmae_2
-  - cmae_2.1
+  - cmae_3
   - scian_1
   - scian_2
   - scian_3
