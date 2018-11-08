@@ -79,28 +79,11 @@ if(length(opt) > 1){
                     jsonlite::stream_in() %>%
                     dplyr::bind_cols(plots_data, .)
 
-  datos_prueba <- tibble(schema = 'features',
-                         table_name = 'enigh_vulnerabilidades',
-                         var_list = list(c('disc_int', 'disc_fis',
-                                           'disc_sens', 'disc_men')))
-
   key <- "variable"
   value <- "valor"
 
-  # Aquí agregar el caso de: tenemos un perfil municipal pero la fuente está a
-  # nivel estatal
-  if(level == 'e'){
-      key_var <- 'cve_ent'
-  } else if(level == 'm') {
-      key_var <- 'cve_muni'
-  } else {
-      key_var <- NULL
-  }
-
-  not_gathered <- c(key_var, "data_date", "actualizacion_sedesol")
- # Sustituir datos_prueba por plots_metadata
-  sql_queries <- purrr::map_chr(1:nrow(datos_prueba),
-                                function(x) glue::glue("SELECT {paste(c(key_var, datos_prueba$var_list[[x]]), collapse = ', ')} FROM {datos_prueba$schema[x]}.{datos_prueba$table_name[x]}"))
+  sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
+                                function(x) glue::glue("SELECT {paste(c(key_var, plots_metadata$var_list[[x]]), collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
 
   tidy_data <- tibble::tibble()
 
@@ -108,9 +91,39 @@ if(length(opt) > 1){
     query <- sql_queries[i]
     data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
 
-    key_var_name <- sym(key_var)
-    key_var_quo <- quo(!! key_var_name)
+    key_var_name <- rlang::sym(key_var)
+    key_var_quo <- rlang::quo(!! key_var_name)
 
+    if(level == 'e'){
+      key_var <- 'cve_ent'
+    } else if(level == 'm') {
+        if (plots_metadata$imputacion_estatal){
+            key_var <- 'cve_ent'
+        } else {
+           key_var <- 'cve_muni'
+        }
+    } else {
+      key_var <- NULL
+    }
+
+  not_gathered <- c(key_var, "data_date", "actualizacion_sedesol")
+    if(plots_metadata$plot[i] == 'piramide_poblacional'){
+      data_largo <- data %>%
+                    dplyr::mutate(grupo_edad = cut_edad(edad),
+                                  sexo = recode(sexo, `1` = 'h', `3` = 'm'),
+                                  grupo_pob = paste0(sexo, grupo_edad)) %>%
+                    dplyr::group_by(!! key_var_quo, grupo_pob) %>%
+                    dplyr::summarise(total_personas = sum(factor)) %>%
+                    dplyr::select(!! key_var_quo,
+                                  variable = grupo_pob,
+                                  valor = total_personas) %>%
+                    dplyr::ungroup() %>%
+                    dplyr::group_by(!! key_var_quo) %>%
+                    dplyr::mutate(element_id = stringr::str_pad(row_number(),
+                                                                width = 2,
+                                                                pad = '0')) %>%
+                    dplyr::ungroup()
+    }else{
     data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered)) %>%
                   dplyr::arrange(!! key_var_quo) %>%
                   dplyr::group_by(!! key_var_quo) %>%
@@ -118,13 +131,14 @@ if(length(opt) > 1){
                                                               width = 2,
                                                               pad = '0')) %>%
                   dplyr::ungroup()
+    }
 
     data_variables <- data_largo %>%
                       dplyr::select(-valor) %>%
                       dplyr::rename(nivel_clave = !! key_var_quo) %>%
                       tidyr::gather(varname, value, -nivel_clave, -element_id) %>%
                       dplyr::mutate(nivel = level,
-                                    plot = plots_metadatadata$plot[i],
+                                    plot = plots_metadata$plot[i],
                                     vartype = 'x') %>%
                       dplyr::select(nivel, nivel_clave, plot, element_id,
                                     vartype, varname, value)
@@ -141,7 +155,9 @@ if(length(opt) > 1){
                       dplyr::mutate_all(as.character)
 
   tidy_data <- bind_rows(tidy_data, data_variables, data_valores)
-
   }
 
+  dplyr::copy_to(con, tidy_data,
+                 dbplyr::in_schema('tidy', pipeline_task),
+                 temporary = FALSE)
 }

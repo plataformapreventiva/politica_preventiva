@@ -45,4 +45,14 @@ spread_db <- function(df, key, value) {
   Reduce(full_join_alt, df_new)
 }
 
+replace_high_bound <- function(x){
+    wrong_bound <- gsub('.*,(.*)\\)', '\\1', x) %>% as.numeric()
+    paste0(gsub('(.*,)(.*)\\)', '\\1', x), wrong_bound-1, ')')
+}
 
+cut_edad <- function(x){
+  cut(x, breaks = c(seq(from = 0, to = 76, by = 5), Inf), right = F) %>%
+      replace_high_bound() %>%
+      gsub('\\[([0-9]+),(.*)\\)', '\\1-\\2', .) %>%
+      gsub('-Inf', '+', .)
+}
