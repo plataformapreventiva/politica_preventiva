@@ -7310,6 +7310,7 @@ ipc_ciudades:
     - scian_3: FLOAT
     - ciudad: TEXT
     - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
   RAW:
   - fecha
   - indice
@@ -9664,8 +9665,7 @@ sistemas_alertas:
     - resultadodelsistemadealertas: Integer
     - indicador1deudapublicayobligacionessobreingresosdelibredisposicion: Integer
     - indicador1: FLOAT
-    - indicador2serviciode
-adeudaydeobligacionessobreingresosdelibredisposicion: Integer
+    - indicador2serviciodeadeudaydeobligacionessobreingresosdelibredisposicion: Integer
     - indicador2: FLOAT
     - indicador3obligacionesacortoplazoyproveedoresycontratistassobreingresostotales: Integer
     - indicador3: FLOAT
