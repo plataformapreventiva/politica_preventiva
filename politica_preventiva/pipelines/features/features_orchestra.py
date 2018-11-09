@@ -121,8 +121,8 @@ class UpdateFeaturesDB(PgRTask):
         for dt in dep_types:
             if 'features_dependencies' in dep_types:
                 features_tables = composition[self.features_task]['features_dependencies']
-                yield [FeaturesPipeline(current_Date=self.current_date,
-                    feature_task=[feature_task]) for feature_task in features_tables]
+                yield [FeaturesPipeline(current_date=self.current_date,
+                    pipelines=[pipeline_task], ptask='auto') for pipeline_task in features_tables]
 
             if 'clean_dependencies' in dep_types:
                 clean_tables = composition[self.features_task]['clean_dependencies']
