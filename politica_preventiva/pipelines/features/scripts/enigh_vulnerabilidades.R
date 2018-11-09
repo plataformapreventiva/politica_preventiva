@@ -72,7 +72,7 @@ if(length(opt) > 1){
   
   print('Pulling datasets')
   
-  query1 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as ent,
+  query1 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as cve_ent,
             folioviv, foliohog,numren, sexo, edad, disc1, disc2, disc3, disc4,
             disc5, disc6, disc7, hor_4, min_4, usotiempo4, COUNT(*) as personas_hogar
             FROM clean.enigh_poblacion
@@ -80,7 +80,7 @@ if(length(opt) > 1){
             GROUP BY folioviv, foliohog, numren, sexo, edad, disc1, disc2, disc3, disc4,
             disc5, disc6, disc7, hor_4, min_4, usotiempo4'
   
-  query2 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as ent,
+  query2 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as cve_ent,
             folioviv, foliohog,tot_integ, cast(factor_hog as integer), data_date
             FROM clean.enigh_concentrados
             WHERE data_date like \'2016-a\''
@@ -89,17 +89,17 @@ if(length(opt) > 1){
   poblacion <- tbl(con, sql(query1)) 
   concentrados <- tbl(con, sql(query2))
   
-  pob_ent <- left_join(poblacion,concentrados, by=c("ent","folioviv", "foliohog")) %>% 
-      select(ent, folioviv, factor_hog, personas_hogar) %>% 
+  pob_ent <- left_join(poblacion,concentrados, by=c("cve_ent","folioviv", "foliohog")) %>% 
+      select(cve_ent, folioviv, factor_hog, personas_hogar) %>% 
       mutate(personas = as.numeric(factor_hog)*personas_hogar) %>% 
-      select(ent, personas) %>% 
-      group_by(ent) %>% 
+      select(cve_ent, personas) %>% 
+      group_by(cve_ent) %>% 
       summarise_all(sum)
 
   #Población discapacitados
   
   poblacion_disc <- poblacion %>% 
-    select(folioviv,foliohog,ent,disc1,disc2,disc3,disc4,disc5,disc6,disc7) %>% 
+    select(folioviv,foliohog,cve_ent,disc1,disc2,disc3,disc4,disc5,disc6,disc7) %>% 
     mutate(disc_int = ifelse(disc1 ==6 | disc2 ==6 | disc3 ==6 | disc4 ==6 | disc5 ==6| 
                                disc6 ==6 | disc7 ==6, 1, 0),
            disc_fis = ifelse(disc1 % in %c(1,5)  | disc2 % in %c(1,5) | disc3% in %c(1,5)  | 
@@ -108,68 +108,68 @@ if(length(opt) > 1){
                                 disc4 % in %c(2:4) | disc5 % in %c(2:4) | disc6 % in %c(2:4) | disc7 % in %c(2:4), 1, 0),
            disc_men = ifelse(disc1 ==7 | disc2 ==7 | disc3 ==7 | disc4 ==7 | disc5 ==7 | 
                                disc6 ==7 | disc7 ==7, 1, 0)) %>% 
-    select(folioviv,foliohog,ent, disc_int, disc_fis, disc_sens, disc_men) %>% 
-    group_by(folioviv, foliohog,ent) %>% 
-    summarise_all(sum) %>% left_join(concentrados, by=c("ent","folioviv", "foliohog")) %>% 
-    select(ent, folioviv, foliohog, factor_hog, disc_int, disc_fis, disc_sens, disc_men) %>%
+    select(folioviv,foliohog,cve_ent, disc_int, disc_fis, disc_sens, disc_men) %>% 
+    group_by(folioviv, foliohog,cve_ent) %>% 
+    summarise_all(sum) %>% left_join(concentrados, by=c("cve_ent","folioviv", "foliohog")) %>% 
+    select(cve_ent, folioviv, foliohog, factor_hog, disc_int, disc_fis, disc_sens, disc_men) %>%
     mutate(disc_inte = disc_int*factor_hog,
            disc_fisi = disc_fis*factor_hog,
            disc_senso = disc_sens*factor_hog,
            disc_ment = disc_men*factor_hog) %>% 
-    select(ent, disc_inte, disc_fisi, disc_senso, disc_ment) %>% group_by(ent) %>% 
-    summarise_all(sum) %>% left_join(pob_ent,by='ent') %>% 
+    select(cve_ent, disc_inte, disc_fisi, disc_senso, disc_ment) %>% group_by(cve_ent) %>% 
+    summarise_all(sum) %>% left_join(pob_ent,by='cve_ent') %>% 
     mutate(disc_int = 100*disc_inte/personas,
            disc_fis = 100*disc_fisi/personas,
            disc_sens = 100*disc_senso/personas,
            disc_men = 100*disc_ment/personas) %>% 
-    select(ent, disc_int, disc_fis, disc_sens, disc_men)
+    select(cve_ent, disc_int, disc_fis, disc_sens, disc_men)
   
 #Acceso a guarderías
   
- query3 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as ent,
+ query3 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as cve_ent,
             folioviv, foliohog, numren, pres_6
             FROM clean.enigh_trabajos
             WHERE data_date like \'2016-a\''
   
  guarderias <- tbl(con, sql(query3)) %>%
     mutate(ac_guar = ifelse(pres_6==6, 1, 0)) %>%
-    group_by(ent,folioviv, foliohog) %>% 
+    group_by(cve_ent,folioviv, foliohog) %>% 
     summarise(personas_guar_hogar =n()) %>%
-    left_join(concentrados,by=c('ent','folioviv','foliohog')) %>% 
-    select(ent,foliohog, folioviv, factor_hog, personas_guar_hogar)  %>% 
+    left_join(concentrados,by=c('cve_ent','folioviv','foliohog')) %>% 
+    select(cve_ent,foliohog, folioviv, factor_hog, personas_guar_hogar)  %>% 
     mutate(tot_hog_guar = factor_hog*foliohog) %>%  
-    select(ent, tot_hog_guar) %>% 
-    group_by(ent) %>% summarise_all(sum)%>% left_join(pob_ent,by='ent') %>% 
+    select(cve_ent, tot_hog_guar) %>% 
+    group_by(cve_ent) %>% summarise_all(sum)%>% left_join(pob_ent,by='cve_ent') %>% 
    mutate(proporcion_guar=tot_hog_guar/personas) %>% 
-   select(ent, proporcion_guar)
+   select(cve_ent, proporcion_guar)
   
 #Brecha salarial
   
- query4 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as ent,
+ query4 <- 'SELECT SUBSTRING(LPAD(folioviv::text, 10, \'0\'), 1, 2) as cve_ent,
             folioviv, foliohog, numren, clave, ing_1
             FROM clean.enigh_ingresos
             WHERE data_date like \'2016-a\''
 
  ingresos_m <- tbl(con, sql(query4))  %>%
    filter(clave == "P001"|clave =="P011"|clave =="P018") %>% 
-   select(ent, foliohog, folioviv, ing_1) %>%
-   left_join(poblacion,by=c('ent','foliohog','folioviv')) %>%
-   filter(sexo == 2) %>% select(ent, foliohog, folioviv, ing_1) %>% group_by(ent) %>% 
+   select(cve_ent, foliohog, folioviv, ing_1) %>%
+   left_join(poblacion,by=c('cve_ent','foliohog','folioviv')) %>%
+   filter(sexo == 2) %>% select(cve_ent, foliohog, folioviv, ing_1) %>% group_by(cve_ent) %>% 
    summarise(media_salario_m = mean(ing_1, na.rm = T))
   
  ingresos_h <- tbl(con, sql(query4))  %>%
    filter(clave == "P001"|clave =="P011"|clave =="P018") %>% 
-   select(ent, foliohog, folioviv, ing_1) %>%
-   left_join(poblacion,by=c('ent','foliohog','folioviv')) %>%
-   filter(sexo == 1) %>% select(ent, foliohog, folioviv, ing_1) %>% group_by(ent) %>% 
+   select(cve_ent, foliohog, folioviv, ing_1) %>%
+   left_join(poblacion,by=c('cve_ent','foliohog','folioviv')) %>%
+   filter(sexo == 1) %>% select(cve_ent, foliohog, folioviv, ing_1) %>% group_by(cve_ent) %>% 
    summarise(media_salario_h = mean(ing_1, na.rm = T))
  
-  brecha_salarial <- left_join(ingresos_m,ingresos_h, by = c("ent")) %>% 
+  brecha_salarial <- left_join(ingresos_m,ingresos_h, by = c("cve_ent")) %>% 
     mutate(brecha_salario_mensual = media_salario_m/media_salario_h) %>% 
-    select(ent,brecha_salario_mensual,media_salario_m,media_salario_h)
+    select(cve_ent,brecha_salario_mensual,media_salario_m,media_salario_h)
   
-enigh_vulnerabilidades <- left_join(poblacion_disc,guarderias,by='ent') %>%
-  left_join(brecha_salarial,by='ent') %>%
+enigh_vulnerabilidades <- left_join(poblacion_disc,guarderias,by='cve_ent') %>%
+  left_join(brecha_salarial,by='cve_ent') %>%
   dplyr::mutate(data_date = data_date,
                   actualizacion_sedesol = lubridate::today())
   

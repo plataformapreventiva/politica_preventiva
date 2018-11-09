@@ -53,6 +53,20 @@ imco_info_publica:
         - imco_info_publica
     raw_dependencies:
         - geom_estados
+mortalidad_tasas:
+    clean_dependencies:
+        - defunciones_generales
+        - intercensal_personas_2015
+inegi_jueces:
+    clean_dependencies:
+        - inegi_jueces
+    raw_dependencies:
+        - geom_estados
+inegi_agentes_fiscales:
+    clean_dependencies:
+        - inegi_agentes_fiscales
+    raw_dependencies:
+        - geom_estados
 inform_mun:
     raw_dependencies:
         - internet_municipios
@@ -71,3 +85,8 @@ inform_mun:
         - crimenes_tasas
         - intercensal_personas_2015
         - intercensal_viviendas_2015
+sistemas_alertas:
+    raw_dependencies:
+        - geom_estados
+    clean_dependencies:
+        - sistemas_alertas
