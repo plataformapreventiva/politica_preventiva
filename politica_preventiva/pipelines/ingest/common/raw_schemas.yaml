@@ -7309,6 +7309,8 @@ ipc_ciudades:
     - scian_2: FLOAT
     - scian_3: FLOAT
     - ciudad: TEXT
+    - month: TEXT
+    - year: Integer
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
