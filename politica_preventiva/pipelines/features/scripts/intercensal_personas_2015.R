@@ -79,25 +79,20 @@ if(length(opt) > 1){
   
   intercensal <- tbl(con, sql(query))
   
-  #Población por municipio
-  pob_mun <- intercensal %>% select(cve_muni, factor) %>%
-    group_by(cve_muni) %>% 
-    summarise(factor=as.numeric(sum(factor, na.rm = T)))
-  
-  intercensal_aux <- intercensal %>% 
-    select(cve_muni,sexo,edad,mayores65,menores5,
-           adultos,menores,indigenas,lengua_indigena,
-           afrodescendientes,mujeres,hombres) %>%
-    left_join(pob_mun,by='cve_muni') %>% group_by(cve_muni) %>% 
-    summarise_all(sum)  %>% 
-    mutate(p_mayores65=100*mayores65/factor, p_menores5=100*menores5/factor, 
-             p_adultos=100*adultos/factor, p_menores=100*menores/factor, 
-             p_indigenas=100*indigenas/factor, p_afrodescendientes=100*afrodescendientes/factor,
-             p_mujeres=100*mujeres/factor,p_hombres=100*hombres/factor) %>% 
-    select(cve_muni,factor,mayores65,p_mayores65,menores5,p_menores5,adultos,p_adultos,
-           menores,p_menores,indigenas,p_indigenas,afrodescendientes,p_afrodescendientes,
-           mujeres,p_mujeres,hombres,p_hombres) 
-  
+  #Población por municipio y grupos
+  pob_mun <- intercensal %>% select(cve_muni,poblacion_mun,mayores65, menores5, adultos, menores, 
+                                    indigenas, lengua_indigena, afrodescendientes, mujeres, hombres) %>%
+    group_by(cve_muni) %>% summarise_all(sum) %>%  
+    mutate(prop_mayores65= mayores65/poblacion_mun,
+           prop_menores5= menores5/poblacion_mun, 
+           prop_adultos= adultos/poblacion_mun, 
+           prop_menores= menores/poblacion_mun, 
+           prop_indigenas= indigenas/poblacion_mun,
+           prop_lengua_indigena= lengua_indigena/poblacion_mun,
+           prop_afrodescendientes= afrodescendientes/poblacion_mun,
+           prop_mujeres= mujeres/poblacion_mun,
+           prop_hombres= hombres/poblacion_mun)
+    
   #MIGRACION INTERNA Y EXTERNA RECIENTE
   migracion_reciente <- intercensal %>% 
     mutate(migracion_interna_reciente = as.double(migrantes_internos_recientes)/poblacion_mun) %>%
@@ -112,7 +107,7 @@ if(length(opt) > 1){
     mutate(pob_flot_esc = ifelse(cve_muni_esc == cve_muni, 0, 1)) %>%
     group_by(cve_muni) %>% summarise(pob_flot_esc = sum(pob_flot_esc,na.rm = TRUE)) %>% 
     left_join(pob_mun, by='cve_muni') %>%
-    mutate(tasa_flot_esc = pob_flot_esc/factor)  %>%
+    mutate(tasa_flot_esc = pob_flot_esc/poblacion_mun)  %>%
     select(cve_muni,pob_flot_esc,tasa_flot_esc) 
   
   #Población flotante por municipio debido al trabajo
@@ -120,7 +115,7 @@ if(length(opt) > 1){
     mutate(pob_flot_trab = ifelse(cve_muni_trab == cve_muni, 0, 1)) %>% 
     group_by(cve_muni) %>% summarise(pob_flot_trab = sum(pob_flot_trab,na.rm = TRUE)) %>% 
     left_join(pob_mun, by='cve_muni') %>%
-    mutate(tasa_flot_trab = pob_flot_trab/factor)  %>%
+    mutate(tasa_flot_trab = pob_flot_trab/poblacion_mun)  %>%
     select(cve_muni,pob_flot_trab,tasa_flot_trab)
   
   # BRECHA TIEMPO DE CUIDADOS
@@ -174,7 +169,7 @@ if(length(opt) > 1){
     left_join(migracion_reciente, by='cve_muni') %>%
     left_join(brecha_tasa_ocupados, by='cve_muni') %>%
     left_join(brecha_horas_cuidados, by='cve_muni') %>%
-    left_join(intercensal_aux, by='cve_muni') %>% replace(is.na(.), 0) %>%  
+    left_join(pob_mun, by='cve_muni') %>%
     dplyr::mutate(actualizacion_sedesol = lubridate::today())
   
   copy_to(con, intercensal_personas_2015,
