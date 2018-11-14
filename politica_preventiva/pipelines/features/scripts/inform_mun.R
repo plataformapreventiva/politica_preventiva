@@ -88,8 +88,8 @@ if(length(opt) > 1){
               secuestro_tasa=avg(secuestro_tasa),
               robo_vehiculos_tasa=avg(robo_vehiculos_tasa),
               violencia_familiar_tasa=avg(violencia_familiar_tasa))
-  intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
-    select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
+  #intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
+  intercensal_amenazas <- intercensal_personas_2015 %>% select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
   
   amenazas <- left_join(cenapred,crimenes_tasas, by='cve_muni') %>%
     left_join(intercensal_amenazas, by='cve_muni')
@@ -98,21 +98,25 @@ if(length(opt) > 1){
   
   # CAPACIDADES
   query <- 'SELECT LPAD(cve_muni::text, 5, \'0\') as cve_muni, 
-            nd_spnn1, nd_nsnn4
-            FROM clean.cngmd_proteccion_civil'
+  nd_spnn1, nd_nsnn4
+  FROM clean.cngmd_proteccion_civil'
   riesgo <- tbl(con, sql(query)) 
   query2 <- 'SELECT LPAD(cve_muni::text, 5, \'0\') as cve_muni,
-            cobertura_dren
-            FROM clean.cngmd_drenaje'
+  cobertura_dren
+  FROM clean.cngmd_drenaje'
   drenaje <- tbl(con, sql(query2)) 
   query3 <- 'SELECT LPAD(cve_muni::text, 5, \'0\') as cve_muni,
-            basura_porcent_cab
-            FROM clean.cngmd_recoleccion_basura'
+  basura_porcent_cab
+  FROM clean.cngmd_recoleccion_basura'
   recoleccion_basura <- tbl(con, sql(query3))
   query4 <- 'SELECT LPAD(cve_muni::text, 5, \'0\') as cve_muni,
-            aut_cobr, totalpo1
-            FROM clean.cngmd_predial'
+  aut_cobr, totalpo1
+  FROM clean.cngmd_predial'
   predial <- tbl(con, sql(query4)) 
+  query5 <- 'SELECT LPAD(cve_muni::text, 5, \'0\') as cve_muni,
+  nd_nsnn1
+  FROM clean.cngmd_participacion_ciudadana'
+  participacion_ciudadana <- tbl(con, sql(query5)) 
   cfe <- tbl(con, dbplyr::in_schema('clean','cfe')) 
   hospitales <- tbl(con, dbplyr::in_schema('features','recursos_hospitales')) %>% 
     select(-c(actualizacion_sedesol,data_date))
@@ -126,25 +130,22 @@ if(length(opt) > 1){
   indicadores_finanzas <- tbl(con, dbplyr::in_schema('raw','indicadores_financieros_municipios')) %>% 
     filter(anio == 2014) %>%
     select(cve_muni,flexibilidad_financiera,capacidad_inversion)
+  transparencia <- tbl(con, dbplyr::in_schema('clean','cngmd_transparencia')) %>% 
+    select(-ubic_geo)
+  mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas'))
   
-  # -------- Errores de ingesta o falta de script de clean-----------
-
-  # query5 <- 'SELECT LPAD(cve_muni::text, 5, \'0\') as cve_muni,
-  # nd_nsnn1, tem_pciu
-  # FROM cngmd_participacion_ciudadana'
-  # participacion_ciudadana <- tbl(con, sql(query5)) 
-  # transparencia <- tbl(con, dbplyr::in_schema('clean','cngmd_transparencia'))
-  # mortalidad <- tbl(con, dbplyr::in_schema('features','defunciones_generales'))
-  
-  capacidades <- left_join(cfe,hospitales, by='cve_muni') %>%
-    left_join(drenaje, by='cve_muni') %>%
-    left_join(riesgo, by='cve_muni') %>% 
-    left_join(predial, by='cve_muni') %>% 
-    left_join(recoleccion_basura, by='cve_muni') %>% 
-    left_join(internet, by='cve_muni') %>% 
-    left_join(complejidad, by='cve_muni') %>%
+  capacidades <- left_join(riesgo,indice_reglamentacion, by='cve_muni') %>%
+    left_join(transparencia, by='cve_muni') %>%
+    #left_join(participacion_ciudadana, by='cve_muni') %>% 
     left_join(indicadores_finanzas, by='cve_muni') %>% 
-    left_join(indice_reglamentacion, by='cve_muni')
+    #left_join(predial, by='cve_muni') %>% 
+    left_join(complejidad, by='cve_muni') %>%
+    left_join(cfe, by='cve_muni') %>% 
+    left_join(internet, by='cve_muni') %>% 
+    left_join(drenaje,by='cve_muni') %>% 
+    left_join(recoleccion_basura,by='cve_muni') %>% 
+    left_join(hospitales,by='cve_muni') %>% 
+    left_join(mortalidad,by='cve_muni') 
   
   #----------------------------------------------------------------------------------------
   
@@ -153,10 +154,12 @@ if(length(opt) > 1){
     filter(data_date == "2015-a") %>% 
     select(cve_muni, ic_rezedu_porcentaje, ic_asalud_porcentaje, ic_segsoc_porcentaje, ic_cv_porcentaje,
            vul_ing_porcentaje, ic_sbv_porcentaje, pobreza_porcentaje)
-  intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
+  #intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
+  intercensal_vulnerabilidades <- intercensal_personas_2015 %>% 
     select(cve_muni,brecha_tasa_ocupados,brecha_horas_cuidados,
-           p_mayores65, p_menores5,p_adultos,p_menores,
-           p_indigenas,p_afrodescendientes,p_mujeres,p_hombres)
+           prop_mayores65,prop_menores5, prop_adultos, prop_menores, 
+           prop_indigenas,prop_lengua_indigena,prop_afrodescendientes,
+           prop_mujeres,prop_hombres)
   # Falta Relación de dependencia, corregir features
   # Número de personas en edades teóricamente inactivas (personas de 0 a 14 y de 65 años y más) 
   # por cada cien personas en edades teóricamente activas (personas de 15 a 64 años).
@@ -170,7 +173,7 @@ if(length(opt) > 1){
   #----------------------------------------------------------------------------------------
   
   inform_mun <- left_join(amenazas,vulnerabilidades, by= 'cve_muni') %>%
-    left_join(capacidades, by='cve_muni') %>% retrieve_result()
+    left_join(capacidades, by='cve_muni') %>%
     dplyr::mutate(data_date=data_date,
                   actualizacion_sedesol = lubridate::today())
   
