@@ -12,7 +12,7 @@ RUN apt-get -y clean &&  apt-get -y update &&  apt-get -y upgrade
 
 RUN \
     apt-get -y -qq update; apt-get upgrade -y -qq; \
-    apt-get install --no-install-recommends -y  curl 
+    apt-get install --no-install-recommends -y  curl
 
 RUN apt-get update \
     && apt-get install -y libblas-dev liblapack-dev gfortran \
