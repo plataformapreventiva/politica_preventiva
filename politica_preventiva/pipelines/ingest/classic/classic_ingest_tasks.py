@@ -238,18 +238,6 @@ class sagarpa_cierre(SourceIngestTask):
         return subprocess.call([cmd], shell=True)
 
 
-class ipc_ciudades(SourceIngestTask):
-
-    @property
-    def cmd(self):
-        cmd = '''
-            python {0}ipc.py\
-            --year {1} --output {2}
-        '''.format(self.classic_task_scripts, self.data_date,
-                   self.local_ingest_file)
-        return cmd
-
-
 class segob_snim(TDockerTask):
 
     @property
