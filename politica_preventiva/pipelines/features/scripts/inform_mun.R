@@ -88,8 +88,8 @@ if(length(opt) > 1){
               secuestro_tasa=avg(secuestro_tasa),
               robo_vehiculos_tasa=avg(robo_vehiculos_tasa),
               violencia_familiar_tasa=avg(violencia_familiar_tasa))
-  #intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
-  intercensal_amenazas <- intercensal_personas_2015 %>% select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
+  intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
+    select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
   
   amenazas <- left_join(cenapred,crimenes_tasas, by='cve_muni') %>%
     left_join(intercensal_amenazas, by='cve_muni')
@@ -154,8 +154,7 @@ if(length(opt) > 1){
     filter(data_date == "2015-a") %>% 
     select(cve_muni, ic_rezedu_porcentaje, ic_asalud_porcentaje, ic_segsoc_porcentaje, ic_cv_porcentaje,
            vul_ing_porcentaje, ic_sbv_porcentaje, pobreza_porcentaje)
-  #intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
-  intercensal_vulnerabilidades <- intercensal_personas_2015 %>% 
+  intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
     select(cve_muni,brecha_tasa_ocupados,brecha_horas_cuidados,
            prop_mayores65,prop_menores5, prop_adultos, prop_menores, 
            prop_indigenas,prop_lengua_indigena,prop_afrodescendientes,
