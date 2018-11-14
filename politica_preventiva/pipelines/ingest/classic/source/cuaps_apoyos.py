@@ -13,12 +13,13 @@ import argparse
 import io
 import pandas as pd
 import os
+import re
 
 from boto3 import client
 
 s3 = client('s3')
 source_bucket = 'sedesol-lab'
-source_key = 'CUAPS-PROGRAMAS/BDCUAPS_APOCOMP_5.xlsx'
+source_key = 'CUAPS-PROGRAMAS/BDCUAPS_APOCOMP_8.xlsx'
 
 
 def cuaps_apoyos(source_bucket, source_key, int_cols=[]):
@@ -45,16 +46,17 @@ def cuaps_apoyos(source_bucket, source_key, int_cols=[]):
     data.filter(regex='TIPO_APOYO_').columns.values.tolist() + \
     data.filter(regex='INDIC_').columns.values.tolist()
     for col in (int_cols_full):
+        print(col)
         data[col] = data[col].apply(lambda x: ''
-                if pd.isnull(x)
-                else int(float(str(x).replace(' ', ''))))
+                    if pd.isnull(x) or re.sub(r'[^0-9]+', '', str(x)) == ''
+                    else int(float(re.sub(r'[^0-9]+', '', str(x)))))
     return(data)
 
 
-int_cols = ['CSC_ESTATUS_CUAPS_FK', 'TIENE_COMPONENTES', 'ID_COMPONENTE',
-        'AP_COMPO', 'TIPO_POB_APO_COD', 'PERIOD_APOYO_COD', 'PERIOD_MONTO_COD',
-        'TEM_APOYO', 'APOYO_GEN_PADRON', 'TIPO_PADRON', 'PERIODICIDAD_PADRON',
-        'CUENTA_INFO_GEO', 'INSTRU_SOCIOE']
+int_cols = ['TIENE_COMPONENTES', 'ID_COMPONENTE', 'AP_COMPO',
+        'TIPO_POB_APO_COD', 'PERIOD_APOYO_COD', 'PERIOD_MONTO_COD',
+        'TEM_APOYO', 'APOYO_GEN_PADRON', 'TIPO_PADRON',
+        'PERIODICIDAD_PADRON', 'CUENTA_INFO_GEO', 'INSTRU_SOCIOE']
 
 if __name__ == '__main__':
     # Get Arguments from bash.
@@ -69,10 +71,12 @@ if __name__ == '__main__':
     _local_ingest_file = args.local_ingest_file
 
     data = cuaps_apoyos(source_bucket, source_key, int_cols)
-    data.to_csv(_local_ingest_file,
-                sep='|',
-                na_rep='',
-                index=False,
-                encoding='utf-8')
-    print('Wrote data to: {}'.format(_local_ingest_file))
-
+    try:
+        data.to_csv(_local_ingest_file,
+                    sep='|',
+                    na_rep='',
+                    index=False,
+                    encoding='utf-8')
+        print('Wrote data to: {}'.format(_local_ingest_file))
+    except:
+        print('Unable to write local ingest file')

@@ -13,12 +13,13 @@ import argparse
 import io
 import pandas as pd
 import os
+import re
 
 from boto3 import client
 
 s3 = client('s3')
 source_bucket = 'sedesol-lab'
-source_key = 'CUAPS-PROGRAMAS/BDCUAPS_PROGRAMA_5.xlsx'
+source_key = 'CUAPS-PROGRAMAS/BDCUAPS_PROGRAMA_8.xlsx'
 
 def concat_extracols(data, columns_to_map={}):
     """
@@ -68,14 +69,15 @@ def cuaps_programas(source_bucket, source_key, int_cols=[], float_cols=[]):
         'COP_ORDGOB_': 5,
         'COP_TIPART_': 5})
     for col in (int_cols + float_cols):
+        print(col)
         if col in int_cols:
             data[col] = data[col].apply(lambda x: ''
-                    if pd.isnull(x)
-                    else int(float(str(x).replace(' ', ''))))
+                    if pd.isnull(x) or re.sub(r'[^0-9]+', '', str(x)) == ''
+                    else int(float(re.sub(r'[^0-9]+', '', str(x)))))
         else:
             data[col] = data[col].apply(lambda x: ''
-                    if pd.isnull(x)
-                    else float(x))
+                    if pd.isnull(x) or re.sub(r'[^0-9]+', '', str(x)) == ''
+                    else float(re.sub(r'[^0-9]+', '', str(x))))
     return(data)
 
 
@@ -102,10 +104,12 @@ if __name__ == '__main__':
     _local_ingest_file = args.local_ingest_file
 
     data = cuaps_programas(source_bucket, source_key, int_cols, float_cols)
-    data.to_csv(_local_ingest_file,
-                sep='|',
-                na_rep='',
-                index=False,
-                encoding='utf-8')
-    print('Wrote data to: {}'.format(_local_ingest_file))
-
+    try:
+        data.to_csv(_local_ingest_file,
+                    sep='|',
+                    na_rep='',
+                    index=False,
+                    encoding='utf-8')
+        print('Wrote data to: {}'.format(_local_ingest_file))
+    except:
+        print('Unable to write local ingest file')

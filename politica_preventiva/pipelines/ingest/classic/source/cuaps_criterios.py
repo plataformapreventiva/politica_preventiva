@@ -13,12 +13,13 @@ import argparse
 import io
 import pandas as pd
 import os
+import re
 
 from boto3 import client
 
 s3 = client('s3')
 source_bucket = 'sedesol-lab'
-source_key = 'CUAPS-PROGRAMAS/BDCUAPS_FOCALIZACION_5.xlsx'
+source_key = 'CUAPS-PROGRAMAS/BDCUAPS_FOCALIZACION_8.xlsx'
 
 def cuaps_criterios(source_bucket, source_key, int_cols=[]):
     """
@@ -40,13 +41,13 @@ def cuaps_criterios(source_bucket, source_key, int_cols=[]):
             replace('\n', '', regex=True)
     for col in int_cols:
         data[col] = data[col].apply(lambda x: ''
-                    if pd.isnull(x)
-                    else int(float(str(x).replace(' ', ''))))
+                if pd.isnull(x) or re.sub(r'[^0-9]+', '', str(x)) == ''
+                else int(float(re.sub(r'[^0-9]+', '', str(x)))))
     return(data)
 
 
-int_cols = ['CSC_ESTATUS_CUAPS_FK', 'ID_COMPONENTE', 'ID_APOYO',
-        'ORDEN', 'CSC_NIVEL_0', 'PADRE', 'CSC_CONFIGURACION_FOC']
+int_cols = ['ID_COMPONENTE', 'ID_APOYO', 'ORDEN',
+        'CSC_NIVEL_0', 'PADRE', 'CSC_CONFIGURACION_FOC']
 
 columns_to_pad = ['ID_COMPONENTE', 'ID_APOYO', 'ORDEN', 'PADRE', 'CSC_CONFIGURACION_FOC']
 
@@ -66,10 +67,12 @@ if __name__ == '__main__':
     for col in columns_to_pad:
         data[col] = data[col].apply(lambda x: str(x).zfill(2))
 
-    data.to_csv(_local_ingest_file,
-                sep='|',
-                na_rep='',
-                index=False,
-                encoding='utf-8')
-    print('Wrote data to: {}'.format(_local_ingest_file))
-
+    try:
+        data.to_csv(_local_ingest_file,
+                    sep='|',
+                    na_rep='',
+                    index=False,
+                    encoding='utf-8')
+        print('Wrote data to: {}'.format(_local_ingest_file))
+    except:
+        print('Unable to write local ingest file')

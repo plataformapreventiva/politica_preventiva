@@ -1,64 +1,64 @@
 id|nombre|fuente|url|tipo|subtipo|periodo|actualizacion_sedesol|metadata|data_date
-cuaps_folio|Folio CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-csc_estatus_cuaps_fk|Estatus CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:'Exitoso', 2:'Captura Incompleta'}|na-fixed
-chr_nombre_programa_cuaps|Nombre del Programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-tiene_componentes|El programa cuenta con componentes|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 2:False}|na-fixed
-id_componente|Identificador del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Id en función del orden de captura|na-fixed
-nombre_componente|Nombre del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-obj_compo|Objetivo específico del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-pob_compo|Población objetivo del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-ap_compo|Total de apoyos que forman parte de este componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Numérica|na-fixed
-id_apoyo|Identificador del apoyos|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Id en función del orden de captura|na-fixed
-nombre_apoyo|Nombre del apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-descr_apoyo|Descripción del apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-tipo_pob_apo_cod|Tipo de población a la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:'Persona', 2:'Hogar', 3:'Vivienda', 4:'Actor Social', 5:'Área de Atención Social', 6:'Otro'}|na-fixed
-tipo_pob_apo|Tipo de población a la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-tipo_pob_apo_otro|Otro tipo de población a la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-tipo_apoyo_mon|El tipo de apoyo es monetario|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-tipo_apoyo_sub|El tipo de apoyo es un subsidio |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-tipo_apoyo_esp|El tipo de apoyo es en especie |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-tipo_apoyo_obra|El tipo de apoyo es obra |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-tipo_apoyo_serv|El tipo de apoyo es un servicio |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-tipo_apoyo_cap|El tipo de apoyo es una capacitación |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-tipo_apoyo_otro|El tipo de apoyo es otro tipo de apoyo |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-otro_tipo_apoyo|Otro tipo de apoyo |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-period_apoyo_cod|Periodicidad con la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:'Diario', 2:'Semanal', 3:'Quincenal', 4:'Mensual', 5:'Bimestral', 6:'Trimestral', 7:'Cuatrimestral', 8:'Semestral', 9:'Annual', 10:'Una sola vez', 11:'Otro'}|na-fixed
-period_apoyo|Periodicidad con la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-otro_period_apoyo|Otra periodicidad con la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-monto_apoyo_otor|Mont al que equivale el apoyo que se otorga|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Int|na-fixed
-period_monto_cod|Periodicidad de entrega del monto - categórica|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:'Diario', 2:'Semanal', 3:'Quincenal', 4:'Mensual', 5:'Bimestral', 6:'Trimestral', 7:'Cuatrimestral', 8:'Semestral', 9:'Annual', 10:'Una sola vez', 11:'Otro'}|na-fixed
-period_monto|Periodicidad de entrega del monto|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-indic_a|El apoyo reduce la inseguridad alimentaria severa |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_b|El apoyo reduce la inseguridad alimentaria moderada |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_c|El apoyo incrementa el número de viviendas con piso firme de cemento o recubrimiento (laminado, mosaico, madera)|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_d|El apoyo incrementa el número de viviendas con techo de losa de concreto o viguetas con bovedilla, terrado con viguería, lámina metálica, asbesto, palma, teja o de calidad superior|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_e|El apoyo reduce el número de viviendas con muros de embarro, bajareque, carrizo, bambú, palma, lámina de cartón, metálica, asbesto o material de desecho|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_f|El apoyo reduce el hacinamiendo en la vivienda|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_g|El apoyo incrementa el número de viviendas que obtienen agua dentro de sus muros o su terreno|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_h|El apoyo incrementa el número de viviendas con drenaje conectado a la red pública o a una fosa séptica|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_i|El apoyo incrementa el número de viviendas con energía eléctrica obtenida del servicio público, de panel solar o de otra fuente o planta particular|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_j|El apoyo reduce el número de viviendas que usan leña o carbón para cocinar o calentar los alimentos y no cuentan con chimenea|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_k|El apoyo incrementa el número de personas con acceso a los servicios de salud a través del Seguro Popular, instituciones públicas de seguridad social o servicios médicos privados|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-indic_l|El apoyo reduce el número de personas de 3 a 15 años que no cuentan con la educación básica obligatoria y no asisten a un centro de educación formal|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_m|El apoyo incrementa el número de personas con primaria completa (nacidas antes de 1982)|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_n|El apoyo incrementa el número de personas con secundaria completa (nacidas a partir de 1982 y mayores de 15 años)|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_o|El apoyo incrementa el número de personas asalariadas con servicio médico, incapacidad y AFORE|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_p|El apoyo incrementa el número de personas trabajadoras no asalariadas o independientes con acceso a servicio médico, como prestación laboral o por contratación voluntaria, y que cuenta con SAR o AFORE|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_q|El apoyo incrementa el número de personas en edad de jubilación (65 años o más) que tiene acceso a la seguridad social a través de algún programa social de pensiones para adultos mayores|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_r|El apoyo incrementa el número de hogares con ingreso corriente total per cápita mayor al costo de la canasta básica completa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_s|El apoyo incrementa el número de hogares cuyo ingreso corriente total per cápita es mayor que el costo de la canasta básica alimentaria|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|na-fixed|na-fixed
-indic_t|Ninguno de los indicadores anteriores|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-tem_apoyo|Ninguno de los anteriores: temática que atiende el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1-19}|na-fixed
-tem_apoyo_otra_esp|Especificar temática|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-apoyo_gen_padron|El apoyo genera un listado o padrón de beneficiarios|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-tipo_padron|Tipo de padrón que genera el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{}|na-fixed
-otro_tipo_padron|Especificar otro tipo de padrón|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-periodicidad_padron|Periodicidad con la que se actualiza el listado o padrón de beneficiarios|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{}|na-fixed
-actualiza_padron|Periodicidad con la que se actualiza el listado o padrón de beneficiarios|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-otro_actualiza_padron|Otra periodicidad con la que se actualiza el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-cuenta_info_geo|El apoyo cuenta con información georreferenciada|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-instru_socioe|El apoyo utiliza algún instrumento de recolección socioeconómica|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|{1:True, 0:False}|na-fixed
-instru_socioe_cual|Especificación del instrumento de recolección socioeconómica|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-observaciones|Observaciones|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Text|na-fixed
-actualizacion_sedesol|Actualización SEDESOL|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Timestamp|na-fixed
-data_date|Data date|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-07-31 18:34:50.955489|Data date|na-fixed
+cuaps_folio|Folio CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+csc_estatus_cuaps_fk|Estatus CUAPS|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:'Exitoso', 2:'Captura Incompleta'}|na-fixed
+chr_nombre_programa_cuaps|Nombre del Programa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+tiene_componentes|El programa cuenta con componentes|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 2:False}|na-fixed
+id_componente|Identificador del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Id en función del orden de captura|na-fixed
+nombre_componente|Nombre del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+obj_compo|Objetivo específico del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+pob_compo|Población objetivo del componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+ap_compo|Total de apoyos que forman parte de este componente|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Numérica|na-fixed
+id_apoyo|Identificador del apoyos|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Id en función del orden de captura|na-fixed
+nombre_apoyo|Nombre del apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+descr_apoyo|Descripción del apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+tipo_pob_apo_cod|Tipo de población a la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:'Persona', 2:'Hogar', 3:'Vivienda', 4:'Actor Social', 5:'Área de Atención Social', 6:'Otro'}|na-fixed
+tipo_pob_apo|Tipo de población a la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+tipo_pob_apo_otro|Otro tipo de población a la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+tipo_apoyo_mon|El tipo de apoyo es monetario|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+tipo_apoyo_sub|El tipo de apoyo es un subsidio |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+tipo_apoyo_esp|El tipo de apoyo es en especie |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+tipo_apoyo_obra|El tipo de apoyo es obra |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+tipo_apoyo_serv|El tipo de apoyo es un servicio |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+tipo_apoyo_cap|El tipo de apoyo es una capacitación |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+tipo_apoyo_otro|El tipo de apoyo es otro tipo de apoyo |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+otro_tipo_apoyo|Otro tipo de apoyo |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+period_apoyo_cod|Periodicidad con la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:'Diario', 2:'Semanal', 3:'Quincenal', 4:'Mensual', 5:'Bimestral', 6:'Trimestral', 7:'Cuatrimestral', 8:'Semestral', 9:'Annual', 10:'Una sola vez', 11:'Otro'}|na-fixed
+period_apoyo|Periodicidad con la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+otro_period_apoyo|Otra periodicidad con la que se entrega el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+monto_apoyo_otor|Mont al que equivale el apoyo que se otorga|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Int|na-fixed
+period_monto_cod|Periodicidad de entrega del monto - categórica|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:'Diario', 2:'Semanal', 3:'Quincenal', 4:'Mensual', 5:'Bimestral', 6:'Trimestral', 7:'Cuatrimestral', 8:'Semestral', 9:'Annual', 10:'Una sola vez', 11:'Otro'}|na-fixed
+period_monto|Periodicidad de entrega del monto|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+indic_a|El apoyo reduce la inseguridad alimentaria severa |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_b|El apoyo reduce la inseguridad alimentaria moderada |CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_c|El apoyo incrementa el número de viviendas con piso firme de cemento o recubrimiento (laminado, mosaico, madera)|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_d|El apoyo incrementa el número de viviendas con techo de losa de concreto o viguetas con bovedilla, terrado con viguería, lámina metálica, asbesto, palma, teja o de calidad superior|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_e|El apoyo reduce el número de viviendas con muros de embarro, bajareque, carrizo, bambú, palma, lámina de cartón, metálica, asbesto o material de desecho|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_f|El apoyo reduce el hacinamiendo en la vivienda|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_g|El apoyo incrementa el número de viviendas que obtienen agua dentro de sus muros o su terreno|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_h|El apoyo incrementa el número de viviendas con drenaje conectado a la red pública o a una fosa séptica|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_i|El apoyo incrementa el número de viviendas con energía eléctrica obtenida del servicio público, de panel solar o de otra fuente o planta particular|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_j|El apoyo reduce el número de viviendas que usan leña o carbón para cocinar o calentar los alimentos y no cuentan con chimenea|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_k|El apoyo incrementa el número de personas con acceso a los servicios de salud a través del Seguro Popular, instituciones públicas de seguridad social o servicios médicos privados|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+indic_l|El apoyo reduce el número de personas de 3 a 15 años que no cuentan con la educación básica obligatoria y no asisten a un centro de educación formal|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_m|El apoyo incrementa el número de personas con primaria completa (nacidas antes de 1982)|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_n|El apoyo incrementa el número de personas con secundaria completa (nacidas a partir de 1982 y mayores de 15 años)|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_o|El apoyo incrementa el número de personas asalariadas con servicio médico, incapacidad y AFORE|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_p|El apoyo incrementa el número de personas trabajadoras no asalariadas o independientes con acceso a servicio médico, como prestación laboral o por contratación voluntaria, y que cuenta con SAR o AFORE|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_q|El apoyo incrementa el número de personas en edad de jubilación (65 años o más) que tiene acceso a la seguridad social a través de algún programa social de pensiones para adultos mayores|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_r|El apoyo incrementa el número de hogares con ingreso corriente total per cápita mayor al costo de la canasta básica completa|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_s|El apoyo incrementa el número de hogares cuyo ingreso corriente total per cápita es mayor que el costo de la canasta básica alimentaria|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|na-fixed|na-fixed
+indic_t|Ninguno de los indicadores anteriores|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+tem_apoyo|Ninguno de los anteriores: temática que atiende el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1-19}|na-fixed
+tem_apoyo_otra_esp|Especificar temática|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+apoyo_gen_padron|El apoyo genera un listado o padrón de beneficiarios|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+tipo_padron|Tipo de padrón que genera el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{}|na-fixed
+otro_tipo_padron|Especificar otro tipo de padrón|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+periodicidad_padron|Periodicidad con la que se actualiza el listado o padrón de beneficiarios|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{}|na-fixed
+actualiza_padron|Periodicidad con la que se actualiza el listado o padrón de beneficiarios|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+otro_actualiza_padron|Otra periodicidad con la que se actualiza el apoyo|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+cuenta_info_geo|El apoyo cuenta con información georreferenciada|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+instru_socioe|El apoyo utiliza algún instrumento de recolección socioeconómica|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|{1:True, 0:False}|na-fixed
+instru_socioe_cual|Especificación del instrumento de recolección socioeconómica|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+observaciones|Observaciones|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Text|na-fixed
+actualizacion_sedesol|Actualización SEDESOL|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Timestamp|na-fixed
+data_date|Data date|CUAPS|www.gob.mx/sedesol|Programas|Cuestionario|Anual|2018-11-14 17:16:44.805377|Data date|na-fixed
