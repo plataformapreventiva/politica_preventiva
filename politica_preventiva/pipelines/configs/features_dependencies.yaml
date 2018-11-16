@@ -68,6 +68,11 @@ inegi_agentes_fiscales:
     raw_dependencies:
         - geom_estados
 inform_mun:
+    raw_dependencies:
+        - internet_municipios
+        - complejidad_municipios
+        - indice_reglamentacion_municipios
+        - indicadores_financieros_municipios
     clean_dependencies:
         - cenapred_app_municipios
         - cngmd_proteccion_civil
@@ -80,7 +85,7 @@ inform_mun:
         - crimenes_tasas
         - intercensal_personas_2015
         - intercensal_viviendas_2015
-sistema_alertas:
+sistemas_alertas:
     raw_dependencies:
         - geom_estados
     clean_dependencies:
