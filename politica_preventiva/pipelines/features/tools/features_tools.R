@@ -170,35 +170,3 @@ spread_db <- function(df, key, value) {
   Reduce(full_join_alt, df_new)
 }
 
-
-  get_distance <- function(municipio, ciudad){
-
-      response <- mapsapi::mp_directions(origin = municipio,
-                                         destination = ciudad,
-                                         key = Sys.getenv('key'),
-                                         alternatives = TRUE)
-      status <- response %>%
-                  xml2::as_list(.) %$%
-                  DirectionsResponse %$%
-                  status[[1]]
-
-      if(status == 'NOT_FOUND') return(NA)
-
-      response %>%
-        mapsapi::mp_get_routes() %$%
-        duration_s[1]
-
-  }
-
-  get_closest_n <- function(municipio, lista_ciudades = ciudades, n = 5){
-
-      tibble::tibble(municipio = municipio,
-                     ciudad = lista_ciudades,
-                     distancia = map_dbl(lista_ciudades,
-                                         function(ciudad) get_distance(municipio,
-                                                                       ciudad))) %>%
-      dplyr::arrange(distancia) %>%
-      head(n)
-
-  }
-
