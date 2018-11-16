@@ -58,6 +58,14 @@ class FeaturesPipeline(luigi.WrapperTask):
     ptask = luigi.Parameter()
 
     def requires(self):
+        if self.ptask!='auto':
+            self.pipelines = [self.ptask]
+
+        logger.info('Luigi is running the Features Pipeline on the date: {0}'.format(
+                    self.current_date))
+        logger.info('Running the following pipelines: {0}'.\
+                    format(self.pipelines))
+
         set_pipelines = [(pipeline_task, final_dates(pipeline_task,
                                                      self.current_date)) for
                          pipeline_task in self.pipelines]
