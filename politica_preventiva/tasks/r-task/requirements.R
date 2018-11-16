@@ -28,7 +28,8 @@ ipak <- function(pkg){
 
 
 packages <- c('optparse','tidyverse', 'dbplyr', 'stringr', 'data.table',
-              'lubridate', 'readxl', 'aws.s3', 'gsubfn')
+              'lubridate', 'readxl', 'aws.s3', 'gsubfn', 'geosphere',
+              'lwgeom', 'mapsapi', 'sf', 'sp')
 
 ipak(packages)
 
