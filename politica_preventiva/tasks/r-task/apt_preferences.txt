@@ -1,0 +1,17 @@
+Package: *
+Pin: release n=stretch
+Pin-Priority: -10
+
+Package: default-libmysqlclient-dev
+Pin: release n=stretch
+Pin-Priority: 500
+
+Package: libgdal-dev
+Pin: release n=stretch
+Pin-Priority: 500
+
+Package: libgdal20
+Pin: release n=stretch
+Pin-Priority: 500
+
+
