@@ -91,9 +91,6 @@ if(length(opt) > 1){
     query <- sql_queries[i]
     data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
 
-    key_var_name <- rlang::sym(key_var)
-    key_var_quo <- rlang::quo(!! key_var_name)
-
     if(level == 'e'){
       key_var <- 'cve_ent'
     } else if(level == 'm') {
@@ -106,6 +103,9 @@ if(length(opt) > 1){
       key_var <- NULL
     }
 
+    key_var_name <- rlang::sym(key_var)
+    key_var_quo <- rlang::quo(!! key_var_name)
+
   not_gathered <- c(key_var, "data_date", "actualizacion_sedesol")
     if(plots_metadata$plot[i] == 'piramide_poblacional'){
       data_largo <- data %>%
@@ -113,7 +113,7 @@ if(length(opt) > 1){
                                   sexo = recode(sexo, `1` = 'h', `3` = 'm'),
                                   grupo_pob = paste0(sexo, grupo_edad)) %>%
                     dplyr::group_by(!! key_var_quo, grupo_pob) %>%
-                    dplyr::summarise(total_personas = sum(factor)) %>%
+                    dplyr::summarise(total_personas = sum(poblacion_mun)) %>%
                     dplyr::select(!! key_var_quo,
                                   variable = grupo_pob,
                                   valor = total_personas) %>%
