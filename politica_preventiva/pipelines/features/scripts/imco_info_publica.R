@@ -41,7 +41,7 @@ opt <- tryCatch(
 )
 
 if(length(opt) > 1){
-  
+
   if (opt$database=="" | opt$user=="" |
       opt$password=="" | opt$host=="" ){
     print_help(opt_parser)
@@ -53,13 +53,13 @@ if(length(opt) > 1){
     PGHOST <- opt$host
     PGPORT <- "5432"
   }
-  
+
   if(opt$data_date == ""){
     stop("Did not receive a valid data date, stopping", call.=FALSE)
   }else{
     data_date <- opt$data_date
   }
-  
+
   con <- DBI::dbConnect(RPostgres::Postgres(),
                         host = PGHOST,
                         port = PGPORT,
@@ -67,23 +67,23 @@ if(length(opt) > 1){
                         user = POSTGRES_USER,
                         password = POSTGRES_PASSWORD
   )
-  
+
   source("pipelines/features/tools/features_tools.R")
-  
+
   print('Pulling datasets')
-  
-  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>% 
+
+  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>%
     select(cve_ent,nom_ent)
-  
+
   info <- tbl(con, dbplyr::in_schema('clean', 'imco_info_publica'))
-  
+
   info_publica <- left_join(cves,info,by='cve_ent') %>%
     dplyr::mutate(actualizacion_sedesol = lubridate::today())
-  
+
   copy_to(con, info_publica,
           dbplyr::in_schema("features",'imco_info_publica'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
-  
+
   print('Features written to: features.crimenes_tasas')
 }
