@@ -76,7 +76,7 @@ if(length(opt) > 1){
   print('Pulling datasets')
   
   # AMENZAZAS
-  cenapred <- large_table(con,clean,cenapred_app_municipios) %>%
+  cenapred <- tbl(con, dbplyr::in_schema('clean','cenapred_app_municipios'))%>%
     select(cve_muni,gp_inundac,gp_sequia2,gp_bajaste,gp_ciclnes,g_suscelad,gp_sismico,gp_tsunami)
   crimenes_tasas <- tbl(con, dbplyr::in_schema('features','crimenes_tasas')) %>%
     select(cve_muni,homicidio_culposo_tasa,homicidio_doloso_tasa,feminicidio_tasa,
@@ -88,8 +88,8 @@ if(length(opt) > 1){
               secuestro_tasa=avg(secuestro_tasa),
               robo_vehiculos_tasa=avg(robo_vehiculos_tasa),
               violencia_familiar_tasa=avg(violencia_familiar_tasa))
-  #intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
-  intercensal_amenazas <- intercensal_personas_2015 %>% select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
+  intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
+    select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
   
   amenazas <- left_join(cenapred,crimenes_tasas, by='cve_muni') %>%
     left_join(intercensal_amenazas, by='cve_muni')
@@ -135,17 +135,17 @@ if(length(opt) > 1){
   mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas'))
   
   capacidades <- left_join(riesgo,indice_reglamentacion, by='cve_muni') %>%
-    left_join(transparencia, by='cve_muni') %>%
-    #left_join(participacion_ciudadana, by='cve_muni') %>% 
+    # left_join(transparencia, by='cve_muni') %>%  #corregir
+    # left_join(participacion_ciudadana, by='cve_muni') %>% #corregir
     left_join(indicadores_finanzas, by='cve_muni') %>% 
-    #left_join(predial, by='cve_muni') %>% 
+    left_join(predial, by='cve_muni') %>% 
     left_join(complejidad, by='cve_muni') %>%
     left_join(cfe, by='cve_muni') %>% 
     left_join(internet, by='cve_muni') %>% 
     left_join(drenaje,by='cve_muni') %>% 
     left_join(recoleccion_basura,by='cve_muni') %>% 
     left_join(hospitales,by='cve_muni') %>% 
-    left_join(mortalidad,by='cve_muni') 
+    left_join(mortalidad,by='cve_muni')
   
   #----------------------------------------------------------------------------------------
   
@@ -154,8 +154,7 @@ if(length(opt) > 1){
     filter(data_date == "2015-a") %>% 
     select(cve_muni, ic_rezedu_porcentaje, ic_asalud_porcentaje, ic_segsoc_porcentaje, ic_cv_porcentaje,
            vul_ing_porcentaje, ic_sbv_porcentaje, pobreza_porcentaje)
-  #intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
-  intercensal_vulnerabilidades <- intercensal_personas_2015 %>% 
+  intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
     select(cve_muni,brecha_tasa_ocupados,brecha_horas_cuidados,
            prop_mayores65,prop_menores5, prop_adultos, prop_menores, 
            prop_indigenas,prop_lengua_indigena,prop_afrodescendientes,
@@ -173,14 +172,14 @@ if(length(opt) > 1){
   #----------------------------------------------------------------------------------------
   
   inform_mun <- left_join(amenazas,vulnerabilidades, by= 'cve_muni') %>%
-    left_join(capacidades, by='cve_muni') %>%
+    left_join(capacidades, by='cve_muni') %>% 
     dplyr::mutate(data_date=data_date,
                   actualizacion_sedesol = lubridate::today())
   
   copy_to(con, inform_mun,
-          dbplyr::in_schema("features",'inform_mun'),
+          dbplyr::in_schema("features",'inform_variables_municipios'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
   
-  print('Features written to: features.inform_mun')
+  print('Features written to: features.inform_variables_municipios')
 }

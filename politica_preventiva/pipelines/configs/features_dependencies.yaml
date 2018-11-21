@@ -49,11 +49,11 @@ enigh_vulnerabilidades:
         - enigh_poblacion
         - enigh_concentrados
 imco_info_publica:
-    clean_dependencies:
-        - imco_info_publica
     raw_dependencies:
         - geom_estados
-mortalidad_tasas:
+    clean_dependencies:
+        - imco_info_publica
+mortalidad tasas:
     clean_dependencies:
         - defunciones_generales
         - intercensal_personas_2015
@@ -67,20 +67,12 @@ inegi_agentes_fiscales:
         - inegi_agentes_fiscales
     raw_dependencies:
         - geom_estados
-inform_mun:
-    raw_dependencies:
-        - internet_municipios
-        - complejidad_municipios
-        - indice_reglamentacion_municipios
-        - indicadores_financieros_municipios
+inform_variables_municipios:
     clean_dependencies:
-        - cenapred_app_municipios
         - cngmd_proteccion_civil
         - cngmd_predial
         - cngmd_drenaje
         - cngmd_recoleccion_basura
-        - cfe
-        - coneval_municipios
     features_dependencies:
         - crimenes_tasas
         - intercensal_personas_2015
