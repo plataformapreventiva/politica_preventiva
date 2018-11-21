@@ -1,6 +1,20 @@
 #!/usr/bin/env Rscript
 
-####### Dependency hotfix
+# Install regular CRAN packages
+install_stable <- function(package_list){
+  to_install <- package_list[!(package_list %in% installed.packages()[, 'Package'])]
+  if (length(to_install))
+    install.packages(to_install, dependencies=TRUE,
+                     repos='http://cran.us.r-project.org')
+  sapply(package_list, require, character.only=TRUE)
+}
+
+packages <- c('Rcpp', 'optparse','tidyverse', 'dbplyr',
+              'stringr', 'data.table', 'lubridate',
+              'readxl', 'aws.s3', 'gsubfn', 'geosphere', 'sp')
+install_stable(packages)
+
+# Dependency hotfix
 install_version <- function(package_name, older_version){
 
     package_info <- as.data.frame(installed.packages()[, c('Package',
@@ -23,19 +37,6 @@ sapply(1:length(older_packages),
        function(x) install_version(package_name=names(older_packages)[x],
                                    older_version=unname(older_packages[[x]])))
 
-# Install regular CRAN packages
-install_stable <- function(package_list){
-  to_install <- package_list[!(package_list %in% installed.packages()[, 'Package'])]
-  if (length(to_install))
-    install.packages(to_install, dependencies=TRUE,
-                     repos='http://cran.us.r-project.org')
-  sapply(package_list, require, character.only=TRUE)
-}
-
-packages <- c('Rcpp', 'optparse','tidyverse', 'dbplyr',
-              'stringr', 'data.table', 'lubridate',
-              'readxl', 'aws.s3', 'gsubfn', 'geosphere', 'sp')
-install_stable(packages)
 
 # Install Github packages
 install_develop <- function(github_path){
