@@ -92,7 +92,7 @@ if(length(opt) > 1){
     select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
   
   amenazas <- left_join(cenapred,crimenes_tasas, by='cve_muni') %>%
-    left_join(intercensal_amenazas, by='cve_muni')
+    left_join(intercensal_amenazas, by='cve_muni') %>% retrieve_result()
   
   #----------------------------------------------------------------------------------------
   
@@ -145,7 +145,7 @@ if(length(opt) > 1){
     left_join(drenaje,by='cve_muni') %>% 
     left_join(recoleccion_basura,by='cve_muni') %>% 
     left_join(hospitales,by='cve_muni') %>% 
-    left_join(mortalidad,by='cve_muni') 
+    left_join(mortalidad,by='cve_muni') %>% retrieve_result()
   
   #----------------------------------------------------------------------------------------
   
@@ -166,13 +166,13 @@ if(length(opt) > 1){
   
   vulnerabilidades <- left_join(coneval, intercensal_vulnerabilidades, by='cve_muni') %>%
     left_join(intercensal_viviendas, by='cve_muni') %>% 
-    select(-c(actualizacion_sedesol,data_date))
+    select(-c(actualizacion_sedesol,data_date)) %>% retrieve_result()
   
   
   #----------------------------------------------------------------------------------------
   
   inform_mun <- left_join(amenazas,vulnerabilidades, by= 'cve_muni') %>%
-    left_join(capacidades, by='cve_muni') %>%
+    left_join(capacidades, by='cve_muni') %>% 
     dplyr::mutate(data_date=data_date,
                   actualizacion_sedesol = lubridate::today())
   
