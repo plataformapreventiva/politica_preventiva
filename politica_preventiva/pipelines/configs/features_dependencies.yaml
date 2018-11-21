@@ -49,8 +49,22 @@ enigh_vulnerabilidades:
         - enigh_poblacion
         - enigh_concentrados
 imco_info_publica:
+    raw_dependencies:
+        - geom_estados
     clean_dependencies:
         - imco_info_publica
+mortalidad tasas:
+    clean_dependencies:
+        - defunciones_generales
+        - intercensal_personas_2015
+inegi_jueces:
+    clean_dependencies:
+        - inegi_jueces
+    raw_dependencies:
+        - geom_estados
+inegi_agentes_fiscales:
+    clean_dependencies:
+        - inegi_agentes_fiscales
     raw_dependencies:
         - geom_estados
 inform_variables_municipios:
