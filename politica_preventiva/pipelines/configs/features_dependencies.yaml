@@ -53,34 +53,12 @@ imco_info_publica:
         - imco_info_publica
     raw_dependencies:
         - geom_estados
-mortalidad_tasas:
+inform_variables_municipios:
     clean_dependencies:
-        - defunciones_generales
-        - intercensal_personas_2015
-inegi_jueces:
-    clean_dependencies:
-        - inegi_jueces
-    raw_dependencies:
-        - geom_estados
-inegi_agentes_fiscales:
-    clean_dependencies:
-        - inegi_agentes_fiscales
-    raw_dependencies:
-        - geom_estados
-inform_mun:
-    raw_dependencies:
-        - internet_municipios
-        - complejidad_municipios
-        - indice_reglamentacion_municipios
-        - indicadores_financieros_municipios
-    clean_dependencies:
-        - cenapred_app_municipios
         - cngmd_proteccion_civil
         - cngmd_predial
         - cngmd_drenaje
         - cngmd_recoleccion_basura
-        - cfe
-        - coneval_municipios
     features_dependencies:
         - crimenes_tasas
         - intercensal_personas_2015
