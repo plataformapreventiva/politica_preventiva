@@ -92,7 +92,6 @@ class ModelTask(luigi.Task):
 
     """
     Task Abstraction to Dockerize models
-
     Note:
 
     Use:
@@ -100,21 +99,30 @@ class ModelTask(luigi.Task):
         R **/**.py
 
     """
+    @property
+    def autocommit(self):
+        return False
+
 
     def run(self):
 
         logger.info('Luigi is using the dockerized version of the model task' +
-                    ' {0}'.format(self.pipeline_task))
+                    ' {0}'.format(self.model_task))
 
         cmd_docker = '''
-         docker run -it --rm  -v $PWD:/politica_preventiva\
-                -v politica_preventiva_store:/data\
-           politica_preventiva/task/models-task {0} > /dev/null
+         docker run -it --rm  -v politica_preventiva_store:/data\
+            {0} politica_preventiva/task/model-task > /dev/null
          '''.format(self.cmd)
-        pdb.set_trace()
-        out = subprocess.call(cmd_docker, shell=True)
+        out = subprocess.call(cmd_docker.strip(), shell=True)
         logger.info(out)
 
+        connection = self.output().connect()
+        # mark as complete in same transaction
+        self.output().touch(connection)
+
+        # commit and clean up
+        connection.commit()
+        connection.close()
 
 class DockerTask(luigi.Task):
 

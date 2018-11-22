@@ -55,7 +55,7 @@ query <- 'SELECT LPAD(ent::text, 2, \'0\') || LPAD(mun::text, 3, \'0\') as cve_m
                             ELSE 0 
                         END) as adultos,
                     sum(CASE 
-                        WHEN CAST(edad as integer) < 15
+                        WHEN CAST(edad as integer) < 18
                             THEN factor 
                             ELSE 0 
                         END) as menores,

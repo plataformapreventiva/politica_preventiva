@@ -58,6 +58,14 @@ class FeaturesPipeline(luigi.WrapperTask):
     ptask = luigi.Parameter()
 
     def requires(self):
+        if self.ptask!='auto':
+            self.pipelines = [self.ptask]
+
+        logger.info('Luigi is running the Features Pipeline on the date: {0}'.format(
+                    self.current_date))
+        logger.info('Running the following pipelines: {0}'.\
+                    format(self.pipelines))
+
         set_pipelines = [(pipeline_task, final_dates(pipeline_task,
                                                      self.current_date)) for
                          pipeline_task in self.pipelines]
@@ -121,8 +129,8 @@ class UpdateFeaturesDB(PgRTask):
         for dt in dep_types:
             if 'features_dependencies' in dep_types:
                 features_tables = composition[self.features_task]['features_dependencies']
-                yield [FeaturesPipeline(current_Date=self.current_date,
-                    feature_task=[feature_task]) for feature_task in features_tables]
+                yield [FeaturesPipeline(current_date=self.current_date,
+                    pipelines=[pipeline_task], ptask='auto') for pipeline_task in features_tables]
 
             if 'clean_dependencies' in dep_types:
                 clean_tables = composition[self.features_task]['clean_dependencies']

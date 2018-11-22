@@ -53,6 +53,19 @@ imco_info_publica:
         - imco_info_publica
     raw_dependencies:
         - geom_estados
+inform_mun:
+    clean_dependencies:
+        - cenapred_app_municipios
+        - cngmd_proteccion_civil
+        - cngmd_predial
+        - cngmd_drenaje
+        - cngmd_recoleccion_basura
+        - cfe
+        - coneval_municipios
+    features_dependencies:
+        - crimenes_tasas
+        - intercensal_personas_2015
+        - intercensal_viviendas_2015
 capacidad_infraestructura_mun:
     clean_dependencies:
         - cngmd_drenaje
@@ -63,3 +76,21 @@ capacidad_infraestructura_mun:
 capacidad_institucional_financiera_municipios:
     features_dependencies:
         - inform_variables_municipios
+inform_variables_municipios:
+    clean_dependencies:
+        - cngmd_proteccion_civil
+        - cngmd_predial
+        - cngmd_drenaje
+        - cngmd_recoleccion_basura
+    features_dependencies:
+        - crimenes_tasas
+        - intercensal_personas_2015
+        - intercensal_viviendas_2015
+sistemas_alertas:
+    raw_dependencies:
+        - geom_estados
+    clean_dependencies:
+        - sistemas_alertas
+ipc_municipios:
+    clean_dependencies:
+        - ipc_ciudades
