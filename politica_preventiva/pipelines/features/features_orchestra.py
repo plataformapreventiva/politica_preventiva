@@ -8,7 +8,11 @@ import random
 import subprocess
 import logging
 import pdb
+import psycopg2
 import yaml
+
+from boto3 import client, resource
+from sqlalchemy import create_engine
 
 from luigi import six
 from os.path import join, dirname
@@ -25,6 +29,7 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
+from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
 load_dotenv(find_dotenv())
@@ -66,14 +71,110 @@ class FeaturesPipeline(luigi.WrapperTask):
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
 
-        set_pipelines = [(pipeline_task, final_dates(pipeline_task,
+        set_pipelines = [(features_task, final_dates(features_task,
                                                      self.current_date)) for
-                         pipeline_task in self.pipelines]
-        return [UpdateFeaturesDB(features_task=pipeline[0],
+                         features_task in self.pipelines]
+        return [UpdateDictionary(features_task=pipeline[0],
                                  current_date=self.current_date,
                                  data_date = dates,
                                  suffix=pipeline[1][1])
                 for pipeline in set_pipelines for dates in pipeline[1][0]]
+
+class UpdateDictionary(postgres.CopyToTable):
+
+    """
+    Updates Postgres DataBase for Dictionary with new datadate ingested data.
+    Assumes that the ditcionary of the features_task is defined
+    """
+    current_date = luigi.DateParameter()
+    features_task = luigi.Parameter()
+    client = S3Client()
+    data_date = luigi.Parameter()
+    suffix = luigi.Parameter()
+
+    common_path = luigi.Parameter('DEFAULT')
+    common_bucket = luigi.Parameter('DEFAULT')
+
+    # AWS RDS
+    database = os.environ.get("PGDATABASE")
+    user = os.environ.get("POSTGRES_USER")
+    password = os.environ.get("POSTGRES_PASSWORD")
+    host = os.environ.get("PGHOST")
+
+    @property
+    def update_id(self):
+        return str(self.features_task) + str(self.data_date) +\
+                str(self.suffix) + 'dic'
+
+    @property
+    def table(self):
+        return "features." + self.features_task + "_dic"
+
+    @property
+    def dict_path(self):
+        return common_path + self.features_task + '_dic.csv'
+
+    @property
+    def columns(self):
+        engine = create_engine('postgresql://{0}:{1}@{2}:{3}/{4}'.\
+                                format(os.getenv('POSTGRES_USER'),
+                                       os.getenv('POSTGRES_PASSWORD'),
+                                       os.getenv('PGHOST'),
+                                       os.getenv('PGPORT'),
+                                       os.getenv('PGDATABASE')))
+        header_query = ("select column_name from information_schema.columns "
+                        "where table_schema = 'features' "
+                        "and table_name='{}'".format(features_task))
+        connection = engine.connect()
+        table_header = connection.execute(header_query)
+        columns = pd.DataFrame([x for x in table_header], columns=['id'])
+        connection_close()
+        return columns
+
+    def rows(self):
+        logging.info('Trying to update the dictionary for '+\
+                     'the features task {}'.format(self.features_task))
+        try:
+            local_dictionary = pd.read_csv(self.dict_path, sep='|')
+            dictionary = self.columns.join(local_dictionary,
+                                                on = 'id', type='left')
+            assert dictionary['nombre'].isnull().\
+                   value_counts().index[0]!=True, 'Your dictionary is not complete.'
+            dictionary['actualizacion_sedesol'] = current_date
+            dictionary['data_date'] = data_date + '-' + suffix
+            dictionary = dictionary.where((pd.notnull(dictionary)), None)
+            dictionary.to_csv(self.dict_path, index=False,
+                              sep='|', encoding='utf-8')
+            csv_buffer = StringIO()
+            dictionary.to_csv(csv_buffer,sep='|')
+            s3_resource = resource('s3')
+            s3_resource.Object('dpa-plataforma-preventiva',
+                         common_bucket + self.features_task + '_dic.csv').\
+                                 put(Body=csv_buffer.getvalue())
+        except:
+            dictionary = self.columns
+            dictionary[['nombre', 'tipo', 'fuente', 'metadata']] = \
+            pd.DataFrame([['', '', '', '{}']], index=dictionary.index)
+            dictionary['actualizacion_sedesol'] = current_date
+            dictionary['data_date'] = data_date + '-' + suffix
+            dictionary.to_csv(self.dict_path, index=False,
+                              sep='|', encoding = 'utf-8')
+            logger.critical('Dictionary of task {task} is not defined,\
+                    see {path}'.format(task=features_task, path=self.dict_path)
+            raise Exception('Dictionary of task {task} is not defined,\
+                    see {path}'.format(task=features_task, path=self.dict_path)
+        return [tuple(x) for x in dictionary.to_records(index=False)]
+
+
+
+    def requires (self):
+    def output(self):
+        return postgres.PostgresTarget(host=self.host,
+                                       database=self.database,
+                                       user=self.user,
+                                       password=self.password,
+                                       table=self.table,
+                                       update_id=self.update_id)
 
 class UpdateFeaturesDB(PgRTask):
 
@@ -130,7 +231,7 @@ class UpdateFeaturesDB(PgRTask):
             if 'features_dependencies' in dep_types:
                 features_tables = composition[self.features_task]['features_dependencies']
                 yield [FeaturesPipeline(current_date=self.current_date,
-                    pipelines=[pipeline_task], ptask='auto') for pipeline_task in features_tables]
+                    pipelines=[features_task], ptask='auto') for features_task in features_tables]
 
             if 'clean_dependencies' in dep_types:
                 clean_tables = composition[self.features_task]['clean_dependencies']
@@ -140,7 +241,7 @@ class UpdateFeaturesDB(PgRTask):
             if 'model_dependencies' in dep_types:
                 models_tables = composition[self.features_task]['models_dependencies']
                 yield [ModelsPipeline(current_date=self.current_date,
-                    models=[pipeline_task], ptask='auto') for pipeline_task in models_tables]
+                    models=[models_task], ptask='auto') for models_task in models_tables]
 
     def output(self):
         return PostgresTarget(host=self.host,
