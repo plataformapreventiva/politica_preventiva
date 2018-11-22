@@ -42,7 +42,12 @@ intercensal_viviendas_2015:
 intercensal_personas_2015:
     clean_dependencies:
         - intercensal_personas_2015
-enigh_vulnerabilidades:
+enigh_vulnerabilidades_municipios:
+    features_dependencies:
+        - enigh_vulnerabilidades_estados
+    clean_dependencies:
+        - geoms_municipios
+enigh_vulnerabilidades_estados:
     clean_dependencies:
         - enigh_trabajos
         - enigh_ingresos
