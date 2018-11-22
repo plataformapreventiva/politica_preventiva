@@ -59,7 +59,7 @@ class FeaturesPipeline(luigi.WrapperTask):
 
     def requires(self):
         if self.ptask!='auto':
-            self.pipelines = [self.ptask]
+            self.pipelines = (self.ptask,)
 
         logger.info('Luigi is running the Features Pipeline on the date: {0}'.format(
                     self.current_date))
