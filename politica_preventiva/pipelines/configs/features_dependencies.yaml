@@ -60,3 +60,6 @@ capacidad_infraestructura_mun:
         - cfe
     features_dependencies:
         - recursos_hospitales
+capacidad_institucional_financiera_municipios:
+    features_dependencies:
+        - inform_variables_municipios
