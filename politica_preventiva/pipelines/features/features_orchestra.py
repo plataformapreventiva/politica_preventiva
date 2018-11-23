@@ -139,7 +139,9 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
         pdb.set_trace()
         try:
             local_dictionary = pd.read_csv(self.dict_path, sep='|')
-            dictionary = pd.DataFrame(self.columns, columns=['id']).join(local_dictionary, rsuffix='_local', on='id', how='left')
+            dictionary = pd.DataFrame(self.columns, columns=['id']).\
+                         join(local_dictionary, rsuffix='_local',
+                                 on='id', how='left')
             assert dictionary['nombre'].isnull().\
                    value_counts().index[0]!=True, 'Your dictionary is not complete.'
             dictionary['actualizacion_sedesol'] = self.current_date
