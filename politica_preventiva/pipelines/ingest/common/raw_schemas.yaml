@@ -6603,6 +6603,41 @@ imco_equidad_congreso:
   - diputadas
   - porcen_diputados
   - porcen_diputadas
+imco_ice:
+  LUIGI:
+    INDEX: clavedeentidad
+    SCHEMA:
+    - clavedeentidad: Integer
+    - entidad: TEXT
+    - general: FLOAT
+    - derecho: FLOAT
+    - ambiente: FLOAT
+    - sociedad: FLOAT
+    - politico: FLOAT
+    - gobiernos: FLOAT
+    - factores: FLOAT
+    - economia: FLOAT
+    - precursores: FLOAT
+    - relaciones: FLOAT
+    - innovacion: FLOAT
+    - anio: Integer
+    - actualizacion_sedesol: TIMESTAMP
+    - data_date: TEXT
+  RAW:
+  - clavedeentidad
+  - entidad
+  - general
+  - derecho
+  - ambiente
+  - sociedad
+  - politico
+  - gobiernos
+  - factores
+  - economia
+  - precursores
+  - relaciones
+  - innovacion
+  - anio
 imco_info_publica:
   LUIGI:
     INDEX: entidad
