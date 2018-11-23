@@ -59,6 +59,16 @@ class SemanticPipeline(luigi.WrapperTask):
         return [UpdateSemanticDB(semantic_task, self.current_date)
                 for semantic_task in self.semantics]
 
+class UpdatePlotsDB(luigi.Task):
+    semantic_task = luigi.Parameter()
+    current_date = luigi.DateParameter()
+    historical = luigi.Parameter('DEFAULT')
+    plot_oriented = configuration.get_config().get(semantic_task,
+                                                  'plot_oriented')
+    def run:
+    def requires:
+    def output:
+
 class UpdateSemanticDB(postgres.PostgresQuery):
 
     semantic_task = luigi.Parameter()
