@@ -42,7 +42,7 @@ opt <- tryCatch(
 )
 
 if(length(opt) > 1){
-  
+
   if (opt$database=="" | opt$user=="" |
       opt$password=="" | opt$host=="" ){
     print_help(opt_parser)
@@ -54,13 +54,13 @@ if(length(opt) > 1){
     PGHOST <- opt$host
     PGPORT <- "5432"
   }
-  
+
   if(opt$data_date == ""){
     stop("Did not receive a valid data date, stopping", call.=FALSE)
   }else{
     data_date <- opt$data_date
   }
-  
+
   con <- DBI::dbConnect(RPostgres::Postgres(),
                         host = PGHOST,
                         port = PGPORT,
@@ -68,28 +68,31 @@ if(length(opt) > 1){
                         user = POSTGRES_USER,
                         password = POSTGRES_PASSWORD
   )
-  
+
   source("pipelines/features/tools/features_tools.R")
-  
+
   print('Pulling datasets')
-  
+
   cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>%
-    select(cve_ent,nom_ent) 
-  
-  agentes_fiscales <- tbl(con, dbplyr::in_schema('clean','inegi_agentes_fiscales')) %>%
-    filter(anio == 2016) %>% 
-    select(nom_ent,num_agentes_fiscales) 
-  
-  agentes_fiscales$nom_ent <- str_replace_all(agentes_fiscales$nom_ent, c("Ciudad de México" = "Distrito Federal"))
-  
-  inegi_agentes_fiscales <- left_join(cves, agentes_fiscales, by = "nom_ent") %>% select(-nom_ent) %>%
+    select(cve_ent,nom_ent)
+
+  agentes_fiscales <- tbl(con, dbplyr::in_schema('clean',
+                                                 'inegi_agentes_fiscales')) %>%
+    filter(anio == 2016) %>%
+    select(nom_ent,num_agentes_fiscales)
+
+  agentes_fiscales$nom_ent <- str_replace_all(agentes_fiscales$nom_ent,
+                                              c("Ciudad de México" = "Distrito Federal"))
+
+  inegi_agentes_fiscales <- left_join(cves, agentes_fiscales, by = "nom_ent") %>%
+      select(-nom_ent) %>%
     dplyr::mutate(data_date = data_date,
                   actualizacion_sedesol = lubridate::today())
-  
+
   copy_to(con, inegi_agentes_fiscales,
-          dbplyr::in_schema("features",'inegi_agentes_fiscales'),
+          dbplyr::in_schema("features",'inegi_agentes_fiscales_estados'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
-  
-  print('Features written to: features.inegi_agentes_fiscales')
+
+  print('Features written to: features.inegi_agentes_fiscales_estados')
 }
