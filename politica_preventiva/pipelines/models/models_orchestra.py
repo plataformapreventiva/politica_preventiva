@@ -5,6 +5,7 @@ import datetime
 import luigi
 import os
 import random
+import re
 import subprocess
 import logging
 import pdb
@@ -52,7 +53,10 @@ with open("pipelines/configs/model_dependencies.yaml", 'r') as file:
 
 
 class ModelsPipeline(luigi.WrapperTask):
+
     """
+    This task programs the model dependencies and defines the missing
+    data dates for the model.
     """
     current_date = luigi.DateParameter()
     models = parse_cfg_list(conf.get("ModelsPipeline", "pipelines"))
@@ -60,23 +64,32 @@ class ModelsPipeline(luigi.WrapperTask):
     ptask = luigi.Parameter()
 
     def requires(self):
-        set_pipelines = [(model_task, final_dates(False,
-                                                 model_task,
+        if self.ptask != "auto":
+            self.models = [self.ptask]
+
+        set_pipelines = [(model_task, final_dates(model_task,
                                                  self.current_date)) for
                         model_task in self.models]
-        return [RunModel(model_task, self.current_date)
-                for model_task in self.models]
+
+        return [RunModel(model_task=model_task[0],
+                         data_date=dates,
+                         current_date=self.current_date)
+                for model_task in set_pipelines
+                for dates in model_task[1][0]]
 
 
 class RunModel(ModelTask):
+
     """
-    This Task runs the tidy script in tidy folder for
-    the model_task, if it doesn't exists then it runs
-    the no_tidy.R script from the same folder.
+    This Task creates the bash command to run the model inside the
+    model-task docker image.   All the models task are currently
+    defined for R scripts, which receive DB connection settings and
+    a data_date as input parameters.
     """
 
     model_task = luigi.Parameter()
     current_date = luigi.DateParameter()
+    data_date = luigi.Parameter()
     client = S3Client()
 
     # RDS
@@ -88,40 +101,51 @@ class RunModel(ModelTask):
     @property
     def cmd(self):
         # path and key to clone model repository
-        env_variables = '-e token=' + os.environ.get("GIT_TOKEN") +\
-                        '-e path=' + self.model_task
-        # Path of the script
-        model_script = self.model_task + '/models/' +\
-            self.model_task + '.R'
+        env_variables = " -e token=" + os.environ.get("GIT_TOKEN") +\
+                        " -e path=" + composition[self.model_task]["repository"][0]
+
+        # Path of the script named by the model tasks
+        # you can have multiple models on the same repository
+        model_script = "models/" + self.model_task + "/handler.R"
+        password = self.password.replace('$','\$')
+
         # TODO() Add model language types
-        # Correr un modelo que puede ser R o python
-        # Por ahora que solo sea R
-
-        command_list = [env_variables,
-                        'Rscript', model_script,
-                        '--data_date', self.data_date,
-                        '--database', self.database,
-                        '--user', self.user,
-                        '--password', "'{}'".format(self.password),
-                        '--host', self.host,
-                        '--pipeline', self.model_task]
-
-        return " ".join(command_list)
+        command_list = [' -e cmd="Rscript', model_script,
+                        "--data_date", self.data_date,
+                        "--current_date", str(self.current_date),
+                        "--database", self.database,
+                        "--user", self.user,
+                        "--password '{0}'".format(password),
+                        "--host", self.host,
+                        "--pipeline", self.model_task, '"']
+        return env_variables + " ".join(command_list)
 
     @property
     def update_id(self):
-        return str(self.model_task) + '_' #+ str(self.data_date) +\
-               # str(self.suffix) + '_models'
+        return str(self.model_task) + '_' + str(self.data_date)
 
     @property
     def table(self):
         return "models." + self.model_task
 
     def requires(self):
-        return ModelDependencies(current_date=self.current_date,
-                                 model_task=self.model_task)#,
-                                 #data_date=self.data_date,
-                                 #suffix=self.suffix)
+        # Check table dependencies
+        dep_types = [*composition[self.model_task]]
+
+        if 'features_dependencies' in dep_types:
+            features_tables = composition[self.model_task]['features_dependencies']
+            yield [FeaturesPipeline(current_date=self.current_date,
+                pipelines=[pipeline_task]) for pipeline_task in features_tables]
+
+        if 'clean_dependencies' in dep_types:
+            clean_tables = composition[self.model_task]['clean_dependencies']
+            yield [ETLPipeline(current_date=self.current_date,
+                pipelines=[pipeline_task]) for pipeline_task in clean_tables]
+
+        if 'model_dependencies' in dep_types:
+            models_tables = composition[self.model_task]['models_dependencies']
+            yield [ModelsPipeline(current_date=self.current_date,
+                models=[pipeline_task]) for pipeline_task in models_tables]
 
     def output(self):
         return PostgresTarget(host=self.host,
@@ -130,35 +154,3 @@ class RunModel(ModelTask):
                               password=self.password,
                               table=self.table,
                               update_id=self.update_id)
-
-
-class ModelDependencies(luigi.Task):
-    """
-    """
-
-    model_task = luigi.Parameter()
-    current_date = luigi.DateParameter()
-    client = S3Client()
-
-    # RDS
-    database = os.environ.get("PGDATABASE")
-    user = os.environ.get("POSTGRES_USER")
-    password = os.environ.get("POSTGRES_PASSWORD")
-    host = os.environ.get("PGHOST")
-
-    def requires(self):
-
-        # Check table dependencies
-        model_tables = set([*composition]) & \
-                set(composition[self.model_task]['dependencies'])
-        dep_tables = set(composition[self.model_task]['dependencies']) - \
-                set([*composition])
-
-        yield [ETLPipeline(current_date=self.current_date,
-                             pipeline_task=pipeline_task)
-               for pipeline_task in dep_tables]
-
-        yield [RunModel(current_Date=self.current_date,
-                        model_task=model_task,
-                        data_date=self.data_date)
-               for model_task in model_tables]

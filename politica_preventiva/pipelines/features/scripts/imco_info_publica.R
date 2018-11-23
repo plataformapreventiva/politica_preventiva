@@ -41,7 +41,7 @@ opt <- tryCatch(
 )
 
 if(length(opt) > 1){
-  
+
   if (opt$database=="" | opt$user=="" |
       opt$password=="" | opt$host=="" ){
     print_help(opt_parser)
@@ -53,7 +53,7 @@ if(length(opt) > 1){
     PGHOST <- opt$host
     PGPORT <- "5432"
   }
-  
+
   if(opt$data_date == ""){
     stop("Did not receive a valid data date, stopping", call.=FALSE)
   }else{

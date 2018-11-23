@@ -1,14 +1,34 @@
+# YAML file indicating model task dependencies.
+# Dependencies are to be listed according to the schema
+# their PostgreSQL table is located in:
+# clean_dependencies: "clean"
+# features_dependencies: "features"
+# model_dependencies: "models"
+
+# The repository parameter should describe the path
+# of the external repository:
+# github.com/plataformapreventiva/*respository*
+
 maize-price-interpolation:
-   dependencies:
+    clean_dependencies:
         - maiz_precios
         - sagarpa_cierre_2003_2016
-   repository:
+    repository:
         - food-price-warning-indicator
+
 maize-price-warning-indicator:
-   dependencies:
+    clean_dependencies:
         - maize-price-interpolation
         - maiz_precios
-   repository:
+    repository:
         - food-price-warning-indicator
-   parameter:
-        - maize
+
+inform_index:
+    clean_dependencies:
+        - temp_1
+    features_dependencies:
+        - temp_2
+    model_dependencies:
+        - temp_3
+    repository:
+        - inform-mexico

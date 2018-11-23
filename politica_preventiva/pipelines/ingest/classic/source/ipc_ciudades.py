@@ -1,36 +1,36 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Utilidades Cenapred
+"""
+Ingesta de los datos del INPC
+Fuente: INEGI
 
-Funciones de Descarga y limpieza de Task Cenapred
+Este script ingesta de los datos de los índices que componen el INPC de INEGI,
+a nivel ciudad, para las 55 ciudades que componen el INPC.
+
+Se toman como argumentos de entrada, en ese orden: el data date, el directorio
+de ingesta local y el path completo del archivo de ingesta local, en formato
+csv, separado por pipes "|". La función está pensada para soportar ingestas
+históricas si se considera necesario.
 """
 
-import os
-import requests
+import argparse
+import datetime
+import logging
 import numpy as np
 import pandas as pd
-import json
-from requests.auth import HTTPDigestAuth
-import datetime
-from itertools import product
-from bs4 import BeautifulSoup
-from ftplib import FTP
-import requests
-import logging
+
 from os import path, makedirs
-import time
 
 
-def ingest_ipc_ciudad(year='2017', historic=False,
-                      output=None):
+def ingest_ipc_ciudad(data_date, historic=False, output=None):
     """
     Returns a Pandas with IPC information from INEGI services
 
     Args:
-        (single_year): Download info from a single year
-        (historic_until): IF True, download data from 1969 until year
-        (output): CSV where to write the results
+        (data_date): Period to download data from
+        (historic): IF True, download data from 1969 until year
+        (output): CSV where to write the results.
 
     Returns:
         Returns two objects
@@ -38,10 +38,9 @@ def ingest_ipc_ciudad(year='2017', historic=False,
         - metadata: .
 
     e.g.
-        - data, metadata = get_inpc_ciudad_data()
+        - data, metadata = get_ipc_ciudad()
 
     """
-    # time.sleep(1000)
     if not path.exists('logs'):
         makedirs('logs')
     logging.basicConfig(filename='logs/inpc.log', level=logging.DEBUG)
@@ -49,15 +48,35 @@ def ingest_ipc_ciudad(year='2017', historic=False,
     data = pd.DataFrame()
     metadata = {}
 
+    # Extract period in order to filter for month
+    year, month = data_date.split('-')
+    period = datetime.datetime(int(year), int(month), 1).\
+             strftime('%b %Y').\
+             title()
+
+    # Ugly hack because we don't have spanish locales in our docker image
+    dict_months = {
+        "Jan": "Ene",
+        "Apr": "Abr",
+        "Aug": "Ago",
+        "Dec": "Dic"
+    }
+
+    for em, sm in dict_months.items():
+        period = period.replace(em, sm)
+
     # dict of ciudades with state code
     dict_ciudades = {
         "7. Area Metropolitana de la Cd. de Mexico": "09",
         "Acapulco, Gro.": "12",
         "Aguascalientes, Ags.": "01",
+        "Atlacomulco, Mex.": "15",
         "Campeche, Camp.": "04",
+        "Cancun, Q.R.": "23",
         "Cd. Acuna, Coah.": "05",
         "Cd. Jimenez, Chih.": "08",
         "Cd. Juarez, Chih.": "08",
+        "Coatzacoalcos, Ver.": "30",
         "Colima, Col.": "06",
         "Cordoba, Ver.": "30",
         "Cortazar, Gto.": "11",
@@ -66,11 +85,13 @@ def ingest_ipc_ciudad(year='2017', historic=False,
         "Chetumal, Q.R.": "23",
         "Chihuahua, Chih.": "08",
         "Durango, Dgo.": "10",
+        "Esperanza, Son.": "26",
         "Fresnillo, Zac.": "32",
         "Guadalajara, Jal.": "14",
         "Hermosillo, Son.": "26",
         "Huatabampo, Son.": "26",
         "Iguala, Gro.": "12",
+        "Izucar de Matamoros, Pue.": "21",
         "Jacona, Mich.": "16",
         "La Paz, B.C.S.": "03",
         "Leon, Gto.": "11",
@@ -81,20 +102,23 @@ def ingest_ipc_ciudad(year='2017', historic=False,
         "Monterrey, N.L.": "19",
         "Morelia, Mich.": "16",
         "Oaxaca, Oax.": "20",
+        "Pachuca, Hgo.": "13",
         "Puebla, Pue.": "21",
         "Queretaro, Qro.": "22",
+        "Saltillo, Coah": "05",
         "San Andres Tuxtla, Ver.": "30",
-        "San Luis Potosí, S.L.P.": "24",
+        "San Luis Potosi, S.L.P.": "24",
         "Tampico, Tamps.": "28",
         "Tapachula, Chis.": "07",
         "Tehuantepec, Oax.": "20",
         "Tepatitlan, Jal.": "14",
-        "Tepic, Nay.": "18",  # error downloading data from tepic
+        "Tepic, Nay.": "18",
         "Tijuana, B.C.": "02",
         "Tlaxcala, Tlax.": "29",
-        "Toluca, Edo. de Méx.": "15",
+        "Toluca, Mex.": "15",
         "Torreon, Coah.": "05",
         "Tulancingo, Hgo.": "13",
+        "Tuxtla Gutierrez, Chis.": "07",
         "Veracruz, Ver.": "30",
         "Villahermosa, Tab.": "27"
     }
@@ -122,7 +146,7 @@ def ingest_ipc_ciudad(year='2017', historic=False,
         'otro',
         'cmae_1',
         'cmae_2',
-        'cmae_2',
+        'cmae_3',
         'scian_1',
         'scian_2',
         'scian_3'
@@ -135,7 +159,6 @@ def ingest_ipc_ciudad(year='2017', historic=False,
 
     for ciudad in dict_ciudades:
         ciudad_encoded = ciudad.replace(" ", "%20")
-        #.encode("utf-8")
         ciudad_id = dict_ciudades[ciudad]
         base = ("http://www.inegi.org.mx/sistemas/indiceprecios/Exportacion.aspx?INPtipoExporta=CSV"
                 "&_formato=CSV")
@@ -157,12 +180,14 @@ def ingest_ipc_ciudad(year='2017', historic=False,
             # download metadata
             metadata[ciudad] = pd.read_csv(url, error_bad_lines=False,
                                            nrows=5, usecols=[0],
-                                           header=None).values
+                                           header=None, encoding='latin-1').values
             # download new dataframe
             print('trying to download data from {}'.format(ciudad))
 
             temp = pd.read_csv(url, error_bad_lines=False,
-                               skiprows=14, header=None, names=cols)
+                               skiprows=14, header=None, names=cols,
+                               encoding='latin-1').\
+                   query('fecha == "{}"'.format(period))
             temp['ciudad'] = ciudad
 
             data = pd.concat([data, temp])
@@ -173,29 +198,43 @@ def ingest_ipc_ciudad(year='2017', historic=False,
             logging.info("Error downloading data for: year={}, historic={}, city={}".format(
                 year, historic, ciudad))
 
+    if data.empty:
+        return
+
     if output:
         data.to_csv(output, sep='|', index=False)
     else:
         return data, metadata
 
 if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser(description='Download IPC for cities')
+    parser = argparse.ArgumentParser(description='Download IPC data for cities')
 
-    parser.add_argument('--year', type=str, default='2017',
-                        help='Year to download, as string format yyyy')
+    parser.add_argument('--data_date', type=str,
+                        help='Data datefor this pipeline task')
+    parser.add_argument('--data_dir', type=str,
+                        help='Local directory to store raw data')
+    parser.add_argument('--local_ingest_file', type=str,
+                        help='Path to local ingest file')
     parser.add_argument('--historic', type=bool, default=False,
-                        help='If True, download all data until the specified year')
-    parser.add_argument('--output', type=str, default='ipc',
-                        help='Name of outputfile')
+                        help='If True, script will download data from first year available until the period specified by the data date parameter')
 
     args = parser.parse_args()
 
-    year = args.year
-    historic = args.historic
-    output = args.output
+    _data_date = args.data_date
+    _data_dir = args.data_dir
+    _local_ingest_file = args.local_ingest_file
+    _historic = args.historic
 
-    if historic:
-        ingest_inc_ciudad(year=year, historic_until=True, output=output)
+    if _historic:
+        data, metadata = ingest_ipc_ciudad(data_date=_data_date, historic=True)
     else:
-        ingest_inc_ciudad(year=year, output=output)
+        data, metadata = ingest_ipc_ciudad(data_date=_data_date)
+
+
+    print('Downloading data')
+
+    try:
+        data.to_csv(_local_ingest_file, sep='|', index=False)
+        print('Written to: {}'.format(_local_ingest_file))
+    except Exception as e:
+        print('Failed to write data to local ingest file')
