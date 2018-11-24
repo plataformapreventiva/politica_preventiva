@@ -110,3 +110,6 @@ sistemas_alertas_estados:
 ipc_municipios:
     clean_dependencies:
         - ipc_ciudades
+coneval_estados:
+    clean_dependencies:
+        - coneval_estados
