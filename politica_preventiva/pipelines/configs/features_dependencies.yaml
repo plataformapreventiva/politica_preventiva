@@ -77,6 +77,9 @@ inform_variables_municipios:
         - crimenes_tasas
         - intercensal_personas_2015
         - intercensal_viviendas_2015
+        - inegi_jueces_municipios
+        - inegi_agentes_fiscales_municipios
+        - sistemas_alertas_municipios
 sistemas_alertas:
     raw_dependencies:
         - geom_estados
