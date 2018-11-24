@@ -30,6 +30,8 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
+from politica_preventiva.pipelines.features.tools.pipeline_tools import \
+dictionary_test
 from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
@@ -118,6 +120,11 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
 
     @property
     def columns(self):
+        return ['id', 'nombre', 'tipo', 'fuente', 'metadata', \
+        'actualizacion_sedesol', 'data_date']
+
+    @property
+    def table_header(self):
         engine = create_engine('postgresql://{0}:{1}@{2}:{3}/{4}'.\
                                 format(os.getenv('POSTGRES_USER'),
                                        os.getenv('POSTGRES_PASSWORD'),
@@ -128,44 +135,22 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
                         "where table_schema = 'features' "
                         "and table_name='{}'".format(self.features_task))
         connection = engine.connect()
-        table_header = connection.execute(header_query)
-        columns = [x for x in table_header]
+        query_result = connection.execute(header_query)
+        table_columns = [x for x in query_result]
         connection.close()
-        return columns
+        return [x[0] for x in table_columns]
 
     def rows(self):
         logging.info('Trying to update the dictionary for '+\
                      'the features task {}'.format(self.features_task))
-        pdb.set_trace()
-        try:
-            local_dictionary = pd.read_csv(self.dict_path, sep='|')
-            dictionary = pd.DataFrame(self.columns, columns=['id']).\
-                         join(local_dictionary, rsuffix='_local',
-                                 on='id', how='left')
-            assert dictionary['nombre'].isnull().\
-                   value_counts().index[0]!=True, 'Your dictionary is not complete.'
-            dictionary['actualizacion_sedesol'] = self.current_date
-            dictionary['data_date'] = self.data_date + '-' + self.suffix
-            dictionary = dictionary.where((pd.notnull(dictionary)), None)
-            dictionary.to_csv(self.dict_path, index=False,
-                              sep='|', encoding='utf-8')
-            csv_buffer = StringIO()
-            dictionary.to_csv(csv_buffer,sep='|')
-            s3_resource = resource('s3')
-            s3_resource.Object(self.common_bucket,
-                         self.common_key + self.features_task + '_dic.csv').\
-                                 put(Body=csv_buffer.getvalue())
-        except:
-            dictionary = pd.DataFrame(self.columns, columns=['id'])
-            dictionary[['nombre', 'tipo', 'fuente', 'metadata']] = pd.DataFrame([['', '', '', '{}']], index=dictionary.index)
-            dictionary['actualizacion_sedesol'] = self.current_date
-            dictionary['data_date'] = self.data_date + '-' + self.suffix
-            dictionary.to_csv(self.dict_path, index=False,
-                              sep='|', encoding = 'utf-8')
-            logger.critical('Dictionary of task {task} is not defined,\
-                    see {path}'.format(task=self.features_task, path=self.dict_path))
-            raise AssertionError('Dictionary of task {0} is not defined,\
-                    see {1}'.format(self.features_task, self.dict_path))
+        dictionary=dictionary_test(features_task=self.features_task,
+                                     dict_path=self.dict_path,
+                                     table_header=self.table_header,
+                                     dict_header=self.columns,
+                                     current_date=self.current_date,
+                                     data_date=self.data_date,
+                                     suffix=self.suffix,
+                                     common_bucket=self.common_bucket)
         return [tuple(x) for x in dictionary.to_records(index=False)]
 
     def requires (self):
