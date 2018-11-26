@@ -90,9 +90,12 @@ if(length(opt) > 1){
               violencia_familiar_tasa=avg(violencia_familiar_tasa))
   intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
     select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
-  
+  ipc <- tbl(con, dbplyr::in_schema('features','inflacion_municipios')) %>% 
+    select(cve_muni,indice_dif)
+    
   amenazas <- left_join(cenapred,crimenes_tasas, by='cve_muni') %>%
-    left_join(intercensal_amenazas, by='cve_muni') 
+    left_join(intercensal_amenazas, by='cve_muni') %>%
+    left_join(ipc, by='cve_muni')
   
   #----------------------------------------------------------------------------------------
   
@@ -141,6 +144,10 @@ if(length(opt) > 1){
     select(-c(cve_ent,actualizacion_sedesol,data_date))
   s_alertas <- tbl(con, dbplyr::in_schema('features','sistemas_alertas_municipios')) %>% 
     select(-c(cve_ent,actualizacion_sedesol,data_date))
+  ici <- tbl(con, dbplyr::in_schema('features','shcp_ici_municipios')) %>% 
+    select(cve_muni,valor_ici)
+  ice <- tbl(con, dbplyr::in_schema('features','imco_ice_municipios')) %>% 
+    select(cve_muni,gobiernos,politico)
     
   # Falta ICI e ICE, hacer imputación en mun
   
@@ -156,10 +163,12 @@ if(length(opt) > 1){
     left_join(recoleccion_basura,by='cve_muni') %>% 
     left_join(hospitales,by='cve_muni') %>% 
     left_join(mortalidad,by='cve_muni') %>%
-    left_join(jueces,by='cve_muni')%>%
-    left_join(agentes,by='cve_muni')%>%
-    left_join(s_alertas,by='cve_muni') 
-  
+    left_join(jueces,by='cve_muni') %>%
+    left_join(agentes,by='cve_muni') %>%
+    left_join(s_alertas,by='cve_muni') %>%
+    left_join(ici, by='cve_muni') %>%
+    left_join(ice, by='cve_muni')
+    
   #----------------------------------------------------------------------------------------
   
   # VULNERABILIDADES
@@ -176,7 +185,9 @@ if(length(opt) > 1){
   # Número de personas en edades teóricamente inactivas (personas de 0 a 14 y de 65 años y más) 
   # por cada cien personas en edades teóricamente activas (personas de 15 a 64 años).
   intercensal_viviendas <- tbl(con, dbplyr::in_schema('features','intercensal_viviendas_2015'))
-  
+  enigh <- tbl(con, dbplyr::in_schema('features','enigh_vulnerabilidades_municipios')) %>% 
+    select(-c(cve_ent,actualizacion_sedesol,data_date)) 
+    
   vulnerabilidades <- left_join(coneval, intercensal_vulnerabilidades, by='cve_muni') %>%
     left_join(intercensal_viviendas, by='cve_muni') %>% 
     select(-c(actualizacion_sedesol,data_date))
@@ -185,7 +196,7 @@ if(length(opt) > 1){
   #----------------------------------------------------------------------------------------
   
   inform_mun <- left_join(amenazas,vulnerabilidades, by= 'cve_muni') %>%
-    left_join(capacidades, by='cve_muni') %>% retrieve_result()
+    left_join(capacidades, by='cve_muni') %>%
     dplyr::mutate(data_date=data_date,
                   actualizacion_sedesol = lubridate::today())
   
