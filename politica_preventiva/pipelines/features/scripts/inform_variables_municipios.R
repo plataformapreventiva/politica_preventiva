@@ -136,7 +136,7 @@ if(length(opt) > 1){
     select(cve_muni,flexibilidad_financiera,capacidad_inversion)
   mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas')) %>% select(-actualizacion_sedesol) 
   jueces <- tbl(con, dbplyr::in_schema('features','inegi_jueces_municipios'))%>% 
-    select(-c(cve_ent,actualizacion_sedesol,data_date))
+    select(-c(anio,cve_ent,actualizacion_sedesol,data_date))
   agentes <- tbl(con, dbplyr::in_schema('features','inegi_agentes_fiscales_municipios'))%>% 
     select(-c(cve_ent,actualizacion_sedesol,data_date))
   s_alertas <- tbl(con, dbplyr::in_schema('features','sistemas_alertas_municipios')) %>% 
@@ -185,7 +185,7 @@ if(length(opt) > 1){
   #----------------------------------------------------------------------------------------
   
   inform_mun <- left_join(amenazas,vulnerabilidades, by= 'cve_muni') %>%
-    left_join(capacidades, by='cve_muni') %>% 
+    left_join(capacidades, by='cve_muni') %>% retrieve_result()
     dplyr::mutate(data_date=data_date,
                   actualizacion_sedesol = lubridate::today())
   
