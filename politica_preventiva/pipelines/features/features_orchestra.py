@@ -111,7 +111,7 @@ class UpdateFeaturesDB(PgRTask):
                 self.features_task + '.R'
 
         if not os.path.isfile(features_script):
-            return
+            raise Exception("Feature script is not defined")
 
         command_list = ['Rscript', features_script,
                         '--data_date', self.data_date,
@@ -130,17 +130,17 @@ class UpdateFeaturesDB(PgRTask):
             if 'features_dependencies' in dep_types:
                 features_tables = composition[self.features_task]['features_dependencies']
                 yield [FeaturesPipeline(current_date=self.current_date,
-                    pipelines=[pipeline_task], ptask='auto') for pipeline_task in features_tables]
+                    ptask=pipeline_task) for pipeline_task in features_tables]
 
             if 'clean_dependencies' in dep_types:
                 clean_tables = composition[self.features_task]['clean_dependencies']
                 yield [ETLPipeline(current_date=self.current_date,
-                    pipelines=[pipeline_task], ptask='auto') for pipeline_task in clean_tables]
+                    ptask=pipeline_task) for pipeline_task in clean_tables]
 
             if 'model_dependencies' in dep_types:
                 models_tables = composition[self.features_task]['models_dependencies']
                 yield [ModelsPipeline(current_date=self.current_date,
-                    models=[pipeline_task], ptask='auto') for pipeline_task in models_tables]
+                    ptask=pipeline_task) for pipeline_task in models_tables]
 
     def output(self):
         return PostgresTarget(host=self.host,

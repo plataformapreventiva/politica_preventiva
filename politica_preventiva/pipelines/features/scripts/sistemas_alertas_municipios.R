@@ -3,7 +3,6 @@ library(optparse)
 library(dbplyr)
 library(dplyr)
 library(DBI)
-library(stringr)
 library(yaml)
 
 option_list = list(
@@ -73,23 +72,21 @@ if(length(opt) > 1){
 
   print('Pulling datasets')
 
-  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>%
-    select(cve_ent,nom_ent)
+  query1 <- 'SELECT LEFT(cve_muni, 2)  as cve_ent, cve_muni FROM clean.geoms_municipios
+            WHERE data_date=\'2018-a\''
 
-  agentes_fiscales <- tbl(con, dbplyr::in_schema('clean','inegi_agentes_fiscales')) %>%
-    filter(anio == 2016 & indicador == "Total") %>%
-    select(nom_ent,num_agentes_fiscales)
+  query2 <- 'SELECT * FROM features.sistemas_alertas_estados'
 
-  agentes_fiscales$nom_ent <- str_replace_all(agentes_fiscales$nom_ent, c("Ciudad de México" = "Distrito Federal"))
+  # Get tables
+  muni_dic <- tbl(con, sql(query1))
+  estatal <- tbl(con, sql(query2))
 
-  inegi_agentes_fiscales <- left_join(cves, agentes_fiscales, by = "nom_ent") %>% select(-nom_ent) %>%
-    dplyr::mutate(data_date = data_date,
-                  actualizacion_sedesol = lubridate::today())
-
-  copy_to(con, inegi_agentes_fiscales,
-          dbplyr::in_schema("features",'inegi_agentes_fiscales'),
+  # Get table at municipality level
+  municipal <- left_join(muni_dic,estatal, by=c("cve_ent"))
+  copy_to(con, municipal,
+          dbplyr::in_schema("features","sistemas_alertas_municipios"),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
 
-  print('Features written to: features.inegi_agentes_fiscales')
+  print('Features written to: features.sistemas_alertas_municipios')
 }
