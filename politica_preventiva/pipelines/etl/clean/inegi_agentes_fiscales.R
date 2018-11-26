@@ -11,7 +11,7 @@ query <- 'SELECT CASE entidad_federativa WHEN \'Ciudad de México\'
                                           WHEN \'Querétaro\'
                                           THEN \'Querétaro de Arteaga\'
                                           ELSE entidad_federativa
-                  END as nom_ent, 
+                  END as nom_ent, indicador,
           num_agentes_fiscales,
           anio
           FROM raw.inegi_agentes_fiscales'
