@@ -92,7 +92,7 @@ if(length(opt) > 1){
     select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
   
   amenazas <- left_join(cenapred,crimenes_tasas, by='cve_muni') %>%
-    left_join(intercensal_amenazas, by='cve_muni')
+    left_join(intercensal_amenazas, by='cve_muni') 
   
   #----------------------------------------------------------------------------------------
   
@@ -117,6 +117,10 @@ if(length(opt) > 1){
   nd_nsnn1
   FROM clean.cngmd_participacion_ciudadana'
   participacion_ciudadana <- tbl(con, sql(query5)) 
+  query6 <- 'SELECT LPAD(cve_muni::text, 5, \'0\') as cve_muni,
+  mec_tran, inf_publ
+  FROM clean.cngmd_transparencia'
+  transparencia <- tbl(con, sql(query6))
   cfe <- tbl(con, dbplyr::in_schema('clean','cfe')) 
   hospitales <- tbl(con, dbplyr::in_schema('features','recursos_hospitales')) %>% 
     select(-c(actualizacion_sedesol,data_date))
@@ -130,12 +134,18 @@ if(length(opt) > 1){
   indicadores_finanzas <- tbl(con, dbplyr::in_schema('raw','indicadores_financieros_municipios')) %>% 
     filter(anio == 2014) %>%
     select(cve_muni,flexibilidad_financiera,capacidad_inversion)
-  transparencia <- tbl(con, dbplyr::in_schema('clean','cngmd_transparencia')) %>% 
-    select(-ubic_geo)
-  mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas'))
+  mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas')) %>% select(-actualizacion_sedesol) 
+  jueces <- tbl(con, dbplyr::in_schema('features','inegi_jueces_municipios'))%>% 
+    select(-c(cve_ent,actualizacion_sedesol,data_date))
+  agentes <- tbl(con, dbplyr::in_schema('features','inegi_agentes_fiscales_municipios'))%>% 
+    select(-c(cve_ent,actualizacion_sedesol,data_date))
+  s_alertas <- tbl(con, dbplyr::in_schema('features','sistemas_alertas_municipios')) %>% 
+    select(-c(cve_ent,actualizacion_sedesol,data_date))
+    
+  # Falta ICI e ICE, hacer imputación en mun
   
   capacidades <- left_join(riesgo,indice_reglamentacion, by='cve_muni') %>%
-    # left_join(transparencia, by='cve_muni') %>%  #corregir
+    left_join(transparencia, by='cve_muni') %>%  #corregir
     # left_join(participacion_ciudadana, by='cve_muni') %>% #corregir
     left_join(indicadores_finanzas, by='cve_muni') %>% 
     left_join(predial, by='cve_muni') %>% 
@@ -145,7 +155,10 @@ if(length(opt) > 1){
     left_join(drenaje,by='cve_muni') %>% 
     left_join(recoleccion_basura,by='cve_muni') %>% 
     left_join(hospitales,by='cve_muni') %>% 
-    left_join(mortalidad,by='cve_muni')
+    left_join(mortalidad,by='cve_muni') %>%
+    left_join(jueces,by='cve_muni')%>%
+    left_join(agentes,by='cve_muni')%>%
+    left_join(s_alertas,by='cve_muni') 
   
   #----------------------------------------------------------------------------------------
   
