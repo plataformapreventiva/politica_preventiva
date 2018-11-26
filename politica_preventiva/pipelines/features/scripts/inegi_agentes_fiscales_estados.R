@@ -76,23 +76,21 @@ if(length(opt) > 1){
   cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>%
     select(cve_ent,nom_ent)
 
-  agentes_fiscales <- tbl(con, dbplyr::in_schema('clean',
-                                                 'inegi_agentes_fiscales')) %>%
-    filter(anio == 2016) %>%
+  agentes_fiscales <- tbl(con, dbplyr::in_schema('clean','inegi_agentes_fiscales')) %>%
+    filter(anio == 2016 & indicador == "Total") %>%
     select(nom_ent,num_agentes_fiscales)
 
-  agentes_fiscales$nom_ent <- str_replace_all(agentes_fiscales$nom_ent,
-                                              c("Ciudad de México" = "Distrito Federal"))
+  agentes_fiscales$nom_ent <- str_replace_all(agentes_fiscales$nom_ent, c("Ciudad de México" = "Distrito Federal"))
 
   inegi_agentes_fiscales <- left_join(cves, agentes_fiscales, by = "nom_ent") %>%
       select(-nom_ent) %>%
-    dplyr::mutate(data_date = data_date,
-                  actualizacion_sedesol = lubridate::today())
+      dplyr::mutate(data_date = data_date,
+                    actualizacion_sedesol = lubridate::today())
 
   copy_to(con, inegi_agentes_fiscales,
           dbplyr::in_schema("features",'inegi_agentes_fiscales_estados'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
 
-  print('Features written to: features.inegi_agentes_fiscales_estados')
+ print('Features written to: features.inegi_agentes_fiscales_estados')
 }
