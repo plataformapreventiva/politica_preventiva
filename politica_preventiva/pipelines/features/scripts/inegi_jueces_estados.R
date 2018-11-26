@@ -77,9 +77,9 @@ if(length(opt) > 1){
     select(cve_ent,nom_ent)
 
   jueces <- tbl(con, dbplyr::in_schema('clean','inegi_jueces')) %>%
-    select(nom_ent,num_jueces)
-  jueces$nom_ent <- str_replace_all(jueces$nom_ent, c("Ciudad de México" = "Distrito Federal")
-                                    )
+    select(nom_ent,num_jueces, anio) %>% dplyr::filter(anio==2016)
+  jueces$nom_ent <- str_replace_all(jueces$nom_ent,
+                                    c("Ciudad de México" = "Distrito Federal"))
   inegi_jueces <- left_join(cves, jueces, by = "nom_ent") %>% select(-nom_ent) %>%
     dplyr::mutate(data_date = data_date,
                   actualizacion_sedesol = lubridate::today())
