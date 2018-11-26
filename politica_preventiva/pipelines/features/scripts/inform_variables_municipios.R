@@ -153,7 +153,7 @@ if(length(opt) > 1){
   
   capacidades <- left_join(riesgo,indice_reglamentacion, by='cve_muni') %>%
     left_join(transparencia, by='cve_muni') %>%  #corregir
-    # left_join(participacion_ciudadana, by='cve_muni') %>% #corregir
+    left_join(participacion_ciudadana, by='cve_muni') %>%
     left_join(indicadores_finanzas, by='cve_muni') %>% 
     left_join(predial, by='cve_muni') %>% 
     left_join(complejidad, by='cve_muni') %>%
@@ -174,8 +174,8 @@ if(length(opt) > 1){
   # VULNERABILIDADES
   coneval <- tbl(con, dbplyr::in_schema('clean','coneval_municipios')) %>%   
     filter(data_date == "2015-a") %>% 
-    select(cve_muni, ic_rezedu_porcentaje, ic_asalud_porcentaje, ic_segsoc_porcentaje, ic_cv_porcentaje,
-           vul_ing_porcentaje, ic_sbv_porcentaje, pobreza_porcentaje)
+    select(cve_muni, ic_ali_porcentaje,ic_rezedu_porcentaje, ic_asalud_porcentaje, ic_segsoc_porcentaje,
+           ic_cv_porcentaje, vul_ing_porcentaje, ic_sbv_porcentaje, pobreza_porcentaje)
   intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
     select(cve_muni,brecha_tasa_ocupados,brecha_horas_cuidados,
            prop_mayores65,prop_menores5, prop_adultos, prop_menores, 
@@ -190,13 +190,14 @@ if(length(opt) > 1){
     
   vulnerabilidades <- left_join(coneval, intercensal_vulnerabilidades, by='cve_muni') %>%
     left_join(intercensal_viviendas, by='cve_muni') %>% 
-    select(-c(actualizacion_sedesol,data_date))
+    select(-c(actualizacion_sedesol,data_date)) %>% 
+    left_join(enigh,by='cve_muni')
   
   
   #----------------------------------------------------------------------------------------
   
   inform_mun <- left_join(amenazas,vulnerabilidades, by= 'cve_muni') %>%
-    left_join(capacidades, by='cve_muni') %>%
+    left_join(capacidades, by='cve_muni') %>% 
     dplyr::mutate(data_date=data_date,
                   actualizacion_sedesol = lubridate::today())
   
