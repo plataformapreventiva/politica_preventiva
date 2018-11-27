@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import csv
 import logging
 import os
 import pandas as pd
@@ -20,7 +21,7 @@ logging.config.fileConfig(logging_conf)
 logger = logging.getLogger("dpa-sedesol")
 
 def dictionary_test(features_task, dict_path, table_header, dict_header,
-        current_date, data_date, suffix, common_bucket):
+        current_date, data_date, suffix, common_bucket, common_key):
     """
     This function updates the dictionary of the features_task in our features
     schema by pulling the table header in order to include new rows, if any
@@ -35,9 +36,9 @@ def dictionary_test(features_task, dict_path, table_header, dict_header,
         dictionary['data_date'] = data_date + '-' + suffix
         dictionary = dictionary.where((pd.notnull(dictionary)), None)
         dictionary.to_csv(dict_path, index=False,
-                          sep='|', encoding='utf-8')
+                          sep='|', encoding='utf-8', quoting=csv.QUOTE_NONE)
         csv_buffer = StringIO()
-        dictionary.to_csv(csv_buffer,sep='|')
+        dictionary.to_csv(csv_buffer,sep='|', quoting=csv.QUOTE_NONE)
         s3_resource = resource('s3')
         s3_resource.Object(common_bucket,
                      common_key + features_task + '_dic.csv').\
@@ -49,7 +50,7 @@ def dictionary_test(features_task, dict_path, table_header, dict_header,
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
         dictionary.to_csv(dict_path, index=False,
-                          sep='|', encoding = 'utf-8')
+                          sep='|', encoding = 'utf-8', quoting=csv.QUOTE_NONE)
         logger.info('Dictionary of task {task} is not defined,\
                 see {path}'.format(task=features_task, path=dict_path))
         raise NameError('Dictionary of task {0} is not defined,\
