@@ -90,9 +90,12 @@ if(length(opt) > 1){
               violencia_familiar_tasa=avg(violencia_familiar_tasa))
   intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
     select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
-  
+  ipc <- tbl(con, dbplyr::in_schema('features','inflacion_municipios')) %>% 
+    select(cve_muni,indice_dif)
+    
   amenazas <- left_join(cenapred,crimenes_tasas, by='cve_muni') %>%
-    left_join(intercensal_amenazas, by='cve_muni')
+    left_join(intercensal_amenazas, by='cve_muni') %>%
+    left_join(ipc, by='cve_muni')
   
   #----------------------------------------------------------------------------------------
   
@@ -117,6 +120,10 @@ if(length(opt) > 1){
   nd_nsnn1
   FROM clean.cngmd_participacion_ciudadana'
   participacion_ciudadana <- tbl(con, sql(query5)) 
+  query6 <- 'SELECT LPAD(cve_muni::text, 5, \'0\') as cve_muni,
+  mec_tran, inf_publ
+  FROM clean.cngmd_transparencia'
+  transparencia <- tbl(con, sql(query6))
   cfe <- tbl(con, dbplyr::in_schema('clean','cfe')) 
   hospitales <- tbl(con, dbplyr::in_schema('features','recursos_hospitales')) %>% 
     select(-c(actualizacion_sedesol,data_date))
@@ -130,13 +137,23 @@ if(length(opt) > 1){
   indicadores_finanzas <- tbl(con, dbplyr::in_schema('raw','indicadores_financieros_municipios')) %>% 
     filter(anio == 2014) %>%
     select(cve_muni,flexibilidad_financiera,capacidad_inversion)
-  transparencia <- tbl(con, dbplyr::in_schema('clean','cngmd_transparencia')) %>% 
-    select(-ubic_geo)
-  mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas'))
+  mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas')) %>% select(-actualizacion_sedesol) 
+  jueces <- tbl(con, dbplyr::in_schema('features','inegi_jueces_municipios'))%>% 
+    select(-c(anio,cve_ent,actualizacion_sedesol,data_date))
+  agentes <- tbl(con, dbplyr::in_schema('features','inegi_agentes_fiscales_municipios'))%>% 
+    select(-c(cve_ent,actualizacion_sedesol,data_date))
+  s_alertas <- tbl(con, dbplyr::in_schema('features','sistemas_alertas_municipios')) %>% 
+    select(-c(cve_ent,actualizacion_sedesol,data_date))
+  ici <- tbl(con, dbplyr::in_schema('features','shcp_ici_municipios')) %>% 
+    select(cve_muni,valor_ici)
+  ice <- tbl(con, dbplyr::in_schema('features','imco_ice_municipios')) %>% 
+    select(cve_muni,gobiernos,politico)
+    
+  # Falta ICI e ICE, hacer imputación en mun
   
   capacidades <- left_join(riesgo,indice_reglamentacion, by='cve_muni') %>%
-    # left_join(transparencia, by='cve_muni') %>%  #corregir
-    # left_join(participacion_ciudadana, by='cve_muni') %>% #corregir
+    left_join(transparencia, by='cve_muni') %>%  #corregir
+    left_join(participacion_ciudadana, by='cve_muni') %>%
     left_join(indicadores_finanzas, by='cve_muni') %>% 
     left_join(predial, by='cve_muni') %>% 
     left_join(complejidad, by='cve_muni') %>%
@@ -145,15 +162,20 @@ if(length(opt) > 1){
     left_join(drenaje,by='cve_muni') %>% 
     left_join(recoleccion_basura,by='cve_muni') %>% 
     left_join(hospitales,by='cve_muni') %>% 
-    left_join(mortalidad,by='cve_muni')
-  
+    left_join(mortalidad,by='cve_muni') %>%
+    left_join(jueces,by='cve_muni') %>%
+    left_join(agentes,by='cve_muni') %>%
+    left_join(s_alertas,by='cve_muni') %>%
+    left_join(ici, by='cve_muni') %>%
+    left_join(ice, by='cve_muni')
+    
   #----------------------------------------------------------------------------------------
   
   # VULNERABILIDADES
   coneval <- tbl(con, dbplyr::in_schema('clean','coneval_municipios')) %>%   
     filter(data_date == "2015-a") %>% 
-    select(cve_muni, ic_rezedu_porcentaje, ic_asalud_porcentaje, ic_segsoc_porcentaje, ic_cv_porcentaje,
-           vul_ing_porcentaje, ic_sbv_porcentaje, pobreza_porcentaje)
+    select(cve_muni, ic_ali_porcentaje,ic_rezedu_porcentaje, ic_asalud_porcentaje, ic_segsoc_porcentaje,
+           ic_cv_porcentaje, vul_ing_porcentaje, ic_sbv_porcentaje, pobreza_porcentaje)
   intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
     select(cve_muni,brecha_tasa_ocupados,brecha_horas_cuidados,
            prop_mayores65,prop_menores5, prop_adultos, prop_menores, 
@@ -163,10 +185,13 @@ if(length(opt) > 1){
   # Número de personas en edades teóricamente inactivas (personas de 0 a 14 y de 65 años y más) 
   # por cada cien personas en edades teóricamente activas (personas de 15 a 64 años).
   intercensal_viviendas <- tbl(con, dbplyr::in_schema('features','intercensal_viviendas_2015'))
-  
+  enigh <- tbl(con, dbplyr::in_schema('features','enigh_vulnerabilidades_municipios')) %>% 
+    select(-c(cve_ent,actualizacion_sedesol,data_date)) 
+    
   vulnerabilidades <- left_join(coneval, intercensal_vulnerabilidades, by='cve_muni') %>%
     left_join(intercensal_viviendas, by='cve_muni') %>% 
-    select(-c(actualizacion_sedesol,data_date))
+    select(-c(actualizacion_sedesol,data_date)) %>% 
+    left_join(enigh,by='cve_muni')
   
   
   #----------------------------------------------------------------------------------------
