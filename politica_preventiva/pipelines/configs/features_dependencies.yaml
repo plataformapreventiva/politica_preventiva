@@ -47,3 +47,84 @@ imco_info_publica:
         - imco_info_publica
     raw_dependencies:
         - geom_estados
+enigh_vulnerabilidades_municipios:
+    features_dependencies:
+        - enigh_vulnerabilidades_estados
+    clean_dependencies:
+        - geoms_municipios
+enigh_vulnerabilidades_estados:
+    clean_dependencies:
+        - enigh_trabajos
+        - enigh_ingresos
+        - enigh_poblacion
+        - enigh_concentrados
+imco_info_publica:
+    raw_dependencies:
+        - geom_estados
+    clean_dependencies:
+        - imco_info_publica
+mortalidad tasas:
+    clean_dependencies:
+        - defunciones_generales
+        - intercensal_personas_2015
+inegi_jueces_municipios:
+    features_dependencies:
+        - inegi_jueces_estados
+    clean_dependencies:
+        - geoms_municipios
+inegi_jueces_estados:
+    clean_dependencies:
+        - inegi_jueces
+    raw_dependencies:
+        - geom_estados
+inegi_agentes_fiscales_municipios:
+    features_dependencies:
+        - inegi_agentes_fiscales_estados
+    clean_dependencies:
+        - geoms_municipios
+inegi_agentes_fiscales_estados:
+    clean_dependencies:
+        - inegi_agentes_fiscales
+    raw_dependencies:
+        - geom_estados
+inform_variables_municipios:
+    clean_dependencies:
+        - cngmd_proteccion_civil
+        - cngmd_predial
+        - cngmd_drenaje
+        - cngmd_recoleccion_basura
+    features_dependencies:
+        - crimenes_tasas
+        - intercensal_personas_2015
+        - intercensal_viviendas_2015
+        - inegi_jueces_municipios
+        - inegi_agentes_fiscales_municipios
+        - sistemas_alertas_municipios
+        - shcp_ici_municipios
+        - imco_ice_municipios
+        - inflancion_municipios
+        - enigh_vulnerabilidades_municipios
+sistemas_alertas_municipios:
+    features_dependencies:
+        - sistemas_alertas_estados
+    clean_dependencies:
+        - geoms_municipios
+sistemas_alertas_estados:
+    raw_dependencies:
+        - geom_estados
+    clean_dependencies:
+        - sistemas_alertas
+inflacion_municipios:
+    clean_dependencies:
+        - ipc_ciudades
+coneval_estados:
+    clean_dependencies:
+        - coneval_estados
+shcp_ici_municipios:
+    clean:
+        - shcp_ici_estados
+        - geoms_municipios
+imco_ice_municipios:
+    clean_dependencies:
+        - imco_ice
+        - geoms_municipios

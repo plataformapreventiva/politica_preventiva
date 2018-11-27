@@ -71,7 +71,7 @@ class RunPipelines(luigi.WrapperTask):
 
     def requires(self):
         # This requirement runs one of the following tasks:
-        # IngestPipeline, EtlPipeline, SemanticPipeline, ModelPipeline
+        # IngestPipeline, EtlPipeline, SemanticPipeline, FeaturesPipeline, ModelPipeline
         Pipeline = eval(self.level)
         return Pipeline(current_date=self.current_date, ptask=self.ptask)
 

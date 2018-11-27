@@ -7,8 +7,13 @@ import os
 import random
 import subprocess
 import logging
+import pandas as pd
 import pdb
+import psycopg2
 import yaml
+
+from boto3 import client, resource
+from sqlalchemy import create_engine
 
 from luigi import six
 from os.path import join, dirname
@@ -25,6 +30,9 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
+from politica_preventiva.pipelines.features.tools.pipeline_tools import \
+dictionary_test
+from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
 load_dotenv(find_dotenv())
@@ -58,14 +66,112 @@ class FeaturesPipeline(luigi.WrapperTask):
     ptask = luigi.Parameter()
 
     def requires(self):
-        set_pipelines = [(pipeline_task, final_dates(pipeline_task,
+        if self.ptask!='auto':
+            self.pipelines = (self.ptask,)
+
+        logger.info('Luigi is running the Features Pipeline on the date: {0}'.format(
+                    self.current_date))
+        logger.info('Running the following pipelines: {0}'.\
+                    format(self.pipelines))
+
+        set_pipelines = [(features_task, final_dates(features_task,
                                                      self.current_date)) for
-                         pipeline_task in self.pipelines]
-        return [UpdateFeaturesDB(features_task=pipeline[0],
+                         features_task in self.pipelines]
+        return [UpdateFeaturesDictionary(features_task=pipeline[0],
                                  current_date=self.current_date,
                                  data_date = dates,
                                  suffix=pipeline[1][1])
                 for pipeline in set_pipelines for dates in pipeline[1][0]]
+
+class UpdateFeaturesDictionary(postgres.CopyToTable):
+
+    """
+    Updates Postgres DataBase for Dictionary with new datadate ingested data.
+    Assumes that the ditcionary of the features_task is defined
+    """
+    current_date = luigi.DateParameter()
+    features_task = luigi.Parameter()
+    client = S3Client()
+    data_date = luigi.Parameter()
+    suffix = luigi.Parameter()
+
+    common_path = luigi.Parameter()
+    common_bucket = luigi.Parameter()
+    common_key = luigi.Parameter()
+
+    # AWS RDS
+    database = os.environ.get("PGDATABASE")
+    user = os.environ.get("POSTGRES_USER")
+    password = os.environ.get("POSTGRES_PASSWORD")
+    host = os.environ.get("PGHOST")
+
+    @property
+    def update_id(self):
+        return str(self.features_task) + str(self.data_date) +\
+                str(self.suffix) + 'dic'
+
+    @property
+    def table(self):
+        return "features." + self.features_task + "_dic"
+
+    @property
+    def dict_path(self):
+        return self.common_path + self.features_task + '_dic.csv'
+
+    @property
+    def columns(self):
+        return [('id', 'TEXT'),
+                ('nombre', 'TEXT'),
+                ('tipo','TEXT'),
+                ('fuente','TEXT'),
+                ('metadata', 'JSONB'),
+                ('actualizacion_sedesol', 'TIMESTAMP'),
+                ('data_date', 'TEXT')]
+
+    @property
+    def table_header(self):
+        engine = create_engine('postgresql://{0}:{1}@{2}:{3}/{4}'.\
+                                format(os.getenv('POSTGRES_USER'),
+                                       os.getenv('POSTGRES_PASSWORD'),
+                                       os.getenv('PGHOST'),
+                                       os.getenv('PGPORT'),
+                                       os.getenv('PGDATABASE')))
+        header_query = ("select column_name from information_schema.columns "
+                        "where table_schema = 'features' "
+                        "and table_name='{}'".format(self.features_task))
+        connection = engine.connect()
+        query_result = connection.execute(header_query)
+        table_columns = [x for x in query_result]
+        connection.close()
+        return [x[0] for x in table_columns]
+
+    def rows(self):
+        logging.info('Trying to update the dictionary for '+\
+                     'the features task {}'.format(self.features_task))
+        dictionary=dictionary_test(features_task=self.features_task,
+                                   dict_path=self.dict_path,
+                                   table_header=self.table_header,
+                                   dict_header=self.columns,
+                                   current_date=self.current_date,
+                                   data_date=self.data_date,
+                                   suffix=self.suffix,
+                                   common_bucket=self.common_bucket,
+                                   common_key=self.common_key)
+        return [tuple(x) for x in dictionary.to_records(index=False)]
+
+    def requires (self):
+        return UpdateFeaturesDB(features_task=self.features_task,
+                                current_date=self.current_date,
+                                data_date=self.data_date,
+                                suffix=self.suffix)
+
+    def output(self):
+        return postgres.PostgresTarget(host=self.host,
+                                       database=self.database,
+                                       user=self.user,
+                                       password=self.password,
+                                       table=self.table,
+                                       update_id=self.update_id)
 
 class UpdateFeaturesDB(PgRTask):
 
@@ -103,7 +209,7 @@ class UpdateFeaturesDB(PgRTask):
                 self.features_task + '.R'
 
         if not os.path.isfile(features_script):
-            return
+            raise Exception("Feature script is not defined")
 
         command_list = ['Rscript', features_script,
                         '--data_date', self.data_date,
@@ -121,18 +227,18 @@ class UpdateFeaturesDB(PgRTask):
         for dt in dep_types:
             if 'features_dependencies' in dep_types:
                 features_tables = composition[self.features_task]['features_dependencies']
-                yield [FeaturesPipeline(current_Date=self.current_date,
-                    feature_task=[feature_task]) for feature_task in features_tables]
+                yield [FeaturesPipeline(current_date=self.current_date,
+                                        ptask=pipeline_task) for pipeline_task in features_tables]
 
             if 'clean_dependencies' in dep_types:
                 clean_tables = composition[self.features_task]['clean_dependencies']
                 yield [ETLPipeline(current_date=self.current_date,
-                    pipelines=[pipeline_task], ptask='auto') for pipeline_task in clean_tables]
-
+                                   ptask=pipeline_task) for pipeline_task in clean_tables]
+                
             if 'model_dependencies' in dep_types:
                 models_tables = composition[self.features_task]['models_dependencies']
                 yield [ModelsPipeline(current_date=self.current_date,
-                    models=[pipeline_task], ptask='auto') for pipeline_task in models_tables]
+                                      ptask=pipeline_task) for pipeline_task in models_tables]
 
     def output(self):
         return PostgresTarget(host=self.host,

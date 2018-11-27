@@ -3,6 +3,7 @@ library(optparse)
 library(dbplyr)
 library(dplyr)
 library(DBI)
+library(lubridate)
 library(yaml)
 
 option_list = list(
@@ -41,7 +42,7 @@ opt <- tryCatch(
 )
 
 if(length(opt) > 1){
-
+  
   if (opt$database=="" | opt$user=="" |
       opt$password=="" | opt$host=="" ){
     print_help(opt_parser)
@@ -53,7 +54,7 @@ if(length(opt) > 1){
     PGHOST <- opt$host
     PGPORT <- "5432"
   }
-
+  
   if(opt$data_date == ""){
     stop("Did not receive a valid data date, stopping", call.=FALSE)
   }else{
@@ -72,18 +73,34 @@ if(length(opt) > 1){
   
   print('Pulling datasets')
   
-  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>% 
-    select(cve_ent,nom_ent)
+  poblacion <- tbl(con, dbplyr::in_schema('clean','intercensal_personas_2015')) %>% 
+    select(cve_muni, factor) %>%
+    group_by(cve_muni) %>% 
+    summarise(factor=as.numeric(sum(factor)))
   
-  info <- tbl(con, dbplyr::in_schema('clean', 'imco_info_publica'))
-  
-  info_publica <- left_join(cves,info,by='cve_ent') %>%
+query <- 'SELECT cve_muni, sum(CASE 
+                                            WHEN CAST(edad as integer) < 4000
+                                            THEN 1 
+                                            ELSE 0 
+                                            END) as infant, 
+                                            sum(CASE 
+                                            WHEN causa_def LIKE \'O%\'
+                                            THEN 1 
+                                            ELSE 0 
+                                            END) as materna
+                                            FROM clean.defunciones_generales
+                                            GROUP BY cve_muni'
+mortalidad_tasas <- tbl(con, sql(query)) %>%
+    dplyr::left_join(poblacion, by='cve_muni') %>%
+    dplyr::mutate(mortalidad_materna = materna/factor) %>%
+    dplyr::mutate(mortalidad_infantil = infant/factor) %>%
+    dplyr::select(cve_muni,mortalidad_materna,mortalidad_infantil) %>%
     dplyr::mutate(actualizacion_sedesol = lubridate::today())
   
-  copy_to(con, info_publica,
-          dbplyr::in_schema("features",'imco_info_publica'),
+  copy_to(con, mortalidad_tasas,
+          dbplyr::in_schema("features",'mortalidad_tasas'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
   
-  print('Features written to: features.crimenes_tasas')
+  print('Features written to: features.mortalidad_tasas')
 }

@@ -4,6 +4,7 @@ library(dbplyr)
 library(dplyr)
 library(DBI)
 library(yaml)
+library(stringr)
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -59,7 +60,7 @@ if(length(opt) > 1){
   }else{
     data_date <- opt$data_date
   }
-  
+
   con <- DBI::dbConnect(RPostgres::Postgres(),
                         host = PGHOST,
                         port = PGPORT,
@@ -67,23 +68,25 @@ if(length(opt) > 1){
                         user = POSTGRES_USER,
                         password = POSTGRES_PASSWORD
   )
-  
+
   source("pipelines/features/tools/features_tools.R")
-  
+
   print('Pulling datasets')
-  
-  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>% 
+
+  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>%
     select(cve_ent,nom_ent)
-  
-  info <- tbl(con, dbplyr::in_schema('clean', 'imco_info_publica'))
-  
-  info_publica <- left_join(cves,info,by='cve_ent') %>%
-    dplyr::mutate(actualizacion_sedesol = lubridate::today())
-  
-  copy_to(con, info_publica,
-          dbplyr::in_schema("features",'imco_info_publica'),
+
+  s_alertas <- tbl(con, dbplyr::in_schema('clean','sistemas_alertas'))
+
+  sistema_alertas <- left_join(cves, s_alertas, by = "nom_ent") %>%
+    select(cve_ent,endeudamiento,liquidez) %>%
+    dplyr::mutate(data_date = data_date,
+                  actualizacion_sedesol = lubridate::today())
+
+  copy_to(con, sistema_alertas,
+          dbplyr::in_schema("features",'sistemas_alertas_estados'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
-  
-  print('Features written to: features.crimenes_tasas')
+
+  print('Features written to: features.sistemas_alertas_estados')
 }

@@ -170,4 +170,3 @@ spread_db <- function(df, key, value) {
   Reduce(full_join_alt, df_new)
 }
 
-

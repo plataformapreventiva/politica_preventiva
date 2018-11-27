@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import csv
 import logging
@@ -105,7 +106,7 @@ def header_test(path, task, common_path, suffix, new=True):
                           "SCHEMA": initial_schema}}
         logger.info('After updating the raw_schemas.yaml with the column types' +\
                     '\n\t\t\t\t\t\t you must change the "new" flag to False in luigi.cfg.')
-        # TODO put logger 
+        # TODO put logger
         logger.critical('\n\n !!! Important message: \n ' +\
                  'Please specify the column types of the pipeline_task '+\
                  task + '\n see: pipelines/ingest/common/raw_schemas.yaml \n' +\
@@ -159,7 +160,7 @@ def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
         csv_buffer = StringIO()
         dictionary.to_csv(csv_buffer,sep='|')
         s3_resource = boto3.resource('s3')
-        s3_resource.Object('dpa-plataforma-preventiva','commons/metadata/diccionarios/'+pipeline_task+'_dic.csv').put(Body=csv_buffer.getvalue())
+        s3_resource.Object('dpa-plataforma-preventiva','commons/metadata/diccionarios/ingest/'+pipeline_task+'_dic.csv').put(Body=csv_buffer.getvalue())
 
     except:
         task_schema = header_d[pipeline_task]["LUIGI"]["SCHEMA"]

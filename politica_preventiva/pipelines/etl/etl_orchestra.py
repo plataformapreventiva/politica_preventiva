@@ -101,7 +101,6 @@ class UpdateCleanDB(PgRTask):
                         '--pipeline_task', self.pipeline_task,
                         '--scripts_dir', self.clean_scripts]
         cmd = " ".join(command_list)
-        pdb.set_trace()
         return cmd
 
     @property

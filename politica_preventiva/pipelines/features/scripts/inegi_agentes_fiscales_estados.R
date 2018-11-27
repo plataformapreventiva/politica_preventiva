@@ -3,6 +3,7 @@ library(optparse)
 library(dbplyr)
 library(dplyr)
 library(DBI)
+library(stringr)
 library(yaml)
 
 option_list = list(
@@ -59,7 +60,7 @@ if(length(opt) > 1){
   }else{
     data_date <- opt$data_date
   }
-  
+
   con <- DBI::dbConnect(RPostgres::Postgres(),
                         host = PGHOST,
                         port = PGPORT,
@@ -67,23 +68,29 @@ if(length(opt) > 1){
                         user = POSTGRES_USER,
                         password = POSTGRES_PASSWORD
   )
-  
+
   source("pipelines/features/tools/features_tools.R")
-  
+
   print('Pulling datasets')
-  
-  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>% 
+
+  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>%
     select(cve_ent,nom_ent)
-  
-  info <- tbl(con, dbplyr::in_schema('clean', 'imco_info_publica'))
-  
-  info_publica <- left_join(cves,info,by='cve_ent') %>%
-    dplyr::mutate(actualizacion_sedesol = lubridate::today())
-  
-  copy_to(con, info_publica,
-          dbplyr::in_schema("features",'imco_info_publica'),
+
+  agentes_fiscales <- tbl(con, dbplyr::in_schema('clean','inegi_agentes_fiscales')) %>%
+    filter(anio == 2016 & indicador == "Total") %>%
+    select(nom_ent,num_agentes_fiscales)
+
+  agentes_fiscales$nom_ent <- str_replace_all(agentes_fiscales$nom_ent, c("Ciudad de México" = "Distrito Federal"))
+
+  inegi_agentes_fiscales <- left_join(cves, agentes_fiscales, by = "nom_ent") %>%
+      select(-nom_ent) %>%
+      dplyr::mutate(data_date = data_date,
+                    actualizacion_sedesol = lubridate::today())
+
+  copy_to(con, inegi_agentes_fiscales,
+          dbplyr::in_schema("features",'inegi_agentes_fiscales_estados'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
-  
-  print('Features written to: features.crimenes_tasas')
+
+ print('Features written to: features.inegi_agentes_fiscales_estados')
 }

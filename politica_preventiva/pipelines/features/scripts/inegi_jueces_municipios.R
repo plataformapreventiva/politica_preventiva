@@ -59,7 +59,7 @@ if(length(opt) > 1){
   }else{
     data_date <- opt$data_date
   }
-  
+
   con <- DBI::dbConnect(RPostgres::Postgres(),
                         host = PGHOST,
                         port = PGPORT,
@@ -67,23 +67,26 @@ if(length(opt) > 1){
                         user = POSTGRES_USER,
                         password = POSTGRES_PASSWORD
   )
-  
+
   source("pipelines/features/tools/features_tools.R")
-  
+
   print('Pulling datasets')
-  
-  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>% 
-    select(cve_ent,nom_ent)
-  
-  info <- tbl(con, dbplyr::in_schema('clean', 'imco_info_publica'))
-  
-  info_publica <- left_join(cves,info,by='cve_ent') %>%
-    dplyr::mutate(actualizacion_sedesol = lubridate::today())
-  
-  copy_to(con, info_publica,
-          dbplyr::in_schema("features",'imco_info_publica'),
+
+  query1 <- 'SELECT LEFT(cve_muni, 2)  as cve_ent, cve_muni FROM clean.geoms_municipios
+            WHERE data_date=\'2018-a\''
+
+  query2 <- 'SELECT * FROM features.inegi_jueces_estados'
+
+  # Get tables
+  muni_dic <- tbl(con, sql(query1))
+  estatal <- tbl(con, sql(query2))
+
+  # Get table at municipality level
+  municipal <- left_join(muni_dic,estatal, by=c("cve_ent"))
+  copy_to(con, municipal,
+          dbplyr::in_schema("features","inegi_jueces_municipios"),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
-  
-  print('Features written to: features.crimenes_tasas')
+
+  print('Features written to: features.inegi_jueces_municipios')
 }

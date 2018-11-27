@@ -145,14 +145,13 @@ S3_BUCKET := s3://dpa-$(PROJECT_NAME)/data/
 ##         Project Tasks              ##
 ########################################
 
-run:       ##@project Run pipeline: make run w=10 p=(IngestPipeline|ETLPipeline|SemanticPipeline|ModelsPipeline) ptask= 'pipeline_task'
+run:       ##@project Run pipeline: make run w=10 p=(IngestPipeline|ETLPipeline|FeaturesPipeline
 	$(MAKE) --directory=$(PROJECT_NAME) run WORKERS=$(w) level=$(p) ptask=$(ptask)
 
 setup: task_build install##@project Crea las imágenes del pipeline e instala el pipeline como paquete en el PYTHONPATH
 
 task_build:
 	$(MAKE) --directory=$(PROJECT_NAME) setup
-
 
 remove: uninstall  ##@project Destruye la imágenes del pipeline y desinstala el pipeline del PYTHONPATH
 	$(MAKE) --directory=$(PROJECT_NAME) clean
