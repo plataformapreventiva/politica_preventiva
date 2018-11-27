@@ -120,8 +120,13 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
 
     @property
     def columns(self):
-        return ['id', 'nombre', 'tipo', 'fuente', 'metadata', \
-        'actualizacion_sedesol', 'data_date']
+        return [('id', 'TEXT'),
+                ('nombre', 'TEXT'),
+                ('tipo','TEXT'),
+                ('fuente','TEXT'),
+                ('metadata', 'JSONB'),
+                ('actualizacion_sedesol', 'TIMESTAMP'),
+                ('data_date', 'TEXT')]
 
     @property
     def table_header(self):
@@ -144,13 +149,14 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
         logging.info('Trying to update the dictionary for '+\
                      'the features task {}'.format(self.features_task))
         dictionary=dictionary_test(features_task=self.features_task,
-                                     dict_path=self.dict_path,
-                                     table_header=self.table_header,
-                                     dict_header=self.columns,
-                                     current_date=self.current_date,
-                                     data_date=self.data_date,
-                                     suffix=self.suffix,
-                                     common_bucket=self.common_bucket)
+                                   dict_path=self.dict_path,
+                                   table_header=self.table_header,
+                                   dict_header=self.columns,
+                                   current_date=self.current_date,
+                                   data_date=self.data_date,
+                                   suffix=self.suffix,
+                                   common_bucket=self.common_bucket,
+                                   common_key=self.common_key)
         return [tuple(x) for x in dictionary.to_records(index=False)]
 
     def requires (self):
