@@ -114,7 +114,7 @@ sistemas_alertas_estados:
         - geom_estados
     clean_dependencies:
         - sistemas_alertas
-ipc_municipios:
+inflacion_municipios:
     clean_dependencies:
         - ipc_ciudades
 coneval_estados:
