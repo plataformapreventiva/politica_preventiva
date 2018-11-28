@@ -66,7 +66,8 @@ class UpdatePlotsDB(luigi.Task):
     semantic_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     historical = luigi.Parameter('DEFAULT')
-    plot_oriented = configuration.get_config().get(semantic_task, 'plot_oriented')
+    plot_oriented = configuration.get_config().get(semantic_task,
+                                                   'plot_oriented')
 
     # AWS RDS
     database = os.environ.get("PGDATABASE")
@@ -112,6 +113,8 @@ class UpdatePlotsDB(luigi.Task):
                     data_dates = get_feature_dates(table, self.current_date)
                 else:
                     data_dates = get_final_dates(table, self.current_date)
+                # Append schema, table, data_date to dataframe
+        return updates_data
 
     def run:
         if (self.plot_oriented):
