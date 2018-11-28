@@ -15,12 +15,13 @@ import yaml
 from boto3 import client, resource
 from sqlalchemy import create_engine
 
-from luigi import six
 from os.path import join, dirname
+from dotenv import load_dotenv, find_dotenv
+
+from luigi import six
 from luigi import configuration
 from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
-from dotenv import load_dotenv, find_dotenv
 from luigi.contrib.postgres import PostgresTarget, PostgresQuery
 
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string,\
@@ -74,9 +75,9 @@ class FeaturesPipeline(luigi.WrapperTask):
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
 
-        set_pipelines = [(features_task, final_dates(features_task,
-                                                     self.current_date)) for
-                         features_task in self.pipelines]
+        set_pipelines = [(features_task, get_features_dates(features_task,
+                                                            self.current_date)) for
+                          features_task in self.pipelines]
         return [UpdateFeaturesDictionary(features_task=pipeline[0],
                                  current_date=self.current_date,
                                  data_date = dates,
@@ -108,7 +109,7 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
     @property
     def update_id(self):
         return str(self.features_task) + str(self.data_date) +\
-                str(self.suffix) + 'dic'
+               str(self.suffix) + 'dic'
 
     @property
     def table(self):
@@ -234,7 +235,7 @@ class UpdateFeaturesDB(PgRTask):
                 clean_tables = composition[self.features_task]['clean_dependencies']
                 yield [ETLPipeline(current_date=self.current_date,
                                    ptask=pipeline_task) for pipeline_task in clean_tables]
-                
+
             if 'model_dependencies' in dep_types:
                 models_tables = composition[self.features_task]['models_dependencies']
                 yield [ModelsPipeline(current_date=self.current_date,
