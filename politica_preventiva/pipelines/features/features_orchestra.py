@@ -53,7 +53,6 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 with open("pipelines/configs/features_dependencies.yaml", "r") as file:
     composition = yaml.load(file)
 
-
 class FeaturesPipeline(luigi.WrapperTask):
 
     """
