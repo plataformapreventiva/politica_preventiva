@@ -30,8 +30,8 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
-from politica_preventiva.pipelines.features.tools.pipeline_tools import \
-dictionary_test
+from politica_preventiva.pipelines.features.tools.pipeline_tools import dictionary_test,\
+pull_features_dependencies, create_granularity_order, get_features_dates
 from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
@@ -53,7 +53,6 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 with open("pipelines/configs/features_dependencies.yaml", "r") as file:
     composition = yaml.load(file)
 
-
 class FeaturesPipeline(luigi.WrapperTask):
 
     """
@@ -74,9 +73,9 @@ class FeaturesPipeline(luigi.WrapperTask):
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
 
-        set_pipelines = [(features_task, final_dates(features_task,
-                                                     self.current_date)) for
-                         features_task in self.pipelines]
+        set_pipelines = [(features_task, get_features_dates(features_task,
+                                                            self.current_date)) for
+                          features_task in self.pipelines]
         return [UpdateFeaturesDictionary(features_task=pipeline[0],
                                  current_date=self.current_date,
                                  data_date = dates,
@@ -108,7 +107,7 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
     @property
     def update_id(self):
         return str(self.features_task) + str(self.data_date) +\
-                str(self.suffix) + 'dic'
+               str(self.suffix) + 'dic'
 
     @property
     def table(self):
@@ -234,7 +233,7 @@ class UpdateFeaturesDB(PgRTask):
                 clean_tables = composition[self.features_task]['clean_dependencies']
                 yield [ETLPipeline(current_date=self.current_date,
                                    ptask=pipeline_task) for pipeline_task in clean_tables]
-                
+
             if 'model_dependencies' in dep_types:
                 models_tables = composition[self.features_task]['models_dependencies']
                 yield [ModelsPipeline(current_date=self.current_date,
