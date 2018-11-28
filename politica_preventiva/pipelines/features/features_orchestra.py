@@ -31,8 +31,8 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
-from politica_preventiva.pipelines.features.tools.pipeline_tools import \
-dictionary_test
+from politica_preventiva.pipelines.features.tools.pipeline_tools import dictionary_test,\
+pull_features_dependencies, create_granularity_order, get_features_dates
 from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
@@ -53,7 +53,6 @@ aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 with open("pipelines/configs/features_dependencies.yaml", "r") as file:
     composition = yaml.load(file)
-
 
 class FeaturesPipeline(luigi.WrapperTask):
 
