@@ -10,6 +10,8 @@ import logging
 import pdb
 import yaml
 
+from sqlalchemy import create_engine
+
 from luigi import six
 from os.path import join, dirname
 from luigi import configuration
@@ -56,18 +58,77 @@ class SemanticPipeline(luigi.WrapperTask):
     pipelines = luigi.Parameter()
 
     def requires(self):
-        return [UpdateSemanticDB(semantic_task, self.current_date)
+        return [UpdatePlotsDB(semantic_task, self.current_date)
                 for semantic_task in self.semantics]
 
 class UpdatePlotsDB(luigi.Task):
+
     semantic_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     historical = luigi.Parameter('DEFAULT')
-    plot_oriented = configuration.get_config().get(semantic_task,
-                                                  'plot_oriented')
+    plot_oriented = configuration.get_config().get(semantic_task, 'plot_oriented')
+
+    # AWS RDS
+    database = os.environ.get("PGDATABASE")
+    user = os.environ.get("POSTGRES_USER")
+    password = os.environ.get("POSTGRES_PASSWORD")
+    host = os.environ.get("PGHOST")
+
+    engine = create_engine('postgresql://{0}:{1}@{2}:{3}/{4}'.\
+                            format(os.getenv('POSTGRES_USER'),
+                                   os.getenv('POSTGRES_PASSWORD'),
+                                   os.getenv('PGHOST'),
+                                   os.getenv('PGPORT'),
+                                   os.getenv('PGDATABASE')))
+
+    @property
+    def update_id(self):
+        return str(self.plots_task) + '_plots'
+
+    @property
+    def table(self):
+        return "plots." + self.semantic_task
+
+    @property
+    def plots_data:
+        try:
+            plots_data = pd.read_sql("SELECT * FROM plots.{}".\
+                                     format(self.semantic_task), con=engine)
+            return plots_data
+        except:
+            return None
+
+    @property
+    def updates:
+        updates_data = pd.DataFrame()
+        if(self.plots_data):
+            schemas = [row.get('schema') for row in plots_data.metadata]
+            table_names = [row.get('table_name') for row in plots_data.metadata]
+            unique_tables = pd.DataFrame({'schema': schemas,
+                                          'table_name': table_names}).\
+                            drop_duplicates()
+            for (schema, table) in unique_tables:
+                if schema == 'features':
+                    data_dates = get_feature_dates(table, self.current_date)
+                else:
+                    data_dates = get_final_dates(table, self.current_date)
+
     def run:
+        if (self.plot_oriented):
+            plots_test(semantic_task=self.semantic_task,
+                       plots_data=self.plots_data)
+
     def requires:
+        return(UpdateSemanticDB(semantic_task=self.semantic_task,
+                                current_date=self.current_date)
+
     def output:
+        return PostgresTarget(host=self.host,
+                              database=self.database,
+                              user=self.user,
+                              password=self.password,
+                              table=self.table,
+                              update_id=self.update_id)
 
 class UpdateSemanticDB(postgres.PostgresQuery):
 
