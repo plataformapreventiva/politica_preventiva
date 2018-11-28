@@ -71,17 +71,17 @@ def pull_features_dependencies(task, deps_dictionary):
     task_list = []
     dep_types = [dt for dt in deps_dictionary[task].keys()]
     if 'clean_dependencies' in dep_types:
-        task_list.append(deps_dictionary[task]['clean_dependencies']
+        task_list = task_list + deps_dictionary[task]['clean_dependencies']
 
     if 'model_dependencies' in dep_types:
-        task_list.append(deps_dictionary[task]['model_dependencies']
+        task_list = task_list + deps_dictionary[task]['model_dependencies']
 
     if not 'features_dependencies' in dep_types:
         return task_list
     else:
         for f in deps_dictionary[task]['features_dependencies']:
             f_deps = pull_features_dependencies(f, deps_dictionary)
-            task_list.append(f_deps)
+            task_list = task_list + f_deps
         return task_list
 
 def create_granularity_order(order_list):
@@ -96,11 +96,9 @@ def get_features_dates(features_task, current_date):
     with open("pipelines/configs/features_dependencies.yaml", "r") as file:
         composition = yaml.load(file)
 
-    task_list = pull_features_dependencies(task=features_task,
-                                           deps_dictionary=composition)
+    task_list = pull_features_dependencies(task=features_task, deps_dictionary=composition)
     dates_list = [final_dates(task, current_date) for task in task_list]
-    order_list = ['d', 'w', 'm', 'bim', 'q', 'a', 'b', 'fixed']
-    order = create_granularity_order(order_list)
-    sorted_list = sorted(dates_list, key=lambda x: order[x])
+    order = create_granularity_order(['d', 'w', 'm', 'bim',
+                                      'q', 'a', 'b', 'fixed'])
+    sorted_list = sorted(dates_list, key=lambda x: order[x[1]])
     return sorted_list[0]
-
