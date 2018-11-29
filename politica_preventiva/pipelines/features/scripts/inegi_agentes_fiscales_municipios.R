@@ -4,7 +4,6 @@ library(dbplyr)
 library(dplyr)
 library(DBI)
 library(yaml)
-library(stringr)
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -42,7 +41,7 @@ opt <- tryCatch(
 )
 
 if(length(opt) > 1){
-  
+
   if (opt$database=="" | opt$user=="" |
       opt$password=="" | opt$host=="" ){
     print_help(opt_parser)
@@ -54,13 +53,13 @@ if(length(opt) > 1){
     PGHOST <- opt$host
     PGPORT <- "5432"
   }
-  
+
   if(opt$data_date == ""){
     stop("Did not receive a valid data date, stopping", call.=FALSE)
   }else{
     data_date <- opt$data_date
   }
-  
+
   con <- DBI::dbConnect(RPostgres::Postgres(),
                         host = PGHOST,
                         port = PGPORT,
@@ -68,25 +67,27 @@ if(length(opt) > 1){
                         user = POSTGRES_USER,
                         password = POSTGRES_PASSWORD
   )
-  
+
   source("pipelines/features/tools/features_tools.R")
-  
+
   print('Pulling datasets')
+
+  query1 <- 'SELECT LEFT(cve_muni, 2)  as cve_ent, cve_muni FROM clean.geoms_municipios
+            WHERE data_date=\'2018-a\''
+
+  query2 <- 'SELECT * FROM features.inegi_agentes_fiscales_estados'
+
+  # Get tables
+  muni_dic <- tbl(con, sql(query1))
+  estatal <- tbl(con, sql(query2))
+
+  # Get table at municipality level
+  municipal <- left_join(muni_dic,estatal, by=c("cve_ent"))
   
-  cves <- tbl(con, dbplyr::in_schema('raw','geom_estados')) %>% 
-    select(cve_ent,nom_ent) 
-  
-  s_alertas <- tbl(con, dbplyr::in_schema('clean','sistemas_alertas'))
-  
-  sistema_alertas <- left_join(cves, s_alertas, by = "nom_ent") %>% 
-    select(cve_ent,endeudamiento,liquidez) %>%
-    dplyr::mutate(data_date = data_date,
-                  actualizacion_sedesol = lubridate::today())
-  
-  copy_to(con, sistema_alertas,
-          dbplyr::in_schema("features",'sistema_alertas'),
+  copy_to(con, municipal,
+          dbplyr::in_schema("features","inegi_agentes_fiscales_municipios"),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
-  
-  print('Features written to: features.sistema_alertas')
+
+  print('Features written to: features.inegi_agentes_fiscales_municipios')
 }
