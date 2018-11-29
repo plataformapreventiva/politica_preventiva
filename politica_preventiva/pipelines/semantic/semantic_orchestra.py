@@ -2,12 +2,13 @@
 # coding: utf-8
 
 import datetime
+import logging
 import luigi
 import os
+import pandas as pd
+import pdb
 import random
 import subprocess
-import logging
-import pdb
 import yaml
 
 from sqlalchemy import create_engine
@@ -28,6 +29,10 @@ from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_li
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import UpdateCleanDB
+from politica_preventiva.pipelines.features.tools.pipeline_tools import
+get_feature_dates
+from politica_preventica.pipelines.semantic.tools.pipeline_tools import \
+plots_test
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
@@ -74,13 +79,11 @@ class UpdatePlotsDB(luigi.Task):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+    port = os.environ.get("PGPORT")
 
     engine = create_engine('postgresql://{0}:{1}@{2}:{3}/{4}'.\
-                            format(os.getenv('POSTGRES_USER'),
-                                   os.getenv('POSTGRES_PASSWORD'),
-                                   os.getenv('PGHOST'),
-                                   os.getenv('PGPORT'),
-                                   os.getenv('PGDATABASE')))
+                            format(user, password, host,
+                                   port, database))
 
     @property
     def update_id(self):
@@ -94,32 +97,41 @@ class UpdatePlotsDB(luigi.Task):
     def plots_data:
         try:
             plots_data = pd.read_sql("SELECT * FROM plots.{}".\
-                                     format(self.semantic_task), con=engine)
+                                     format(self.semantic_task), con=self.engine)
             return plots_data
         except:
             return None
 
     @property
     def updates:
-        updates_data = pd.DataFrame()
+        updates_data = pd.DataFrame(columns=['schema', 'table_name', 'last_update'])
         if(self.plots_data):
-            schemas = [row.get('schema') for row in plots_data.metadata]
-            table_names = [row.get('table_name') for row in plots_data.metadata]
-            unique_tables = pd.DataFrame({'schema': schemas,
-                                          'table_name': table_names}).\
+            unique_tables = pd.DataFrame([(row.get('schema'), row.get('table_name'))\
+                                                  for row in plots_data.metadata],
+                                          columns=['schema', 'table_name']).\
                             drop_duplicates()
-            for (schema, table) in unique_tables:
-                if schema == 'features':
-                    data_dates = get_feature_dates(table, self.current_date)
-                else:
-                    data_dates = get_final_dates(table, self.current_date)
-                # Append schema, table, data_date to dataframe
+            # Test if we need first or last element
+            for index, row in unique_tables.iterrows():
+                try:
+                    if row['schema'] == 'features':
+                        data_dates = get_feature_dates(row['table_name'], self.current_date)
+                    else:
+                        data_dates = get_final_dates(row['table_name'], self.current_date)
+                    last_update = data_dates[0][-1]
+                except:
+                    data_dates = ([''], '')
+                updates_data.append([schema, table, last_update])
         return updates_data
 
     def run:
         if (self.plot_oriented):
-            plots_test(semantic_task=self.semantic_task,
+            updated_plots_data = plots_test(updates_data=self.updates_data,
                        plots_data=self.plots_data)
+            if updated_plots_data != self.plots_data:
+                query = """DROP TABLE IF EXISTS plots.{0};""".\
+                        format(self.semantic_task)
+                engine.execute(query)
+
 
     def requires:
         return(UpdateSemanticDB(semantic_task=self.semantic_task,
