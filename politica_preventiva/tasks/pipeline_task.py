@@ -47,8 +47,11 @@ class PgRTask(luigi.Task):
         cmd_docker = '''
             docker run -it --rm  -v $PWD:/politica_preventiva\
             -v politica_preventiva_store:/data\
+                -e AWS_ACCESS_KEY_ID="{1}" \
+                -e AWS_SECRET_ACCESS_KEY="{2}" \
             politica_preventiva/task/r-task {0} > /dev/null
-         '''.format(self.cmd)
+         '''.format(self.cmd, aws_access_key_id,
+                 aws_secret_access_key)
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
 
