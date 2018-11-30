@@ -14,7 +14,7 @@ import pandas as pd
 
 from politica_preventiva.pipelines.ingest.classic.classic_ingest_tasks import *
 from politica_preventiva.pipelines.ingest.classic.preprocessing_scripts.preprocessing_scripts import *
-from politica_preventiva.pipelines.ingest.tools.ingest_utils import\
+from politica_preventiva.pipelines.utils.pipeline_utils import\
         parse_cfg_list, get_extra_str, s3_to_pandas, find_extension
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string
 

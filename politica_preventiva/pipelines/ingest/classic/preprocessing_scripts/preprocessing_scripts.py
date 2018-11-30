@@ -12,7 +12,7 @@ import pandas as pd
 import politica_preventiva.pipelines.ingest.tools.preprocessing_utils as\
         pputils
 from luigi import task
-from politica_preventiva.pipelines.ingest.tools.ingest_utils import\
+from politica_preventiva.pipelines.utils.pipeline_utils import\
         s3_to_pandas, get_extra_str, pandas_to_s3, copy_s3_files, delete_s3_file
 
 # logger
