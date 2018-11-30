@@ -111,7 +111,7 @@ sistemas_alertas_municipios:
         - geoms_municipios
 sistemas_alertas_estados:
     raw_dependencies:
-        - geom_estados
+        - geoms_estados
     clean_dependencies:
         - sistemas_alertas
 inflacion_municipios:
@@ -127,4 +127,8 @@ shcp_ici_municipios:
 imco_ice_municipios:
     clean_dependencies:
         - imco_ice
+        - geoms_municipios
+geojson_mun_ent:
+    clean_dependencies:
+        - geoms_estados
         - geoms_municipios
