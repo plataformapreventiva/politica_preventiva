@@ -131,6 +131,9 @@ class UpdatePlotsDB(luigi.Task):
                 query = """DROP TABLE IF EXISTS plots.{0};""".\
                         format(self.semantic_task)
                 engine.execute(query)
+                tested_data.to_sql(name=self.semantic_task,
+                                   con=engine,
+                                   schema='plots')
 
 
     def requires:
