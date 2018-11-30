@@ -1,18 +1,47 @@
 coneval:
-- coneval_estados
-- coneval_municipios
+    clean_dependencies:
+        - coneval_estados
+        - coneval_municipios
 cuenta_publica:
-- cuenta_publica_anual
-- cuenta_publica_trimestral
+    clean_dependencies:
+        - cuenta_publica_anual
+        - cuenta_publica_trimestral
 pub_agrupaciones:
-- pub_agrupaciones
+    clean_dependencies:
+        - pub_agrupaciones
 catalogo_ubicaciones:
-- geoms_municipios
-- geoms_estados
+        - geoms_municipios
+        - geoms_estados
 reporte_programas:
-- cuaps_programas
-- cuaps_apoyos
-- cuaps_criterios
-- inventario_coneval_estatales
-- inventario_coneval_federales
-- listado_coneval_federales
+    clean_dependencies:
+        - cuaps_programas
+        - cuaps_apoyos
+        - cuaps_criterios
+        - inventario_coneval_estatales
+        - inventario_coneval_federales
+        - listado_coneval_federales
+perfil_ubicaciones:
+    clean_dependencies:
+        - cngmd_proteccion_civil_municipios
+        - coneval_municipios
+        - intercensal_personas_2015_municipios
+    features_dependencies:
+        - capacidad_institucional_financiera_estados
+        - capacidad_institucional_financiera_municipios
+        - coneval_estados
+#        - crimenes_tasas_estados
+#        - crimenes_tasas_municipios
+        - enigh_vulnerabilidades_estados
+        - enigh_vulnerabilidades_municipios
+        - inflacion_estados
+        - inflacion_municipios
+        - inform_variables_estados
+        - inform_variables_municipios
+        - intercensal_personas_2015_estados
+        - intercensal_personas_2015_municipios
+        - mortalidad_tasas_estados
+        - mortalidad_tasas_municipios
+#        - oferta_social_estados
+#        - oferta_social_municipios
+#        - poblaciones_atendidas_estados
+#        - poblaciones_atendidas_municipios
