@@ -131,8 +131,9 @@ if(length(opt) > 1){
             )) FROM features.geojson_mun_ent"
 
   geojson_file <- tbl(con, sql(geojson)) %>% collect()
-  s3save(geojson_file, bucket = "sedesol-open-data",
-         object = "geometrias_test.json")
+
+  s3save(toString(geojson_file), bucket = "sedesol-open-data",
+         object = "geometrias_test.geojson")
 
   dbDisconnect(con)
 
