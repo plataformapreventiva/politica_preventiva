@@ -197,7 +197,7 @@ if(length(opt) > 1){
   #----------------------------------------------------------------------------------------
   
   inform_mun <- left_join(amenazas,vulnerabilidades, by= 'cve_muni') %>%
-    left_join(capacidades, by='cve_muni') %>% 
+    left_join(capacidades, by='cve_muni') %>%
     dplyr::mutate(data_date=data_date,
                   actualizacion_sedesol = lubridate::today())
   
