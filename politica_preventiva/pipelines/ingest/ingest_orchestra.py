@@ -307,14 +307,6 @@ class UpdateDictionary(postgres.CopyToTable):
 
     def requires(self):
         extra = extras(self.pipeline_task)
-        if extra[0] == 'geoms':
-            pass
-            # return UpdateGeomDB(current_date=self.current_date,
-            #                    pipeline_task=self.pipeline_task,
-            #                    actualizacion=self.actualizacion,
-            #                    data_date=self.data_date, suffix=self.suffix)
-
-        else:
             return UpdateRawDB(current_date=self.current_date,
                                pipeline_task=self.pipeline_task,
                                actualizacion=self.actualizacion,
