@@ -31,8 +31,7 @@ from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import UpdateCleanDB
 from politica_preventiva.pipelines.features.tools.pipeline_tools import
 get_feature_dates
-from politica_preventica.pipelines.semantic.tools.pipeline_tools import \
-plots_test
+from politica_preventica.pipelines.semantic.tools.pipeline_tools import plots_test
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
@@ -63,16 +62,23 @@ class SemanticPipeline(luigi.WrapperTask):
     pipelines = luigi.Parameter()
 
     def requires(self):
-        return [UpdatePlotsDB(semantic_task, self.current_date)
-                for semantic_task in self.semantics]
+        if self.ptask!='auto':
+            self.pipelines = (self.ptask,)
+
+        logger.info('Luigi is running the Semanic Pipeline on the date: {0}'.\
+                    format( self.current_date))
+        return [UpdatePlotsDB(semantic_task=semantic_task,
+                              current_date=self.current_date,
+                              plot_oriented=configuration.get_config().\
+                                     get(semantic_task, 'plot_oriented'))
+                for semantic_task in self.pipelines]
 
 class UpdatePlotsDB(luigi.Task):
 
     semantic_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     historical = luigi.Parameter('DEFAULT')
-    plot_oriented = configuration.get_config().get(semantic_task,
-                                                   'plot_oriented')
+    plot_oriented = luigi.Parameter()
 
     # AWS RDS
     database = os.environ.get("PGDATABASE")
@@ -104,9 +110,11 @@ class UpdatePlotsDB(luigi.Task):
 
     @property
     def updates:
-        updates_data = pd.DataFrame(columns=['schema', 'table_name', 'last_update'])
+        updates_data = pd.DataFrame(columns=['schema', 'table_name',\
+                                                        'last_update'])
         if(self.plots_data):
-            unique_tables = pd.DataFrame([(row.get('schema'), row.get('table_name'))\
+            unique_tables = pd.DataFrame([(row.get('schema'),\
+                                            row.get('table_name'))\
                                                   for row in plots_data.metadata],
                                           columns=['schema', 'table_name']).\
                             drop_duplicates()
@@ -114,9 +122,11 @@ class UpdatePlotsDB(luigi.Task):
             for index, row in unique_tables.iterrows():
                 try:
                     if row['schema'] == 'features':
-                        data_dates = get_feature_dates(row['table_name'], self.current_date)
+                        data_dates = get_feature_dates(row['table_name'],
+                                                        self.current_date)
                     else:
-                        data_dates = get_final_dates(row['table_name'], self.current_date)
+                        data_dates = get_final_dates(row['table_name'],
+                                                        self.current_date)
                     last_update = data_dates[0][-1]
                 except:
                     data_dates = ([''], '')
@@ -126,7 +136,7 @@ class UpdatePlotsDB(luigi.Task):
     def run:
         if (self.plot_oriented):
             updated_plots_data = plots_test(updates_data=self.updates_data,
-                       plots_data=self.plots_data)
+                                                plots_data=self.plots_data)
             if updated_plots_data != self.plots_data:
                 query = """DROP TABLE IF EXISTS plots.{0};""".\
                         format(self.semantic_task)
@@ -134,7 +144,6 @@ class UpdatePlotsDB(luigi.Task):
                 tested_data.to_sql(name=self.semantic_task,
                                    con=engine,
                                    schema='plots')
-
 
     def requires:
         return(UpdateSemanticDB(semantic_task=self.semantic_task,
