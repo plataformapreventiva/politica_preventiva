@@ -1,8 +1,9 @@
 # Platforma Preventiva -
 
 ## About:
-In order to improve the targeting of social programs, the System of Integral Social Information (Sistema de Información Social Integral - SISI) strives to create a platform to help analyse multi-dimensional data not usually taken into account when developing social policy in Mexico. The proposed approach is to create various compound indicators tailored to tackle different areas of interest in social policy; as such, all indicators would create a profile of geographical areas and help target social programs in a more thorough manner.
+In order to improve the targeting of social programs, the System of Integral Social Information (Sistema de Información Social Integral - SISI) strives to create a platform to analyse multi-dimensional data not usually taken into account when developing social policy in Mexico. 
 
+This pipeline ingests, preprocesses and cleans more than 30 sources of information from different private and public entities and, establishes a process for feature creation and the execution of statistical models.
 
 ## Installation
 
@@ -30,6 +31,8 @@ The general process of the pipeline is:
 * LocalToS3: Upload to S3 and save historical by date
 * UpdateDB: Update Postgres tables and Create indexes (see commons/pg_raw_schemas)
 * **ETL:** [politica_preventiva/pipelines/etl/etl_orchestra.py]
+* **Features:** [politica_preventiva/pipelines/features/features_orchestra.py]
+* **Models:** [politica_preventiva/pipelines/models/models_orchestra.py]
 
 ### Contributors
 
