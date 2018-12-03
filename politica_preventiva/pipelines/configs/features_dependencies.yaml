@@ -30,7 +30,10 @@ enigh_ingreso:
         - enigh_poblacion
         - enigh_trabajos
         - enigh_viviendas
-crimenes_tasas:
+crimenes_tasas_municipios:
+    clean_dependencies:
+        - delitos_comun
+crimenes_tasas_estados:
     clean_dependencies:
         - delitos_comun
 recursos_hospitales:
