@@ -28,6 +28,7 @@ from politica_preventiva.pipelines.utils.pipeline_utils import\
         parse_cfg_list, extras, dates_list, get_extra_str, s3_to_pandas,\
         final_dates
 from politica_preventiva.pipelines.utils import s3_utils
+from politica_preventiva.pipelines.tests import pipeline_tests
 from politica_preventiva.pipelines.ingest.tests import classic_tests
 from politica_preventiva.tasks.pipeline_task import *
 from politica_preventiva.pipelines.utils import emr_tasks
@@ -263,6 +264,9 @@ class UpdateDictionary(postgres.CopyToTable):
     local_path = luigi.Parameter('DEFAULT')  # path where csv is located
     raw_bucket = luigi.Parameter('DEFAULT')  # s3 bucket address
 
+    common_bucket = luigi.Parameter()
+    common_key = luigi.Parameter()
+
     # RDS
     database = os.environ.get("PGDATABASE")
     user = os.environ.get("POSTGRES_USER")
@@ -297,28 +301,28 @@ class UpdateDictionary(postgres.CopyToTable):
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
                   i in range(len(self.columns))]
-        path = self.common_path + "dictionaries/"+self.pipeline_task + "_dic.csv"
-        data = classic_tests.dictionary_test(self.pipeline_task, path,
-                                             header_d, header,
-                                             self.actualizacion,
-                                             self.data_date,
-                                             self.suffix)
+        table_header = [x for x in set().union(*(d.keys() for d \
+                in header_d[self.pipeline_task]['LUIGI']['SCHEMA']))]
+        path = self.common_path + "dictionaries/" +\
+               self.pipeline_task + "_dic.csv"
+        data = pipeline_tests.dictionary_test(task=self.pipeline_task,
+                                              dict_path=path,
+                                              table_header=table_header,
+                                              dict_header=header,
+                                              current_date=self.actualizacion,
+                                              data_date=self.data_date,
+                                              suffix=self.suffix,
+                                              common_bucket=self.common_bucket,
+                                              common_key=self.common_key)
+        pdb.set_trace()
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
         extra = extras(self.pipeline_task)
-        if extra[0] == 'geoms':
-            pass
-            # return UpdateGeomDB(current_date=self.current_date,
-            #                    pipeline_task=self.pipeline_task,
-            #                    actualizacion=self.actualizacion,
-            #                    data_date=self.data_date, suffix=self.suffix)
-
-        else:
-            return UpdateRawDB(current_date=self.current_date,
-                               pipeline_task=self.pipeline_task,
-                               actualizacion=self.actualizacion,
-                               data_date=self.data_date, suffix=self.suffix)
+        return UpdateRawDB(current_date=self.current_date,
+                           pipeline_task=self.pipeline_task,
+                           actualizacion=self.actualizacion,
+                           data_date=self.data_date, suffix=self.suffix)
 
 
     def output(self):
