@@ -32,7 +32,7 @@ from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
 from politica_preventiva.pipelines.features.tools.pipeline_tools import dictionary_test,\
         pull_features_dependencies, create_granularity_order, get_features_dates
-from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
+#from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
 load_dotenv(find_dotenv())
