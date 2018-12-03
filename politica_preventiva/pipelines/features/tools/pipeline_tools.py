@@ -13,7 +13,7 @@ from io import StringIO
 from luigi import configuration
 from sqlalchemy import create_engine
 
-from politica_preventiva.pipelines.ingest.tools.ingest_utils import parse_cfg_list,\
+from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
      extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 
 # Logger and Config

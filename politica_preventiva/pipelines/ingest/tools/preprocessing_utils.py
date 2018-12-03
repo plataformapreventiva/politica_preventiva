@@ -14,7 +14,7 @@ import ast
 import os
 import pdb
 import boto3
-from politica_preventiva.pipelines.ingest.tools.ingest_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
+from politica_preventiva.pipelines.utils.pipeline_utils import s3_to_pandas, copy_s3_files, delete_s3_file, get_s3_file_size
 from dotenv import load_dotenv, find_dotenv
 
 
