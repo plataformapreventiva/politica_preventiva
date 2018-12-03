@@ -7,11 +7,11 @@ import pdb
 import re
 import sys
 import yaml
-import boto3
-from io import StringIO
 
-from luigi import configuration
+from boto3 import resource
 from datetime import datetime
+from io import StringIO
+from luigi import configuration
 import pandas as pd
 from messytables import CSVTableSet, type_guess, \
           types_processor, headers_guess, headers_processor, \
@@ -26,8 +26,9 @@ logging.config.fileConfig(logging_conf)
 logger = logging.getLogger("dpa-sedesol")
 
 
-def dictionary_test(task, allow_joins=False, dict_path, table_header, dict_header,
-        current_date, data_date, suffix, common_bucket, common_key):
+def dictionary_test(task, dict_path, table_header, dict_header,
+                    current_date, data_date, suffix, common_bucket,
+                    common_key, allow_joins=False):
     """
     This function updates the task dictionary data with the
     local dictionary file.  If the task is an ingest task, it will look
@@ -35,6 +36,7 @@ def dictionary_test(task, allow_joins=False, dict_path, table_header, dict_heade
     features task, it will instead query the database the current features
     table header.
 
+    # Add a more general way of quoting
     # TODO() Check if the data has other data date (ingest)
     # TODO() Add Neo4j legacy task for both ingest and features pipelines
     # TODO() Rethink dictionary schemas to be more general and standardized
@@ -47,19 +49,21 @@ def dictionary_test(task, allow_joins=False, dict_path, table_header, dict_heade
         if allow_joins:
             header_series = pd.DataFrame(pd.Series(table_header, name='id'))
             dictionary = header_series.join(local_dictionary, how='left', on='id')
-        assert True in dictionary['nombre'].isnull(),\
+        else:
+            dictionary = local_dictionary
+            dictionary.reset_index(level=0, inplace=True)
+        assert True not in dictionary['nombre'].isnull(),\
                 'Your dictionary is not complete'
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
         dictionary = dictionary.where((pd.notnull(dictionary)), None)
-        dictionary.to_csv(dict_path, index=False,
-                          sep='|', encoding='utf-8',
-                          quoting=csv.QUOTE_NONE)
+        dictionary.to_csv(dict_path, sep='|', encoding='utf-8',
+                quoting=csv.QUOTE_NONE)
         csv_buffer = StringIO()
-        dictionary.to_csv(csv_buffer,sep='|', quoting=csv.QUOTE_NONE)
+        dictionary.to_csv(csv_buffer,sep='|', encoding='utf-8',
+                quoting=csv.QUOTE_NONE)
         s3_resource = resource('s3')
-        s3_resource.Object(common_bucket,
-                           common_key + features_task + '_dic.csv').\
+        s3_resource.Object(common_bucket, common_key + task + '_dic.csv').\
                            put(Body=csv_buffer.getvalue())
     except FileNotFoundError:
         # Create an empty dataframe with just enough empty cols

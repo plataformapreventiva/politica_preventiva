@@ -301,8 +301,8 @@ class UpdateDictionary(postgres.CopyToTable):
         header = [[a for (a, b) in
                    header_d["dictionary"]['LUIGI']['SCHEMA'][i].items()][0] for
                   i in range(len(self.columns))]
-        table_header = [x for x in\
-                header_d[self.pipeline_task]['LUIGI']['SCHEMA'].keys()]
+        table_header = [x for x in set().union(*(d.keys() for d \
+                in header_d[self.pipeline_task]['LUIGI']['SCHEMA']))]
         path = self.common_path + "dictionaries/" +\
                self.pipeline_task + "_dic.csv"
         data = pipeline_tests.dictionary_test(task=self.pipeline_task,
@@ -314,14 +314,15 @@ class UpdateDictionary(postgres.CopyToTable):
                                               suffix=self.suffix,
                                               common_bucket=self.common_bucket,
                                               common_key=self.common_key)
+        pdb.set_trace()
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
         extra = extras(self.pipeline_task)
-            return UpdateRawDB(current_date=self.current_date,
-                               pipeline_task=self.pipeline_task,
-                               actualizacion=self.actualizacion,
-                               data_date=self.data_date, suffix=self.suffix)
+        return UpdateRawDB(current_date=self.current_date,
+                           pipeline_task=self.pipeline_task,
+                           actualizacion=self.actualizacion,
+                           data_date=self.data_date, suffix=self.suffix)
 
 
     def output(self):
