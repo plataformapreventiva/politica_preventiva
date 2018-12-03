@@ -29,9 +29,9 @@ from politica_preventiva.tasks.pipeline_task import DockerTask, PgRTask
 from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
+from politica_preventiva.pipelines.tests import pipeline_tests
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
-from politica_preventiva.pipelines.features.tools.pipeline_tools import dictionary_test,\
-pull_features_dependencies, create_granularity_order, get_features_dates
+from politica_preventiva.pipelines.features.tools.pipeline_tools import get_features_dates
 from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
@@ -147,15 +147,16 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
     def rows(self):
         logging.info('Trying to update the dictionary for '+\
                      'the features task {}'.format(self.features_task))
-        dictionary=dictionary_test(features_task=self.features_task,
-                                   dict_path=self.dict_path,
-                                   table_header=self.table_header,
-                                   dict_header=self.columns,
-                                   current_date=self.current_date,
-                                   data_date=self.data_date,
-                                   suffix=self.suffix,
-                                   common_bucket=self.common_bucket,
-                                   common_key=self.common_key)
+        dictionary=pipeline_tests.dictionary_test(features_task=self.features_task,
+                                                  dict_path=self.dict_path,
+                                                  allow_joins=True,
+                                                  table_header=self.table_header,
+                                                  dict_header=self.columns,
+                                                  current_date=self.current_date,
+                                                  data_date=self.data_date,
+                                                  suffix=self.suffix,
+                                                  common_bucket=self.common_bucket,
+                                                  common_key=self.common_key)
         return [tuple(x) for x in dictionary.to_records(index=False)]
 
     def requires (self):

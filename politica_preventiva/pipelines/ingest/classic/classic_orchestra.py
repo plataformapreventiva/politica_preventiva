@@ -32,7 +32,6 @@ from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.ingest.tests import classic_tests
 from politica_preventiva.tasks.pipeline_task import *
 from politica_preventiva.pipelines.utils import emr_tasks
-from politica_preventiva.pipelines.ingest.geoms.geoms_orchestra import *
 
 # Load Postgres Schemas
 with open('./pipelines/ingest/common/raw_schemas.yaml', 'r') as file:
