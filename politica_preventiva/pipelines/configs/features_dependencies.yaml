@@ -30,7 +30,10 @@ enigh_ingreso:
         - enigh_poblacion
         - enigh_trabajos
         - enigh_viviendas
-crimenes_tasas:
+crimenes_tasas_municipios:
+    clean_dependencies:
+        - delitos_comun
+crimenes_tasas_estados:
     clean_dependencies:
         - delitos_comun
 recursos_hospitales:
@@ -94,7 +97,7 @@ inform_variables_municipios:
         - cngmd_drenaje
         - cngmd_recoleccion_basura
     features_dependencies:
-        - crimenes_tasas
+        - crimenes_tasas_municipios
         - intercensal_personas_2015
         - intercensal_viviendas_2015
         - inegi_jueces_municipios
@@ -102,7 +105,7 @@ inform_variables_municipios:
         - sistemas_alertas_municipios
         - shcp_ici_municipios
         - imco_ice_municipios
-        - inflancion_municipios
+        - inflacion_municipios
         - enigh_vulnerabilidades_municipios
 sistemas_alertas_municipios:
     features_dependencies:
@@ -111,7 +114,7 @@ sistemas_alertas_municipios:
         - geoms_municipios
 sistemas_alertas_estados:
     raw_dependencies:
-        - geom_estados
+        - geoms_estados
     clean_dependencies:
         - sistemas_alertas
 inflacion_municipios:
@@ -127,4 +130,8 @@ shcp_ici_municipios:
 imco_ice_municipios:
     clean_dependencies:
         - imco_ice
+        - geoms_municipios
+geojson_mun_ent:
+    clean_dependencies:
+        - geoms_estados
         - geoms_municipios
