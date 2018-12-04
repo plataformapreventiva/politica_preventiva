@@ -145,13 +145,14 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
         return [x[0] for x in table_columns]
 
     def rows(self):
+        dict_header = [x[0] for x in self.columns]
         logging.info('Trying to update the dictionary for '+\
                      'the features task {}'.format(self.features_task))
-        dictionary=pipeline_tests.dictionary_test(features_task=self.features_task,
+        dictionary=pipeline_tests.dictionary_test(task=self.features_task,
                                                   dict_path=self.dict_path,
                                                   allow_joins=True,
                                                   table_header=self.table_header,
-                                                  dict_header=self.columns,
+                                                  dict_header=dict_header,
                                                   current_date=self.current_date,
                                                   data_date=self.data_date,
                                                   suffix=self.suffix,
