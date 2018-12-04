@@ -74,7 +74,7 @@ def dictionary_test(task, dict_path, table_header, dict_header,
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
         dictionary.to_csv(dict_path, index=False,
-                          sep='|', encoding = 'utf-8', quoting=csv.QUOTE_NONE)
+                sep='|', encoding = 'utf-8', quoting=csv.QUOTE_NONE)
         logger.info('Dictionary of task {task} is not defined,\
                 see {path}'.format(task=features_task, path=dict_path))
         raise AssertionError('Dictionary of task {0} is not defined,\

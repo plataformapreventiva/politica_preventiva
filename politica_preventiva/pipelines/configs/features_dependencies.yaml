@@ -97,7 +97,7 @@ inform_variables_municipios:
         - cngmd_drenaje
         - cngmd_recoleccion_basura
     features_dependencies:
-        - crimenes_tasas
+        - crimenes_tasas_municipios
         - intercensal_personas_2015
         - intercensal_viviendas_2015
         - inegi_jueces_municipios
@@ -105,7 +105,7 @@ inform_variables_municipios:
         - sistemas_alertas_municipios
         - shcp_ici_municipios
         - imco_ice_municipios
-        - inflancion_municipios
+        - inflacion_municipios
         - enigh_vulnerabilidades_municipios
 sistemas_alertas_municipios:
     features_dependencies:
