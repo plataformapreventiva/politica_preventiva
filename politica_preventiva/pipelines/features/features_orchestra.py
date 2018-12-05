@@ -141,7 +141,6 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
                         "and table_name='{}' "
                         "and column_name <> 'actualizacion_sedesol' "
                         "and column_name <> 'data_date'".format(self.features_task))
-        pdb.set_trace()
         connection = engine.connect()
         query_result = connection.execute(header_query)
         table_columns = [x for x in query_result]
