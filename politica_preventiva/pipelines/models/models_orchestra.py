@@ -29,7 +29,6 @@ from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import UpdateCleanDB
-<<<<<<< HEAD
 from politica_preventiva.pipelines.ingest.tools.ingest_utils import final_dates
 from politica_preventiva.pipelines.features.features_orchestra import FeaturesPipeline
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
