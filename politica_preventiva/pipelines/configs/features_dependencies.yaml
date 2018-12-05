@@ -81,9 +81,9 @@ inegi_agentes_fiscales_municipios:
     clean_dependencies:
         - geoms_municipios
 inegi_agentes_fiscales_estados:
-    features_dependencies:
-        - inegi_agentes_fiscales
     clean_dependencies:
+        - inegi_agentes_fiscales
+    raw_dependencies:
         - geoms_estados
 inform_variables_municipios:
     clean_dependencies:
@@ -92,15 +92,14 @@ inform_variables_municipios:
         - cngmd_drenaje
         - cngmd_recoleccion_basura
     features_dependencies:
-        - crimenes_tasas
-        - intercensal_personas_2015
-        - intercensal_viviendas_2015
+        - crimenes_tasas_municipios
+        - intercensal_personas_2015_municipios
+        - intercensal_viviendas_2015_municipios
         - inegi_jueces_municipios
         - inegi_agentes_fiscales_municipios
         - sistemas_alertas_municipios
         - shcp_ici_municipios
         - imco_ice_municipios
-        - inflancion_municipios
         - enigh_vulnerabilidades_municipios
 sistemas_alertas_municipios:
     features_dependencies:
