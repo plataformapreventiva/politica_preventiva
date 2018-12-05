@@ -120,6 +120,9 @@ sistemas_alertas_estados:
 inflacion_municipios:
     clean_dependencies:
         - ipc_ciudades
+inflacion_estados:
+    features_dependencies:
+        - inflacion_municipios
 coneval_estados:
     clean_dependencies:
         - coneval_estados

@@ -4,12 +4,12 @@ library(dplyr)
 library(DBI)
 library(dotenv)
 library(geosphere)
+library(lubridate)
 library(lwgeom)
 library(mapsapi)
 library(optparse)
 library(sf)
 library(sp)
-
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -80,18 +80,25 @@ if(length(opt) > 1){
 
   # Obtain inflation data by querying and mutating prices data
 
-  ipc_ciudades <- dplyr::tbl(con, dbplyr::in_schema('clean', 'ipc_ciudades')) %>%
-                    dplyr::collect()
-
-  inflacion_ciudades <- tbl(con, dbplyr::in_schema('clean', 'ipc_ciudades')) %>%
+  inflacion_ciudades <- tbl(con, dbplyr::in_schema('raw', 'ipc_ciudades')) %>%
                           dplyr::collect() %>%
-                          dplyr::group_by(ciudad) %>%
+                          dplyr::filter(!is.na(nom_cd), !grepl('México', nom_cd)) %>%
+                          dplyr::mutate(year = as.numeric(gsub('.*([0-9]{4})$',
+                                                               '\\1', fecha)),
+                                        mes = dplyr::recode(gsub('(^.*) ([0-9]{4})',
+                                                                 '\\1', fecha),
+                                                            Ene = 'Jan', Abr = 'Apr',
+                                                            Ago = 'Aug', Dic = 'Dec'),
+                                        month = month(parse_date_time(paste0(mes, ' 2018'),
+                                                                           order = 'b Y'))) %>%
+                          dplyr::group_by(nom_cd, variable) %>%
                           dplyr::arrange(year, month) %>%
-                          dplyr::mutate_at(vars(indice:scian_3), as.numeric) %>%
-                          dplyr::mutate_at(vars(indice:scian_3),
-                                           funs(dif = (.-lag(.))/.)) %>%
+                          dplyr::mutate(value_dif = (value-lag(value))/value,
+                                         month = stringr::str_pad(month, width = 2,
+                                                                  side = 'left', pad = '0')) %>%
                           dplyr::ungroup() %>%
                           tidyr::unite('yearmon', c('year', 'month'))
+# Imputar la media a CDMX
 
   periods <- inflacion_ciudades %>%
               dplyr::pull(yearmon) %>%
@@ -106,7 +113,9 @@ if(length(opt) > 1){
                         dplyr::collect()
 
   ciudades <- inflacion_ciudades_lp %>%
-                dplyr::pull(ciudad) %>%
+                dplyr::arrange(nom_cd) %>%
+                dplyr::pull(nom_cd) %>%
+                unique() %>%
                 mapsapi::mp_geocode(key = Sys.getenv('key')) %>%
                 mapsapi::mp_get_points()
   n_cities <- nrow(ciudades)
@@ -126,10 +135,14 @@ if(length(opt) > 1){
 
   print('Successfully computed weights matrix')
 
-  inflacion_municipios <- inflacion_ciudades_lp %>%
-                            dplyr::select(ends_with('dif')) %>%
-                            purrr::map_df(function(x) weights_matrix %*% x) %>%
-                            dplyr::bind_cols(dplyr::select(geoms_municipios, cve_muni), .)
+  inflacion_municipios <- tibble(ipc_dif = as.vector(weights_matrix %*%
+                                                     inflacion_ciudades_lp$value_dif),
+                                 yearmon = unique(inflacion_ciudades_lp$yearmon),
+                                 actualizacion_sedesol = lubridate::today(),
+                                 data_date = unique(inflacion_ciudades_lp$data_date)) %>%
+                          tidyr::separate(yearmon, into = c('year', 'month')) %>%
+                          dplyr::bind_cols(dplyr::select(geoms_municipios, cve_muni), .)
+
 
   dplyr::copy_to(con, inflacion_municipios,
                  dbplyr::in_schema("features",'inflacion_municipios'),
@@ -138,4 +151,3 @@ if(length(opt) > 1){
 
   print('Features written to: features.inflacion_municipios')
 }
-
