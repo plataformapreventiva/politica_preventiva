@@ -98,9 +98,9 @@ mortalidad_tasas <- tbl(con, sql(query)) %>%
     dplyr::mutate(actualizacion_sedesol = lubridate::today())
   
   copy_to(con, mortalidad_tasas,
-          dbplyr::in_schema("features",'mortalidad_tasas'),
+          dbplyr::in_schema("features",'mortalidad_tasas_municipios'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
   
-  print('Features written to: features.mortalidad_tasas')
+  print('Features written to: features.mortalidad_tasas_municipios')
 }

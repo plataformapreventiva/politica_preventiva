@@ -62,3 +62,4 @@ def get_features_dates(features_task, current_date):
                           'q', 'a', 'b', 'fixed'])
     sorted_list = sorted(dates_list, key=lambda x: order[x[1]])
     return sorted_list[0]
+

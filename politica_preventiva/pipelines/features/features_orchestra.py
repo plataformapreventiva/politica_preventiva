@@ -72,7 +72,6 @@ class FeaturesPipeline(luigi.WrapperTask):
                     self.current_date))
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
-
         set_pipelines = [(features_task, get_features_dates(features_task,
                                                             self.current_date)) for
                           features_task in self.pipelines]
@@ -208,7 +207,7 @@ class UpdateFeaturesDB(PgRTask):
         # Read features script
         features_script = self.features_scripts +\
                 self.features_task + '.R'
-
+        
         if not os.path.isfile(features_script):
             raise Exception("Feature script is not defined")
 
