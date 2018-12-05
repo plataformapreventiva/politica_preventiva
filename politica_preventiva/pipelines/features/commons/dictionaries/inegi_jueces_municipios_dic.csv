@@ -1,0 +1,7 @@
+id|nombre|tipo|fuente|metadata|actualizacion_sedesol|data_date
+cve_ent|Clave de entidad|||{}|2018-12-04|2018-a
+cve_muni|Clave de municipio|||{}|2018-12-04|2018-a
+num_jueces|Número de jueces por cada 1000 habitantes|INEGI||{}|2018-12-04|2018-a
+anio|Año|||{}|2018-12-04|2018-a
+data_date|Data date|||{}|2018-12-04|2018-a
+actualizacion_sedesol|Actualización sedesol|||{}|2018-12-04|2018-a
