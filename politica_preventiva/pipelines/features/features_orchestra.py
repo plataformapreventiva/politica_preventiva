@@ -226,6 +226,7 @@ class UpdateFeaturesDB(PgRTask):
                         '--password', "'{}'".format(self.password),
                         '--host', self.host]
         cmd = " ".join(command_list)
+        
         return cmd
 
     def requires(self):
