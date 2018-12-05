@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 # coding: utf-8
 
 import datetime
@@ -107,7 +107,7 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
     @property
     def update_id(self):
         return str(self.features_task) + str(self.data_date) +\
-               str(self.suffix) + 'dic'
+               str(self.suffix) + '_features_dic'
 
     @property
     def table(self):
@@ -142,6 +142,10 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
         query_result = connection.execute(header_query)
         table_columns = [x for x in query_result]
         connection.close()
+        if not table_columns:
+            raise ExecutionError('Could not find table features.{},\
+                    please check the execution status of your features script'.\
+                            format(self.features_task))
         return [x[0] for x in table_columns]
 
     def rows(self):
