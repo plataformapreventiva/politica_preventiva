@@ -83,6 +83,7 @@ if(length(opt) > 1){
 
   # Get table at municipality level
   municipal <- left_join(muni_dic,estatal, by=c("cve_ent"))
+  
   copy_to(con, municipal,
           dbplyr::in_schema("features","inegi_agentes_fiscales_municipios"),
           temporary = FALSE, overwrite = TRUE)

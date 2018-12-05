@@ -22,7 +22,7 @@ from dotenv import find_dotenv
 from politica_preventiva.pipelines.ingest.ingest_orchestra import\
     IngestPipeline
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
-from politica_preventiva.pipelines.ingest.tools.ingest_utils import\
+from politica_preventiva.pipelines.utils.pipeline_utils import\
         parse_cfg_list
 from politica_preventiva.pipelines.semantic.semantic_orchestra import\
         SemanticPipeline
@@ -35,7 +35,6 @@ from politica_preventiva.pipelines.features.features_orchestra import\
 configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_models.cfg')
 configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_etl.cfg')
 configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_ingest.cfg')
-configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_features.cfg')
 
 # from politica_preventiva.pipelines.model.model_orchestra import ModelPipeline
 logging_conf = configuration.get_config().get("core", "logging_conf_file")

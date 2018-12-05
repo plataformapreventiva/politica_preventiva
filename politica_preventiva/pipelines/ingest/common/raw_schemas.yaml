@@ -7318,64 +7318,20 @@ ipc_ciudades:
     INDEX: fecha
     SCHEMA:
     - fecha: TEXT
-    - indice: TEXT
-    - alim_bt: FLOAT
-    - alim: FLOAT
-    - alim_pantc: FLOAT
-    - alim_car: FLOAT
-    - alim_pescm: FLOAT
-    - alim_lech: FLOAT
-    - alim_aceig: FLOAT
-    - alim_fruth: FLOAT
-    - alim_azucf: FLOAT
-    - alim_otr: FLOAT
-    - alim_alcht: FLOAT
-    - ropa: FLOAT
-    - viv: FLOAT
-    - mueb: FLOAT
-    - salu: FLOAT
-    - transp: FLOAT
-    - edu: FLOAT
-    - otro: FLOAT
-    - cmae_1: FLOAT
-    - cmae_2: FLOAT
-    - cmae_3: FLOAT
-    - scian_1: FLOAT
-    - scian_2: FLOAT
-    - scian_3: FLOAT
-    - ciudad: TEXT
-    - month: TEXT
-    - year: Integer
+    - variable: TEXT
+    - value: FLOAT
+    - descripcion: TEXT
+    - base: TEXT
+    - nom_cd: TEXT
     - actualizacion_sedesol: TIMESTAMP
     - data_date: TEXT
   RAW:
   - fecha
-  - indice
-  - alim_bt
-  - alim
-  - alim_pantc
-  - alim_car
-  - alim_pescm
-  - alim_lech
-  - alim_aceig
-  - alim_fruth
-  - alim_azucf
-  - alim_otr
-  - alim_alcht
-  - ropa
-  - viv
-  - mueb
-  - salu
-  - transp
-  - edu
-  - otro
-  - cmae_1
-  - cmae_2
-  - cmae_3
-  - scian_1
-  - scian_2
-  - scian_3
-  - ciudad
+  - variable
+  - value
+  - descripcion
+  - base
+  - nom_cd
 iter_2010:
   LUIGI:
     INDEX: mun
