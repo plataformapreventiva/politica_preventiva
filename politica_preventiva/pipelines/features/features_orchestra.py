@@ -107,7 +107,7 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
     @property
     def update_id(self):
         return str(self.features_task) + str(self.data_date) +\
-               str(self.suffix) + 'dic'
+                str(self.suffix) + '_features_dic'
 
     @property
     def table(self):
@@ -219,7 +219,7 @@ class UpdateFeaturesDB(PgRTask):
                         '--password', "'{}'".format(self.password),
                         '--host', self.host]
         cmd = " ".join(command_list)
-        pdb.set_trace()
+        
         return cmd
 
     def requires(self):
