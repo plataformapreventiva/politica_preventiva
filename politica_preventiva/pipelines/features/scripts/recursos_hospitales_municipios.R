@@ -86,10 +86,10 @@ recursos_hospitales <- tbl(con, sql(query)) %>%
                 densidad_camas,data_date,actualizacion_sedesol)
 
 copy_to(con, recursos_hospitales,
-          dbplyr::in_schema("features",'recursos_hospitales'),
+          dbplyr::in_schema("features",'recursos_hospitales_municipios'),
           temporary = FALSE, overwrite = TRUE)
 
 dbDisconnect(con)
   
-print('Features written to: recursos_hospitales')
+print('Features written to: recursos_hospitales_municipios')
 }
