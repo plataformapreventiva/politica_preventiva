@@ -80,9 +80,9 @@ if(length(opt) > 1){
                   actualizacion_sedesol = lubridate::today())
   
   copy_to(con, intercensal_viviendas_2015,
-          dbplyr::in_schema("features",'intercensal_viviendas_2015'),
+          dbplyr::in_schema("features",'intercensal_viviendas_2015_municipios'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
   
-  print('Features written to: features.intercensal_viviendas_2015')
+  print('Features written to: features.intercensal_viviendas_2015_municipios')
 }
