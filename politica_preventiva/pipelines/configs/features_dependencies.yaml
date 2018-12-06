@@ -39,7 +39,7 @@ crimenes_tasas_estados:
 recursos_hospitales_municipios:
     clean_dependencies:
         - recursos_hospitales
-intercensal_viviendas_2015:
+intercensal_viviendas_2015_municipios:
     clean_dependencies:
         - intercensal_viviendas_2015
 intercensal_personas_2015_municipios:
