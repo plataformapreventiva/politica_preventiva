@@ -43,7 +43,6 @@ class PgRTask(luigi.Task):
         return False
 
     def run(self):
-
         cmd_docker = '''
             docker run --env-file $PWD/.env\
              -it --rm  -v $PWD:/politica_preventiva\
@@ -51,7 +50,6 @@ class PgRTask(luigi.Task):
             politica_preventiva/task/r-task {0} > /dev/null
          '''.format(self.cmd, aws_access_key_id,
                  aws_secret_access_key)
-        pdb.set_trace()
         out = subprocess.call(cmd_docker, shell=True)
         logger.info(out)
 
@@ -119,7 +117,6 @@ class ModelTask(luigi.Task):
             {0} politica_preventiva/task/model-task
             '''.format(self.cmd)
         out = subprocess.call(cmd_docker.strip(), shell=True)
-        pdb.set_trace()
         logger.info(out)
 
         connection = self.output().connect()

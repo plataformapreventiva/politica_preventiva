@@ -314,7 +314,6 @@ class UpdateDictionary(postgres.CopyToTable):
                                               suffix=self.suffix,
                                               common_bucket=self.common_bucket,
                                               common_key=self.common_key)
-        pdb.set_trace()
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):

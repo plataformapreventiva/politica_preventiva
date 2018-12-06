@@ -214,7 +214,6 @@ class UpdateFeaturesDB(PgRTask):
         # Read features script
         features_script = self.features_scripts +\
                 self.features_task + '.R'
-        
         if not os.path.isfile(features_script):
             raise Exception("Feature script is not defined")
 
@@ -225,7 +224,6 @@ class UpdateFeaturesDB(PgRTask):
                         '--password', "'{}'".format(self.password),
                         '--host', self.host]
         cmd = " ".join(command_list)
-        
         return cmd
 
     def requires(self):
