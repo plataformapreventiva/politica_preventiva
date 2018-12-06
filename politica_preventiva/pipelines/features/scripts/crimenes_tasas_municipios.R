@@ -118,21 +118,22 @@ if(length(opt) > 1){
                                   robo_vehiculos_tasa = `Robo de vehículo automotor`) %>%
                     dplyr::ungroup()
 
+
   crimenes_tasas <- dplyr::left_join(tasa_crimenes, incidencia_total) %>%
                     dplyr::mutate(data_date = data_date,
                                   actualizacion_sedesol = lubridate::today(),
-                                  fecha = lubridate::parse_date_time(paste0('01 ', tolower(mes), anio),
-                                                                     orders = 'd b Y',
-                                                                     locale = 'es_ES.UTF-8'),
+                                  month = recode(mes, Ene = 'Jan', Apr = 'Abr',
+                                                 Ago = 'Aug' , Dic = 'Dec'),
+                                  fecha = lubridate::parse_date_time(paste0('01 ', tolower(month), anio),
+                                                                     orders = 'd b Y'),
                                   data_date_text = paste0('01 ', gsub('([0-9]{4})-([0-9]+)(.*)', '\\1 \\2', data_date)),
                                   data_date_parsed = lubridate::parse_date_time(data_date_text,
-                                                                             orders = 'd Y m',
-                                                                             locale = 'es_ES.UTF-8')) %>%
+                                                                             orders = 'd Y m')) %>%
                     dplyr::filter(fecha <= data_date_parsed) %>%
-                    dplyr::select(-fecha, -data_date_text, -data_date_parsed)
+                    dplyr::select(-fecha, -data_date_text, -data_date_parsed, -month)
 
   copy_to(con, crimenes_tasas,
-          dbplyr::in_schema("features",'crimenes_tasas'),
+          dbplyr::in_schema("features",'crimenes_tasas_municipios'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
 

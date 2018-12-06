@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 # coding: utf-8
 
 import datetime
@@ -106,7 +107,7 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
     @property
     def update_id(self):
         return str(self.features_task) + str(self.data_date) +\
-               str(self.suffix) + 'dic'
+               str(self.suffix) + '_features_dic'
 
     @property
     def table(self):
@@ -136,11 +137,17 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
                                        os.getenv('PGDATABASE')))
         header_query = ("select column_name from information_schema.columns "
                         "where table_schema = 'features' "
-                        "and table_name='{}'".format(self.features_task))
+                        "and table_name='{}' "
+                        "and column_name <> 'actualizacion_sedesol' "
+                        "and column_name <> 'data_date'".format(self.features_task))
         connection = engine.connect()
         query_result = connection.execute(header_query)
         table_columns = [x for x in query_result]
         connection.close()
+        if not table_columns:
+            raise Exception('Could not find table features.{},\
+                    please check the execution status of your features script'.\
+                            format(self.features_task))
         return [x[0] for x in table_columns]
 
     def rows(self):
@@ -218,6 +225,7 @@ class UpdateFeaturesDB(PgRTask):
                         '--password', "'{}'".format(self.password),
                         '--host', self.host]
         cmd = " ".join(command_list)
+        
         return cmd
 
     def requires(self):
