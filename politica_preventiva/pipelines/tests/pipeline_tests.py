@@ -42,8 +42,14 @@ def dictionary_test(task, dict_path, table_header, dict_header,
     # TODO() Rethink dictionary schemas to be more general and standardized
     if possible
     """
+    s3 = boto3.client('s3')
+    file_name = common_key + task + '_dic.csv'
     try:
-        local_dictionary = pd.read_csv(dict_path, sep='|', index_col='id')
+        try:
+            obj = s3.get_object(Bucket=common_bucket, Key= file_name)
+            local_dictionary = pd.read_csv(obj['Body'], sep='|', index_col='id')
+        except:
+            local_dictionary = pd.read_csv(dict_path, sep='|', index_col='id')
         # If the task is a features task, allow to include new variables in
         # dictionary
         if allow_joins:
@@ -52,7 +58,7 @@ def dictionary_test(task, dict_path, table_header, dict_header,
         else:
             dictionary = local_dictionary
             dictionary.reset_index(level=0, inplace=True)
-        assert True not in dictionary['nombre'].isnull(),\
+        assert True not in dictionary['nombre'].isnull().values,\
                 'Your dictionary is not complete'
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix
@@ -62,9 +68,9 @@ def dictionary_test(task, dict_path, table_header, dict_header,
         csv_buffer = StringIO()
         dictionary.to_csv(csv_buffer,sep='|', encoding='utf-8',
                 quoting=csv.QUOTE_NONE)
-        s3_resource = resource('s3')
-        s3_resource.Object(common_bucket, common_key + task + '_dic.csv').\
-                           put(Body=csv_buffer.getvalue())
+        s3.Object(common_bucket,
+                file_name).put(Body=csv_buffer.getvalue())
+
     except FileNotFoundError:
         # Create an empty dataframe with just enough empty cols
         n = len(dict_header) - 1
