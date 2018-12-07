@@ -1,0 +1,76 @@
+id|nombre|tipo|fuente|metadata|actualizacion_sedesol|data_date
+cve_muni|Clave del municipio|Ubicación|INEGI|{"level": "m"}|2018-12-07|2018-10-m
+gp_inundac|Grado de peligro por inundación|Fenómeno Hidrometeorológico|Cenapred|{}|2018-12-07|2018-10-m
+gp_sequia2|Grado de peligro por sequía|Fenómeno Hidrometeorológico|Cenapred|{}|2018-12-07|2018-10-m
+gp_bajaste|Grado de peligro por bajas temperaturas|Fenómeno Hidrometeorológico|Cenapred|{}|2018-12-07|2018-10-m
+gp_ciclnes|Grado de peligro por ciclón|Fenómeno Hidrometeorológico|Cenapred|{}|2018-12-07|2018-10-m
+g_suscelad|Grado de susceptibilidad de laderas|Fenómeno Geológico|Cenapred|{}|2018-12-07|2018-10-m
+gp_sismico|Grado de peligro por sismo|Fenómeno Geológico|Cenapred|{}|2018-12-07|2018-10-m
+gp_tsunami|Grado de peligro por tsunami|Fenómeno Geológico|Cenapred|{}|2018-12-07|2018-10-m
+homicidio_culposo_tasa|Tasa de homicidios culposos|Violencia y delincuencia|Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública|{"description":"Número de homicidios por cada 100 mil habitantes. (Culposos)"}|2018-12-07|2018-10-m
+homicidio_dolos_tasao|Tasa de homicidios dolosos|Violencia y delincuencia|Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública|{"description":"Número de homicidios por cada 100 mil habitantes. (Dolosos)"}|2018-12-07|2018-10-m
+feminicidio_tasa|Tasa de feminicidio|Violencia y delincuencia|Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública|{"description":"Número de feminicidios por cada 100 mil habitantes."}|2018-12-07|2018-10-m
+secuestro_tasa|Tasa de secuestro|Violencia y delincuencia|Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública|{"description":"Número de secuestros por cada 100 mil habitantes."}|2018-12-07|2018-10-m
+robo_vehiculos_tasa|Tasa de robo de vehículos|Violencia y delincuencia|Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública|{"description":"Número de robo de vehículos por cada 100 mil habitantes."}|2018-12-07|2018-10-m
+violencia_familiar_tasa|Tasa de violencia familiar|Violencia y delincuencia|Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública|{"description":"Numero de delitos del tipo violencia familiar por cada 100 mil habitantes."}|2018-12-07|2018-10-m
+tasa_flot_esc|Tasa de población flotante por escuela|Demográficos|INEGI|{"equation": "Número de personas que asisten a la escuela en un municipio distinto a donde residen/población municipal"}|2018-12-07|2018-10-m
+tasa_flot_trab|Tasa de población flotante por trabajo|Demográficos|INEGI|{"equation": "Número de personas que trabajan en un municipio distinto a donde residen/población municipal"}|2018-12-07|2018-10-m
+migracion_interna_reciente|Tasa de migración interna reciente|Demográficos|INEGI|{"equation": "Número de personas que cambiaron de municipio de residencia en los últimos 5 años/población municipal"}|2018-12-07|2018-10-m
+migracion_externa_reciente|Tasa de migración externa reciente|Demográficos|INEGI|{"equation": "Número de personas que cambiaron de país de residencia en los últimos 5 años/población municipal"}|2018-12-07|2018-10-m
+ipc_dif|Índice de inflación|Económicas|IPC|{"description":"Calculado a partir de la serie general del IPC de INEGI ponderando por la distancia a ciudades cercanas"}|2018-12-07|2018-10-m
+ic_ali_porcentaje|Porcentaje de personas con carencia por acceso a la alimentación|Vulnerabilidades|estimaciones del CONEVAL con base en el MCS-ENIGH 2016.|{"description":"Indicador de carencia por acceso a la alimentación porcentaje"}|2018-12-07|2018-10-m
+ic_asalud_porcentaje|Porcentaje de personas con carencia por acceso a los servicios de salud|Vulnerabilidades|estimaciones del CONEVAL con base en el MCS-ENIGH 2016.|{"description":"Indicador de carencia por acceso a servicios de salud porcentaje"}|2018-12-07|2018-10-m
+ic_cv_porcentaje|Porcentaje de personas con carencia por calidad y espacios de la vivienda|Vulnerabilidades|estimaciones del CONEVAL con base en el MCS-ENIGH 2016.|{"description":"Indicador de carencia por calidad y espacios de la vivienda porcentaje"}|2018-12-07|2018-10-m
+ic_rezedu_porcentaje|Personas con rezago educativo|Vulnerabilidades|estimaciones del CONEVAL con base en el MCS-ENIGH 2016.|{"description":"Indicador de carencia por rezago educativo porcentaje"}|2018-12-07|2018-10-m
+ic_sbv_porcentaje|Porcentaje de personas con carencia por acceso a los servicios básicos en la vivienda|Vulnerabilidades|estimaciones del CONEVAL con base en el MCS-ENIGH 2016.|{"description":"Indicador de carencia de acceso a servicios básicos en la vivienda porcentaje"}|2018-12-07|2018-10-m
+ic_segsoc_porcentaje|Porcentaje de personas con carencia por acceso a la seguridad social|Vulnerabilidades|estimaciones del CONEVAL con base en el MCS-ENIGH 2016.|{"description":"Indicador de carencia por acceso a la seguridad social porcentaje"}|2018-12-07|2018-10-m
+pobreza_porcentaje|Porcentaje de personas en pobreza|Vulnerabilidades|estimaciones del CONEVAL con base en el MCS-ENIGH 2016.|{"description":"Pobreza porcentaje"}|2018-12-07|2018-10-m
+vul_ing_porcentaje|Porcentaje de personas vulnerables por ingreso|Vulnerabilidades|estimaciones del CONEVAL con base en el MCS-ENIGH 2016.|{"description":"Población vulnerable por ingresos porcentaje"}|2018-12-07|2018-10-m
+brecha_tasa_ocupados|Brecha de tasa de ocupación|Desigualdad de Género|INEGI|{"description": "Razón entre las tasas de ocupación femenina y masculina","equation": "proporcion_mujeres_ocupadas/proporcion_hombres_ocupadas"}|2018-12-07|2018-10-m
+brecha_horas_cuidados|Brecha en horas de cuidados|Desigualdad de Género|INEGI|{"description": "Razón entre las horas y minutos dedicados a cuidados por los hombres y las mujeres a la semana.","equation":"total_horas_m/total_horas_h"}|2018-12-07|2018-10-m
+prop_mayores65|Proporción de la población mayor de 65 años|Grupos Etarios|INEGI|{"equation": "población mayor de 65 años/población municipal"}|2018-12-07|2018-10-m
+prop_menores5|Proporción de la población menor de 5 años|Grupos Etarios|INEGI|{"equation": "población menor de 5 años/población municipal"}|2018-12-07|2018-10-m
+prop_adultos|Proporción de la población adulta|Grupos Etarios|INEGI|{"equation": "población adulta/población municipal"}|2018-12-07|2018-10-m
+prop_menores|Proporción de la población menor de 18 años|Grupos Etarios|INEGI|{"equation": "población menor de 18 años/población municipal"}|2018-12-07|2018-10-m
+prop_indigenas|Proporción de la población autoidentificada como indígena|Etnicidad|INEGI|{"equation": "población autoidentificada como indígena/población municipal"}|2018-12-07|2018-10-m
+prop_lengua_indigena|Proporción de la población que habla una lengua indígena|Etnicidad|INEGI|{"equation": "población que habla una lengua indígena/población municipal"}|2018-12-07|2018-10-m
+prop_afrodescendientes|Proporción de la población autoidentificada como afrodescentiende|Etnicidad|INEGI|{"equation": "población autoidentificada como afrodescentiente/población municipal"}|2018-12-07|2018-10-m
+prop_mujeres|Proporción de la población femenina|Desigualdad de Género|INEGI|{"equation": "(Número mujeres/ Total de la población)x100"}|2018-12-07|2018-10-m
+prop_hombres|Proporción de la población masculina|Desigualdad de Género|INEGI|{"equation": "(Número hombres/ Total de la población)x100"}|2018-12-07|2018-10-m
+proporcion_jefatura|Proporción de hogares con jefatura femenina|Tipología de Hogares|INEGI|{"equation": "Hogares con jefatura femenina / Total de viviendas en el municipio"}|2018-12-07|2018-10-m
+proporcion_unipersonales|Proporción de hogares unipersonales|Tipología de Hogares|INEGI|{"equation": "Hogares unipersonales / Total de viviendas en el municipio"}|2018-12-07|2018-10-m
+disc_int|Personas con Discapacidad Intelectual|Grupos sociales en condición de vulnerabilidad y desigualdad||{}|2018-12-07|2018-10-m
+disc_fis|Personas con Discapacidad Física|Grupos sociales en condición de vulnerabilidad y desigualdad|Encuesta Nacional de Ingresos y Gastos de los Hogares (ENIGH) 2016|{}|2018-12-07|2018-10-m
+disc_sens|Personas con Discapacidad Sensorial|Grupos sociales en condición de vulnerabilidad y desigualdad|Encuesta Nacional de Ingresos y Gastos de los Hogares (ENIGH) 2016|{}|2018-12-07|2018-10-m
+disc_men|Personas con Discapacidad Mental (Psicosocial)|Grupos sociales en condición de vulnerabilidad y desigualdad|Encuesta Nacional de Ingresos y Gastos de los Hogares (ENIGH) 2016|{}|2018-12-07|2018-10-m
+proporcion_guar|Proporción de Acceso a Guarderías|Grupos sociales en condición de vulnerabilidad y desigualdad|Encuesta Nacional de Ingresos y Gastos de los Hogares (ENIGH) 2016|{}|2018-12-07|2018-10-m
+brecha_salario_mensual|Desigualdad salarial|Desigualdad de Género||{}|2018-12-07|2018-10-m
+media_salario_m|Salario Promedio Mujeres|Desigualdad de Génerod|Encuesta Nacional de Ingresos y Gastos de los Hogares (ENIGH) 2016|{}|2018-12-07|2018-10-m
+media_salario_h|Salario Promedio Hombres|Desigualdad de Género|Encuesta Nacional de Ingresos y Gastos de los Hogares (ENIGH) 2016|{}|2018-12-07|2018-10-m
+nd_spnn1|Existencia de Atlas de Riesgo|Gestión de Riesgo de Desastre|INEGI|{}|2018-12-07|2018-10-m
+nd_nsnn4|Existencia de unidad de protección civil|Gestión de Riesgo de Desastre|INEGI|{}|2018-12-07|2018-10-m
+indice|índice de Reglamentación Básica Municipal|Reglamentación Básica|INAFED|{}|2018-12-07|2018-10-m
+mec_tran|Existencia de mecanismos de transparencia||INEGI|{}|2018-12-07|2018-10-m
+inf_publ|Información Pública y de libre acceso||INEGI|{}|2018-12-07|2018-10-m
+nd_nsnn1|Existencia de organismos para participación ciudadana|Gobernabilidad|INEGI|{}|2018-12-07|2018-10-m
+flexibilidad_financiera|Flexibilidad financiera|Finanzas Públicas|INAFED|{}|2018-12-07|2018-10-m
+capacidad_inversion|Capacidad de inversión|Finanzas Públicas|INAFED|{}|2018-12-07|2018-10-m
+aut_cobr|Existencia del cobro del predial por parte del municipio|Finanzas Públicas|INEGI|{}|2018-12-07|2018-10-m
+totalpo1|Porcentaje del predial programado cobrado|Finanzas Públicas|INEGI|{}|2018-12-07|2018-10-m
+complejidad_2014|Índice de complejidad económica||Capacidad Económica|Atlas de la Complejidad Económica|{"description":"Es una medida de la sofisticación de las capacidades productivas de un lugar basada en la diversidad y la exclusividad de sus sectores productivos o sus exportaciones."}|2018-12-07|2018-10-m
+n_usuarios|Número de usuarios de la Comisión Federal de Electricidad|Comunicación y Energía|CFE|{}|2018-12-07|2018-10-m
+pct_viv_con_internet|Número de viviendas con acceso a internet por vivienda|Comunicación y Energía|INEGI|{}|2018-12-07|2018-10-m
+cobertura_dren|Cobertura de drenaje|Sistema de Gestión Municipal|INEGI|{"description":"Porcentaje de las viviendas con sistema de drenaje"}|2018-12-07|2018-10-m
+basura_porcent_cab|Recolección de basura|Sistema de Gestión Municipal|INEGI|{"description":"Porcentaje de las viviendas con servicio de recolección de basura"}|2018-12-07|2018-10-m
+densidad_medicos|Densidad de médicos|Sistema de Salud|DGIS|{"description": "El número de médicos relativo a la población mide la cobertura de personal calificado en atención médica directa con el paciente.","equation": "Número de medicos por cada mil habitantes."}|2018-12-07|2018-10-m
+densidad_hospitales|Densidad de hospitales|Sistema de Salud|DGIS|{"description": "Mide la capacidad instalada de camas de hospital para la atención médica.","equation":"Número de camas por cada mil habitantes."}|2018-12-07|2018-10-m
+densidad_camas|Densidad de camas|Sistema de Salud|DGIS|{"description": "Mide la capacidad instalada de las unidades de atención médica para la población.","equation":"Número de hospitales por cada mil habitantes."}|2018-12-07|2018-10-m
+mortalidad_materna|Tasa de mortalidad materna|Sistema de Salud|INEGI|{"equation": "Número de muertes de mujeres embarazadas / total de población","description": "Mide la efectividad de la atención hospitalaria, y seguimiento posterior a la atención médico hospitalaria."}|2018-12-07|2018-10-m
+mortalidad_infantil|Tasa de mortalidad infantil|Sistema de Salud|INEGI|{"equation": "Número de muertes de infantiles / total de población","description": "Mide la efectividad en la atención del grupo con mayor vulnerabilidad en el servicio de atención médica. Muertes infantiles menores de 5 años."}|2018-12-07|2018-10-m
+num_jueces|Número de jueces por cada 1000 habitantes|INEGI|{}|2018-12-07|2018-10-m
+num_agentes_fiscales|Número de agentes por cada 1000 habitantes|INEGI|{}|2018-12-07|2018-10-m
+endeudamiento|Endeudamiento|Finanzas Públicas|SHCP Sistema de alertas|{"description":"La Ley establece que se deben de considerar tres indicadores para la evaluación del nivel de endeudamiento del Ente Público local: Indicador 1: Deuda Pública y Obligaciones, Indicador 2: Servicio de la Deuda y Obligaciones e Indicador 3: Obligaciones a Corto Plazo y Proveedores y Contratistas"}|2018-12-07|2018-10-m
+liquidez|Liquidez|Finanzas Públicas|SHCP Sistema de alertas|{"description":"Ingresos de libre disposión/(Costo financiero+ pago de pensiones+obligaciones de corto plazo+gasto corriente obligatorio)"}|2018-12-07|2018-10-m
+valor_ici|Valor del índice de calidad de la información|Administrativa_Operativa|SHCP|{}|2018-12-07|2018-10-m
+gobiernos|Subíndice Gobierno eficiente y eficaz|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-07|2018-10-m
+politico|Subíndice Sistema político estable y funcional|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-07|2018-10-m
