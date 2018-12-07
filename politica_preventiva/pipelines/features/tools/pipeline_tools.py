@@ -33,8 +33,8 @@ def pull_features_dependencies(task, deps_dictionary):
     if 'clean_dependencies' in dep_types:
         task_list = task_list + deps_dictionary[task]['clean_dependencies']
 
-    if 'model_dependencies' in dep_types:
-        task_list = task_list + deps_dictionary[task]['model_dependencies']
+    if 'models_dependencies' in dep_types:
+        task_list = task_list + deps_dictionary[task]['models_dependencies']
 
     if not 'features_dependencies' in dep_types:
         return task_list
