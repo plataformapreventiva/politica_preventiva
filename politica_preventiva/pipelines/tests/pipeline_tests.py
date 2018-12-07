@@ -70,7 +70,6 @@ def dictionary_test(task, dict_path, table_header, dict_header,
         n_cols = len(dict_header) - 1
         dictionary = pd.DataFrame([[x] + [''] * n_cols for x in table_header],
                                   columns=dict_header)
-        pdb.set_trace()
         dictionary['metadata'] = '{}'
         dictionary['actualizacion_sedesol'] = current_date
         dictionary['data_date'] = data_date + '-' + suffix

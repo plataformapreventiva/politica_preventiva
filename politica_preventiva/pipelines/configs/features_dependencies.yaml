@@ -121,9 +121,8 @@ coneval_estados:
     clean_dependencies:
         - coneval_estados
 shcp_ici_municipios:
-    clean:
-        - shcp_ici_estados
-        - geoms_municipios
+    clean_dependencies:
+        - geoms_estados
 imco_ice_municipios:
     clean_dependencies:
         - imco_ice

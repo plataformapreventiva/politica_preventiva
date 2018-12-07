@@ -1,0 +1,5 @@
+id|nombre|tipo|fuente|metadata|actualizacion_sedesol|data_date
+cve_muni|Clave del municipio|Sistema de Salud|INEGI|{"level": "m"}|2018-12-05|2016-a
+mortalidad_materna|Tasa de mortalidad materna|Sistema de Salud|INEGI|{"equation": "Número de muertes de mujeres embarazadas / total de población","description": "Mide la efectividad de la atención hospitalaria, y seguimiento posterior a la atención médico hospitalaria."}|2018-12-05|2016-a
+mortalidad_infantil|Tasa de mortalidad infantil|Sistema de Salud|INEGI|{"equation": "Número de muertes de infantiles / total de población","description": "Mide la efectividad en la atención del grupo con mayor vulnerabilidad en el servicio de atención médica. Muertes infantiles menores de 5 años."}|2018-12-05|2016-a
+actualizacion_sedesol||||{}|2018-12-05|2016-a
