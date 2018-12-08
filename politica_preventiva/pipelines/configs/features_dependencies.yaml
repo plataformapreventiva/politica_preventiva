@@ -138,3 +138,19 @@ geojson_mun_ent:
     clean_dependencies:
         - geoms_estados
         - geoms_municipios
+comedores_municipios:
+    clean_dependencies:
+        - comedores
+comedores_estados:
+    clean_dependencies:
+        - comedores
+estancias_municipios:
+    clean_dependencies:
+        - estancias
+estancias_estados:
+    clean_dependencies:
+        - estancias
+lecherias_municipios:
+    clean_dependencies:
+        - lecherias
+
