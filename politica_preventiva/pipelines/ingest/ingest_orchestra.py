@@ -305,16 +305,8 @@ class UpdateDictionary(postgres.CopyToTable):
                 in header_d[self.pipeline_task]['LUIGI']['SCHEMA']))]
         path = self.common_path + "dictionaries/" +\
                self.pipeline_task + "_dic.csv"
-        data = pipeline_tests.dictionary_test(task=self.pipeline_task,
-                                              dict_path=path,
-                                              table_header=table_header,
-                                              dict_header=header,
-                                              current_date=self.actualizacion,
-                                              data_date=self.data_date,
-                                              suffix=self.suffix,
-                                              common_bucket=self.common_bucket,
-                                              common_key=self.common_key)
-        pdb.set_trace()
+        data = classic_tests.dictionary_test(self.pipeline_task,
+                    path, header_d, header, self.actualizacion, self.data_date, self.suffix)
         return [tuple(x) for x in data.to_records(index=False)]
 
     def requires(self):
