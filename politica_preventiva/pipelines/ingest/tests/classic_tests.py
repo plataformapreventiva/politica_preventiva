@@ -137,3 +137,47 @@ def header_test(path, task, common_path, suffix, new=True):
         #            '\n\t\t\t\t\t\t you must change the "new" flag to False in luigi.cfg.\n')
     file = open(path+".done", "w")
     file.close()
+
+
+def dictionary_test(pipeline_task, path, header_d, dic_header, current_date,
+        data_date, suffix):
+    """
+    This task updates the dictionary of the pipeline_task in raw
+    and creates the legacy neo4j nodes
+    # TODO() Check if the data has other date date
+    # TODO() Add Neo4j legacy task
+    """
+
+    try:
+        dictionary = pd.read_csv(path, sep="|")
+        # If your column 'nombre' has at least one null your task fails..
+        assert dictionary["nombre"].isnull().\
+                value_counts().index[0]!=True, "Your dictionary is not complete."
+        dictionary['actualizacion_sedesol'] = current_date
+        dictionary['data_date'] = data_date + '-' + suffix
+        dictionary = dictionary.where((pd.notnull(dictionary)), None)
+        dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
+        csv_buffer = StringIO()
+        dictionary.to_csv(csv_buffer,sep='|')
+        s3_resource = boto3.resource('s3')
+        s3_resource.Object('dpa-plataforma-preventiva','commons/metadata/diccionarios/'+pipeline_task+'_dic.csv').put(Body=csv_buffer.getvalue())
+
+    except:
+        task_schema = header_d[pipeline_task]["LUIGI"]["SCHEMA"]
+        dictionary = pd.DataFrame([task_schema[i].keys() for i
+            in range(len(task_schema))],columns=["id"])
+        dic_header.pop(0)
+        # parse raw_schemas.yaml to convert to data frame
+        dictionary = dictionary.reindex(columns=[*dictionary.\
+                columns.tolist(), *dic_header], fill_value=None)
+        # Update actualizacion
+        dictionary['actualizacion_sedesol'] = current_date
+        dictionary['data_date'] = data_date + '-' + suffix
+        dictionary.to_csv(path, index=False, sep="|", encoding="utf-8")
+        logger.critical("Dictionary of task {task} is not defined,\
+            see {path}".format(task=pipeline_task, path=path))
+        raise Exception("Dictionary of task {0} is not defined,\
+         see {1} ".format(pipeline_task, path))
+
+    return dictionary
+
