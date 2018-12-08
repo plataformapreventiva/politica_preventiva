@@ -599,10 +599,10 @@ comedores:
     SCHEMA:
     - x: FLOAT
     - y: FLOAT
-    - cve_ent: Integer
+    - cve_ent: TEXT
     - nom_ent: TEXT
     - nom_reg: TEXT
-    - cve_munc: Integer
+    - cve_muni: TEXT
     - nom_mun: TEXT
     - cve_locc: Integer
     - nom_loc: TEXT
@@ -6219,9 +6219,9 @@ estancias:
     - x: FLOAT
     - y: FLOAT
     - id_est: Integer
-    - cve_ent: Integer
-    - cve_munc: Integer
-    - cve_locc: Integer
+    - cve_ent: TEXT
+    - cve_muni: TEXT
+    - cve_locc: TEXT
     - nom_ent: TEXT
     - nom_mun: TEXT
     - nom_loc: TEXT
