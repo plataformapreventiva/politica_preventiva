@@ -71,8 +71,14 @@ if(length(opt) > 1){
   level <- opt$level
   pipeline_task <- opt$pipeline
 
-  plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT plot, metadata FROM plots.{pipeline_task} WHERE nivel = '{level}'"))) %>%
-                dplyr::collect()
+  plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT plot, metadata \
+                                                FROM plots.{pipeline_task} \
+                                                WHERE nivel = '{level}'"))) %>%
+                dplyr::collect() %>%
+                dplyr::filter(!grepl('^programas_', plot),
+                              !grepl('^distribucion_', plot),
+                              !grepl('^poblacion_atendida', plot),
+                              !grepl('^capacidad_institucional', plot))
 
   plots_metadata <- textConnection(dplyr::pull(plots_data, metadata) %>%
                                    gsub("\\n", "", .)) %>%
@@ -83,9 +89,33 @@ if(length(opt) > 1){
   value <- "valor"
 
   sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
-                                function(x) glue::glue("SELECT {paste(c(key_var, plots_metadata$var_list[[x]]), collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
+                                function(x) glue::glue("SELECT {paste(c(key_var,
+                                                       plots_metadata$vars[[x]]),
+                                collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
 
   tidy_data <- tibble::tibble()
+
+  query_data <- tibble::tibble()
+  for (i in 1:nrow(plots_metadata)){
+    query <- sql_queries[i]
+    print(i)
+    data <- tryCatch(
+                     {query_result <- tbl(con, dbplyr::sql(query)) %>%
+                                        dplyr::collect()
+                      plots_metadata[i,] %>%
+                      mutate(status = 1,
+                             error = list('e'=''))
+                     },
+                     error = function(e) {
+                      result_data <- plots_metadata[i,] %>%
+                                    mutate(status = 0,
+                                           error = list(e))
+                       print(e)
+                       return(result_data)
+                     })
+    query_data <- bind_rows(query_data, data)
+  }
+
 
   for(i in 1:nrow(plots_metadata)){
     query <- sql_queries[i]
