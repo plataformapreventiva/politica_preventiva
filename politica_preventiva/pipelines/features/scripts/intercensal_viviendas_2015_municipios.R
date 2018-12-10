@@ -3,7 +3,6 @@ library(optparse)
 library(dbplyr)
 library(dplyr)
 library(DBI)
-library(lubridate)
 library(yaml)
 
 option_list = list(
@@ -73,34 +72,17 @@ if(length(opt) > 1){
   
   print('Pulling datasets')
   
-  poblacion <- tbl(con, dbplyr::in_schema('clean','intercensal_personas_2015')) %>% 
-    select(cve_muni, factor) %>%
-    group_by(cve_muni) %>% 
-    summarise(factor=as.numeric(sum(factor)))
+  intercensal_viviendas_2015 <- tbl(con, dbplyr::in_schema('clean','intercensal_viviendas_2015')) %>%
+    mutate(proporcion_unipersonales = as.double(unipersonales)/viviendas_mun) %>% 
+    mutate(proporcion_jefatura = as.double(jefatura_fem)/viviendas_mun) %>% 
+    select(cve_muni, proporcion_jefatura,proporcion_unipersonales)%>%
+    dplyr::mutate(data_date = data_date,
+                  actualizacion_sedesol = lubridate::today())
   
-query <- 'SELECT cve_muni, sum(CASE 
-                                            WHEN CAST(edad as integer) < 4000
-                                            THEN 1 
-                                            ELSE 0 
-                                            END) as infant, 
-                                            sum(CASE 
-                                            WHEN causa_def LIKE \'O%\'
-                                            THEN 1 
-                                            ELSE 0 
-                                            END) as materna
-                                            FROM clean.defunciones_generales
-                                            GROUP BY cve_muni'
-mortalidad_tasas <- tbl(con, sql(query)) %>%
-    dplyr::left_join(poblacion, by='cve_muni') %>%
-    dplyr::mutate(mortalidad_materna = materna/factor) %>%
-    dplyr::mutate(mortalidad_infantil = infant/factor) %>%
-    dplyr::select(cve_muni,mortalidad_materna,mortalidad_infantil) %>%
-    dplyr::mutate(actualizacion_sedesol = lubridate::today())
-  
-  copy_to(con, mortalidad_tasas,
-          dbplyr::in_schema("features",'mortalidad_tasas'),
+  copy_to(con, intercensal_viviendas_2015,
+          dbplyr::in_schema("features",'intercensal_viviendas_2015_municipios'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
   
-  print('Features written to: features.mortalidad_tasas')
+  print('Features written to: features.intercensal_viviendas_2015_municipios')
 }

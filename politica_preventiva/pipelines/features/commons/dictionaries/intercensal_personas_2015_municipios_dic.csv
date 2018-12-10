@@ -1,0 +1,34 @@
+id|nombre|tipo|fuente|metadata|actualizacion_sedesol|data_date
+cve_muni|Clave de municipio|||{"level": "m"}|2018-12-05|na-fixed
+pob_flot_esc|Población flotante por escuela|Demográficos|INEGI|{"equation": "Número de personas que asisten a la escuela en un municipio distinto a donde residen"}|2018-12-05|na-fixed
+tasa_flot_esc|Tasa de población flotante por escuela|Demográficos|INEGI|{"equation": "Número de personas que asisten a la escuela en un municipio distinto a donde residen/población municipal"}|2018-12-05|na-fixed
+pob_flot_trab|Población flotante por trabajo|Demográficos|INEGI|{"equation": "Número de personas que trabajan en un municipio distinto a donde residen"}|2018-12-05|na-fixed
+tasa_flot_trab|Tasa de población flotante por trabajo|Demográficos|INEGI|{"equation": "Número de personas que trabajan en un municipio distinto a donde residen/población municipal"}|2018-12-05|na-fixed
+migracion_interna_reciente|Tasa de migración interna reciente|Demográficos|INEGI|{"equation": "Número de personas que cambiaron de municipio de residencia en los últimos 5 años/población municipal"}|2018-12-05|na-fixed
+migracion_externa_reciente|Tasa de migración externa reciente|Demográficos|INEGI|{"equation": "Número de personas que cambiaron de país de residencia en los últimos 5 años/población municipal"}|2018-12-05|na-fixed
+brecha_tasa_ocupados|Brecha de tasa de ocupación|Desigualdad de Género|INEGI|{"description": "Razón entre las tasas de ocupación femenina y masculina","equation": "proporcion_mujeres_ocupadas/proporcion_hombres_ocupadas"}|2018-12-05|na-fixed
+proporcion_hombres_ocupados|Proporción de hombres ocupados|Desigualdad de Género|INEGI|{"description": "Participación masculina en el mercado laboral","equation": "(Número de hombres ocupadas / Población de hombres en edad de trabajar)"}|2018-12-05|na-fixed
+proporcion_mujeres_ocupadas|Proporción de mujeres ocupadas|Desigualdad de Género|INEGI|{"description": "Participación femenina en el mercado laboral","equation": "(Número de mujeres ocupadas / Población de mujeres en edad de trabajar)"}|2018-12-05|na-fixed
+brecha_horas_cuidados|Brecha en horas de cuidados|Desigualdad de Género|INEGI|{"description": "Razón entre las horas y minutos dedicados a cuidados por los hombres y las mujeres a la semana.","equation":"total_horas_m/total_horas_h"}|2018-12-05|na-fixed
+total_horas_h|Total de horas de cuidado hombres|Desigualdad de Género|INEGI|{"description": "Horas y minutos dedicados por los hombres a la semana a cuidados"}|2018-12-05|na-fixed
+total_horas_m|Total de horas de cuidado mujeres|Desigualdad de Género|INEGI|{"description": "Horas y minutos dedicados por los hombres a la semana a cuidados"}|2018-12-05|na-fixed
+poblacion_mun|Población municipal|Demográficos|INEGI|{"description": "Total de habitantes en el municipio"}|2018-12-05|na-fixed
+mayores65|Población mayor de 65 años|Grupos Etarios|INEGI|{"description": "Total de habitantes mayores de 65 año"}|2018-12-05|na-fixed
+menores5|Población menor de 5 años|Grupos Etarios|INEGI|{"description": "Total de habitantes menores de 5 años"}|2018-12-05|na-fixed
+adultos|Población adulta|Grupos Etarios|INEGI|{"description": "Total de habitantes entre 18 y 65 años"}|2018-12-05|na-fixed
+menores|Población menor de 18 años|Grupos Etarios|INEGI|{"description": "Total de habitantes menores de 18 años"}|2018-12-05|na-fixed
+indigenas|Población autoidentificada como indígena|Etnicidad|INEGI|{"description": "Total de habitantes autoidentificados como indigenas"}|2018-12-05|na-fixed
+lengua_indigena|Población que habla una lengua indígena|Etnicidad|INEGI|{"description": "Total de habitantes que hablan una lengua indígena"}|2018-12-05|na-fixed
+afrodescendientes|Población autoidentificada como afrodescentiente|Etnicidad|INEGI|{"description": "Total de habitantes autoidentificados como afrodescendientes"}|2018-12-05|na-fixed
+mujeres|Población femenina|Desigualdad de Género|INEGI|{"description": "Total de habitantes femeninos"}|2018-12-05|na-fixed
+hombres|Población masculina|Desigualdad de Género|INEGI|{"description": "Total de habitantes masculinos"}|2018-12-05|na-fixed
+prop_mayores65|Proporción de la población mayor de 65 años|Grupos Etarios|INEGI|{"equation": "población mayor de 65 años/población municipal"}|2018-12-05|na-fixed
+prop_menores5|Proporción de la población menor de 5 años|Grupos Etarios|INEGI|{"equation": "población menor de 5 años/población municipal"}|2018-12-05|na-fixed
+prop_adultos|Proporción de la población adulta|Grupos Etarios|INEGI|{"equation": "población adulta/población municipal"}|2018-12-05|na-fixed
+prop_menores|Proporción de la población menor de 18 años|Grupos Etarios|INEGI|{"equation": "población menor de 18 años/población municipal"}|2018-12-05|na-fixed
+prop_indigenas|Proporción de la población autoidentificada como indígena|Etnicidad|INEGI|{"equation": "población autoidentificada como indígena/población municipal"}|2018-12-05|na-fixed
+prop_lengua_indigena|Proporción de la población que habla una lengua indígena|Etnicidad|INEGI|{"equation": "población que habla una lengua indígena/población municipal"}|2018-12-05|na-fixed
+prop_afrodescendientes|Proporción de la población autoidentificada como afrodescentiende|Etnicidad|INEGI|{"equation": "población autoidentificada como afrodescentiente/población municipal"}|2018-12-05|na-fixed
+prop_mujeres|Proporción de la población femenina|Desigualdad de Género|INEGI|{"equation": "(Número mujeres/ Total de la población)x100"}|2018-12-05|na-fixed
+prop_hombres|Proporción de la población masculina|Desigualdad de Género|INEGI|{"equation": "(Número hombres/ Total de la población)x100"}|2018-12-05|na-fixed
+actualizacion_sedesol||||{}|2018-12-06|na-fixed

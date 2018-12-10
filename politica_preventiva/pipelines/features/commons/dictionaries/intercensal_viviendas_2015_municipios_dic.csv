@@ -1,0 +1,4 @@
+id|nombre|tipo|fuente|metadata|actualizacion_sedesol|data_date
+cve_muni|Clave del municipio|||{"level": "m"}|2018-12-06|na-fixed
+proporcion_jefatura|Proporción de hogares con jefatura femenina|Tipología de Hogares|INEGI|{"equation": "Hogares con jefatura femenina / Total de viviendas en el municipio"}|2018-12-06|na-fixed
+proporcion_unipersonales|Proporción de hogares unipersonales|Tipología de Hogares|INEGI|{"equation": "Hogares unipersonales / Total de viviendas en el municipio"}|2018-12-06|na-fixed

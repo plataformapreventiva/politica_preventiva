@@ -1,0 +1,7 @@
+id|nombre|tipo|fuente|metadata|actualizacion_sedesol|data_date
+cve_muni|Clave de municipio|Sistema de Salud||{"level": "m"}|2018-12-05|na-fixed
+densidad_medicos|Densidad de médicos|Sistema de Salud|DGIS|{"description": "El número de médicos relativo a la población mide la cobertura de personal calificado en atención médica directa con el paciente.","equation": "Número de medicos por cada mil habitantes."}|2018-12-05|na-fixed
+densidad_hospitales|Densidad de hospitales|Sistema de Salud|DGIS|{"description": "Mide la capacidad instalada de camas de hospital para la atención médica.","equation":"Número de camas por cada mil habitantes."}|2018-12-05|na-fixed
+densidad_camas|Densidad de camas|Sistema de Salud|DGIS|{"description": "Mide la capacidad instalada de las unidades de atención médica para la población.","equation":"Número de hospitales por cada mil habitantes."}|2018-12-05|na-fixed
+data_date|data_date|||{}|2018-12-05|na-fixed
+actualizacion_sedesol|actualización SEDESOL|||{}|2018-12-05|na-fixed

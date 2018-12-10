@@ -1,0 +1,17 @@
+id|nombre|tipo|fuente|metadata|actualizacion_sedesol|data_date
+cve_ent|Clave del estado|||{"level": "e"}|2018-12-06|2017-a
+cve_muni|Clave del municipio|||{"level": "m"}|2018-12-06|2017-a
+clavedeentidad|Clave de la entidad|||{"level": "e"}|2018-12-06|2017-a
+entidad|Nombre de la entidad|||{"level": "e"}|2018-12-06|2017-a
+general|Índice general|Acceso a la Justicia y Gobernabilidad||{}|2018-12-06|2017-a
+derecho|Subíndice Sistema de derecho confiable y objetivo|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+ambiente|Subíndice Manejo sustentable del medio ambiente|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+sociedad|Subíndice Sociedad incluyente, preparada y sana|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+politico|Subíndice Sistema político estable y funcional|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+gobiernos|Subíndice Gobierno eficiente y eficaz|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+factores|Subíndice Mercado de factores eficiente|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+economia|Subíndice Economía estable|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+precursores|Subíndice Sectores precursores de clase mundial|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+relaciones|Subíndice Aprovechamiento de las relaciones internacionales|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+innovacion|Subíndice Innovación de los sectores económicos|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a
+anio|Año del índice|Acceso a la Justicia y Gobernabilidad|IMCO|{}|2018-12-06|2017-a

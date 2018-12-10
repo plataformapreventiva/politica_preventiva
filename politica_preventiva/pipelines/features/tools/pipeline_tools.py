@@ -33,8 +33,8 @@ def pull_features_dependencies(task, deps_dictionary):
     if 'clean_dependencies' in dep_types:
         task_list = task_list + deps_dictionary[task]['clean_dependencies']
 
-    if 'model_dependencies' in dep_types:
-        task_list = task_list + deps_dictionary[task]['model_dependencies']
+    if 'models_dependencies' in dep_types:
+        task_list = task_list + deps_dictionary[task]['models_dependencies']
 
     if not 'features_dependencies' in dep_types:
         return task_list
@@ -62,3 +62,4 @@ def get_features_dates(features_task, current_date):
                           'q', 'a', 'b', 'fixed'])
     sorted_list = sorted(dates_list, key=lambda x: order[x[1]])
     return sorted_list[0]
+

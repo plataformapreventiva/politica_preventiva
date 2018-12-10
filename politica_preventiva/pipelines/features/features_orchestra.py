@@ -33,7 +33,7 @@ from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.tests import pipeline_tests
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
 from politica_preventiva.pipelines.features.tools.pipeline_tools import get_features_dates
-from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
+#from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
 load_dotenv(find_dotenv())
@@ -73,7 +73,6 @@ class FeaturesPipeline(luigi.WrapperTask):
                     self.current_date))
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
-
         set_pipelines = [(features_task, get_features_dates(features_task,
                                                             self.current_date)) for
                           features_task in self.pipelines]
@@ -215,7 +214,6 @@ class UpdateFeaturesDB(PgRTask):
         # Read features script
         features_script = self.features_scripts +\
                 self.features_task + '.R'
-
         if not os.path.isfile(features_script):
             raise Exception("Feature script is not defined")
 
@@ -226,7 +224,6 @@ class UpdateFeaturesDB(PgRTask):
                         '--password', "'{}'".format(self.password),
                         '--host', self.host]
         cmd = " ".join(command_list)
-        
         return cmd
 
     def requires(self):
