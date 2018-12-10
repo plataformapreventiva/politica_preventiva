@@ -71,7 +71,7 @@ if(length(opt) > 1){
   level <- opt$level
   pipeline_task <- opt$pipeline
 
-  plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT plot, metadata \
+  plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT plot, plot_type, metadata \
                                                 FROM plots.{pipeline_task} \
                                                 WHERE nivel = '{level}'"))) %>%
                 dplyr::collect() %>%
@@ -84,9 +84,6 @@ if(length(opt) > 1){
                                    gsub("\\n", "", .)) %>%
                     jsonlite::stream_in() %>%
                     dplyr::bind_cols(plots_data, .)
-
-  key <- "variable"
-  value <- "valor"
 
   sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
                                 function(x) glue::glue("SELECT {paste(c(key_var,
@@ -116,27 +113,17 @@ if(length(opt) > 1){
     query_data <- bind_rows(query_data, data)
   }
 
+  key_var <- 'cve_muni'
 
   for(i in 1:nrow(plots_metadata)){
     query <- sql_queries[i]
     data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
 
-    if(level == 'e'){
-      key_var <- 'cve_ent'
-    } else if(level == 'm') {
-        if (plots_metadata$imputacion_estatal){
-            key_var <- 'cve_ent'
-        } else {
-           key_var <- 'cve_muni'
-        }
-    } else {
-      key_var <- NULL
-    }
-
     key_var_name <- rlang::sym(key_var)
     key_var_quo <- rlang::quo(!! key_var_name)
 
-  not_gathered <- c(key_var, "data_date", "actualizacion_sedesol")
+    not_gathered <- c(key_var)
+    print(glue::glue('Query number {i}'))
     if(plots_metadata$plot[i] == 'piramide_poblacional'){
       data_largo <- data %>%
                     dplyr::mutate(grupo_edad = cut_edad(edad),
@@ -144,47 +131,50 @@ if(length(opt) > 1){
                                   grupo_pob = paste0(sexo, grupo_edad)) %>%
                     dplyr::group_by(!! key_var_quo, grupo_pob) %>%
                     dplyr::summarise(total_personas = sum(poblacion_mun)) %>%
-                    dplyr::select(!! key_var_quo,
+                    dplyr::select(nivel_clave = !! key_var_quo,
                                   variable = grupo_pob,
                                   valor = total_personas) %>%
-                    dplyr::ungroup() %>%
-                    dplyr::group_by(!! key_var_quo) %>%
-                    dplyr::mutate(element_id = stringr::str_pad(row_number(),
-                                                                width = 2,
-                                                                pad = '0')) %>%
                     dplyr::ungroup()
     }else{
     data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered)) %>%
-                  dplyr::arrange(!! key_var_quo) %>%
-                  dplyr::group_by(!! key_var_quo) %>%
-                  dplyr::mutate(element_id = stringr::str_pad(row_number(),
-                                                              width = 2,
-                                                              pad = '0')) %>%
-                  dplyr::ungroup()
+                  dplyr::rename(nivel_clave = !! key_var_quo)
     }
+    if(plots_metadata$plot_type[i] == 'map'){
+        # Agarrar una variable adicional, e.g. localidad o municipio o clave de
+        # algo, y agrupar con ella como element id
+        # Una idea:
 
-    data_variables <- data_largo %>%
-                      dplyr::select(-valor) %>%
-                      dplyr::rename(nivel_clave = !! key_var_quo) %>%
-                      tidyr::gather(varname, value, -nivel_clave, -element_id) %>%
-                      dplyr::mutate(nivel = level,
-                                    plot = plots_metadata$plot[i],
-                                    vartype = 'x') %>%
-                      dplyr::select(nivel, nivel_clave, plot, element_id,
-                                    vartype, varname, value)
-
-    data_valores <- data_largo %>%
-                      dplyr::select(-variable) %>%
-                      dplyr::rename(nivel_clave = !! key_var_quo) %>%
-                      tidyr::gather(varname, value, -nivel_clave, -element_id) %>%
-                      dplyr::mutate(nivel = level,
-                                    plot = plots_metadata$plot[i],
-                                    vartype = 'y') %>%
-                      dplyr::select(nivel, nivel_clave, plot, element_id,
-                                    vartype, varname, value) %>%
-                      dplyr::mutate_all(as.character)
-
-  tidy_data <- bind_rows(tidy_data, data_variables, data_valores)
+    # if(level == 'e'){
+    #  key_var <- 'cve_ent'
+    #} else if(level == 'm') {
+    #    if (plots_metadata$imputacion_estatal){
+    #        key_var <- 'cve_ent'
+    #    } else {
+    #       key_var <- 'cve_muni'
+    #    }
+    #} else {
+    #  key_var <- NULL
+    #}
+        print('This query is a map')
+        data_to_plot <- tibble()
+    } else {
+        data_to_plot <- data_largo %>%
+                        dplyr::group_by(nivel_clave) %>%
+                        dplyr::arrange(variable) %>%
+                        dplyr::mutate(element_id = stringr::str_pad(row_number(),
+                                                                    width = 2,
+                                                                    pad = '0')) %>%
+                        dplyr::ungroup() %>%
+                        tidyr::gather(varname, value, -nivel_clave, -element_id) %>%
+                        dplyr::mutate(vartype = dplyr::recode(varname,
+                                                              variable='x',
+                                                              valor='y')) %>%
+                        dplyr::mutate(values = jsonlite::toJSON(dplyr::select(., varname,
+                                                                    vartype, value)),
+                                      nivel = level) %>%
+                        dplyr::select(-varname, -vartype, -value)
+    }
+  tidy_data <- dplyr::bind_rows(tidy_data, data_to_plot)
   }
 
   dplyr::copy_to(con, tidy_data,
