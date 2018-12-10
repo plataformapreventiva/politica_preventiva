@@ -72,8 +72,9 @@ if(length(opt) > 1){
 
   print('Pulling datasets')
 
-  query1 <- 'SELECT cve_ent, ninos_ap, ninas_ap,
-			nninos, madres, padres FROM clean.estancias'
+  query1 <- 'SELECT cve_ent, familias, beneficiar, nin0a12,
+             adul60_, ben13a15, muj45a59, litros,
+             habitantes, mujeres, hombres FROM clean.lecherias'
 
   db <- tbl(con, sql(query1)) %>% collect()
 
@@ -81,11 +82,11 @@ if(length(opt) > 1){
       group_by(cve_ent) %>%
       summarise_all(sum) %>%
       left_join( group_by(db, cve_ent) %>%
-                summarise(n_estancias = n()))
+                summarise(n_lecherias = n()))
 
   # Get table at municipality level
   copy_to(con, db_estados,
-          dbplyr::in_schema("features","estancias_estados"),
+          dbplyr::in_schema("features","lecherias_estados"),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
 

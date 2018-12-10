@@ -72,22 +72,23 @@ if(length(opt) > 1){
 
   print('Pulling datasets')
 
-  query1 <- 'SELECT cve_ent, ninos_ap, ninas_ap,
-			nninos, madres, padres FROM clean.estancias'
+  query1 <- 'SELECT cve_ent, cve_muni, familias, beneficiar, nin0a12,
+             adul60_, ben13a15, muj45a59, litros,
+             habitantes, mujeres, hombres FROM clean.lecherias'
 
   db <- tbl(con, sql(query1)) %>% collect()
 
-  db_estados <- db %>%
-      group_by(cve_ent) %>%
+  municipal <- db %>%
+      group_by(cve_ent, cve_muni) %>%
       summarise_all(sum) %>%
-      left_join( group_by(db, cve_ent) %>%
-                summarise(n_estancias = n()))
+      left_join( group_by(db, cve_ent, cve_muni) %>%
+                summarise(n_lecherias = n()))
 
   # Get table at municipality level
-  copy_to(con, db_estados,
-          dbplyr::in_schema("features","estancias_estados"),
+  copy_to(con, municipal,
+          dbplyr::in_schema("features","lecherias_municipios"),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
 
-  print('Features written to: features.comedores_estados')
+  print('Features written to: features.lecherias.municipios')
 }

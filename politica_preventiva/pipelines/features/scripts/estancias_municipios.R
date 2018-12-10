@@ -72,19 +72,20 @@ if(length(opt) > 1){
 
   print('Pulling datasets')
 
-  query1 <- 'SELECT cve_muni, cve_ent, ninos_ap,
-             ninas_ap, nninos, madres, padres FROM clean.estancias'
+  query1 <- 'SELECT cve_muni, cve_ent,
+         ninos_ap, ninas_ap, nninos,
+            madres, padres FROM clean.estancias'
 
-  estancias <- tbl(con, sql(query1)) %>% collect()
+  db <- tbl(con, sql(query1)) %>% collect()
 
-  estancias_municipal <- estancias %>%
+  municipal <- db %>%
       group_by(cve_ent, cve_muni) %>%
       summarise_all(sum) %>%
-      left_join( group_by(estancias, cve_ent, cve_muni) %>%
-                summarise(n_estancias = toString(n())))
+      left_join( group_by(db, cve_ent, cve_muni) %>%
+                summarise(n_estancias = n()))
 
   # Get table at municipality level
-  copy_to(con, estancias_municipal,
+  copy_to(con, municipal,
           dbplyr::in_schema("features","estancias_municipios"),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
