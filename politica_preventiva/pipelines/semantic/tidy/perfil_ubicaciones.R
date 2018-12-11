@@ -61,11 +61,11 @@ if(length(opt) > 1){
   }
 
   con <- DBI::dbConnect(RPostgres::Postgres(),
-    host = PGHOST,
-    port = PGPORT,
-    dbname = PGDATABASE,
-    user = POSTGRES_USER,
-    password = POSTGRES_PASSWORD
+    host=PGHOST,
+    port=PGPORT,
+    dbname=PGDATABASE,
+    user=POSTGRES_USER,
+    password=POSTGRES_PASSWORD
   )
 
   level <- opt$level
@@ -85,38 +85,36 @@ if(length(opt) > 1){
                     jsonlite::stream_in() %>%
                     dplyr::bind_cols(plots_data, .)
 
+  key_var <- 'cve_muni'
   sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
                                 function(x) glue::glue("SELECT {paste(c(key_var,
                                                        plots_metadata$vars[[x]]),
                                 collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
 
+  query <- c("DROP TABLE IF EXISTS tidy.perfil_ubicaciones;
+              CREATE TABLE tidy.perfil_ubicaciones(
+                nivel TEXT,
+                nivel_clave TEXT,
+                plot TEXT,
+                element_id TEXT,
+                values JSONB
+             );")
+
+  DBI::dbGetQuery(con, query)
+  dbCommit(con)
+  dbDisconnect(con)
+
   tidy_data <- tibble::tibble()
-
-  query_data <- tibble::tibble()
-  for (i in 1:nrow(plots_metadata)){
-    query <- sql_queries[i]
-    print(i)
-    data <- tryCatch(
-                     {query_result <- tbl(con, dbplyr::sql(query)) %>%
-                                        dplyr::collect()
-                      plots_metadata[i,] %>%
-                      mutate(status = 1,
-                             error = list('e'=''))
-                     },
-                     error = function(e) {
-                      result_data <- plots_metadata[i,] %>%
-                                    mutate(status = 0,
-                                           error = list(e))
-                       print(e)
-                       return(result_data)
-                     })
-    query_data <- bind_rows(query_data, data)
-  }
-
-  key_var <- 'cve_muni'
-
   for(i in 1:nrow(plots_metadata)){
     query <- sql_queries[i]
+    con <- DBI::dbConnect(RPostgres::Postgres(),
+                          host=PGHOST,
+                          port=PGPORT,
+                          dbname=PGDATABASE,
+                          user=POSTGRES_USER,
+                          password=POSTGRES_PASSWORD
+    )
+    print('Opened connection')
     data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
 
     key_var_name <- rlang::sym(key_var)
@@ -143,6 +141,8 @@ if(length(opt) > 1){
         # Agarrar una variable adicional, e.g. localidad o municipio o clave de
         # algo, y agrupar con ella como element id
         # Una idea:
+        # Acordarme de sacar del if todo lo que tenga sentido sacar
+
 
     # if(level == 'e'){
     #  key_var <- 'cve_ent'
@@ -169,15 +169,22 @@ if(length(opt) > 1){
                         dplyr::mutate(vartype = dplyr::recode(varname,
                                                               variable='x',
                                                               valor='y')) %>%
-                        dplyr::mutate(values = jsonlite::toJSON(dplyr::select(., varname,
-                                                                    vartype, value)),
-                                      nivel = level) %>%
-                        dplyr::select(-varname, -vartype, -value)
+                        arrange(nivel_clave, element_id) %>%
+                                      nivel = level,
+                                      plot = plots_metadata$plot[i]) %>%
+                       dplyr::select(nivel, nivel_clave, plot, element_id, values)
     }
-  tidy_data <- dplyr::bind_rows(tidy_data, data_to_plot)
-  }
+  tidy_data <- data_to_plot %>%
+               dplyr::select(nivel, nivel_clave, plot,
+                             element_id, values)
 
-  dplyr::copy_to(con, tidy_data,
-                 dbplyr::in_schema('tidy', pipeline_task),
-                 temporary = FALSE)
+  dplyr::copy_to(dest=con,
+                 df=tidy_data,
+                 name=dbplyr::in_schema('tidy',
+                                        'perfil_ubicaciones'),
+                 overwrite=FALSE)
+  print(glue::glue('Wrote table {i}'))
+  RPostgresql::dbDisconnect(con)
+  print('Closed connection')
+  }
 }

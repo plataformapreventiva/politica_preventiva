@@ -56,3 +56,27 @@ cut_edad <- function(x){
       gsub('\\[([0-9]+),(.*)\\)', '\\1-\\2', .) %>%
       gsub('-Inf', '+', .)
 }
+
+check_queries <- function(plots_metadata, sql_queries){
+  query_data <- tibble::tibble()
+  for (i in 1:nrow(plots_metadata)){
+    query <- sql_queries[i]
+    print(i)
+    data <- tryCatch(
+                     {query_result <- tbl(con, dbplyr::sql(query)) %>%
+                                        dplyr::collect()
+                      plots_metadata[i,] %>%
+                      mutate(status = 1,
+                             error = list('e'=''))
+                     },
+                     error = function(e) {
+                      result_data <- plots_metadata[i,] %>%
+                                    mutate(status = 0,
+                                           error = list(e))
+                       print(e)
+                       return(result_data)
+                     })
+    query_data <- bind_rows(query_data, data)
+  }
+return(query_data)
+}
