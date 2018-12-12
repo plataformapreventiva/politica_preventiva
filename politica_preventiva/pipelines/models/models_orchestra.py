@@ -29,8 +29,10 @@ from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import UpdateCleanDB
+from politica_preventiva.pipelines.ingest.tools.ingest_utils import final_dates
+from politica_preventiva.pipelines.features.features_orchestra import FeaturesPipeline
+from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
 from politica_preventiva.pipelines.utils.pipeline_utils import final_dates
-
 
 # Env Setup
 load_dotenv(find_dotenv())
@@ -100,6 +102,7 @@ class RunModel(ModelTask):
 
     @property
     def cmd(self):
+        pdb.set_trace()
         # path and key to clone model repository
         env_variables = " -e token=" + os.environ.get("GIT_TOKEN") +\
                         " -e path=" + composition[self.model_task]["repository"][0]
@@ -118,6 +121,7 @@ class RunModel(ModelTask):
                         "--password '{0}'".format(password),
                         "--host", self.host,
                         "--pipeline", self.model_task, '"']
+        pdb.set_trace()
         return env_variables + " ".join(command_list)
 
     @property
@@ -135,17 +139,17 @@ class RunModel(ModelTask):
         if 'features_dependencies' in dep_types:
             features_tables = composition[self.model_task]['features_dependencies']
             yield [FeaturesPipeline(current_date=self.current_date,
-                pipelines=[pipeline_task]) for pipeline_task in features_tables]
+                pipelines=[pipeline_task],ptask='auto') for pipeline_task in features_tables]
 
         if 'clean_dependencies' in dep_types:
             clean_tables = composition[self.model_task]['clean_dependencies']
             yield [ETLPipeline(current_date=self.current_date,
-                pipelines=[pipeline_task]) for pipeline_task in clean_tables]
+                pipelines=[pipeline_task],ptask='auto') for pipeline_task in clean_tables]
 
         if 'model_dependencies' in dep_types:
             models_tables = composition[self.model_task]['models_dependencies']
             yield [ModelsPipeline(current_date=self.current_date,
-                models=[pipeline_task]) for pipeline_task in models_tables]
+                models=[pipeline_task],ptask='auto') for pipeline_task in models_tables]
 
     def output(self):
         return PostgresTarget(host=self.host,
@@ -154,3 +158,4 @@ class RunModel(ModelTask):
                               password=self.password,
                               table=self.table,
                               update_id=self.update_id)
+

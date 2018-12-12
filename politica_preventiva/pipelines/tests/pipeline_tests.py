@@ -67,8 +67,8 @@ def dictionary_test(task, dict_path, table_header, dict_header,
                            put(Body=csv_buffer.getvalue())
     except FileNotFoundError:
         # Create an empty dataframe with just enough empty cols
-        n = len(dict_header) - 1
-        dictionary = pd.DataFrame([[x] + [''] * n for x in table_header],
+        n_cols = len(dict_header) - 1
+        dictionary = pd.DataFrame([[x] + [''] * n_cols for x in table_header],
                                   columns=dict_header)
         dictionary['metadata'] = '{}'
         dictionary['actualizacion_sedesol'] = current_date
@@ -76,9 +76,9 @@ def dictionary_test(task, dict_path, table_header, dict_header,
         dictionary.to_csv(dict_path, index=False,
                 sep='|', encoding = 'utf-8', quoting=csv.QUOTE_NONE)
         logger.info('Dictionary of task {task} is not defined,\
-                see {path}'.format(task=features_task, path=dict_path))
+                see {path}'.format(task=task, path=dict_path))
         raise AssertionError('Dictionary of task {0} is not defined,\
-                            see {1}'.format(features_task, dict_path))
+                            see {1}'.format(task, dict_path))
     except Exception as e:
         logger.critical('All fields in name column must be complete')
         print(e)

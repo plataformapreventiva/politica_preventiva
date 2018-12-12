@@ -78,7 +78,7 @@ if(length(opt) > 1){
   # AMENZAZAS
   cenapred <- tbl(con, dbplyr::in_schema('clean','cenapred_app_municipios'))%>%
     select(cve_muni,gp_inundac,gp_sequia2,gp_bajaste,gp_ciclnes,g_suscelad,gp_sismico,gp_tsunami)
-  crimenes_tasas <- tbl(con, dbplyr::in_schema('features','crimenes_tasas')) %>%
+  crimenes_tasas <- tbl(con, dbplyr::in_schema('features','crimenes_tasas_municipios')) %>%
     select(cve_muni,homicidio_culposo_tasa,homicidio_doloso_tasa,feminicidio_tasa,
            secuestro_tasa,robo_vehiculos_tasa,violencia_familiar_tasa) %>%
     group_by(cve_muni) %>%
@@ -88,10 +88,10 @@ if(length(opt) > 1){
               secuestro_tasa=avg(secuestro_tasa),
               robo_vehiculos_tasa=avg(robo_vehiculos_tasa),
               violencia_familiar_tasa=avg(violencia_familiar_tasa))
-  intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
+  intercensal_amenazas <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015_municipios')) %>%
     select(cve_muni,tasa_flot_esc,tasa_flot_trab,migracion_interna_reciente,migracion_externa_reciente)
   ipc <- tbl(con, dbplyr::in_schema('features','inflacion_municipios')) %>% 
-    select(cve_muni,indice_dif)
+    select(cve_muni,ipc_dif)
     
   amenazas <- left_join(cenapred,crimenes_tasas, by='cve_muni') %>%
     left_join(intercensal_amenazas, by='cve_muni') %>%
@@ -125,7 +125,7 @@ if(length(opt) > 1){
   FROM clean.cngmd_transparencia'
   transparencia <- tbl(con, sql(query6))
   cfe <- tbl(con, dbplyr::in_schema('clean','cfe')) 
-  hospitales <- tbl(con, dbplyr::in_schema('features','recursos_hospitales')) %>% 
+  hospitales <- tbl(con, dbplyr::in_schema('features','recursos_hospitales_municipios')) %>% 
     select(-c(actualizacion_sedesol,data_date))
   internet <- tbl(con, dbplyr::in_schema('raw','internet_municipios')) %>% 
     select(cve_muni,pct_viv_con_internet)
@@ -137,7 +137,7 @@ if(length(opt) > 1){
   indicadores_finanzas <- tbl(con, dbplyr::in_schema('raw','indicadores_financieros_municipios')) %>% 
     filter(anio == 2014) %>%
     select(cve_muni,flexibilidad_financiera,capacidad_inversion)
-  mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas')) %>% select(-actualizacion_sedesol) 
+  mortalidad <- tbl(con, dbplyr::in_schema('features','mortalidad_tasas_municipios')) %>% select(-actualizacion_sedesol) 
   jueces <- tbl(con, dbplyr::in_schema('features','inegi_jueces_municipios'))%>% 
     select(-c(anio,cve_ent,actualizacion_sedesol,data_date))
   agentes <- tbl(con, dbplyr::in_schema('features','inegi_agentes_fiscales_municipios'))%>% 
@@ -148,9 +148,7 @@ if(length(opt) > 1){
     select(cve_muni,valor_ici)
   ice <- tbl(con, dbplyr::in_schema('features','imco_ice_municipios')) %>% 
     select(cve_muni,gobiernos,politico)
-    
-  # Falta ICI e ICE, hacer imputación en mun
-  
+
   capacidades <- left_join(riesgo,indice_reglamentacion, by='cve_muni') %>%
     left_join(transparencia, by='cve_muni') %>%  #corregir
     left_join(participacion_ciudadana, by='cve_muni') %>%
@@ -176,7 +174,7 @@ if(length(opt) > 1){
     filter(data_date == "2015-a") %>% 
     select(cve_muni, ic_ali_porcentaje,ic_rezedu_porcentaje, ic_asalud_porcentaje, ic_segsoc_porcentaje,
            ic_cv_porcentaje, vul_ing_porcentaje, ic_sbv_porcentaje, pobreza_porcentaje)
-  intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015')) %>%
+  intercensal_vulnerabilidades <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015_municipios')) %>%
     select(cve_muni,brecha_tasa_ocupados,brecha_horas_cuidados,
            prop_mayores65,prop_menores5, prop_adultos, prop_menores, 
            prop_indigenas,prop_lengua_indigena,prop_afrodescendientes,
@@ -184,7 +182,7 @@ if(length(opt) > 1){
   # Falta Relación de dependencia, corregir features
   # Número de personas en edades teóricamente inactivas (personas de 0 a 14 y de 65 años y más) 
   # por cada cien personas en edades teóricamente activas (personas de 15 a 64 años).
-  intercensal_viviendas <- tbl(con, dbplyr::in_schema('features','intercensal_viviendas_2015'))
+  intercensal_viviendas <- tbl(con, dbplyr::in_schema('features','intercensal_viviendas_2015_municipios'))
   enigh <- tbl(con, dbplyr::in_schema('features','enigh_vulnerabilidades_municipios')) %>% 
     select(-c(cve_ent,actualizacion_sedesol,data_date)) 
     
@@ -197,7 +195,7 @@ if(length(opt) > 1){
   #----------------------------------------------------------------------------------------
   
   inform_mun <- left_join(amenazas,vulnerabilidades, by= 'cve_muni') %>%
-    left_join(capacidades, by='cve_muni') %>% 
+    left_join(capacidades, by='cve_muni') %>%
     dplyr::mutate(data_date=data_date,
                   actualizacion_sedesol = lubridate::today())
   

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 # coding: utf-8
 
 import datetime
@@ -33,7 +34,7 @@ from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.tests import pipeline_tests
 from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
 from politica_preventiva.pipelines.features.tools.pipeline_tools import get_features_dates
-from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
+#from politica_preventiva.pipelines.models.models_orchestra import ModelsPipeline
 
 # Environment Setup
 load_dotenv(find_dotenv())
@@ -73,7 +74,6 @@ class FeaturesPipeline(luigi.WrapperTask):
                     self.current_date))
         logger.info('Running the following pipelines: {0}'.\
                     format(self.pipelines))
-
         set_pipelines = [(features_task, get_features_dates(features_task,
                                                             self.current_date)) for
                           features_task in self.pipelines]
@@ -108,7 +108,7 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
     @property
     def update_id(self):
         return str(self.features_task) + str(self.data_date) +\
-               str(self.suffix) + 'dic'
+               str(self.suffix) + '_features_dic'
 
     @property
     def table(self):
@@ -138,11 +138,17 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
                                        os.getenv('PGDATABASE')))
         header_query = ("select column_name from information_schema.columns "
                         "where table_schema = 'features' "
-                        "and table_name='{}'".format(self.features_task))
+                        "and table_name='{}' "
+                        "and column_name <> 'actualizacion_sedesol' "
+                        "and column_name <> 'data_date'".format(self.features_task))
         connection = engine.connect()
         query_result = connection.execute(header_query)
         table_columns = [x for x in query_result]
         connection.close()
+        if not table_columns:
+            raise Exception('Could not find table features.{},\
+                    please check the execution status of your features script'.\
+                            format(self.features_task))
         return [x[0] for x in table_columns]
 
     def rows(self):
@@ -209,7 +215,6 @@ class UpdateFeaturesDB(PgRTask):
         # Read features script
         features_script = self.features_scripts +\
                 self.features_task + '.R'
-
         if not os.path.isfile(features_script):
             raise Exception("Feature script is not defined")
 

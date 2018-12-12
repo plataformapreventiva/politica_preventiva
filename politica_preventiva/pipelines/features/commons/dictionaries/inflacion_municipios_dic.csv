@@ -1,0 +1,5 @@
+id|nombre|tipo|fuente|metadata|actualizacion_sedesol|data_date
+cve_muni|Clave del municipio|||{"level":"m"}|2018-12-06|2018-7-m
+ipc_dif|Índice de inflación|Económicas|IPC|{"description":"Calculado a partir de la serie general del IPC de INEGI ponderando por la distancia a ciudades cercanas"}|2018-12-06|2018-7-m
+year|Año|||{}|2018-12-06|2018-7-m
+month|Mes|||{}|2018-12-06|2018-7-m
