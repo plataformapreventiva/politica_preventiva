@@ -170,8 +170,11 @@ if(length(opt) > 1){
                                                               variable='x',
                                                               valor='y')) %>%
                         arrange(nivel_clave, element_id) %>%
-                                      nivel = level,
-                                      plot = plots_metadata$plot[i]) %>%
+                        group_by(element_id, nivel_clave) %>%
+                        mutate(
+                               values = 
+                               nivel = level,
+                               plot = plots_metadata$plot[i]) %>%
                        dplyr::select(nivel, nivel_clave, plot, element_id, values)
     }
   tidy_data <- data_to_plot %>%
