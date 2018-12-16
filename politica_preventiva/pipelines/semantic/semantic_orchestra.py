@@ -29,9 +29,14 @@ from politica_preventiva.pipelines.utils.pipeline_utils import parse_cfg_list,\
     extras, dates_list, get_extra_str, s3_to_pandas, final_dates
 from politica_preventiva.pipelines.utils import s3_utils
 from politica_preventiva.pipelines.etl.etl_orchestra import UpdateCleanDB
-from politica_preventiva.pipelines.features.tools.pipeline_tools import
-get_feature_dates
-from politica_preventica.pipelines.semantic.tools.pipeline_tools import plots_test
+from politica_preventiva.pipelines.features.tools.pipeline_tools import get_features_dates
+from politica_preventiva.pipelines.models.models_orchestra import\
+        ModelsPipeline
+from politica_preventiva.pipelines.features.features_orchestra import\
+        FeaturesPipeline
+from politica_preventiva.pipelines.etl.etl_orchestra import ETLPipeline
+
+configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_semantic.cfg')
 
 # Variables de ambiente
 load_dotenv(find_dotenv())
@@ -42,7 +47,6 @@ logging_conf = configuration.get_config().get("core", "logging_conf_file")
 
 logging.config.fileConfig(logging_conf)
 logger = logging.getLogger("dpa-sedesol")
-
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -54,6 +58,8 @@ with open("pipelines/configs/semantic_dependencies.yaml", "r") as file:
 
 
 class SemanticPipeline(luigi.WrapperTask):
+    """
+    """
 
     semantics = parse_cfg_list(conf.get("SemanticPipeline", "pipelines"))
     current_date = luigi.DateParameter()
@@ -67,18 +73,24 @@ class SemanticPipeline(luigi.WrapperTask):
 
         logger.info('Luigi is running the Semanic Pipeline on the date: {0}'.\
                     format( self.current_date))
+        # Plotoriented
         return [UpdatePlotsDB(semantic_task=semantic_task,
                               current_date=self.current_date,
-                              plot_oriented=configuration.get_config().\
-                                     get(semantic_task, 'plot_oriented'))
+                              plot_oriented = parse_cfg_list(conf.get(semantic_task,
+                                  "plot_oriented")),
+                              extra_parameters = ','.join(parse_cfg_list(conf.get(semantic_task,
+                                  "extra_parameters"))))
                 for semantic_task in self.pipelines]
 
 class UpdatePlotsDB(luigi.Task):
+    """
+    """
 
     semantic_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     historical = luigi.Parameter('DEFAULT')
     plot_oriented = luigi.Parameter()
+    extra_parameters = luigi.Parameter()
 
     # AWS RDS
     database = os.environ.get("PGDATABASE")
@@ -93,14 +105,14 @@ class UpdatePlotsDB(luigi.Task):
 
     @property
     def update_id(self):
-        return str(self.plots_task) + '_plots'
+        return str(self.semantic_task) + '_plots'
 
     @property
     def table(self):
         return "plots." + self.semantic_task
 
     @property
-    def plots_data:
+    def plots_data(self):
         try:
             plots_data = pd.read_sql("SELECT * FROM plots.{}".\
                                      format(self.semantic_task), con=self.engine)
@@ -109,7 +121,7 @@ class UpdatePlotsDB(luigi.Task):
             return None
 
     @property
-    def updates:
+    def updates(self):
         updates_data = pd.DataFrame(columns=['schema', 'table_name',\
                                                         'last_update'])
         if(self.plots_data):
@@ -133,7 +145,7 @@ class UpdatePlotsDB(luigi.Task):
                 updates_data.append([schema, table, last_update])
         return updates_data
 
-    def run:
+    def run(self):
         if (self.plot_oriented):
             updated_plots_data = plots_test(updates_data=self.updates_data,
                                                 plots_data=self.plots_data)
@@ -145,11 +157,12 @@ class UpdatePlotsDB(luigi.Task):
                                    con=engine,
                                    schema='plots')
 
-    def requires:
-        return(UpdateSemanticDB(semantic_task=self.semantic_task,
-                                current_date=self.current_date)
+    def requires(self):
+        return UpdateSemanticDB(semantic_task=self.semantic_task,
+                                current_date=self.current_date,
+                                extra_parameters=self.extra_parameters)
 
-    def output:
+    def output(self):
         return PostgresTarget(host=self.host,
                               database=self.database,
                               user=self.user,
@@ -158,12 +171,15 @@ class UpdatePlotsDB(luigi.Task):
                               update_id=self.update_id)
 
 class UpdateSemanticDB(postgres.PostgresQuery):
+    """
+    """
 
     semantic_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     client = S3Client()
     semantic_scripts = luigi.Parameter()
     historical = luigi.Parameter('DEFAULT')
+    extra_parameters = luigi.Parameter()
 
     # RDS
     database = os.environ.get("PGDATABASE")
@@ -196,8 +212,8 @@ class UpdateSemanticDB(postgres.PostgresQuery):
 
     def requires(self):
         return UpdateTidyDB(current_date=self.current_date,
-                            semantic_task=self.semantic_task)
-
+                            semantic_task=self.semantic_task,
+                            extra_parameters=self.extra_parameters)
     def output(self):
         return PostgresTarget(host=self.host,
                               database=self.database,
@@ -218,6 +234,7 @@ class UpdateTidyDB(PgRTask):
     semantic_task = luigi.Parameter()
     client = S3Client()
     tidy_scripts = luigi.Parameter()
+    extra_parameters = luigi.Parameter()
 
     # RDS
     database = os.environ.get("PGDATABASE")
@@ -228,7 +245,7 @@ class UpdateTidyDB(PgRTask):
     @property
     def cmd(self):
         tidy_file = self.tidy_scripts +\
-                    self.pipeline_task + '.R'
+                    self.semantic_task + '.R'
 
         if os.path.isfile(tidy_file):
             pass
@@ -240,7 +257,8 @@ class UpdateTidyDB(PgRTask):
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host,
-                        '--semantic', self.semantic_task]
+                        '--pipeline', self.semantic_task,
+                        '--extra_parameters', self.extra_parameters]
         cmd = " ".join(command_list)
         return cmd
 
@@ -250,11 +268,15 @@ class UpdateTidyDB(PgRTask):
 
     @property
     def table(self):
-        return "tidy." + self.pipeline_task
+        return "tidy." + self.semantic_task
 
     def requires(self):
         # Check table dependencies
-        dep_types = [dt for dt in composition[self.semantic_task].keys()]
+        dep = composition[self.semantic_task]
+        if dep!=None:
+            dep_types = [dt for dt in dep.keys()]
+        else:
+            return
 
         for dt in dep_types:
             if 'features_dependencies' in dep_types:

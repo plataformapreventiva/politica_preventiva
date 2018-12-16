@@ -138,6 +138,6 @@ capacidad_comparaciones:
 inform_index_estados:
     models_dependencies:
         - inform_index_municipios
-intercensal_personas_2015_municipios:
+intercensal_personas_2015_estados:
     features_dependencies:
         - intercensal_personas_2015_municipios

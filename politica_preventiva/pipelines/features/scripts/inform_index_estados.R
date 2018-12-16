@@ -43,7 +43,7 @@ opt <- tryCatch(
 )
 
 if(length(opt) > 1){
-  
+
   if (opt$database=="" | opt$user=="" |
       opt$password=="" | opt$host=="" ){
     print_help(opt_parser)
@@ -55,13 +55,13 @@ if(length(opt) > 1){
     PGHOST <- opt$host
     PGPORT <- "5432"
   }
-  
+
   if(opt$data_date == ""){
     stop("Did not receive a valid data date, stopping", call.=FALSE)
   }else{
     data_date <- opt$data_date
   }
-  
+
   con <- DBI::dbConnect(RPostgres::Postgres(),
                         host = PGHOST,
                         port = PGPORT,
@@ -69,16 +69,16 @@ if(length(opt) > 1){
                         user = POSTGRES_USER,
                         password = POSTGRES_PASSWORD
   )
-  
+
   source("pipelines/features/tools/features_tools.R")
-  
+
   print('Pulling datasets')
-  
+
   query1 <- 'SELECT *, LEFT(cve_muni, 2)  as cve_ent FROM models.inform_index_municipios'
-  
+
   data <- tbl(con, sql(query1)) %>% select(-c(cve_muni,ranking)) %>% group_by(cve_ent)  %>%
     summarise_all(mean,na.rm = TRUE) %>% collect()
-  
+
   data <- arrange(data, desc(inform)) %>%
     mutate(ranking = 1:nrow(data))
 
@@ -86,6 +86,6 @@ if(length(opt) > 1){
           dbplyr::in_schema("features","inform_index_estados"),
           temporary  = FALSE, overwrite = TRUE)
   dbDisconnect(con)
-  
+
   print('Features written to: features.inform_index_estados')
 }

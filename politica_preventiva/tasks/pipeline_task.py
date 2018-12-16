@@ -47,13 +47,10 @@ class PgRTask(luigi.Task):
             docker run --env-file $PWD/.env\
              -it --rm  -v $PWD:/politica_preventiva\
             -v politica_preventiva_store:/data\
-            politica_preventiva/task/r-task {0} > /dev/null
+            politica_preventiva/task/r-task {0}
          '''.format(self.cmd, aws_access_key_id,
                  aws_secret_access_key)
         out = subprocess.call(cmd_docker, shell=True)
-        logger.info(out)
-
-        # Update marker table
         connection = self.output().connect()
         connection.autocommit = self.autocommit
         self.output().touch(connection)
