@@ -126,6 +126,9 @@ site/
 # Archivos de datos
 *.xlsx
 *.dat
+**/*.txt
+**/*.csv
+**.csv
 *.csv
 *.tsv
 *.psv
@@ -155,8 +158,7 @@ site/
 .Rproj.user
 
 # Diccionarios
-!*_dic.csv
+**/*_dic.csv
 
 # neo4j
 politica_preventiva/pipelines/ingest/common/neo4j/*
-!*_dic.csv

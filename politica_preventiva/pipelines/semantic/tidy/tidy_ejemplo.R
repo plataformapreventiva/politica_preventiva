@@ -4,7 +4,7 @@ library(tidyverse)
 library(dbplyr)
 library(stringr)
 library(DBI)
-source("pipelines/etl/tools/tidy_tools.R")
+source("pipelines/semantic/tools/tidy_tools.R")
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -19,6 +19,8 @@ option_list = list(
               help="database host name", metavar="character"),
   make_option(c("--pipeline"), type="character", default="",
               help="pipeline task", metavar="character")
+  make_option(c("--data_level"), type="character", default="",
+              help="data aggregation level", metavar="character")
 );
 
 opt_parser <- OptionParser(option_list=option_list);
@@ -65,25 +67,50 @@ if(length(opt) > 1){
     password = POSTGRES_PASSWORD
   )
 
-  cenapred <- tbl(con, sql("select cve_muni,data_date,gp_bajaste,gp_ciclnes,
-                          gp_granizo,gp_inundac,gp_nevadas,gp_sequia2,gp_sismico,
-                          gp_susinfl,gp_sustox,gp_tormele,gp_tsunami,gp_ondasca, 
-                          actualizacion_sedesol
-                          from clean.cenapred"))
+  level <- opt$level
+
+  df <- tbl(con, dplyr::in_schema('clean', 'delitos_comun'))
 
   key <- "variable"
   value <- "valor"
-  not_gathered <- c("cve_muni", "data_date", "actualizacion_sedesol")
 
-  cenapred_larga <- gather_db(cenapred, key, value, not_gathered) %>%
-    select(clave=cve_muni, variable, valor, data_date, actualizacion_sedesol) %>%
-    compute(name="cenapred_temp")
+  if(level == 'e'){
+      key_var <- 'cve_ent'
+  } elif(level == 'm') {
+      key_var <- 'cve_muni'
+  } else {
+      key_var <- NULL
+  }
 
-  dbGetQuery(con, "create table tidy.cenapred as (select * from cenapred_temp)")
+  not_gathered <- c(key_var, "data_date", "actualizacion_sedesol")
 
-  # commit the change
+  df_largo <- gather_db(df, key, value, not_gathered) %>%
+                dplyr::compute(name="df_temp")
+
+  df_variables <- tbl(con, sql(glue::glue("select {key_var} as nivel_clave, variable from df_temp"))) %>%
+                    gather_db(varname, value, "nivel_clave") %>%
+                    dplyr::mutate(nivel = level,
+                                  plot = plot_task,
+                                  element_id = rownames(.),
+                                  vartype = 'x') %>%
+                    dplyr::select(nivel, nivel_clave, plot, element_id,
+                                  vartype, varname, value, label) %>%
+                    dplyr::compute()
+
+  df_valores <- tbl(con, sql(glue::glue("select {key_var} as nivel_clave, valor from df_temp"))) %>%
+                    gather_db(varname, value, "nivel_clave") %>%
+                    dplyr::mutate(nivel = level,
+                                  plot = plot_task,
+                                  element_id = rownames(.),
+                                  vartype = 'y') %>%
+                    dplyr::select(nivel, nivel_clave, plot, element_id,
+                                  vartype, varname, value, label) %>%
+                    dplyr::compute()
+
+  dbGetQuery(con, glue::glue("CREATE TABLE tidy.{plot_task} AS (SELECT * FROM df_temp_variables) UNION (SELECT * FROM df_temp_valores)))"))
+
   dbCommit(con)
 
-  # disconnect from the database
   dbDisconnect(con)
+
 }

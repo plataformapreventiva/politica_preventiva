@@ -3,7 +3,7 @@
 ########################################
 ##            Variables               ##
 ########################################
-SHELL := /bin/bash 
+SHELL := /bin/bash
 PROJECT_NAME:= politica_preventiva
 DATA_DIRECTORY:= /data
 DOCKER_REGISTRY:= "localhost:5000"
@@ -25,7 +25,7 @@ setup: create up
 	@docker-compose --project-name ${PROJECT_NAME} up -d
 	@touch .running
 
-create: .images_built .network_built .data_built  
+create: .images_built .network_built .data_built
 
 .images_built:
 	@./registrar.sh
@@ -48,7 +48,7 @@ create: .images_built .network_built .data_built
 	@touch .infrastructure_built
 
 register_images:
-	@echo TODO 
+	@echo TODO
 
 stop:
 	@docker-compose --project-name ${PROJECT_NAME} stop
@@ -62,7 +62,7 @@ logs:
 
 restart: clean start status
 
-clean: stop  clean_images clean_containers clean_data clean_network 
+clean: stop  clean_images clean_containers clean_data clean_network
 
 nuke: clean
 

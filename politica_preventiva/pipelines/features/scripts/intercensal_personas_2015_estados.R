@@ -3,9 +3,8 @@ library(optparse)
 library(dbplyr)
 library(dplyr)
 library(DBI)
-library(lubridate)
 library(yaml)
-library(aws.s3)
+library(stringr)
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -74,18 +73,17 @@ if(length(opt) > 1){
 
   print('Pulling datasets')
 
-  query1 <- 'SELECT *, LEFT(cve_muni, 2)  as cve_ent FROM models.inform_index_municipios'
+  db <- tbl(con, dbplyr::in_schema('features','intercensal_personas_2015_municipios')) %>%
+      collect() %>%
+      mutate(cve_ent = str_sub(cve_muni,start=1, end=2)) %>%
+      select(-cve_muni, -actualizacion_sedesol) %>%
+      group_by(cve_ent) %>%
+      summarise_all( mean, na.rm=TRUE)
 
-  data <- tbl(con, sql(query1)) %>% select(-c(cve_muni,ranking)) %>% group_by(cve_ent)  %>%
-    summarise_all(mean,na.rm = TRUE) %>% collect()
-
-  data <- arrange(data, desc(inform)) %>%
-    mutate(ranking = 1:nrow(data))
-
-  copy_to(con, data,
-          dbplyr::in_schema("features","inform_index_estados"),
-          temporary  = FALSE, overwrite = TRUE)
+  copy_to(con, db,
+          dbplyr::in_schema("features",'intercensal_personas_2015_estados'),
+          temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
 
-  print('Features written to: features.inform_index_estados')
+  print('Features written to: features.intercensal_personas_2015_estados')
 }

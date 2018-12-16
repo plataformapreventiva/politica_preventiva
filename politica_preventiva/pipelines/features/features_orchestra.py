@@ -16,12 +16,13 @@ import yaml
 from boto3 import client, resource
 from sqlalchemy import create_engine
 
-from luigi import six
 from os.path import join, dirname
+from dotenv import load_dotenv, find_dotenv
+
+from luigi import six
 from luigi import configuration
 from luigi.contrib import postgres
 from luigi.s3 import S3Target, S3Client
-from dotenv import load_dotenv, find_dotenv
 from luigi.contrib.postgres import PostgresTarget, PostgresQuery
 
 from politica_preventiva.pipelines.utils.pg_sedesol import parse_cfg_string,\

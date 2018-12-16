@@ -100,6 +100,7 @@ inform_variables_municipios:
         - sistemas_alertas_municipios
         - shcp_ici_municipios
         - imco_ice_municipios
+        - inflacion_municipios
         - enigh_vulnerabilidades_municipios
 sistemas_alertas_municipios:
     features_dependencies:
@@ -137,3 +138,6 @@ capacidad_comparaciones:
 inform_index_estados:
     models_dependencies:
         - inform_index_municipios
+intercensal_personas_2015_estados:
+    features_dependencies:
+        - intercensal_personas_2015_municipios

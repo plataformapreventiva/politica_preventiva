@@ -23,12 +23,12 @@ maize-price-warning-indicator:
     repository:
         - food-price-warning-indicator
 
-inform_index:
-    clean_dependencies:
-        - temp_1
-    features_dependencies:
-        - temp_2
-    model_dependencies:
-        - temp_3
+inform_index_municipios:
+    #    clean_dependencies:
+    #        - temp_1
+    #    features_dependencies:
+    #        - temp_2
+    #    model_dependencies:
+    #        - temp_3
     repository:
         - inform-mexico
