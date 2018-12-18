@@ -141,3 +141,6 @@ inform_index_estados:
 intercensal_personas_2015_estados:
     features_dependencies:
         - intercensal_personas_2015_municipios
+pub_agg:
+    models_dependencies:
+        - inform_index_municipios
