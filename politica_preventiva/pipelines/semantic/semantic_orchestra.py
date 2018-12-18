@@ -76,8 +76,8 @@ class SemanticPipeline(luigi.WrapperTask):
         # Plotoriented
         return [UpdatePlotsDB(semantic_task=semantic_task,
                               current_date=self.current_date,
-                              plot_oriented = parse_cfg_list(conf.get(semantic_task,
-                                  "plot_oriented")),
+                              plot_oriented = conf.get(semantic_task,
+                                  "plot_oriented"),
                               extra_parameters = ','.join(parse_cfg_list(conf.get(semantic_task,
                                   "extra_parameters"))))
                 for semantic_task in self.pipelines]

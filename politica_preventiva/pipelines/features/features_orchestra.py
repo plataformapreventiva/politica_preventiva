@@ -229,7 +229,12 @@ class UpdateFeaturesDB(PgRTask):
 
     def requires(self):
         # Check table dependencies
-        dep_types = [dt for dt in composition[self.features_task].keys()]
+        dep = composition[self.features_task]
+        if dep!=None:
+            dep_types = [dt for dt in dep.keys()]
+        else:
+            return
+
 
         for dt in dep_types:
             if 'features_dependencies' in dep_types:

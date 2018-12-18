@@ -45,3 +45,6 @@ perfil_ubicaciones:
 #        - oferta_social_municipios
 #        - poblaciones_atendidas_estados
 #        - poblaciones_atendidas_municipios
+pub_agg:
+    features_dependencies:
+        - pub_agg
