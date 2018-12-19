@@ -211,4 +211,4 @@ if(length(opt) > 1){
   query <- c("DROP TABLE public.perfil_ubicaciones_t2;")
   DBI::dbGetQuery(con, query)
   print('Closed connection')
-  }
+}
