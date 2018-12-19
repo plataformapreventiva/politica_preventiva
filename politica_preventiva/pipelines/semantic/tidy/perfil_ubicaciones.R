@@ -80,6 +80,11 @@ if(length(opt) > 1){
                     metadata TEXT);")
   DBI::dbGetQuery(con, query)
   DBI::dbGetQuery(con, query_2)
+  query_meta <- "SELECT string_agg( 'SELECT ' || quote_literal(table_schema) || ' AS table_schema, ' || quote_literal(table_name) || ' AS table_name, id, nombre ,  fuente FROM ' || table_schema || '.' || table_name , ' UNION ')::text FROM information_schema.tables WHERE ( table_schema = 'features' OR table_schema = 'raw' ) AND table_name ~ '_dic$';"
+  metadata <- DBI::dbGetQuery(con, query_meta)
+  metadata <- sub(" *string_agg *1",'',metadata)
+  dict <-  tbl(con, dbplyr::sql(metadata)) %>% collect() %>%
+         rename(vars=id) %>% unique(by='vars')
 
   for(level in as.list(strsplit(opt$extra_parameters, ",")[[1]])){
     if (level=='m'){
@@ -90,7 +95,7 @@ if(length(opt) > 1){
       n <-2
     }
 
-    plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT plot, plot_type, metadata \
+    plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT nivel, plot, plot_type, metadata \
                                                   FROM plots.{pipeline_task} \
                                                   WHERE nivel = '{level}'"))) %>%
                   dplyr::collect() %>%
@@ -102,10 +107,24 @@ if(length(opt) > 1){
     plots_metadata <- textConnection(dplyr::pull(plots_data, metadata) %>%
                                      gsub("\\n", "", .)) %>%
                       jsonlite::stream_in() %>%
-                      dplyr::bind_cols(plots_data, .)
+                      dplyr::bind_cols(plots_data, .) %>%
+                      unnest(vars=vars) %>%
+                      left_join(dict, by=c('table_name','vars')) %>%
+                      rowwise %>%
+                      mutate(vars_dict = toJSON(list(variable=vars,
+                                                  name=nombre,
+                                                  source=fuente),auto_unbox=T)) %>%
+                      group_by(nivel, plot, plot_type, metadata,
+                               title, schema, palette, subtext, table_name, section,
+                               table_schema) %>%
+                      summarise(vars = paste(vars, collapse=','),
+                                vars_dict = paste(vars_dict, collapse=','))
+
+
     plots_metadata_d <- plots_metadata %>%
       rowwise %>%
       mutate(metadata = toJSON(list(plot_type=plot_type,
+                                  vars = vars,
                                   metadata=metadata,
                                   title=title,
                                   palette=palette,
