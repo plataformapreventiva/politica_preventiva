@@ -72,7 +72,7 @@ if(length(opt) > 1){
   pipeline_task <- opt$pipeline
 
   query <- c("DROP TABLE IF EXISTS tidy.perfil_ubicaciones;")
-  query_2 <- c("CREATE TABLE IF NOT EXISTS  temp_perfil_ubicaciones_t2 (
+  query_2 <- c("CREATE TABLE IF NOT EXISTS  public.perfil_ubicaciones_t2 (
                     nivel TEXT,
                     nivel_clave TEXT,
                     plot TEXT,
@@ -81,6 +81,7 @@ if(length(opt) > 1){
   DBI::dbGetQuery(con, query)
   DBI::dbGetQuery(con, query_2)
 
+  dbDisconnect(con)
   for(level in as.list(strsplit(opt$extra_parameters, ",")[[1]])){
     if (level=='m'){
       key_var <- 'cve_muni'
@@ -89,6 +90,13 @@ if(length(opt) > 1){
       key_var <- 'cve_ent'
       n <-2
     }
+    con <- DBI::dbConnect(RPostgres::Postgres(),
+      host=PGHOST,
+      port=PGPORT,
+      dbname=PGDATABASE,
+      user=POSTGRES_USER,
+      password=POSTGRES_PASSWORD
+    )
 
     plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT plot, plot_type, metadata \
                                                   FROM plots.{pipeline_task} \
@@ -122,58 +130,68 @@ if(length(opt) > 1){
     concat <- tibble::tibble()
 
     for(i in 1:nrow(plots_metadata)){
-      con <- DBI::dbConnect(RPostgres::Postgres(),
-        host=PGHOST,
-        port=PGPORT,
-        dbname=PGDATABASE,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD)
-      query <- sql_queries[i]
-      print(query)
-      print('Opened connection')
-      data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
-      key_var_name <- rlang::sym(key_var)
-      key_var_quo <- rlang::quo(!! key_var_name)
+        con <- DBI::dbConnect(RPostgres::Postgres(),
+          host=PGHOST,
+          port=PGPORT,
+          dbname=PGDATABASE,
+          user=POSTGRES_USER,
+          password=POSTGRES_PASSWORD
+        )
 
-      not_gathered <- c(key_var)
-      print(glue::glue('Query number {i}'))
+        query <- sql_queries[i]
+        print(query)
+        print('Opened connection')
+        data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
+        key_var_name <- rlang::sym(key_var)
+        key_var_quo <- rlang::quo(!! key_var_name)
 
-      data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered)) %>%
-                    dplyr::rename(nivel_clave = !! key_var_quo)
+        not_gathered <- c(key_var)
+        print(glue::glue('Query number {i}'))
 
-      data_to_plot <- data_largo %>%
-         dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0')) %>%
-         dplyr::group_by(nivel_clave) %>%
-         dplyr::arrange(variable) %>%
-         dplyr::mutate(element_id = stringr::str_pad(row_number(),
-                                                     width = 2,
-                                                     pad = '0')) %>%
-         dplyr::ungroup() %>%
-         rowwise %>%
-         dplyr::mutate(values = str_c('"',variable,'":{"valor":"',valor,'"}'),
-                 nivel = level,
-                 plot = plots_metadata$plot[i]) %>%
-         drop_na(values) %>%
-         dplyr::select(-element_id, -valor, -variable) %>%
-         dplyr::group_by(nivel, nivel_clave, plot) %>%
-         dplyr::summarise(values=paste(values, collapse=', ')) %>%
-         dplyr::left_join(plots_metadata_d) %>%
-         dplyr::mutate(values = str_c('"',plot,'":{"values":{',values,
-                                   '},"info":',metadata,'}')) %>%
-         dplyr::select(-metadata)
+        data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered)) %>%
+                      dplyr::rename(nivel_clave = !! key_var_quo)
 
-      RPostgres::dbWriteTable(conn=con,
-                              name='temp_perfil_ubicaciones',
-                              value=data_to_plot, temporary=TRUE,
-                              overwrite=T, row.names=FALSE)
-      query <- c("INSERT INTO temp_perfil_ubicaciones_t2
-                 SELECT * from temp_perfil_ubicaciones;")
-      DBI::dbGetQuery(con, query)
-      # Clean and disconnect
-      gc()
-      dbDisconnect(con)
+        data_to_plot <- data_largo %>%
+            dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0')) %>%
+            dplyr::group_by(nivel_clave) %>%
+            dplyr::arrange(variable) %>%
+            dplyr::mutate(element_id = stringr::str_pad(row_number(),
+                                                        width = 2,
+                                                        pad = '0')) %>%
+            dplyr::ungroup() %>%
+            rowwise %>%
+            dplyr::mutate(values = str_c('"',variable,'":{"valor":"',valor,'"}'),
+                    nivel = level,
+                    plot = plots_metadata$plot[i]) %>%
+            drop_na(values) %>%
+            dplyr::select(-element_id, -valor, -variable) %>%
+            dplyr::group_by(nivel, nivel_clave, plot) %>%
+            dplyr::summarise(values=paste(values, collapse=', ')) %>%
+            dplyr::left_join(plots_metadata_d) %>%
+            dplyr::mutate(values = str_c('"',plot,'":{"values":{',values,
+                                         '},"info":',metadata,'}')) %>%
+            dplyr::select(-metadata)
+
+        RPostgres::dbWriteTable(conn=con,
+                                name='temp_perfil_ubicaciones',
+                                value=data_to_plot, temporary=TRUE,
+                                overwrite=T, row.names=FALSE)
+        query <- c("INSERT INTO temp_perfil_ubicaciones_t2
+                   SELECT * from temp_perfil_ubicaciones;")
+        DBI::dbGetQuery(con, query)
+        # Clean and disconnect
+        gc()
+        dbDisconnect(con)
    }
   }
+  con <- DBI::dbConnect(RPostgres::Postgres(),
+    host=PGHOST,
+    port=PGPORT,
+    dbname=PGDATABASE,
+    user=POSTGRES_USER,
+    password=POSTGRES_PASSWORD
+  )
+
   # Group by into clave (one row per mun/ent)
   tbl(con, dbplyr::sql(glue::glue("SELECT * FROM temp_perfil_ubicaciones_t2"))) %>%
       dplyr::group_by(nivel, nivel_clave) %>%
@@ -184,5 +202,5 @@ if(length(opt) > 1){
   query <- c("DROP TABLE public.perfil_ubicaciones_t2;")
   DBI::dbGetQuery(con, query)
   print('Closed connection')
+  dbDisconnect(con)
 }
-
