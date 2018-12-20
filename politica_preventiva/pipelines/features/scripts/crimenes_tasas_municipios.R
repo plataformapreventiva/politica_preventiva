@@ -73,8 +73,12 @@ if(length(opt) > 1){
 
   print('Pulling datasets')
 
-  poblacion <- tbl(con, dbplyr::in_schema('public',
-                                          'poblacion_intercensal_mun_2015'))
+  poblacion <- tbl(con, dbplyr::in_schema('clean',
+                                          'coneval_municipios')) %>%
+        dplyr::filter(data_date=='2015-a') %>%
+        dplyr::rename(poblacion = pob_tot) %>%
+        dplyr::select(cve_muni, poblacion)
+
 
   selected_crimes <- c('Homicidio doloso',
                        'Homicidio culposo',
@@ -122,7 +126,7 @@ if(length(opt) > 1){
   crimenes_tasas <- dplyr::left_join(tasa_crimenes, incidencia_total) %>%
                     dplyr::mutate(data_date = data_date,
                                   actualizacion_sedesol = lubridate::today(),
-                                  month = recode(mes, Ene = 'Jan', Apr = 'Abr',
+                                  month = recode(str_sub(mes,1,3), Ene = 'Jan', Apr = 'Abr',
                                                  Ago = 'Aug' , Dic = 'Dec'),
                                   fecha = lubridate::parse_date_time(paste0('01 ', tolower(month), anio),
                                                                      orders = 'd b Y'),
@@ -130,7 +134,7 @@ if(length(opt) > 1){
                                   data_date_parsed = lubridate::parse_date_time(data_date_text,
                                                                              orders = 'd Y m')) %>%
                     dplyr::filter(fecha <= data_date_parsed) %>%
-                    dplyr::select(-fecha, -data_date_text, -data_date_parsed, -month)
+                    dplyr::select(-data_date_text, -data_date_parsed, -month)
 
   copy_to(con, crimenes_tasas,
           dbplyr::in_schema("features",'crimenes_tasas_municipios'),
