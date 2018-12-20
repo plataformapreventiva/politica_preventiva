@@ -102,7 +102,6 @@ class RunModel(ModelTask):
 
     @property
     def cmd(self):
-        pdb.set_trace()
         # path and key to clone model repository
         env_variables = " -e token=" + os.environ.get("GIT_TOKEN") +\
                         " -e path=" + composition[self.model_task]["repository"][0]
@@ -121,7 +120,6 @@ class RunModel(ModelTask):
                         "--password '{0}'".format(password),
                         "--host", self.host,
                         "--pipeline", self.model_task, '"']
-        pdb.set_trace()
         return env_variables + " ".join(command_list)
 
     @property
