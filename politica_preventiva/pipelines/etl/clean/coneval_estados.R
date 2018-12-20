@@ -1,8 +1,10 @@
+#!/usr/bin/env Rscript
+library(rlang)
+library(tidyverse)
 
-drop table if exists clean.coneval_estados cascade;
 
-create table clean.coneval_estados as (
-select  proyecto,
+query <- 'select  data_date as fecha,
+        proyecto,
 		factor,
 		folioviv,
 		foliohog,
@@ -58,6 +60,8 @@ select  proyecto,
 		round(int_caren::numeric, 2) as int_caren,
 		round(ict::numeric, 2) as ict,
 		actualizacion_sedesol,
-		data_date
-from raw.coneval_estados
-);
+		data_date  from raw.coneval_estados'
+
+make_clean <- function(pipeline_task, con){
+  df <- tbl(con, sql(query))
+}
