@@ -125,7 +125,8 @@ if(length(opt) > 1){
     sql_queries <- plots_metadata %>%
                    dplyr::rowwise() %>%
                    dplyr::mutate(var_list = paste0(vars, collapse=', '),
-                                 query_vars = paste0(c(extra_grouping_var, key_var, var_list),
+                                 query_vars = paste0(c(extra_grouping_var,
+                                                       key_var, var_list),
                                                      collapse=', '),
                                  query = glue::glue("SELECT {gsub('^, ', '', query_vars)} ",
                                                     "FROM {schema}.{table_name}")) %>%
