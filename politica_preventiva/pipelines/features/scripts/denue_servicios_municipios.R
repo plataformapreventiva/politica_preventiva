@@ -81,7 +81,8 @@ if(length(opt) > 1){
       summarise(value = toString(n())) %>%
       select(clave, type, value) %>%
       tidyr::spread(key=type, value=value) %>%
-      mutate(nivel='m') %>%
+      mutate(nivel='m',
+             cve_ent=substr(clave, 1,2)) %>%
       rename(cve_muni=clave)
 
   copy_to(con, denue_estatal,
