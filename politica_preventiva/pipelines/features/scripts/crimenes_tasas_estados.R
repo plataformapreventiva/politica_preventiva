@@ -5,6 +5,7 @@ library(dplyr)
 library(DBI)
 library(lubridate)
 library(yaml)
+library(stringr)
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -76,8 +77,11 @@ if(length(opt) > 1){
   poblacion <- tbl(con, dbplyr::in_schema('clean',
                                           'coneval_municipios')) %>%
         dplyr::filter(data_date=='2015-a') %>%
+        dplyr::rename(cve_ent=ent) %>%
+        dplyr::group_by(cve_ent) %>%
+        dplyr::summarise(pob_tot=sum(pob_tot, na.rm=TRUE)) %>%
         dplyr::rename(poblacion = pob_tot) %>%
-        dplyr::select(cve_muni, poblacion)
+        dplyr::select(cve_ent, poblacion)
 
 
   selected_crimes <- c('Homicidio doloso',
@@ -90,7 +94,7 @@ if(length(opt) > 1){
 
   crimenes_data <- tbl(con, dbplyr::in_schema('clean', 'delitos_comun')) %>%
                     dplyr::filter(subtipodedelito %in% selected_crimes) %>%
-                    dplyr::group_by(anio, mes, cve_muni, subtipodedelito) %>%
+                    dplyr::group_by(anio, mes, cve_ent, subtipodedelito,data_date) %>%
                     dplyr::summarise(incidencia_total =  sum(incidencia_delictiva,
                                                              na.rm = TRUE)) %>%
                     dplyr::left_join(poblacion) %>%
@@ -137,7 +141,7 @@ if(length(opt) > 1){
                     dplyr::select(-data_date_text, -data_date_parsed, -month)
 
   copy_to(con, crimenes_tasas,
-          dbplyr::in_schema("features",'crimenes_tasas_municipios'),
+          dbplyr::in_schema("features",'crimenes_tasas_estados'),
           temporary = FALSE, overwrite = TRUE)
   dbDisconnect(con)
 

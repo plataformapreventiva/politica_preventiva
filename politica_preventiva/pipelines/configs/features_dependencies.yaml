@@ -144,3 +144,9 @@ intercensal_personas_2015_estados:
 pub_agg:
     models_dependencies:
         - inform_index_municipios
+denue_servicios:
+    clean_dependencies:
+        - denue
+denue_servicios_municipios:
+    features_dependencies:
+        - denue_servicios

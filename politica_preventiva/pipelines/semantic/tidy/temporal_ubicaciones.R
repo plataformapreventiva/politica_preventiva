@@ -9,7 +9,7 @@ library(stringr)
 source("pipelines/semantic/tools/tidy_tools.R")
 
 option_list = list(
-  make_option(c("--data_date"), type="character", default="",
+  make_option(c("--fecha"), type="character", default="",
               help="data date", metavar="character"),
   make_option(c("--database"), type="character", default="",
               help="database name", metavar="character"),
@@ -71,8 +71,8 @@ if(length(opt) > 1){
 
   pipeline_task <- opt$pipeline
 
-  query <- c("DROP TABLE IF EXISTS tidy.perfil_ubicaciones;")
-  query_2 <- c("CREATE TABLE IF NOT EXISTS  temp_perfil_ubicaciones_t2 (
+  query <- c("DROP TABLE IF EXISTS tidy.temporal_ubicaciones;")
+  query_2 <- c("CREATE TABLE IF NOT EXISTS  temp_temporal_ubicaciones_t2 (
                nivel TEXT,
                nivel_clave TEXT,
                plot TEXT,
@@ -87,7 +87,6 @@ if(length(opt) > 1){
   dict <-  tbl(con, dbplyr::sql(metadata)) %>% collect() %>%
     rename(vars=id) %>% distinct(vars, .keep_all = TRUE)
 
- dbDisconnect(con)
   for(level in as.list(strsplit(opt$extra_parameters, ",")[[1]])){
 
     con <- DBI::dbConnect(RPostgres::Postgres(),
@@ -106,15 +105,14 @@ if(length(opt) > 1){
     }
     time_series <- c('amenazas_violencia', 'poblacion_pobreza', 'pobreza_mult', 'carencias')
     plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT nivel, plot, plot_type, metadata \
-                                                 FROM plots.{pipeline_task} \
+                                                  FROM plots.perfil_ubicaciones \
                                                   WHERE nivel = '{level}'"))) %>%
       dplyr::collect() %>%
       dplyr::filter(!grepl('^programas_', plot),
                     !grepl('^distribucion_', plot),
                     !grepl('^poblacion_atendida', plot),
                     !grepl('^capacidad_institucional', plot)) %>%
-      # Los mapas, pub y las series de tiempo se hacen en otro pipeline.
-      dplyr::filter(plot_type != "map" & !(plot %in% time_series))  %>%
+      dplyr::filter(plot_type != "map" & plot %in% time_series)  %>%
       dplyr::distinct(plot, .keep_all = TRUE)
 
     plots_metadata <- textConnection(dplyr::pull(plots_data, metadata) %>%
@@ -147,7 +145,7 @@ if(length(opt) > 1){
       dplyr::select(plot, metadata)
 
     sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
-                                  function(x) glue::glue("SELECT {paste(c(key_var,
+                                  function(x) glue::glue("SELECT fecha, {paste(c(key_var,
                                                          plots_metadata$vars[[x]]),
                                                          collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
 
@@ -156,76 +154,70 @@ if(length(opt) > 1){
     concat <- tibble::tibble()
 
     for(i in 1:nrow(plots_metadata)){
-        con <- DBI::dbConnect(RPostgres::Postgres(),
-          host=PGHOST,
-          port=PGPORT,
-          dbname=PGDATABASE,
-          user=POSTGRES_USER,
-          password=POSTGRES_PASSWORD
-        )
+      con <- DBI::dbConnect(RPostgres::Postgres(),
+                             host=PGHOST,
+                             port=PGPORT,
+                             dbname=PGDATABASE,
+                             user=POSTGRES_USER,
+                             password=POSTGRES_PASSWORD)
+      query <- sql_queries[i]
+      print(query)
+      print('Opened connection')
+      data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
+      key_var_name <- rlang::sym(key_var)
+      key_var_quo <- rlang::quo(!! key_var_name)
 
-        query <- sql_queries[i]
-        print(query)
-        print('Opened connection')
-        data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
-        key_var_name <- rlang::sym(key_var)
-        key_var_quo <- rlang::quo(!! key_var_name)
+      not_gathered <- c(key_var, 'fecha')
+      print(glue::glue('Query number {i}'))
 
-        not_gathered <- c(key_var)
-        print(glue::glue('Query number {i}'))
+      data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered)) %>%
+        dplyr::rename(nivel_clave = !! key_var_quo)
 
-        data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered)) %>%
-                      dplyr::rename(nivel_clave = !! key_var_quo)
+      data_to_plot <- data_largo %>%
+        dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0')) %>%
+        rowwise %>%
+        dplyr::mutate(values = str_c('"',variable,'":{"valor":"',valor,'"}'),
+                      nivel = level,
+                      plot = plots_metadata$plot[i]) %>%
+        drop_na(values) %>%
+        dplyr::select(-valor, -variable) %>%
+        arrange(fecha) %>%
+        dplyr::group_by(nivel, nivel_clave, plot, fecha) %>%
+        dplyr::summarise(values=paste(values, collapse=', ')) %>%
+        dplyr::mutate(values = str_c('"',fecha,'":{"values":{',values,'}}')) %>%
+        dplyr::group_by(nivel, nivel_clave, plot) %>%
+        dplyr::summarise(values=paste(values, collapse=', ')) %>%
+        dplyr::left_join(plots_metadata_d) %>%
+        dplyr::mutate(values = str_c('"',plot,'":{"values":{',values,
+                                     '},"info":',metadata,'}')) %>%
+        dplyr::select(-metadata)
 
-        data_to_plot <- data_largo %>%
-            dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0')) %>%
-            dplyr::group_by(nivel_clave) %>%
-            dplyr::arrange(variable) %>%
-            dplyr::mutate(element_id = stringr::str_pad(row_number(),
-                                                        width = 2,
-                                                        pad = '0')) %>%
-            dplyr::ungroup() %>%
-            rowwise %>%
-            dplyr::mutate(values = str_c('"',variable,'":{"valor":"',valor,'"}'),
-                    nivel = level,
-                    plot = plots_metadata$plot[i]) %>%
-            drop_na(values) %>%
-            dplyr::select(-element_id, -valor, -variable) %>%
-            dplyr::group_by(nivel, nivel_clave, plot) %>%
-            dplyr::summarise(values=paste(values, collapse=', ')) %>%
-            dplyr::left_join(plots_metadata_d) %>%
-            dplyr::mutate(values = str_c('"',plot,'":{"values":{',values,
-                                         '},"info":',metadata,'}')) %>%
-            dplyr::select(-metadata)
-
-        RPostgres::dbWriteTable(conn=con,
-                                name='temp_perfil_ubicaciones',
-                                value=data_to_plot, temporary=TRUE,
-                                overwrite=T, row.names=FALSE)
-        query <- c("INSERT INTO temp_perfil_ubicaciones_t2
-                   SELECT * from temp_perfil_ubicaciones;")
-        DBI::dbGetQuery(con, query)
-        # Clean and disconnect
-        gc()
-        dbDisconnect(con)
-   }
+      RPostgres::dbWriteTable(conn=con,
+                              name='temp_temporal_ubicaciones',
+                              value=data_to_plot, temporary=TRUE,
+                              overwrite=T, row.names=FALSE)
+      query <- c("INSERT INTO temp_temporal_ubicaciones_t2
+                 SELECT * from temp_temporal_ubicaciones;")
+      DBI::dbGetQuery(con, query)
+      # Clean and disconnect
+      gc()
+      dbDisconnect(con)
+    }
   }
   con <- DBI::dbConnect(RPostgres::Postgres(),
-    host=PGHOST,
-    port=PGPORT,
-    dbname=PGDATABASE,
-    user=POSTGRES_USER,
-    password=POSTGRES_PASSWORD
-  )
-
+                        host=PGHOST,
+                        port=PGPORT,
+                        dbname=PGDATABASE,
+                        user=POSTGRES_USER,
+                        password=POSTGRES_PASSWORD)
   # Group by into clave (one row per mun/ent)
-  tbl(con, dbplyr::sql(glue::glue("SELECT * FROM temp_perfil_ubicaciones_t2"))) %>%
+  tbl(con, dbplyr::sql(glue::glue("SELECT * FROM temp_temporal_ubicaciones_t2"))) %>%
            dplyr::group_by(nivel, nivel_clave) %>%
            dplyr::summarise(values = str_flatten(values, collapse=', ')) %>%
            dplyr::mutate(values = paste0("{",values,'}')) %>%
-           compute(name= in_schema("tidy", "perfil_ubicaciones"),temporary=F)
-  query <- c("DROP TABLE temp_perfil_ubicaciones_t2;")
+           compute(name= in_schema("tidy", "temporal_ubicaciones"),temporary=F)
+  query <- c("DROP TABLE temp_temporal_ubicaciones_t2;")
   DBI::dbGetQuery(con, query)
-  print('Closed connection')
-  dbDisconnect(con)
+print('Closed connection')
+ dbDisconnect(con)
 }

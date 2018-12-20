@@ -4,7 +4,8 @@ library(dbplyr)
 library(tidyverse)
 library(DBI)
 library(yaml)
-source("pipelines/etl/tools/tidy_tools.R")
+
+source("pipelines/features/tools/features_tools.R")
 
 option_list = list(
   make_option(c("--data_date"), type="character", default="",
@@ -109,6 +110,7 @@ if(length(opt) > 1){
 
   auxiliar <- aux_p_ancha %>%
     left_join(aux_n_ancha, by = c("cve_ent","data_date")) %>%
+    dplyr::rename(fecha = data_date) %>%
     dplyr::mutate(actualizacion_sedesol = lubridate::today())
 
   #dbGetQuery(con, "create table tidy.coneval_estados as (select * from temp_coneval_estado)")
