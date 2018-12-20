@@ -74,13 +74,14 @@ if(length(opt) > 1){
 
   print('Pulling datasets')
 
-  query1 <- 'SELECT *, LEFT(cve_muni, 2)  as cve_ent FROM models.inform_index_municipios'
+  query1 <- "SELECT  *, LEFT(cve_muni, 2)  as cve_ent FROM models.inform_index_municipios"
 
-  data <- tbl(con, sql(query1)) %>% select(-c(cve_muni,ranking)) %>% group_by(cve_ent)  %>%
-    summarise_all(mean,na.rm = TRUE) %>% collect()
+  data <- tbl(con, sql(query1)) %>% collect() %>% select(-c(cve_muni,ranking)) %>% group_by(cve_ent)  %>%
+    summarise_all(mean,na.rm = TRUE)
 
   data <- arrange(data, desc(inform)) %>%
-    mutate(ranking = 1:nrow(data))
+    mutate(ranking = 1:nrow(data),
+           fecha = '01-12-2018')
 
   copy_to(con, data,
           dbplyr::in_schema("features","inform_index_estados"),
