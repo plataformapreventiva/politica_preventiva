@@ -80,6 +80,7 @@ if(length(opt) > 1){
       group_by(clave, type) %>%
       summarise(value = toString(n())) %>%
       select(clave, type, value) %>%
+      mutate(type = gsub(' ', '_', tolower(type))) %>%
       tidyr::spread(key=type, value=value) %>%
       mutate(nivel='m',
              cve_ent=substr(clave, 1,2)) %>%
