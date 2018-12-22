@@ -83,6 +83,7 @@ if(length(opt) > 1){
 
   dbDisconnect(con)
   for(level in as.list(strsplit(opt$extra_parameters, ",")[[1]])){
+    print(glue::glue('Level: {level}'))
     if (level=='m'){
       key_var <- 'cve_muni'
       n <- 5
@@ -142,6 +143,7 @@ if(length(opt) > 1){
         )
 
         query <- sql_queries[i]
+        print(glue::glue('Query number {i}'))
         print(query)
         print('Opened connection')
         data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
@@ -156,8 +158,6 @@ if(length(opt) > 1){
         }
         id_var_quo <- rlang::quo(!! id_var_name)
 
-        print(glue::glue('Query number {i}'))
-
         not_gathered <- c(key_var, id_var) %>% unique()
         data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered))
 
@@ -168,15 +168,33 @@ if(length(opt) > 1){
                         dplyr::mutate(element_id = !! id_var_quo) %>%
                         dplyr::ungroup() %>%
                         dplyr::rowwise() %>%
+                        # Create dictionary structure for each variable, valor pair
                         dplyr::mutate(values = str_c('"', variable, '":{"valor":"', valor,'"}'),
                                       nivel = level,
                                       plot = plots_metadata$plot[i]) %>%
                         tidyr::drop_na(valor) %>%
                         dplyr::select(-valor, -variable) %>%
                         dplyr::group_by(nivel, nivel_clave, plot, element_id) %>%
-                        dplyr::summarise(values = paste(values, collapse=',')) %>%
-                        dplyr::mutate(values = str_c('"', element_id, '":{"', values, '"}')) %>%
+                        # Collapse all variable-level dictionaries into one row
+                        dplyr::summarise(values = paste(values, collapse=','))
+        # Assign all those variable-value dictionaries to one
+        # element id (it makes sense to have more than one
+        # var-value pair assigned to the same element_id,
+        # because our map tooltips contain several extra vars)
+        if(id_var == 'cve_ent' and level == 'm'){
+        # In the case of municipios-level profiles, some maps have an id_var
+        # Which implies a coarser partition on the data than the actual
+        # nivel_clave
+            aggregate_data <- data_to_plot %>%
+                              dplyr::group_by(element_id) %>%
+                              dplyr::summarise(values = paste(values, collapse=','))
+                          # Still needing a way to aggregate with element_id
+            data_to_plot <- dplyr::left_join(data_to_plot, aggregate_data)
+        } else {
+        }
+                        dplyr::mutate(values = str_c('"', element_id, '":{', values, '}')) %>%
                         dplyr::group_by(nivel, nivel_clave, plot) %>%
+                        # Paste all plot elements dictionaries together
                         dplyr::summarise(values = paste(values, collapse=', ')) %>%
                         dplyr::left_join(plots_metadata_d) %>%
                         dplyr::mutate(values = str_c('"', plot, '":{"values":{', values,
@@ -211,7 +229,7 @@ if(length(opt) > 1){
       dplyr::mutate(values = paste0("{",values,'}')) %>%
       compute(name= in_schema("tidy", "maps_ubicaciones"), temporary=F)
 
-  query <- c("DROP TABLE public.maps_ubicaciones_t2;")
+  query <- c("DROP TABLE maps_ubicaciones_t2;")
   DBI::dbGetQuery(con, query)
   print('Closed connection')
   dbDisconnect(con)
