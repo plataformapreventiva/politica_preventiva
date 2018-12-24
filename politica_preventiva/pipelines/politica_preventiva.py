@@ -32,6 +32,7 @@ from politica_preventiva.pipelines.features.features_orchestra import\
         FeaturesPipeline
 
 configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_semantic.cfg')
+configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_tidy.cfg')
 configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_models.cfg')
 configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_etl.cfg')
 configuration.LuigiConfigParser.add_config_path('./pipelines/configs/luigi_ingest.cfg')
