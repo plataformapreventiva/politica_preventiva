@@ -52,10 +52,10 @@ aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 # Semantic Schema
-
 with open("pipelines/configs/semantic_dependencies.yaml", "r") as file:
+    semantic_composition = yaml.load(file)
+with open("pipelines/configs/tidy_dependencies.yaml", "r") as file:
     composition = yaml.load(file)
-
 
 class SemanticPipeline(luigi.WrapperTask):
     """
@@ -73,113 +73,21 @@ class SemanticPipeline(luigi.WrapperTask):
 
         logger.info('Luigi is running the Semanic Pipeline on the date: {0}'.\
                     format( self.current_date))
-        # Plotoriented
-        return [UpdatePlotsDB(semantic_task=semantic_task,
-                              current_date=self.current_date,
-                              plot_oriented = conf.get(semantic_task,
-                                  "plot_oriented"),
-                              extra_parameters = ','.join(parse_cfg_list(conf.get(semantic_task,
-                                  "extra_parameters"))))
-                for semantic_task in self.pipelines]
 
-class UpdatePlotsDB(luigi.Task):
+        return [UpdateSemanticDB(semantic_task=semantic_task,
+                              current_date=self.current_date)
+               for semantic_task in self.pipelines]
+
+class UpdateSemanticDB(PgRTask):
     """
-    """
-
-    semantic_task = luigi.Parameter()
-    current_date = luigi.DateParameter()
-    historical = luigi.Parameter('DEFAULT')
-    plot_oriented = luigi.Parameter()
-    extra_parameters = luigi.Parameter()
-
-    # AWS RDS
-    database = os.environ.get("PGDATABASE")
-    user = os.environ.get("POSTGRES_USER")
-    password = os.environ.get("POSTGRES_PASSWORD")
-    host = os.environ.get("PGHOST")
-    port = os.environ.get("PGPORT")
-
-    engine = create_engine('postgresql://{0}:{1}@{2}:{3}/{4}'.\
-                            format(user, password, host,
-                                   port, database))
-
-    @property
-    def update_id(self):
-        return str(self.semantic_task) + '_plots'
-
-    @property
-    def table(self):
-        return "plots." + self.semantic_task
-
-    @property
-    def plots_data(self):
-        try:
-            plots_data = pd.read_sql("SELECT * FROM plots.{}".\
-                                     format(self.semantic_task), con=self.engine)
-            return plots_data
-        except:
-            return None
-
-    @property
-    def updates(self):
-        updates_data = pd.DataFrame(columns=['schema', 'table_name',\
-                                                        'last_update'])
-        if(self.plots_data):
-            unique_tables = pd.DataFrame([(row.get('schema'),\
-                                            row.get('table_name'))\
-                                                  for row in plots_data.metadata],
-                                          columns=['schema', 'table_name']).\
-                            drop_duplicates()
-            # Test if we need first or last element
-            for index, row in unique_tables.iterrows():
-                try:
-                    if row['schema'] == 'features':
-                        data_dates = get_feature_dates(row['table_name'],
-                                                        self.current_date)
-                    else:
-                        data_dates = get_final_dates(row['table_name'],
-                                                        self.current_date)
-                    last_update = data_dates[0][-1]
-                except:
-                    data_dates = ([''], '')
-                updates_data.append([schema, table, last_update])
-        return updates_data
-
-    def run(self):
-        if (self.plot_oriented):
-            updated_plots_data = plots_test(updates_data=self.updates_data,
-                                                plots_data=self.plots_data)
-            if updated_plots_data != self.plots_data:
-                query = """DROP TABLE IF EXISTS plots.{0};""".\
-                        format(self.semantic_task)
-                engine.execute(query)
-                tested_data.to_sql(name=self.semantic_task,
-                                   con=engine,
-                                   schema='plots')
-
-    def requires(self):
-        return UpdateSemanticDB(semantic_task=self.semantic_task,
-                                current_date=self.current_date,
-                                extra_parameters=self.extra_parameters)
-
-    def output(self):
-        return PostgresTarget(host=self.host,
-                              database=self.database,
-                              user=self.user,
-                              password=self.password,
-                              table=self.table,
-                              update_id=self.update_id)
-
-class UpdateSemanticDB(postgres.PostgresQuery):
-    """
+    This task creates the semantic tables joining
+    tidy tables defined in
     """
 
     semantic_task = luigi.Parameter()
     current_date = luigi.DateParameter()
     client = S3Client()
     semantic_scripts = luigi.Parameter()
-    historical = luigi.Parameter('DEFAULT')
-    extra_parameters = luigi.Parameter()
 
     # RDS
     database = os.environ.get("PGDATABASE")
@@ -189,31 +97,41 @@ class UpdateSemanticDB(postgres.PostgresQuery):
 
     @property
     def update_id(self):
-        return str(self.semantic_task) + '_semantic'
+        return str(self.semantic_task) + '_semantic_'
 
     @property
     def table(self):
         return "semantic." + self.semantic_task
 
     @property
-    def query(self):
-        # Read sql command
-        path = self.semantic_scripts + self.semantic_task + '.sql'
+    def cmd(self):
+        semantic_file = self.semantic_scripts +\
+                    self.semantic_task + '.R'
+        extra_parameters = ",".join(semantic_composition[self.semantic_task]['tidy_dependencies'])
 
-        try:
-            sqlfile = open(path, 'r')
-            query = sqlfile.read()
-
-        except:
-            query = ("""DROP TABLE IF EXISTS {0};
-                     CREATE TABLE {0} AS (SELECT * FROM tidy.{1});"""
-                     .format(self.table, self.semantic_task))
-        return query
+        command_list = ['Rscript', semantic_file,
+                        '--database', self.database,
+                        '--user', self.user,
+                        '--password', "'{}'".format(self.password),
+                        '--host', self.host,
+                        '--pipeline', self.semantic_task,
+                        '--extra_parameters', extra_parameters]
+        cmd = " ".join(command_list)
+        return cmd
 
     def requires(self):
-        return UpdateTidyDB(current_date=self.current_date,
-                            semantic_task=self.semantic_task,
-                            extra_parameters=self.extra_parameters)
+        dep = semantic_composition[self.semantic_task]
+        if dep!=None:
+            dep_types = [dt for dt in dep.keys()]
+        else:
+            return
+        for dt in dep_types:
+            if 'tidy_dependencies' in dep_types:
+                tidy_tables = semantic_composition[self.semantic_task]['tidy_dependencies']
+                yield [UpdateTidyDB(current_date=self.current_date,
+                                        tidy_task=pipeline_task) for pipeline_task\
+                                                in tidy_tables]
+
     def output(self):
         return PostgresTarget(host=self.host,
                               database=self.database,
@@ -231,10 +149,9 @@ class UpdateTidyDB(PgRTask):
     """
 
     current_date = luigi.DateParameter()
-    semantic_task = luigi.Parameter()
+    tidy_task = luigi.Parameter()
     client = S3Client()
     tidy_scripts = luigi.Parameter()
-    extra_parameters = luigi.Parameter()
 
     # RDS
     database = os.environ.get("PGDATABASE")
@@ -244,8 +161,12 @@ class UpdateTidyDB(PgRTask):
 
     @property
     def cmd(self):
+        plot_oriented = conf.get(self.tidy_task, "plot_oriented")
+        extra_parameters = ','.join(parse_cfg_list(conf.get(self.tidy_task,
+          "extra_parameters")))
+
         tidy_file = self.tidy_scripts +\
-                    self.semantic_task + '.R'
+                    self.tidy_task + '.R'
 
         if os.path.isfile(tidy_file):
             pass
@@ -257,22 +178,22 @@ class UpdateTidyDB(PgRTask):
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host,
-                        '--pipeline', self.semantic_task,
-                        '--extra_parameters', self.extra_parameters]
+                        '--pipeline', self.tidy_task,
+                        '--extra_parameters', extra_parameters]
         cmd = " ".join(command_list)
         return cmd
 
     @property
     def update_id(self):
-        return str(self.semantic_task) + '_tidy'
+        return str(self.tidy_task) + '_tidy'
 
     @property
     def table(self):
-        return "tidy." + self.semantic_task
+        return "tidy." + self.tidy_task
 
     def requires(self):
         # Check table dependencies
-        dep = composition[self.semantic_task]
+        dep = composition[self.tidy_task]
         if dep!=None:
             dep_types = [dt for dt in dep.keys()]
         else:
@@ -280,19 +201,19 @@ class UpdateTidyDB(PgRTask):
 
         for dt in dep_types:
             if 'features_dependencies' in dep_types:
-                features_tables = composition[self.semantic_task]['features_dependencies']
+                features_tables = composition[self.tidy_task]['features_dependencies']
                 yield [FeaturesPipeline(current_date=self.current_date,
                                         ptask=pipeline_task) for pipeline_task\
                                                 in features_tables]
 
             if 'clean_dependencies' in dep_types:
-                clean_tables = composition[self.semantic_task]['clean_dependencies']
+                clean_tables = composition[self.tidy_task]['clean_dependencies']
                 yield [ETLPipeline(current_date=self.current_date,
                                    ptask=pipeline_task) for pipeline_task\
                                            in clean_tables]
 
             if 'model_dependencies' in dep_types:
-                models_tables = composition[self.semantic_task]['models_dependencies']
+                models_tables = composition[self.tidy_task]['models_dependencies']
                 yield [ModelsPipeline(current_date=self.current_date,
                                       ptask=pipeline_task) for pipeline_task\
                                               in models_tables]
