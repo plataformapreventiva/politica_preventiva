@@ -19,10 +19,11 @@ option_list = list(
   make_option(c("--host"), type="character", default="",
               help="database host name", metavar="character"),
   make_option(c("--pipeline"), type="character", default="",
-              help="semantic pipeline task", metavar="character")
-  make_option(c("--data_level"), type="character", default="",
-              help="data aggregation level", metavar="character")
+              help="semantic pipeline task", metavar="character"),
+  make_option(c("--extra_parameters"), type="character", default="",
+              help="Extra parameters", metavar="character")
 );
+
 
 opt_parser <- OptionParser(option_list=option_list);
 
@@ -68,41 +69,16 @@ if(length(opt) > 1){
     password = POSTGRES_PASSWORD
   )
 
-  level <- opt$level
   pipeline_task <- opt$pipeline
 
-  plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT plot, plot_type, metadata \
-                                                FROM plots.{pipeline_task} \
-                                                WHERE nivel = '{level}'"))) %>%
-                dplyr::collect() %>%
-                dplyr::filter(!grepl('^programas_', plot),
-                              !grepl('^distribucion_', plot),
-                              !grepl('^poblacion_atendida', plot),
-                              !grepl('^capacidad_institucional', plot))
-
-  plots_metadata <- textConnection(dplyr::pull(plots_data, metadata) %>%
-                                   gsub("\\n", "", .)) %>%
-                    jsonlite::stream_in() %>%
-                    dplyr::bind_cols(plots_data, .)
-
-  dictionary_rows <- tibble()
-  for(i in 1:nrow(plots_metadata)){
-      dict_schema <- dplyr::recode(plots_metadata$schema[i], clean='raw')
-      table_name <- plots_metadata$table_name[i]
-      varlist <- plots_metadata$var_list[i]
-      var_labels <- tbl(con, dbplyr::sql(glue::glue("SELECT id, nombre \
-                                                    FROM {dict_schema}.{table_name}_dic \
-                                                    WHERE id = ANY({varlist})")))
-      dictionary_rows <- dplyr::bind_rows(var_labels, dictionary_rows)
-  }
-
-  tidy_data <- tbl(con, dbplyr::sql(glue::glue("SELECT * \
-                                                FROM tidy.{pipeline_task} \
-                                                WHERE nivel = '{level}'")))
-
-  # Jalar varname de x, buscar su label y meterlo al diccionario
-
-  dplyr::copy_to(con, semantic_data,
-                 dbplyr::in_schema('semantic', pipeline_task),
-                 temporary = FALSE)
+  query <- glue::glue("DROP TABLE IF EXISTS semantic.{pipeline_task};")
+  DBI::dbGetQuery(con, query)
+  semantic_data <- tibble()
+  tables <- unlist(strsplit('perfil_ubicaciones,temporal_ubicaciones', ","))
+  queries <- purrr::map_chr(1:length(tables),
+                            function(x) glue::glue("SELECT '{tables[x]}' as tipo, nivel,
+                                                   nivel_clave, values::JSONB FROM tidy.{tables[x]}"))
+  queries <- paste(queries, collapse=' UNION ')
+  tbl(con, dbplyr::sql(queries)) %>%
+          compute(name= in_schema("semantic", "perfil"),temporary=F)
 }

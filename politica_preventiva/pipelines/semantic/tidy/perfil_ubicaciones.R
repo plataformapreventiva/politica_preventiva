@@ -71,7 +71,7 @@ if(length(opt) > 1){
 
   pipeline_task <- opt$pipeline
 
-  query <- c("DROP TABLE IF EXISTS tidy.perfil_ubicaciones;")
+  query <- glue::glue("DROP TABLE IF EXISTS tidy.{pipeline_task};")
   query_2 <- c("CREATE TABLE IF NOT EXISTS  temp_perfil_ubicaciones_t2 (
                nivel TEXT,
                nivel_clave TEXT,
@@ -81,7 +81,14 @@ if(length(opt) > 1){
   DBI::dbGetQuery(con, query)
   DBI::dbGetQuery(con, query_2)
 
-  query_meta <- "SELECT string_agg( 'SELECT ' || quote_literal(table_schema) || ' AS table_schema, ' || quote_literal(table_name) || ' AS table_name, id, nombre ,  fuente FROM ' || table_schema || '.' || table_name , ' UNION ')::text FROM information_schema.tables WHERE ( table_schema = 'features' OR table_schema = 'raw' ) AND table_name ~ '_dic$';"
+  query_meta <- "SELECT string_agg(
+                'SELECT ' ||
+                   quote_literal(table_schema) || ' AS table_schema, ' ||
+                   quote_literal(table_name) || ' AS table_name, id, nombre ,
+                   fuente FROM ' || table_schema || '.' || table_name , ' UNION ')::text
+                   FROM information_schema.tables WHERE (table_schema = 'features'
+                                                         OR table_schema = 'raw' )
+                   AND table_name ~ '_dic$';"
   metadata <- DBI::dbGetQuery(con, query_meta)
   metadata <- sub(" *string_agg *1",'',metadata)
   dict <-  tbl(con, dbplyr::sql(metadata)) %>% collect() %>%
@@ -140,7 +147,7 @@ if(length(opt) > 1){
       mutate(metadata = toJSON(list(plot_type=plot_type,
                                     vars = vars,
                                     metadata=metadata,
-                                    dictionary=vars_dict,
+                                    #dictionary=vars_dict,
                                     title=title,
                                     palette=palette,
                                     subtext=subtext),auto_unbox=T)) %>%
@@ -181,16 +188,16 @@ if(length(opt) > 1){
             dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0')) %>%
             dplyr::group_by(nivel_clave) %>%
             dplyr::arrange(variable) %>%
-            dplyr::mutate(element_id = stringr::str_pad(row_number(),
-                                                        width = 2,
-                                                        pad = '0')) %>%
+            left_join(dict, by=c('variable'='vars')) %>%
             dplyr::ungroup() %>%
             rowwise %>%
-            dplyr::mutate(values = str_c('"',variable,'":{"valor":"',valor,'"}'),
+            dplyr::mutate(values = str_c('"',variable,'":{"valor":"',as.character(valor),
+                                     '","name":"',as.character(nombre),
+                                     '","source":"',as.character(fuente),'"}'),
                     nivel = level,
                     plot = plots_metadata$plot[i]) %>%
             drop_na(values) %>%
-            dplyr::select(-element_id, -valor, -variable) %>%
+            dplyr::select(-valor, -variable) %>%
             dplyr::group_by(nivel, nivel_clave, plot) %>%
             dplyr::summarise(values=paste(values, collapse=', ')) %>%
             dplyr::left_join(plots_metadata_d) %>%
