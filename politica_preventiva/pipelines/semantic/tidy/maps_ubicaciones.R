@@ -83,6 +83,7 @@ if(length(opt) > 1){
 
   dbDisconnect(con)
   for(level in as.list(strsplit(opt$extra_parameters, ",")[[1]])){
+    print(glue::glue('Level: {level}'))
     if (level=='m'){
       key_var <- 'cve_muni'
       n <- 5
@@ -115,10 +116,7 @@ if(length(opt) > 1){
                         dplyr::select(-extra_grouping_var) %>%
                         dplyr::rowwise() %>%
                         dplyr::mutate(metadata = toJSON(list(plot_type=plot_type,
-                                                             metadata=metadata,
-                                                             title=title,
-                                                             palette=palette,
-                                                             subtext=subtext),
+                                                             metadata=metadata),
                                                         auto_unbox=T)) %>%
                         dplyr::select(plot, metadata)
 
@@ -142,42 +140,68 @@ if(length(opt) > 1){
         )
 
         query <- sql_queries[i]
+        print(glue::glue('Query number {i}'))
         print(query)
         print('Opened connection')
         data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
+
+        extra_key <- plots_metadata$grouping_var[i]
+        # Define key that links to profile
         key_var_name <- rlang::sym(key_var)
         key_var_quo <- rlang::quo(!! key_var_name)
-
-        id_var <- plots_metadata$grouping_var[i]
-        if(id_var != key_var){
-            id_var_name <- rlang::sym(id_var)
-        } else {
+        if (level == 'm' & extra_key == 'cve_ent'){
+            # IN this case, the extra key (cve_ent) is a coarser aggregation level than
+            # the original key_var (cve_muni), so we need to exchange them in
+            # order to always have the coarser-level rows "containing" the finer-level
+            # elements in a logical way
+            grouping_var_name <- rlang::sym(extra_key)
             id_var_name <- key_var_name
+        } else {
+            grouping_var_name <- key_var_name
+            id_var_name <- rlang::sym(extra_key)
         }
+        grouping_var_quo <- rlang::quo(!! grouping_var_name)
         id_var_quo <- rlang::quo(!! id_var_name)
 
-        print(glue::glue('Query number {i}'))
-
-        not_gathered <- c(key_var, id_var) %>% unique()
+        not_gathered <- c(key_var, extra_key) %>% unique()
         data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered))
 
-        data_to_plot <- data_largo %>%
-                        dplyr::mutate(nivel_clave = str_pad(!! key_var_quo, n, "left", '0')) %>%
-                        dplyr::group_by_at(vars(one_of(not_gathered))) %>%
-                        dplyr::arrange(variable) %>%
-                        dplyr::mutate(element_id = !! id_var_quo) %>%
-                        dplyr::ungroup() %>%
-                        dplyr::rowwise() %>%
-                        dplyr::mutate(values = str_c('"', variable, '":{"valor":"', valor,'"}'),
-                                      nivel = level,
-                                      plot = plots_metadata$plot[i]) %>%
-                        tidyr::drop_na(valor) %>%
-                        dplyr::select(-valor, -variable) %>%
-                        dplyr::group_by(nivel, nivel_clave, plot, element_id) %>%
-                        dplyr::summarise(values = paste(values, collapse=',')) %>%
-                        dplyr::mutate(values = str_c('"', element_id, '":{"', values, '"}')) %>%
-                        dplyr::group_by(nivel, nivel_clave, plot) %>%
-                        dplyr::summarise(values = paste(values, collapse=', ')) %>%
+        elements_data <- data_largo %>%
+                         dplyr::mutate(nivel_clave = str_pad(!! key_var_quo, n, "left", '0')) %>%
+                         dplyr::group_by_at(vars(one_of(not_gathered))) %>%
+                         dplyr::arrange(variable) %>%
+                         dplyr::mutate(element_id = !! id_var_quo) %>%
+                         dplyr::ungroup() %>%
+                         dplyr::rowwise() %>%
+  # Create dictionary structure for each variable, valor pair
+                         dplyr::mutate(values = str_c('"', variable, '":{"valor":"', valor,'"}'),
+                                       nivel = level,
+                                       plot = plots_metadata$plot[i]) %>%
+                         tidyr::drop_na(valor) %>%
+                         dplyr::group_by(nivel, nivel_clave, plot, element_id, !! grouping_var_quo) %>%
+  # Collapse all variable-level dictionaries into one row
+                         dplyr::summarise(values = paste(values, collapse=',')) %>%
+  # Assign all those variable-value dictionaries to one element id (it makes sense to have more than one
+  # var-value pair assigned to the same element_id, because our map tooltips contain several extra vars)
+                         dplyr::mutate(values = paste0('"', element_id, '":{', values, '}'))
+  # Aggregate all plot data for that municipio/estado
+        if(extra_key == 'cve_ent' & level == 'm') {
+            # In this case, we need to repeat values for all municipios of the
+            # same state
+            aggregate_data <- elements_data %>%
+                              dplyr::group_by(!! grouping_var_quo) %>%
+                              dplyr::summarise(values = paste(values, collapse=','))
+            plot_data <- elements_data %>%
+                            dplyr::select(-values) %>%
+                            dplyr::left_join(aggregate_data) %>%
+                            dplyr::ungroup() %>%
+                            dplyr::select(nivel, nivel_clave, plot, values)
+        } else {
+            plot_data <- elements_data %>%
+                            dplyr::group_by(nivel, nivel_clave, plot) %>%
+                            dplyr::summarise(values = paste(values, collapse=','))
+        }
+        profile_data <- plot_data %>%
                         dplyr::left_join(plots_metadata_d) %>%
                         dplyr::mutate(values = str_c('"', plot, '":{"values":{', values,
                                                      '},"info":', metadata, '}')) %>%
@@ -185,7 +209,7 @@ if(length(opt) > 1){
 
         RPostgres::dbWriteTable(conn=con,
                                 name='temp_maps_ubicaciones',
-                                value=data_to_plot, temporary=TRUE,
+                                value=profile_data, temporary=TRUE,
                                 overwrite=T, row.names=FALSE)
         query <- c("INSERT INTO temp_maps_ubicaciones_t2
                    SELECT * from temp_maps_ubicaciones;")
@@ -208,10 +232,10 @@ if(length(opt) > 1){
   tbl(con, dbplyr::sql(glue::glue("SELECT * FROM temp_maps_ubicaciones_t2"))) %>%
       dplyr::group_by(nivel, nivel_clave) %>%
       dplyr::summarise(values = str_flatten(values, collapse=', ')) %>%
-      dplyr::mutate(values = paste0("{",values,'}')) %>%
+      dplyr::mutate(values = paste0('{',values,'}')) %>%
       compute(name= in_schema("tidy", "maps_ubicaciones"), temporary=F)
 
-  query <- c("DROP TABLE public.maps_ubicaciones_t2;")
+  query <- c("DROP TABLE temp_maps_ubicaciones_t2;")
   DBI::dbGetQuery(con, query)
   print('Closed connection')
   dbDisconnect(con)
