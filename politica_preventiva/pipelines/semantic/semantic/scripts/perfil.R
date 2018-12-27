@@ -18,6 +18,14 @@ option_list = list(
               help="password for datbase user", metavar="character"),
   make_option(c("--host"), type="character", default="",
               help="database host name", metavar="character"),
+  make_option(c("--prod_database"), type="character", default="",
+              help="prod database name", metavar="character"),
+  make_option(c("--prod_user"), type="character", default="",
+              help="prod database user", metavar="character"),
+  make_option(c("--prod_password"), type="character", default="",
+              help="prod password for datbase user", metavar="character"),
+  make_option(c("--prod_host"), type="character", default="",
+              help="prod database host name", metavar="character"),
   make_option(c("--pipeline"), type="character", default="",
               help="semantic pipeline task", metavar="character"),
   make_option(c("--extra_parameters"), type="character", default="",
@@ -59,6 +67,13 @@ if(length(opt) > 1){
     POSTGRES_USER <- opt$user
     PGHOST <- opt$host
     PGPORT <- "5432"
+    PROD_DATABASE <- opt$prod_database
+    PROD_PASSWORD <- opt$prod_password
+    PROD_USER <- opt$prod_user
+    PROD_HOST <- opt$prod_host
+    PROD_PORT <- "5432"
+
+
   }
 
   con <- DBI::dbConnect(RPostgres::Postgres(),
@@ -69,16 +84,32 @@ if(length(opt) > 1){
     password = POSTGRES_PASSWORD
   )
 
+
+  prod_con <- DBI::dbConnect(RPostgres::Postgres(),
+    host = PROD_HOST,
+    port = PROD_PORT,
+    dbname = PROD_DATABASE,
+    user = PROD_USER,
+    password = PROD_PASSWORD
+  )
+
   pipeline_task <- opt$pipeline
 
   query <- glue::glue("DROP TABLE IF EXISTS semantic.{pipeline_task};")
-  DBI::dbGetQuery(con, query)
+  DBI::dbGetQuery(prod_con, query)
   semantic_data <- tibble()
+
+  # TODO() take table names from config yaml
   tables <- unlist(strsplit('perfil_ubicaciones,temporal_ubicaciones', ","))
   queries <- purrr::map_chr(1:length(tables),
-                            function(x) glue::glue("SELECT '{tables[x]}' as tipo, nivel,
-                                                   nivel_clave, values::JSONB FROM tidy.{tables[x]}"))
+                            function(x) glue::glue("SELECT '{tables[x]}' as tipo,
+                                                           nivel, nivel_clave,
+                                                           values::JSONB
+                                                    FROM tidy.{tables[x]}"))
+
   queries <- paste(queries, collapse=' UNION ')
-  tbl(con, dbplyr::sql(queries)) %>%
-          compute(name= in_schema("semantic", "perfil"),temporary=F)
+  data <- tbl(con, dbplyr::sql(queries)) %>% collect()
+  copy_to(prod_con, data,
+          name=in_schema("semantic",'perfil'),
+          temporary = FALSE, overwrite = TRUE)
 }

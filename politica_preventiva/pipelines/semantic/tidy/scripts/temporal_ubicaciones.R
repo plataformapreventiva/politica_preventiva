@@ -81,7 +81,14 @@ if(length(opt) > 1){
   DBI::dbGetQuery(con, query)
   DBI::dbGetQuery(con, query_2)
 
-  query_meta <- "SELECT string_agg( 'SELECT ' || quote_literal(table_schema) || ' AS table_schema, ' || quote_literal(table_name) || ' AS table_name, id, nombre ,  fuente FROM ' || table_schema || '.' || table_name , ' UNION ')::text FROM information_schema.tables WHERE ( table_schema = 'features' OR table_schema = 'raw' ) AND table_name ~ '_dic$';"
+  query_meta <- "SELECT string_agg(
+                'SELECT ' ||
+                   quote_literal(table_schema) || ' AS table_schema, ' ||
+                   quote_literal(table_name) || ' AS table_name, id, nombre ,
+                   fuente FROM ' || table_schema || '.' || table_name , ' UNION ')::text
+                   FROM information_schema.tables WHERE (table_schema = 'features'
+                                                         OR table_schema = 'raw' )
+                   AND table_name ~ '_dic$';"
   metadata <- DBI::dbGetQuery(con, query_meta)
   metadata <- sub(" *string_agg *1",'',metadata)
   dict <-  tbl(con, dbplyr::sql(metadata)) %>% collect() %>%
@@ -138,7 +145,7 @@ if(length(opt) > 1){
       mutate(metadata = toJSON(list(plot_type=plot_type,
                                     vars = vars,
                                     metadata=metadata,
-                                    dictionary=vars_dict,
+                                    #dictionary=vars_dict,
                                     title=title,
                                     palette=palette,
                                     subtext=subtext),auto_unbox=T)) %>%
@@ -175,8 +182,11 @@ if(length(opt) > 1){
 
       data_to_plot <- data_largo %>%
         dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0')) %>%
+        left_join(dict, by=c('variable'='vars')) %>%
         rowwise %>%
-        dplyr::mutate(values = str_c('"',variable,'":{"valor":"',valor,'"}'),
+        dplyr::mutate(values = str_c('"',variable,'":{"valor":"',as.character(valor),
+                                     '","name":"',as.character(nombre),
+                                     '","source":"',as.character(fuente),'"}'),
                       nivel = level,
                       plot = plots_metadata$plot[i]) %>%
         drop_na(values) %>%
