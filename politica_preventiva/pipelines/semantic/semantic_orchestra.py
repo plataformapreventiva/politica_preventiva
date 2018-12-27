@@ -95,6 +95,12 @@ class UpdateSemanticDB(PgRTask):
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
 
+    prod_database = os.environ.get("PROD_DATABASE")
+    prod_user = os.environ.get("PROD_POSTGRES_USER")
+    prod_password = os.environ.get("PROD_POSTGRES_PASSWORD")
+    prod_host = os.environ.get("PROD_PGHOST")
+
+
     @property
     def update_id(self):
         return str(self.semantic_task) + '_semantic_'
@@ -114,6 +120,10 @@ class UpdateSemanticDB(PgRTask):
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host,
+                        '--prod_database', self.prod_database,
+                        '--prod_user', self.prod_user,
+                        '--prod_password', "'{}'".format(self.prod_password),
+                        '--prod_host', self.prod_host,
                         '--pipeline', self.semantic_task,
                         '--extra_parameters', extra_parameters]
         cmd = " ".join(command_list)
