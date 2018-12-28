@@ -85,22 +85,14 @@ if(length(opt) > 1){
   )
 
 
-  prod_con <- DBI::dbConnect(RPostgres::Postgres(),
-    host = PROD_HOST,
-    port = PROD_PORT,
-    dbname = PROD_DATABASE,
-    user = PROD_USER,
-    password = PROD_PASSWORD
-  )
-
   pipeline_task <- opt$pipeline
 
   query <- glue::glue("DROP TABLE IF EXISTS semantic.{pipeline_task};")
-  DBI::dbGetQuery(prod_con, query)
+  #DBI::dbGetQuery(prod_con, query)
   semantic_data <- tibble()
 
   # TODO() take table names from config yaml
-  tables <- unlist(strsplit('perfil_ubicaciones,temporal_ubicaciones', ","))
+  tables <- unlist(strsplit('perfil_ubicaciones,temporal_ubicaciones,maps_ubicaciones', ","))
   queries <- purrr::map_chr(1:length(tables),
                             function(x) glue::glue("SELECT '{tables[x]}' as tipo,
                                                            nivel, nivel_clave,
@@ -109,7 +101,28 @@ if(length(opt) > 1){
 
   queries <- paste(queries, collapse=' UNION ')
   data <- tbl(con, dbplyr::sql(queries)) %>% collect()
-  copy_to(prod_con, data,
-          name=in_schema("semantic",'perfil'),
-          temporary = FALSE, overwrite = TRUE)
+  db_schema <- c(tipo='TEXT', nivel='TEXT', nivel_clave='TEXT',values='JSONB')
+  RPostgres::dbWriteTable(conn=con,
+                          name=c("semantic",'perfil'),
+                          value=data,
+                          temporary=FALSE,
+                          overwrite=TRUE,
+                          field.types=db_schema,
+                          row.names=FALSE)
+
+  prod_con <- DBI::dbConnect(RPostgres::Postgres(),
+    host = PROD_HOST,
+    port = PROD_PORT,
+    dbname = PROD_DATABASE,
+    user = PROD_USER,
+    password = PROD_PASSWORD
+  )
+
+  RPostgres::dbWriteTable(conn=prod_con,
+                          name=c("semantic",'perfil'),
+                          value=data,
+                          temporary=FALSE,
+                          overwrite=TRUE,
+                          field.types=db_schema,
+                          row.names=FALSE)
 }
