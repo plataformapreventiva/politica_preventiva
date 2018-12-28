@@ -191,7 +191,7 @@ if(length(opt) > 1){
             left_join(dict, by=c('variable'='vars')) %>%
             dplyr::ungroup() %>%
             rowwise %>%
-            dplyr::mutate(values = str_c('"',variable,'":{"valor":"',as.character(valor),
+            dplyr::mutate(values = str_c('"',variable,'":{"values":"',as.character(valor),
                                      '","name":"',as.character(nombre),
                                      '","source":"',as.character(fuente),'"}'),
                     nivel = level,
