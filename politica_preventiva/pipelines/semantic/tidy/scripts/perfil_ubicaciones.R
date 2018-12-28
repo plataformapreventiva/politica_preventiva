@@ -72,29 +72,16 @@ if(length(opt) > 1){
   pipeline_task <- opt$pipeline
 
   query <- glue::glue("DROP TABLE IF EXISTS tidy.{pipeline_task};")
-  query_2 <- c("CREATE TABLE IF NOT EXISTS  temp_perfil_ubicaciones_t2 (
+  DBI::dbGetQuery(con, query)
+  query_2 <- glue::glue("CREATE TABLE IF NOT EXISTS  temp_{pipeline_task}_t2 (
                nivel TEXT,
                nivel_clave TEXT,
                plot TEXT,
                values TEXT,
                metadata TEXT);")
-  DBI::dbGetQuery(con, query)
   DBI::dbGetQuery(con, query_2)
 
-  query_meta <- "SELECT string_agg(
-                'SELECT ' ||
-                   quote_literal(table_schema) || ' AS table_schema, ' ||
-                   quote_literal(table_name) || ' AS table_name, id, nombre ,
-                   fuente FROM ' || table_schema || '.' || table_name , ' UNION ')::text
-                   FROM information_schema.tables WHERE (table_schema = 'features'
-                                                         OR table_schema = 'raw' )
-                   AND table_name ~ '_dic$';"
-  metadata <- DBI::dbGetQuery(con, query_meta)
-  metadata <- sub(" *string_agg *1",'',metadata)
-  dict <-  tbl(con, dbplyr::sql(metadata)) %>% collect() %>%
-    rename(vars=id) %>% distinct(vars, .keep_all = TRUE)
-
- dbDisconnect(con)
+  dbDisconnect(con)
   for(level in as.list(strsplit(opt$extra_parameters, ",")[[1]])){
 
     con <- DBI::dbConnect(RPostgres::Postgres(),
@@ -129,8 +116,6 @@ if(length(opt) > 1){
       jsonlite::stream_in() %>%
       dplyr::bind_cols(plots_data, .) %>%
       unnest(vars=vars) %>%
-      left_join(dict, by=c('vars')) %>%
-      select(-table_name.y, table_name=table_name.x) %>%
       rowwise %>%
       mutate(vars_dict = toJSON(list(variable=vars,
                                      name=nombre,
@@ -138,8 +123,7 @@ if(length(opt) > 1){
       group_by(nivel, plot, plot_type, metadata,
                title, schema, palette, subtext, table_name, section,
                table_schema) %>%
-      summarise(vars = paste(vars, collapse=','),
-                vars_dict = paste(vars_dict, collapse=','))
+      summarise(vars = paste(vars, collapse=','))
 
 
     plots_metadata_d <- plots_metadata %>%
@@ -147,7 +131,6 @@ if(length(opt) > 1){
       mutate(metadata = toJSON(list(plot_type=plot_type,
                                     vars = vars,
                                     metadata=metadata,
-                                    #dictionary=vars_dict,
                                     title=title,
                                     palette=palette,
                                     subtext=subtext),auto_unbox=T)) %>%
@@ -199,11 +182,7 @@ if(length(opt) > 1){
             drop_na(values) %>%
             dplyr::select(-valor, -variable) %>%
             dplyr::group_by(nivel, nivel_clave, plot) %>%
-            dplyr::summarise(values=paste(values, collapse=', ')) %>%
-            dplyr::left_join(plots_metadata_d) %>%
-            dplyr::mutate(values = str_c('"',plot,'":{"values":{',values,
-                                         '},"info":',metadata,'}')) %>%
-            dplyr::select(-metadata)
+            dplyr::summarise(values=paste(values, collapse=', '))
 
         RPostgres::dbWriteTable(conn=con,
                                 name='temp_perfil_ubicaciones',
@@ -217,22 +196,6 @@ if(length(opt) > 1){
         dbDisconnect(con)
    }
   }
-  con <- DBI::dbConnect(RPostgres::Postgres(),
-    host=PGHOST,
-    port=PGPORT,
-    dbname=PGDATABASE,
-    user=POSTGRES_USER,
-    password=POSTGRES_PASSWORD
-  )
-
-  # Group by into clave (one row per mun/ent)
-  tbl(con, dbplyr::sql(glue::glue("SELECT * FROM temp_perfil_ubicaciones_t2"))) %>%
-           dplyr::group_by(nivel, nivel_clave) %>%
-           dplyr::summarise(values = str_flatten(values, collapse=', ')) %>%
-           dplyr::mutate(values = paste0("{",values,'}')) %>%
-           compute(name= in_schema("tidy", "perfil_ubicaciones"),temporary=F)
-  query <- c("DROP TABLE temp_perfil_ubicaciones_t2;")
-  DBI::dbGetQuery(con, query)
   print('Closed connection')
   dbDisconnect(con)
 }

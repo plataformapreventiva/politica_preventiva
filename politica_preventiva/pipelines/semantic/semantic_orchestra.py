@@ -126,6 +126,7 @@ class UpdateSemanticDB(PgRTask):
                         '--prod_host', self.prod_host,
                         '--pipeline', self.semantic_task,
                         '--extra_parameters', extra_parameters]
+        pdb.set_trace()
         cmd = " ".join(command_list)
         return cmd
 
@@ -138,9 +139,67 @@ class UpdateSemanticDB(PgRTask):
         for dt in dep_types:
             if 'tidy_dependencies' in dep_types:
                 tidy_tables = semantic_composition[self.semantic_task]['tidy_dependencies']
-                yield [UpdateTidyDB(current_date=self.current_date,
+                yield [MetadataTidyDB(current_date=self.current_date,
                                         tidy_task=pipeline_task) for pipeline_task\
                                                 in tidy_tables]
+
+    def output(self):
+        return PostgresTarget(host=self.host,
+                              database=self.database,
+                              user=self.user,
+                              password=self.password,
+                              table=self.table,
+                              update_id=self.update_id)
+
+class MetadataTidyDB(PgRTask):
+
+    """
+    This Task runs the tidy script in tidy folder for
+    the features task, if it doesn't exist then it runs
+    the no_tidy.R script from the same folder.
+    """
+
+    current_date = luigi.DateParameter()
+    tidy_task = luigi.Parameter()
+    client = S3Client()
+    tidy_scripts = luigi.Parameter()
+
+    # RDS
+    database = os.environ.get("PGDATABASE")
+    user = os.environ.get("POSTGRES_USER")
+    password = os.environ.get("POSTGRES_PASSWORD")
+    host = os.environ.get("PGHOST")
+
+    @property
+    def cmd(self):
+        tidy_file = self.tidy_scripts +\
+                    'metadata.R'
+
+        if os.path.isfile(tidy_file):
+            pass
+        else:
+            pdb.set_trace()
+
+        command_list = ['Rscript', tidy_file,
+                        '--database', self.database,
+                        '--user', self.user,
+                        '--password', "'{}'".format(self.password),
+                        '--host', self.host,
+                        '--pipeline', self.tidy_task]
+        cmd = " ".join(command_list)
+        return cmd
+
+    @property
+    def update_id(self):
+        return str(self.tidy_task) + 'metadata_tidy'
+
+    @property
+    def table(self):
+        return "tidy." + self.tidy_task + '_metadata'
+
+    def requires(self):
+        UpdateTidyDB(current_date=self.current_date,
+                tidy_task=self.tidy_task)
 
     def output(self):
         return PostgresTarget(host=self.host,
@@ -188,8 +247,7 @@ class UpdateTidyDB(PgRTask):
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host,
-                        '--pipeline', self.tidy_task,
-                        '--extra_parameters', extra_parameters]
+                        '--pipeline', self.tidy_task]
         cmd = " ".join(command_list)
         return cmd
 
