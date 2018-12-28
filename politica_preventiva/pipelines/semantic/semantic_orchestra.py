@@ -178,7 +178,7 @@ class MetadataTidyDB(PgRTask):
         if os.path.isfile(tidy_file):
             pass
         else:
-            pdb.set_trace()
+            raise
 
         command_list = ['Rscript', tidy_file,
                         '--database', self.database,
@@ -187,6 +187,7 @@ class MetadataTidyDB(PgRTask):
                         '--host', self.host,
                         '--pipeline', self.tidy_task]
         cmd = " ".join(command_list)
+        pdb.set_trace()
         return cmd
 
     @property
@@ -198,7 +199,7 @@ class MetadataTidyDB(PgRTask):
         return "tidy." + self.tidy_task + '_metadata'
 
     def requires(self):
-        UpdateTidyDB(current_date=self.current_date,
+        return UpdateTidyDB(current_date=self.current_date,
                 tidy_task=self.tidy_task)
 
     def output(self):
@@ -247,7 +248,8 @@ class UpdateTidyDB(PgRTask):
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host,
-                        '--pipeline', self.tidy_task]
+                        '--pipeline', self.tidy_task,
+                        '--extra_parameters', extra_parameters]
         cmd = " ".join(command_list)
         return cmd
 

@@ -20,9 +20,7 @@ option_list = list(
   make_option(c("--host"), type="character", default="",
               help="database host name", metavar="character"),
   make_option(c("--pipeline"), type="character", default="",
-              help="semantic pipeline task", metavar="character"),
-  make_option(c("--extra_parameters"), type="character", default="",
-              help="Extra parameters", metavar="character")
+              help="semantic pipeline task", metavar="character"))
 );
 
 opt_parser <- OptionParser(option_list=option_list);
@@ -71,19 +69,23 @@ if(length(opt) > 1){
 
   pipeline_task <- opt$pipeline
 
-  query <- glue::glue("DROP TABLE IF EXISTS temp_{pipeline_task}_t2;")
+  query <- glue::glue("DROP TABLE IF EXISTS tidy.{pipeline_task};")
   DBI::dbGetQuery(con, query)
-  query_2 <- glue::glue("CREATE TABLE IF NOT EXISTS  temp_{pipeline_task}_t2 (
-               nivel TEXT,
-               nivel_clave TEXT,
-               plot TEXT,
-               values TEXT,
-               metadata TEXT);")
-  DBI::dbGetQuery(con, query_2)
 
-  dbDisconnect(con)
-  for(level in as.list(strsplit(opt$extra_parameters, ",")[[1]])){
+  query_meta <- "SELECT string_agg(
+                'SELECT ' ||
+                   quote_literal(table_schema) || ' AS table_schema, ' ||
+                   quote_literal(table_name) || ' AS table_name, id, nombre ,
+                   fuente FROM ' || table_schema || '.' || table_name , ' UNION ')::text
+                   FROM information_schema.tables WHERE (table_schema = 'features'
+                                                         OR table_schema = 'raw' )
+                   AND table_name ~ '_dic$';"
+  metadata <- DBI::dbGetQuery(con, query_meta)
+  metadata <- sub(" *string_agg *1",'',metadata)
+  dict <-  tbl(con, dbplyr::sql(metadata)) %>% collect() %>%
+    rename(vars=id) %>% distinct(vars, .keep_all = TRUE)
 
+ dbDisconnect(con)
     con <- DBI::dbConnect(RPostgres::Postgres(),
                           host=PGHOST,
                           port=PGPORT,
@@ -91,16 +93,6 @@ if(length(opt) > 1){
                           user=POSTGRES_USER,
                           password=POSTGRES_PASSWORD
     )
-    if (level=='m'){
-      key_var <- 'cve_muni'
-      n <- 5
-    } else{
-      key_var <- 'cve_ent'
-      n <-2
-    }
-    print(key_var)
-
-    time_series <- c('amenazas_violencia', 'poblacion_pobreza', 'pobreza_mult', 'carencias')
     plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT nivel, plot, plot_type, metadata \
                                                  FROM plots.{pipeline_task} \
                                                   WHERE nivel = '{level}'"))) %>%
@@ -117,66 +109,73 @@ if(length(opt) > 1){
                                        gsub("\\n", "", .)) %>%
       jsonlite::stream_in() %>%
       dplyr::bind_cols(plots_data, .) %>%
-      unnest(vars=vars)
+      unnest(vars=vars) %>%
+      left_join(dict, by=c('vars')) %>%
+      select(-table_name.y, table_name=table_name.x) %>%
+      rowwise %>%
+      mutate(vars_dict = toJSON(list(variable=vars,
+                                     name=nombre,
+                                     source=fuente),auto_unbox=T)) %>%
+      group_by(nivel, plot, plot_type, metadata,
+               title, schema, palette, subtext, table_name, section,
+               table_schema) %>%
+      summarise(vars = paste(vars, collapse=','),
+                vars_dict = paste(vars_dict, collapse=','))
+
 
     plots_metadata_d <- plots_metadata %>%
       rowwise %>%
       mutate(metadata = toJSON(list(plot_type=plot_type,
                                     vars = vars,
                                     metadata=metadata,
+                                    #dictionary=vars_dict,
                                     title=title,
                                     palette=palette,
                                     subtext=subtext),auto_unbox=T)) %>%
       dplyr::select(plot, metadata)
 
-    sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
-                                  function(x) glue::glue("SELECT {paste(c(key_var,
-                                                         plots_metadata$vars[[x]]),
-                                                         collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
+  sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
+                                function(x) glue::glue("SELECT {paste(c(key_var,
+                                                       plots_metadata$vars[[x]]),
+                                                       collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
 
 
-    tidy_data <- tibble::tibble()
-    concat <- tibble::tibble()
+  tidy_data <- tibble::tibble()
+  concat <- tibble::tibble()
 
-    for(i in 1:nrow(plots_metadata)){
-        con <- DBI::dbConnect(RPostgres::Postgres(),
-          host=PGHOST,
-          port=PGPORT,
-          dbname=PGDATABASE,
-          user=POSTGRES_USER,
-          password=POSTGRES_PASSWORD
-        )
+  con <- DBI::dbConnect(RPostgres::Postgres(),
+    host=PGHOST,
+    port=PGPORT,
+    dbname=PGDATABASE,
+    user=POSTGRES_USER,
+    password=POSTGRES_PASSWORD
+  )
 
-        query <- sql_queries[i]
-        print(query)
-        print('Opened connection')
-        data <- tbl(con, dbplyr::sql(query)) %>% dplyr::collect()
-        key_var_name <- rlang::sym(key_var)
-        key_var_quo <- rlang::quo(!! key_var_name)
+  # Group by into clave (one row per mun/ent)
+  tbl(con, dbplyr::sql(glue::glue("SELECT * FROM temp_perfil_ubicaciones_t2"))) %>%
+           left_join(dict, by=c('variable'='vars')) %>%
+           dplyr::ungroup() %>%
+           rowwise %>%
+           dplyr::mutate(values = str_c('"',variable,'":{"valor":"',as.character(valor),
+                                     '","name":"',as.character(nombre),
+                                     '","source":"',as.character(fuente),'"}'),
+                    nivel = level,
+                    plot = plots_metadata$plot[i]) %>%
+           drop_na(values) %>%
+           dplyr::select(-valor, -variable) %>%
+           dplyr::group_by(nivel, nivel_clave, plot) %>%
+           dplyr::summarise(values=paste(values, collapse=', '))
+           dplyr::left_join(plots_metadata_d) %>%
+           dplyr::mutate(values = str_c('"',plot,'":{"values":{',values,
+                                         '},"info":',metadata,'}')) %>%
+           dplyr::select(-metadata)
+           dplyr::group_by(nivel, nivel_clave) %>%
+           dplyr::summarise(values = str_flatten(values, collapse=', ')) %>%
+           dplyr::mutate(values = paste0("{",values,'}')) %>%
+           compute(name= in_schema("tidy", "perfil_ubicaciones"),temporary=F)
 
-        not_gathered <- c(key_var)
-        print(glue::glue('Query number {i}'))
+  query <- c("DROP TABLE temp_perfil_ubicaciones_t2;")
 
-        data_largo <- tidyr::gather(data, variable, valor, -one_of(not_gathered)) %>%
-                      dplyr::rename(nivel_clave = !! key_var_quo)
-
-        data_to_plot <- data_largo %>%
-            dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0')) %>%
-            dplyr::group_by(nivel_clave) %>%
-            dplyr::arrange(variable)
-
-        RPostgres::dbWriteTable(conn=con,
-                                name='temp_perfil_ubicaciones',
-                                value=data_to_plot, temporary=TRUE,
-                                overwrite=T, row.names=FALSE)
-        query <- c("INSERT INTO temp_perfil_ubicaciones_t2
-                   SELECT * from temp_perfil_ubicaciones;")
-        DBI::dbGetQuery(con, query)
-        # Clean and disconnect
-        gc()
-        dbDisconnect(con)
-   }
-  }
+  DBI::dbGetQuery(con, query)
   print('Closed connection')
   dbDisconnect(con)
-}

@@ -6,6 +6,6 @@
 perfil:
     tidy_dependencies:
         - perfil_ubicaciones
-        - temporal_ubicaciones
+        #- temporal_ubicaciones
         # TODO() Add dbrsocial to rtask
         # - pub_agg
