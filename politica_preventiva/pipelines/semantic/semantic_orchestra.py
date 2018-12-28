@@ -126,7 +126,6 @@ class UpdateSemanticDB(PgRTask):
                         '--prod_host', self.prod_host,
                         '--pipeline', self.semantic_task,
                         '--extra_parameters', extra_parameters]
-        pdb.set_trace()
         cmd = " ".join(command_list)
         return cmd
 
@@ -187,7 +186,6 @@ class MetadataTidyDB(PgRTask):
                         '--host', self.host,
                         '--pipeline', self.tidy_task]
         cmd = " ".join(command_list)
-        pdb.set_trace()
         return cmd
 
     @property

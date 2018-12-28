@@ -76,9 +76,8 @@ if(length(opt) > 1){
   query_2 <- glue::glue("CREATE TABLE IF NOT EXISTS  temp_{pipeline_task}_t2 (
                nivel TEXT,
                nivel_clave TEXT,
-               plot TEXT,
-               values TEXT,
-               metadata TEXT);")
+               variable TEXT,
+               values TEXT);")
   DBI::dbGetQuery(con, query_2)
 
   dbDisconnect(con)
@@ -132,7 +131,8 @@ if(length(opt) > 1){
     sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
                                   function(x) glue::glue("SELECT {paste(c(key_var,
                                                          plots_metadata$vars[[x]]),
-                                                         collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
+                                                         collapse = ', ')}
+                             FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
 
 
     tidy_data <- tibble::tibble()
@@ -161,16 +161,18 @@ if(length(opt) > 1){
                       dplyr::rename(nivel_clave = !! key_var_quo)
 
         data_to_plot <- data_largo %>%
-            dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0')) %>%
-            dplyr::group_by(nivel_clave) %>%
-            dplyr::arrange(variable)
+            dplyr::mutate(nivel_clave = str_pad(nivel_clave,n,"left", '0'),
+                          nivel = level) %>%
+            dplyr::arrange(variable) %>%
+            select(nivel, nivel_clave, variable, valor)
 
         RPostgres::dbWriteTable(conn=con,
-                                name='temp_perfil_ubicaciones',
+                                name=glue::glue('temp_{pipeline_task}'),
                                 value=data_to_plot, temporary=TRUE,
                                 overwrite=T, row.names=FALSE)
-        query <- c("INSERT INTO temp_perfil_ubicaciones_t2
-                   SELECT * from temp_perfil_ubicaciones;")
+
+        query <- glue::glue("INSERT INTO temp_{pipeline_task}_t2
+                   SELECT * from temp_{pipeline_task}")
         DBI::dbGetQuery(con, query)
         # Clean and disconnect
         gc()

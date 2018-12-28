@@ -20,7 +20,7 @@ option_list = list(
   make_option(c("--host"), type="character", default="",
               help="database host name", metavar="character"),
   make_option(c("--pipeline"), type="character", default="",
-              help="semantic pipeline task", metavar="character"))
+              help="semantic pipeline task", metavar="character")
 );
 
 opt_parser <- OptionParser(option_list=option_list);
@@ -85,60 +85,47 @@ if(length(opt) > 1){
   dict <-  tbl(con, dbplyr::sql(metadata)) %>% collect() %>%
     rename(vars=id) %>% distinct(vars, .keep_all = TRUE)
 
- dbDisconnect(con)
-    con <- DBI::dbConnect(RPostgres::Postgres(),
-                          host=PGHOST,
-                          port=PGPORT,
-                          dbname=PGDATABASE,
-                          user=POSTGRES_USER,
-                          password=POSTGRES_PASSWORD
-    )
-    plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT nivel, plot, plot_type, metadata \
-                                                 FROM plots.{pipeline_task} \
-                                                  WHERE nivel = '{level}'"))) %>%
-      dplyr::collect() %>%
-      dplyr::filter(!grepl('^programas_', plot),
-                    !grepl('^distribucion_', plot),
-                    !grepl('^poblacion_atendida', plot),
-                    !grepl('^capacidad_institucional', plot)) %>%
-      # Los mapas, pub y las series de tiempo se hacen en otro pipeline.
-      dplyr::filter(plot_type != "map" & !(plot %in% time_series))  %>%
-      dplyr::distinct(plot, .keep_all = TRUE)
+  dbDisconnect(con)
+  con <- DBI::dbConnect(RPostgres::Postgres(),
+                        host=PGHOST,
+                        port=PGPORT,
+                        dbname=PGDATABASE,
+                        user=POSTGRES_USER,
+                        password=POSTGRES_PASSWORD
+  )
+  plots_data <- tbl(con, dbplyr::sql(glue::glue("SELECT nivel, plot, plot_type, metadata \
+                                               FROM plots.{pipeline_task}"))) %>%
+    dplyr::collect() %>% # Los mapas, pub y las series de tiempo se hacen en otro pipeline.
+    dplyr::distinct(plot, .keep_all = TRUE)
 
-    plots_metadata <- textConnection(dplyr::pull(plots_data, metadata) %>%
-                                       gsub("\\n", "", .)) %>%
-      jsonlite::stream_in() %>%
-      dplyr::bind_cols(plots_data, .) %>%
-      unnest(vars=vars) %>%
-      left_join(dict, by=c('vars')) %>%
-      select(-table_name.y, table_name=table_name.x) %>%
-      rowwise %>%
-      mutate(vars_dict = toJSON(list(variable=vars,
-                                     name=nombre,
-                                     source=fuente),auto_unbox=T)) %>%
-      group_by(nivel, plot, plot_type, metadata,
-               title, schema, palette, subtext, table_name, section,
-               table_schema) %>%
-      summarise(vars = paste(vars, collapse=','),
-                vars_dict = paste(vars_dict, collapse=','))
+  plots_metadata <- textConnection(dplyr::pull(plots_data, metadata) %>%
+                                     gsub("\\n", "", .)) %>%
+    jsonlite::stream_in() %>%
+    dplyr::bind_cols(plots_data, .) %>%
+    unnest(vars=vars) %>%
+    left_join(dict, by=c('vars')) %>%
+    select(-table_name.y, table_name=table_name.x) %>%
+    rowwise %>%
+    mutate(vars_dict = toJSON(list(variable=vars,
+                                   name=nombre,
+                                   source=fuente),auto_unbox=T)) %>%
+    group_by(nivel, plot, plot_type, metadata,
+             title, schema, palette, subtext, table_name, section,
+             table_schema) %>%
+    summarise(vars = paste(vars, collapse=','),
+              vars_dict = paste(vars_dict, collapse=','))
 
 
-    plots_metadata_d <- plots_metadata %>%
-      rowwise %>%
-      mutate(metadata = toJSON(list(plot_type=plot_type,
-                                    vars = vars,
-                                    metadata=metadata,
-                                    #dictionary=vars_dict,
-                                    title=title,
-                                    palette=palette,
-                                    subtext=subtext),auto_unbox=T)) %>%
-      dplyr::select(plot, metadata)
-
-  sql_queries <- purrr::map_chr(1:nrow(plots_metadata),
-                                function(x) glue::glue("SELECT {paste(c(key_var,
-                                                       plots_metadata$vars[[x]]),
-                                                       collapse = ', ')} FROM {plots_metadata$schema[x]}.{plots_metadata$table_name[x]}"))
-
+  plots_metadata_d <- plots_metadata %>%
+    rowwise %>%
+    mutate(metadata = toJSON(list(plot_type=plot_type,
+                                  vars = vars,
+                                  metadata=metadata,
+                                  #dictionary=vars_dict,
+                                  title=title,
+                                  palette=palette,
+                                  subtext=subtext),auto_unbox=T)) %>%
+    dplyr::select(plot, metadata)
 
   tidy_data <- tibble::tibble()
   concat <- tibble::tibble()
@@ -152,30 +139,34 @@ if(length(opt) > 1){
   )
 
   # Group by into clave (one row per mun/ent)
-  tbl(con, dbplyr::sql(glue::glue("SELECT * FROM temp_perfil_ubicaciones_t2"))) %>%
-           left_join(dict, by=c('variable'='vars')) %>%
-           dplyr::ungroup() %>%
-           rowwise %>%
-           dplyr::mutate(values = str_c('"',variable,'":{"valor":"',as.character(valor),
-                                     '","name":"',as.character(nombre),
-                                     '","source":"',as.character(fuente),'"}'),
-                    nivel = level,
-                    plot = plots_metadata$plot[i]) %>%
-           drop_na(values) %>%
-           dplyr::select(-valor, -variable) %>%
-           dplyr::group_by(nivel, nivel_clave, plot) %>%
-           dplyr::summarise(values=paste(values, collapse=', '))
-           dplyr::left_join(plots_metadata_d) %>%
-           dplyr::mutate(values = str_c('"',plot,'":{"values":{',values,
-                                         '},"info":',metadata,'}')) %>%
-           dplyr::select(-metadata)
-           dplyr::group_by(nivel, nivel_clave) %>%
-           dplyr::summarise(values = str_flatten(values, collapse=', ')) %>%
-           dplyr::mutate(values = paste0("{",values,'}')) %>%
-           compute(name= in_schema("tidy", "perfil_ubicaciones"),temporary=F)
+  data <-  tbl(con, dbplyr::sql(glue::glue("SELECT * FROM temp_perfil_ubicaciones_t2"))) %>%
+      collect()
 
+  data <- data %>% left_join(dict, by=c('variable'='vars')) %>%
+      drop_na(variable) %>%
+      rowwise %>%
+      dplyr::mutate(values = str_c('"',variable,'":{"values":"',as.character(values),
+                                '","name":"',as.character(nombre),
+                                '","source":"',as.character(fuente),'"}'),
+               plot = plots_metadata$plot[i]) %>%
+      dplyr::group_by(nivel, nivel_clave, plot) %>%
+      dplyr::summarise(values=paste(values, collapse=', ')) %>%
+      dplyr::left_join(plots_metadata_d) %>%
+      drop_na(values) %>%
+      rowwise %>%
+      dplyr::mutate(values = str_c('"',plot,'":{"values":{',values,
+                                    '},"info":',metadata,'}')) %>%
+      dplyr::select(-metadata) %>%
+      dplyr::group_by(nivel, nivel_clave) %>%
+      dplyr::summarise(values = str_flatten(values, collapse=', ')) %>%
+      dplyr::mutate(values = paste0("{",values,'}'))
+
+  copy_to(con, data,
+          dbplyr::in_schema("tidy","perfil_ubicaciones"),
+          temporary = FALSE, overwrite = TRUE)
   query <- c("DROP TABLE temp_perfil_ubicaciones_t2;")
 
-  DBI::dbGetQuery(con, query)
+  # DBI::dbGetQuery(con, query)
   print('Closed connection')
   dbDisconnect(con)
+}
