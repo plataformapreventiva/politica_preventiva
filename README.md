@@ -7,8 +7,13 @@ This pipeline ingests, preprocesses and cleans more than 30 sources of informati
 
 ## Installation
 
-The Ingest pipeline can be run after cloning this repository and
-calling `make init`, `make setup` and `make run`.
+The Ingest pipeline can be run after cloning this repository
+
+* Check main dependencies on prerequisits
+* `make init` to install the project python requirements
+* `sh infraestructura/registrar.sh` to build the base images
+* `make setup` To build the project images
+* `make run` To run the pipeline
 
 ### Dependencies
 
