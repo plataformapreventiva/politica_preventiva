@@ -14,12 +14,26 @@ services:
     environment:
       - NEO4J_AUTH=none
     ports:
-      - "7474:7474"
-      - "7687:7687"
+        - "7474:7474"
+        - "7687:7687"
     networks:
       - politica_preventiva_net
     volumes: 
         - politica_preventiva_store:/data
+
+  postgres:
+    image: mdillon/postgis:9.5
+    volumes:
+      - politica_preventiva_store:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=maestrosedesol
+      - POSTGRES_PASSWORD=foobar # TODO() set password through .env - check secrets 
+      - POSTGRES_DB=predictivadb
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+        - "5433:5432"
+    networks:
+      - politica_preventiva_net
 
 volumes:
   politica_preventiva_store:

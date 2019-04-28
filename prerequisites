@@ -17,13 +17,10 @@ sudo apt-get -y install silversearcher-ag
 
 
 #PIP
-sudo apt-get -y install python-pip
 sudo apt-get -y install python3-pip
-
-
-
-
-
+#Postgres
+sudo apt update
+sudo apt install postgresql postgresql-contrib
 
 #install pyenv
 cd
@@ -65,3 +62,4 @@ rm -rf hub-linux-amd64-2.2.9
 
 pip --upgrade 
 make init
+
