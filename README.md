@@ -13,6 +13,7 @@ calling `make init`, `make setup` and `make run`.
 ### Dependencies
 
 * Python 3.5.2
+* pip3
 * luigi
 * git
 * psql (PostgreSQL) 9.5.4
