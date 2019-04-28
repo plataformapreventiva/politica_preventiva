@@ -51,10 +51,10 @@ pyenv: .python-version
 deps: pip pip-dev
 
 pip: requirements.txt
-	@pip install -r $<
+	@pip3 install -r $<
 
 pip-dev: requirements-dev.txt
-	@pip install -r $<
+	@pip3 install -r $<
 
 info:
 	@echo Proyecto: $(PROJECT_NAME) ver. $(PROJECT_VERSION)
