@@ -2,7 +2,7 @@
 
 IMAGE_VERSION="0.1"
 DOCKER_REGISTRY="localhost:5000"
-IMAGES="python r luigi-server"
+IMAGES="base python r luigi-server"
 
 for IMAGE in ${IMAGES} ; do
 	echo $IMAGE

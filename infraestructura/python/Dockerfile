@@ -17,9 +17,9 @@ RUN apt-get update \
                        libpq-dev \
                        make libssl-dev zlib1g-dev \
                        libbz2-dev libreadline-dev libsqlite3-dev llvm \
-                       libncurses5-dev libncursesw5-dev xz-utils libpng12-dev \
+                       libncurses5-dev libncursesw5-dev xz-utils libpng-dev \
                        libfreetype6-dev libfreetype6 libxft-dev freetype* \
-                       libmysqlclient-dev
+                       default-libmysqlclient-dev
 
 
 ADD requirements.txt /tmp/requirements.txt
