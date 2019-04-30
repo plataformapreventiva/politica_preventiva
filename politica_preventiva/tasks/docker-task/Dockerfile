@@ -8,7 +8,19 @@ WORKDIR /${PROJECT_NAME}
 
 RUN echo 'deb http://http.us.debian.org/debian stable main contrib non-free' >> /etc/apt/sources.list.d/jessie.non-free.list
 RUN apt-get update
-RUN apt-get -y install wget nodejs npm gdal-bin unrar libiconv-hook1
+RUN apt-get install -y build-essential
+RUN apt-get install -y wget gdal-bin unrar libiconv-hook1
+
+# Install Node.js
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash
+RUN apt-get install --yes nodejs
+RUN apt-get install -y npm
+RUN node -v
+RUN npm -v
+RUN npm i -g nodemon
+RUN nodemon -v
+
+# ogr2ogr
 RUN npm install ogr2ogr
 #RUN mkdir /${PROJECT_NAME}/data
 
