@@ -20,7 +20,7 @@ RUN npm -v
 RUN npm i -g nodemon
 RUN nodemon -v
 
-# ogr2ogr
+# Install ogr2ogr
 RUN npm install ogr2ogr
 #RUN mkdir /${PROJECT_NAME}/data
 

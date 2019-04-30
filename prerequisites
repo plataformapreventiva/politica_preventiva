@@ -60,6 +60,14 @@ echo "eval "$(hub alias -s)"" >> ~/.zshrc
 # Cleanup
 rm -rf hub-linux-amd64-2.2.9
 
+sudo apt-get update
+sudo apt-get install -y build-essential
+sudo apt-get install -y python3.4-dev
+sudo apt-get install -y libpq-dev
+
+pip3 install psycopg2
+
+
 pip --upgrade 
 make init
 
