@@ -1,4 +1,4 @@
-IMAGES="r-task"
+IMAGES="r-task docker-task"
 IMAGE_VERSION="0.1"
 DOCKER_REGISTRY="localhost:5000"
 
