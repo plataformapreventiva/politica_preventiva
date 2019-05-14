@@ -272,6 +272,7 @@ class UpdateDictionary(postgres.CopyToTable):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+    port = os.environ.get("PGPORT")
 
     @property
     def update_id(self):
@@ -327,5 +328,5 @@ class UpdateDictionary(postgres.CopyToTable):
     def output(self):
         return postgres.PostgresTarget(host=self.host, database=self.database,
                                        user=self.user, password=self.password,
-                                       table=self.table,
+                                       table=self.table, port=self.port,
                                        update_id=self.update_id)

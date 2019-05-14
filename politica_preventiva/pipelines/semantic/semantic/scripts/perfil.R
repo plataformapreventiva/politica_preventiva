@@ -12,6 +12,8 @@ option_list = list(
               help="data date", metavar="character"),
   make_option(c("--database"), type="character", default="",
               help="database name", metavar="character"),
+  make_option(c("--port"), type="character", default="",
+              help="port number", metavar="character"),
   make_option(c("--user"), type="character", default="",
               help="database user", metavar="character"),
   make_option(c("--password"), type="character", default="",
@@ -66,14 +68,12 @@ if(length(opt) > 1){
     POSTGRES_PASSWORD <- opt$password
     POSTGRES_USER <- opt$user
     PGHOST <- opt$host
-    PGPORT <- "5432"
+    PGPORT <- opt$port # "5432"
     PROD_DATABASE <- opt$prod_database
     PROD_PASSWORD <- opt$prod_password
     PROD_USER <- opt$prod_user
     PROD_HOST <- opt$prod_host
-    PROD_PORT <- "5432"
-
-
+    PROD_PORT <- opt$port #"5432"
   }
 
   con <- DBI::dbConnect(RPostgres::Postgres(),

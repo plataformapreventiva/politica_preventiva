@@ -104,6 +104,7 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+    port = os.environ.get("PGPORT")
 
     @property
     def update_id(self):
@@ -178,6 +179,7 @@ class UpdateFeaturesDictionary(postgres.CopyToTable):
                                        database=self.database,
                                        user=self.user,
                                        password=self.password,
+                                       port=self.port,
                                        table=self.table,
                                        update_id=self.update_id)
 
@@ -200,6 +202,7 @@ class UpdateFeaturesDB(PgRTask):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+    port = os.environ.get("PGPORT")
 
     @property
     def update_id(self):
@@ -221,6 +224,7 @@ class UpdateFeaturesDB(PgRTask):
         command_list = ['Rscript', features_script,
                         '--data_date', self.data_date,
                         '--database', self.database,
+                        '--port', self.port,
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host]
@@ -255,6 +259,7 @@ class UpdateFeaturesDB(PgRTask):
     def output(self):
         return PostgresTarget(host=self.host,
                               database=self.database,
+                              port=self.port,
                               user=self.user,
                               password=self.password,
                               table=self.table,

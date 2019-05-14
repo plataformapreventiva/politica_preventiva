@@ -90,6 +90,7 @@ class UpdateRawDB(postgres.CopyToTable):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+    port = os.environ.get("PGPORT")
 
     def requires(self):
         return Concatenation(current_date=self.current_date,
@@ -271,6 +272,7 @@ class UpdateRawDB(postgres.CopyToTable):
     def output(self):
         return postgres.PostgresTarget(host=self.host,
                                        database=self.database,
+                                       port=self.port,
                                        user=self.user,
                                        password=self.password,
                                        table=self.table,

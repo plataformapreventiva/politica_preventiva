@@ -50,6 +50,7 @@ database = os.environ.get("PGDATABASE")
 user = os.environ.get("POSTGRES_USER")
 password = os.environ.get("POSTGRES_PASSWORD")
 host = os.environ.get("PGHOST")
+port = os.environ.get("PGPORT")
 
 # AWS
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')

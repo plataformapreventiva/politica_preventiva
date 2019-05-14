@@ -94,6 +94,7 @@ class UpdateSemanticDB(PgRTask):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+    port = os.environ.get("PGPORT")
 
     @property
     def update_id(self):
@@ -111,6 +112,7 @@ class UpdateSemanticDB(PgRTask):
 
         command_list = ['Rscript', semantic_file,
                         '--database', self.database,
+                        '--port', self.port,
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host,
@@ -135,6 +137,7 @@ class UpdateSemanticDB(PgRTask):
     def output(self):
         return PostgresTarget(host=self.host,
                               database=self.database,
+                              port=self.port,
                               user=self.user,
                               password=self.password,
                               table=self.table,
@@ -158,6 +161,7 @@ class UpdateTidyDB(PgRTask):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+    port = os.environ.get("PGPORT")
 
     @property
     def cmd(self):
@@ -175,6 +179,7 @@ class UpdateTidyDB(PgRTask):
 
         command_list = ['Rscript', tidy_file,
                         '--database', self.database,
+                        '--port', self.port,
                         '--user', self.user,
                         '--password', "'{}'".format(self.password),
                         '--host', self.host,
@@ -221,6 +226,7 @@ class UpdateTidyDB(PgRTask):
     def output(self):
         return PostgresTarget(host=self.host,
                               database=self.database,
+                              port=self.port,
                               user=self.user,
                               password=self.password,
                               table=self.table,
