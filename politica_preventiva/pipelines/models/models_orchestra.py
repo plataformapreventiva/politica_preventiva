@@ -99,6 +99,7 @@ class RunModel(ModelTask):
     user = os.environ.get("POSTGRES_USER")
     password = os.environ.get("POSTGRES_PASSWORD")
     host = os.environ.get("PGHOST")
+    port = os.environ.get("PGPORT")
 
     @property
     def cmd(self):
@@ -117,6 +118,7 @@ class RunModel(ModelTask):
                         "--current_date", str(self.current_date),
                         "--database", self.database,
                         "--user", self.user,
+                        "--port", self.port,
                         "--password '{0}'".format(password),
                         "--host", self.host,
                         "--pipeline", self.model_task, '"']
@@ -155,5 +157,6 @@ class RunModel(ModelTask):
                               user=self.user,
                               password=self.password,
                               table=self.table,
+                              port=self.port,
                               update_id=self.update_id)
 

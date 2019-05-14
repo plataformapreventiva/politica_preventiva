@@ -45,7 +45,8 @@ class PgRTask(luigi.Task):
     def run(self):
         cmd_docker = '''
             docker run --env-file $PWD/.env\
-             -it --rm  -v $PWD:/politica_preventiva\
+            -it --rm  -v $PWD:/politica_preventiva\
+            --network="host"\
             -v politica_preventiva_store:/data\
             politica_preventiva/task/r-task {0}
          '''.format(self.cmd, aws_access_key_id,
@@ -79,6 +80,7 @@ class RTask(luigi.Task):
         cmd_docker = '''
          docker run --env-file $PWD/.env\
                  -it --rm  -v $PWD:/politica_preventiva\
+                --network="host"\
                 -v politica_preventiva_store:/data\
            politica_preventiva/task/r-task {0} > /dev/null
          '''.format(self.cmd)
@@ -145,6 +147,7 @@ class DockerTask(luigi.Task):
         cmd_docker = '''
          docker run --env-file $PWD/.env\
                 -it --rm  -v $PWD:/politica_preventiva\
+                --network="host"\
                 -v politica_preventiva_store:/data\
            politica_preventiva/task/docker-task {0} > /dev/null
          '''.format(self.cmd)
